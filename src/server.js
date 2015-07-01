@@ -9,6 +9,17 @@ var client = {
 
     plugin.route({
       method: 'get',
+      path: '/bower_components/{param*}',
+      handler: {
+        directory: {
+          path: 'bower_components',
+          index: true
+        }
+      }
+    });
+
+    plugin.route({
+      method: 'get',
       path: '/{param*}',
       handler: {
         directory: {
