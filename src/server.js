@@ -20,6 +20,17 @@ var client = {
 
     plugin.route({
       method: 'get',
+      path: '/assets/{param*}',
+      handler: {
+        directory: {
+          path: 'assets',
+          index: true
+        }
+      }
+    });
+
+    plugin.route({
+      method: 'get',
       path: '/{param*}',
       handler: {
         directory: {
