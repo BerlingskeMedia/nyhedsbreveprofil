@@ -1,7 +1,8 @@
 /*jshint node: true */
 'use strict';
 
-var Hapi = require('hapi');
+var Hapi = require('hapi'),
+    backend = require('./backend');
 
 var client = {
   register: function (plugin, options, next) {
@@ -37,6 +38,7 @@ var server = new Hapi.Server({
 server.connection({ port: 8000 });
 
 server.register(client, cb);
+server.register(backend, { routes: { prefix: '/backend' } }, cb);
 
 if (!module.parent) {
   server.start(function() {
