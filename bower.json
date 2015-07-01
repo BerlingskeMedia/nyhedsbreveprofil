@@ -1,0 +1,19 @@
+{
+  "name": "nyhedsbreve",
+  "version": "0.0.0",
+  "authors": [
+    "Marcus Gregersen <marcus@deathbycode.dk>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.5",
+    "components-font-awesome": "~4.3.0"
+  }
+}
