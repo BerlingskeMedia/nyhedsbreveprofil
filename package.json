@@ -1,0 +1,25 @@
+{
+  "name": "nyhedsbreve",
+  "version": "1.0.0",
+  "description": "Kunde admin af nyhedsbreve",
+  "main": "src/server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BerlingskeMedia/nyhedsbreve.git"
+  },
+  "author": "Berlingske Media",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BerlingskeMedia/nyhedsbreve/issues"
+  },
+  "homepage": "https://github.com/BerlingskeMedia/nyhedsbreve#readme",
+  "dependencies": {
+    "hapi": "^8.6.1"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.0"
+  }
+}
