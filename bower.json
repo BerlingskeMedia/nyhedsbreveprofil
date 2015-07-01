@@ -14,6 +14,7 @@
   ],
   "dependencies": {
     "bootstrap": "~3.3.5",
-    "components-font-awesome": "~4.3.0"
+    "components-font-awesome": "~4.3.0",
+    "angular": "~1.4.1"
   }
 }
