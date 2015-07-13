@@ -25,6 +25,18 @@ newsletterApp.config(['$routeProvider',
         templateUrl: 'assets/partials/faq.html',
         controller: 'faqController'
       }).
+      when('/login', {
+        templateUrl: 'assets/partials/login.html',
+        // controller: 'faqController'
+      }).
+      when('/edit', {
+        templateUrl: 'assets/partials/edit.html',
+        // controller: 'faqController'
+      }).
+      when('/me', {
+        templateUrl: 'assets/partials/me.html',
+        // controller: 'faqController'
+      }).
       otherwise({
         redirectTo: '/'
       });
