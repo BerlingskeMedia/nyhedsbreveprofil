@@ -5,10 +5,12 @@ var backend = {
 
     plugin.route({
       method: 'get',
-      path: '/',
-      handler: function (request, reply) {
-        reply('HEY');
-      }
+      path: '/publishers',
+      handler: {
+        proxy: {
+          uri: 'http://54.77.4.249:8000/publishers'
+        }
+    }
     });
 
     next();
@@ -20,4 +22,4 @@ backend.register.attributes = {
   version: '1.0.0'
 };
 
-module.exports = backend
+module.exports = backend;

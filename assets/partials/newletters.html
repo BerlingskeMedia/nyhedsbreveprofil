@@ -4,4 +4,48 @@
 		<p>Du kan tilmelde dig nyhedsbreve fra flere medier ved at klikke på logoerne. Herefter vælger du de nyhedsbreve, du vil modtage.</p>
   </div>
 </header>
-Forside content
+<div class="col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
+
+
+	<section class="newsletter-header">
+    <div class="btn-group">
+      <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Flere nyhedsbreve <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+    	  <li><a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">BT</a></li>
+    	  <li><a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">Berlingske</a></li>
+    	  <li><a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">Business.dk</a></li>
+      </ul>
+    </div>
+
+  <a href="step-2.php" class="btn btn-success pull-right">TILMELD <i class="fa fa-angle-right"></i></a>
+	</section>
+
+	<section class="newsletters">
+    <ul class="list-brand">
+      <li ng-repeat="publisher in publishers">
+        <div class="li-body">
+						<div class="row">
+							<div class="col-sm-3 col-xs-4">
+								<img ng-src="{{publisher.publisher_toppic}}" class="newsletter-logo">
+							</div>
+							<div class="col-sm-9 col-xs-8">
+								<div class="checkbox">
+									<label>
+										<input type="checkbox"><strong class="newsletter-title">{{publisher.publisher_navn}}</strong>
+										<small>Lacus non velit nam suscipit diam, nisl varius donec.</small>
+									</label>
+								</div>
+							</div>
+						</div>
+          </div>
+      </li>
+    </ul>
+
+  </section>
+
+
+
+
+</div>

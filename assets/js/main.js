@@ -1,8 +1,10 @@
 var newsletterController = angular.module('newsletterController', []);
 
-newsletterController.controller('newsletterController', ['$scope', '$routeParams',
-  function($scope, $routeParams) {
-    //TODO
+newsletterController.controller('newsletterController', ['$scope', '$routeParams', '$http' ,
+  function($scope, $routeParams, $http) {
+    $http.get("/backend/publishers").success(function(data, status, headers, config) {
+      $scope.publishers = data;
+    });
   }]);
 
 var newsletterApp = angular.module('newsletter', [
