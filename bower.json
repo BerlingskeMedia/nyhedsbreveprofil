@@ -19,6 +19,7 @@
     "angular-route": "~1.4.1"
   },
   "devDependencies": {
-    "angular-bootstrap": "~0.13.0"
+    "angular-bootstrap": "~0.13.0",
+    "checklist-model": "~0.2.4"
   }
 }

@@ -7,14 +7,15 @@ newsletterController.controller('newsletterController', ['$scope', '$routeParams
     $q.all([publishers, newsletters]).then(function(resolved) {
       $scope.publishers = resolved[0].data;
       $scope.newsletters = resolved[1].data;
+      $scope.current_publisher = $scope.publishers[3];
     });
-
   }]);
 
 var newsletterApp = angular.module('newsletter', [
   'ngRoute',
   'newsletterController',
-  'ui.bootstrap'
+  'ui.bootstrap',
+  "checklist-model"
 ]).controller('faqController', ['$scope', '$routeParams',
 function($scope, $routeParams) {
   //TODO
