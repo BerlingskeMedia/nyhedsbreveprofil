@@ -31,6 +31,14 @@ newsletterApp.config(['$routeProvider',
         templateUrl: 'assets/partials/login.html',
         // controller: 'faqController'
       }).
+      when('/step2', {
+        templateUrl: 'assets/partials/step2.html',
+        // controller: 'faqController'
+      }).
+      when('/step3', {
+        templateUrl: 'assets/partials/step3.html',
+        // controller: 'faqController'
+      }).
       when('/edit', {
         templateUrl: 'assets/partials/edit.html',
         // controller: 'faqController'

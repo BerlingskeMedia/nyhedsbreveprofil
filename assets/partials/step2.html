@@ -1,0 +1,167 @@
+<div class="col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
+			<h1>Tilmeld dig</h1>
+
+			<form action="step-3.php" method="post" id="user-form" novalidate="novalidate" class="fv-form fv-form-bootstrap"><button type="submit" class="fv-hidden-submit" style="display: none; width: 0px; height: 0px;"></button>
+								<div class="hidden-labels">
+					<div class="form-group required has-feedback">
+						<label for="exampleInputEmail1">Email</label>
+						<input type="email" class="form-control input-sm" id="id_email" name="email" data-fv-field="email"><i class="form-control-feedback" data-fv-icon-for="email" style="display: none;"></i>
+					<small class="help-block" data-fv-validator="notEmpty" data-fv-for="email" data-fv-result="NOT_VALIDATED" style="display: none;">Du skal indtaste din email adresse</small><small class="help-block" data-fv-validator="emailAddress" data-fv-for="email" data-fv-result="NOT_VALIDATED" style="display: none;">Email adressen er ugyldig</small></div>
+
+					<div class="row">
+						<div class="col-sm-6">
+							<div class="form-group required has-feedback">
+								<label for="">Fornavn</label>
+								<input type="text" name="firstName" class="form-control input-sm" id="id_firstname" data-fv-field="firstName"><i class="form-control-feedback" data-fv-icon-for="firstName" style="display: none;"></i>
+							<small class="help-block" data-fv-validator="notEmpty" data-fv-for="firstName" data-fv-result="NOT_VALIDATED" style="display: none;">Fornavn er påkrævet</small></div>
+						</div>
+
+						<div class="col-sm-6">
+							<div class="form-group required has-feedback">
+								<label for="">Efternavn</label>
+								<input type="text" name="lastName" class="form-control input-sm" id="id_lastname" data-fv-field="lastName"><i class="form-control-feedback" data-fv-icon-for="lastName" style="display: none;"></i>
+							<small class="help-block" data-fv-validator="notEmpty" data-fv-for="lastName" data-fv-result="NOT_VALIDATED" style="display: none;">Efternavn er påkrævet</small></div>
+						</div>
+					</div>
+
+
+
+					<div class="row">
+						<div class="col-md-12">
+							<a href="#" class="toggle-form"><i class="fa fa-caret-down"></i> Udfyld alle felter</a> og deltag i konkurrencen om en iPad
+						</div>
+					</div>
+
+					<div class="form-hidden">
+					<div class="row">
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label for="">Land</label>
+								<select class="form-control">
+									<option>Danmark</option>
+									<option>Tyskland</option>
+									<option>Sverige</option>
+								</select>
+							</div>
+						</div>
+					</div>
+
+
+
+					<div class="row">
+						<div class="col-xs-4 col-lg-2 col-md-3">
+							<div class="form-group">
+								<label for="">Postnr.</label>
+								<input type="text" name="zip" class="form-control input-sm" id="id_zip">
+							</div>
+						</div>
+						<div class="col-xs-8 col-lg-10 col-md-9">
+							<div class="form-group">
+								<label for="">By</label>
+								<input type="text" class="form-control input-sm" id="id_town" placeholder="* Dette felt udfyldes automatisk alt efter postnr." disabled="">
+							</div>
+						</div>
+					</div>
+
+
+
+
+
+
+
+
+
+					<div class="row">
+						<div class="col-xs-10">
+							<label for="">Vejnavn</label>
+							<input type="text" class="form-control input-sm" id="id_street" placeholder="[Autocomplete]">
+						</div>
+						<div class="col-xs-2">
+							<div class="form-group">
+								<label for="">Husnr.</label>
+								<input type="text" class="form-control input-sm" id="id_streetnumber">
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+
+						<div class="col-xs-4 col-md-2">
+							<div class="form-group">
+								<label for="">Bogstav</label>
+								<input type="text" class="form-control input-sm" id="id_streetletter">
+							</div>
+						</div>
+
+
+						<div class="col-xs-4 col-md-2">
+							<div class="form-group">
+								<label for="">Etage</label>
+								<input type="text" class="form-control input-sm" id="id_floor">
+							</div>
+						</div>
+						<div class="col-xs-4 col-md-2">
+							<div class="form-group">
+								<label for="">Side</label>
+								<input type="text" class="form-control input-sm" id="id_side">
+							</div>
+						</div>
+					</div>
+
+					<div class="checkbox">
+						<div class="form-group">
+							<label class="">
+								<input type="checkbox" name="address_type" id="address_2" value=""> <strong>Firmadresse</strong>
+							</label>
+						</div>
+					</div>
+
+					<div class="form-group no-show">
+						<label for="">Firma</label>
+						<input type="text" class="form-control input-sm" id="id_company">
+					</div>
+
+					<div class="row">
+						<div class="col-xs-6">
+							<div class="form-group">
+								<label for="">Telefon</label>
+								<input type="text" class="form-control input-sm" id="id_phone">
+							</div>
+						</div>
+
+						<div class="col-xs-6 ">
+							<div class="form-group">
+								<label for="">Fødselsår</label>
+								<input type="text" class="form-control input-sm" id="id_year">
+							</div>
+						</div>
+					</div>
+					</div><!-- hidden -->
+				</div>
+
+				<h4>
+					Kontaktsamtykker
+				</h4>
+
+				<ul class="list-default ">
+	<li>
+		<div class="checkbox">
+			<label>
+				<input type="checkbox"> <small><strong class="xs-block">Tilbud fra partnere</strong><br>Duis facilisis fusce fringilla. Aliquam vitae mi quis ligula dapibus tempor. Praesent mauris tortor luctus ut aliquam at aliquam eu arcu.</small>
+			</label>
+		</div>
+	</li>
+	<li>
+		<div class="checkbox">
+			<label>
+				<input type="checkbox"> <small><strong>Datasamkøringssamtykke</strong><br>Fusce et risus nonummy neque euismod pretium. Donec dignissim ligula vitae ipsum. Maecenas a velit eu lectus blandit blandit.</small>
+			</label>
+		</div>
+	</li>
+</ul>
+				<div class="module-top ">
+					<a href="index.php" class="btn btn-link pull-left"><i class="fa fa-angle-left"></i> Flere nyhedsbreve</a>
+					<button type="submit" class="btn btn-success pull-right ">TILMELD <i class="fa fa-angle-right"></i></button>
+				</div>
+			</form>
+</div>
