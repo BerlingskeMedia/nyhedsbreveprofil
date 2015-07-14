@@ -17,5 +17,8 @@
     "components-font-awesome": "~4.3.0",
     "angular": "~1.4.1",
     "angular-route": "~1.4.1"
+  },
+  "devDependencies": {
+    "angular-bootstrap": "~0.13.0"
   }
 }

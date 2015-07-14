@@ -13,6 +13,16 @@ var backend = {
     }
     });
 
+    plugin.route({
+      method: 'get',
+      path: '/nyhedsbreve',
+      handler: {
+        proxy: {
+          uri: 'http://54.77.4.249:8000/nyhedsbreve'
+        }
+    }
+    });
+
     next();
   }
 };

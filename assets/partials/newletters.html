@@ -6,16 +6,15 @@
 </header>
 <div class="col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
 
-
 	<section class="newsletter-header">
-    <div class="btn-group">
-      <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        Flere nyhedsbreve <span class="caret"></span>
+		{{current_id}}
+		<div class="btn-group" dropdown>
+      <button type="button" class="btn btn-primary dropdown-toggle" dropdown-toggle>
+				{{current_publisher.publisher_navn}} <span class="caret"></span>
       </button>
-      <ul class="dropdown-menu">
-    	  <li><a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">BT</a></li>
-    	  <li><a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">Berlingske</a></li>
-    	  <li><a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">Business.dk</a></li>
+      <ul class="dropdown-menu" role="menu">
+				<li><a href="">Alle</a></li>
+        <li ng-repeat="publisher in publishers"><a href="" ng-click="$parent.current_publisher = publisher">{{publisher.publisher_navn}}</a></li>
       </ul>
     </div>
 
@@ -24,17 +23,18 @@
 
 	<section class="newsletters">
     <ul class="list-brand">
-      <li ng-repeat="publisher in publishers">
+
+      <li ng-repeat="newsletter in newsletters | filter : {publisher_id : current_publisher.publisher_id}">
         <div class="li-body">
 						<div class="row">
 							<div class="col-sm-3 col-xs-4">
-								<img ng-src="{{publisher.publisher_toppic}}" class="newsletter-logo">
+								<img ng-src="{{current_publisher.publisher_toppic}} " class="newsletter-logo">
 							</div>
 							<div class="col-sm-9 col-xs-8">
 								<div class="checkbox">
 									<label>
-										<input type="checkbox"><strong class="newsletter-title">{{publisher.publisher_navn}}</strong>
-										<small>Lacus non velit nam suscipit diam, nisl varius donec.</small>
+										<input type="checkbox"><strong class="newsletter-title">{{newsletter.nyhedsbrev_navn}}</strong>
+										<small>{{newsletter.nyhedsbrev_navn}}</small>
 									</label>
 								</div>
 							</div>
