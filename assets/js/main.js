@@ -23,13 +23,26 @@ newsletterController.controller('newsletterController', ['$scope', '$routeParams
 
       $http.post("/backend/users", payload).
       success(function(data, status, headers, config) {
-        console.log("walla");
         $scope.state = "step3";
         $scope.user.my_id = data.ekstern_id;
       }).
       error(function(data, status, headers, config) {
         console.error(data);
         $location.path = "/login";
+      });
+    };
+    $scope.submit_interests = function(user) {
+      var payload = {};
+      payload.location_id = 1;
+      payload.interesser = user.interests_choices;
+      $http.post("backend/users/" + user.my_id +  "/interesser", payload).
+      success(function(data, status, headers, config) {
+        console.log("Hurra");
+        $scope.state = "step4";
+      }).
+      error(function(data, status, headers, config) {
+        console.error(data);
+        //TODO handle error
       });
     };
   }]);

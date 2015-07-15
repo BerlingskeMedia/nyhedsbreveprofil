@@ -211,7 +211,8 @@
 		<div class="row">
 			<div ng-repeat="interest in interests" class="col-lg-4 col-sm-6 col-xs-12">
 				<label>
-					<input type="checkbox" /> {{interest.interesse_navn}}
+					<input checklist-model="$parent.user.interests_choices"
+					checklist-value="interest.interesse_id" type="checkbox" /> {{interest.interesse_navn}}
 				</label>
 			</div>
 
