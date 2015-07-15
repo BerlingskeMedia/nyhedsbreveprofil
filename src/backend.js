@@ -23,6 +23,36 @@ var backend = {
     }
     });
 
+    plugin.route({
+      method: 'get',
+      path: '/interesser',
+      handler: {
+        proxy: {
+          uri: 'http://54.77.4.249:8000/interesser?displayTypeId=3'
+        }
+    }
+    });
+
+    plugin.route({
+      method: 'post',
+      path: '/users',
+      handler: {
+        proxy: {
+          uri: 'http://54.77.4.249:8000/users'
+        }
+    }
+    });
+
+    plugin.route({
+      method: 'post',
+      path: '/mails/profile-page-link',
+      handler: {
+        proxy: {
+          uri: 'http://54.77.4.249:8000/mails/profile-page-link'
+        }
+    }
+    });
+
     next();
   }
 };

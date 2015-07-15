@@ -1,4 +1,4 @@
-<div class="step1" ng-hide="state == 'step2'">
+<div class="step1 row" ng-show="state == 'step1'">
 	<header class="row">
 		<div class="col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
 			<h1>Nyhedsbreve</h1>
@@ -31,7 +31,7 @@
 								<div class="col-sm-9 col-xs-8">
 									<div class="checkbox">
 										<label>
-											<input type="checkbox" checklist-model="$parent.newsletter_choices" checklist-value="newsletter.nyhedsbrev_id"><strong class="newsletter-title">{{newsletter.nyhedsbrev_navn}}</strong>
+											<input type="checkbox" checklist-model="$parent.user.newsletter_choices" checklist-value="newsletter.nyhedsbrev_id"><strong class="newsletter-title">{{newsletter.nyhedsbrev_navn}}</strong>
 											<small>{{newsletter.indhold}}</small>
 										</label>
 									</div>
@@ -42,30 +42,31 @@
 	    </ul>
 	  </section>
 	</div>
+	<div class="col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
+			<div class="module-top text-right bottom-nav">
+				<a ng-click="state = 'step2'" class="btn btn-success">TILMELD <i class="fa fa-angle-right"></i></a>
+			</div>
+	</div>
 </div>
 <div ng-show="state == 'step2'" class="col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
 			<h1>Tilmeld dig</h1>
 
-			<form action="step-3.php" method="post" id="user-form" novalidate="novalidate" class="fv-form fv-form-bootstrap"><button type="submit" class="fv-hidden-submit" style="display: none; width: 0px; height: 0px;"></button>
-								<div class="hidden-labels">
-					<div class="form-group required has-feedback">
+			<form method="post" id="user-form" class="fv-form fv-form-bootstrap">
+					<div class="form-group required">
 						<label for="exampleInputEmail1">Email</label>
-						<input type="email" class="form-control input-sm" id="id_email" name="email" data-fv-field="email"><i class="form-control-feedback" data-fv-icon-for="email" style="display: none;"></i>
-					<small class="help-block" data-fv-validator="notEmpty" data-fv-for="email" data-fv-result="NOT_VALIDATED" style="display: none;">Du skal indtaste din email adresse</small><small class="help-block" data-fv-validator="emailAddress" data-fv-for="email" data-fv-result="NOT_VALIDATED" style="display: none;">Email adressen er ugyldig</small></div>
+						<input type="email" ng-required ng-model="user.email" class="form-control input-sm" id="id_email" name="email">
 
 					<div class="row">
 						<div class="col-sm-6">
-							<div class="form-group required has-feedback">
+							<div class="form-group required">
 								<label for="">Fornavn</label>
-								<input type="text" name="firstName" class="form-control input-sm" id="id_firstname" data-fv-field="firstName"><i class="form-control-feedback" data-fv-icon-for="firstName" style="display: none;"></i>
-							<small class="help-block" data-fv-validator="notEmpty" data-fv-for="firstName" data-fv-result="NOT_VALIDATED" style="display: none;">Fornavn er påkrævet</small></div>
+								<input type="text" required ng-model="user.firstname" name="firstName" class="form-control input-sm" id="id_firstname" data-fv-field="firstName"></div>
 						</div>
 
 						<div class="col-sm-6">
-							<div class="form-group required has-feedback">
+							<div class="form-group required">
 								<label for="">Efternavn</label>
-								<input type="text" name="lastName" class="form-control input-sm" id="id_lastname" data-fv-field="lastName"><i class="form-control-feedback" data-fv-icon-for="lastName" style="display: none;"></i>
-							<small class="help-block" data-fv-validator="notEmpty" data-fv-for="lastName" data-fv-result="NOT_VALIDATED" style="display: none;">Efternavn er påkrævet</small></div>
+								<input type="text" ng-required ng-model="user.lastname" name="lastName" class="form-control input-sm" id="id_lastname" data-fv-field="lastName"></div>
 						</div>
 					</div>
 
@@ -73,11 +74,11 @@
 
 					<div class="row">
 						<div class="col-md-12">
-							<a href="#" class="toggle-form"><i class="fa fa-caret-down"></i> Udfyld alle felter</a> og deltag i konkurrencen om en iPad
+							<a ng-click="show_extrafields = !show_extrafields" class="toggle-form"><i class="fa fa-caret-down"></i> Udfyld alle felter</a> og deltag i konkurrencen om en iPad
 						</div>
 					</div>
 
-					<div class="form-hidden">
+					<div ng-show="show_extrafields" class="form-hidden">
 					<div class="row">
 						<div class="col-sm-6">
 							<div class="form-group">
@@ -107,15 +108,6 @@
 							</div>
 						</div>
 					</div>
-
-
-
-
-
-
-
-
-
 					<div class="row">
 						<div class="col-xs-10">
 							<label for="">Vejnavn</label>
@@ -205,8 +197,41 @@
 	</li>
 </ul>
 				<div class="module-top ">
-					<a href="index.php" class="btn btn-link pull-left"><i class="fa fa-angle-left"></i> Flere nyhedsbreve</a>
-					<button type="submit" class="btn btn-success pull-right ">TILMELD <i class="fa fa-angle-right"></i></button>
+					<a ng-click="state = 'step1'" class="btn btn-link pull-left"><i class="fa fa-angle-left"></i> Flere nyhedsbreve</a>
+					<button type="submit" ng-click="post_user(user)" class="btn btn-success pull-right ">TILMELD <i class="fa fa-angle-right"></i></button>
 				</div>
 			</form>
 </div>
+
+<div ng-show="state == 'step3'">
+	<div class="col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
+		<h1>Dine interesser</h1>
+
+		<p>Fortæl os hvad der interesserer dig. Så kan vi fremover sende dig skærddersyede mails, der matcher netop dine interesser.</p>
+		<div class="row">
+			<div ng-repeat="interest in interests" class="col-lg-4 col-sm-6 col-xs-12">
+				<label>
+					<input type="checkbox" /> {{interest.interesse_navn}}
+				</label>
+			</div>
+
+
+		</div>
+		<div class="module-top text-center">
+			<a href="" ng-click="state= 'step2'"class="btn btn-default btn-link pull-left"><i class="fa fa-angle-left"></i>Tilbage</a>
+			<a ng-click="submit_interests(user); state= 'step4'" class="btn btn-success pull-right">Gem <i class="fa fa-angle-right"></i></a>
+		</div>
+	</div>
+</div>
+<div ng-show="state == 'step4'">
+	<div class="col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
+		<div class="alert alert-success mt-50" role="alert">
+			<h1>Tak for din interesse</h1>
+			<h4><strong>Du er endnu ikke tilmeldt.</strong></h4>
+			<p>Vi har sendt dig en email med et link, hvor du skal bekræfte din tilmelding, for at fuldføre processen. </p>
+			<p>Dette link udløber om 48 timer. </p>
+			</div>
+	</div>
+</div>
+
+<div class="row"> <h1>DEBUG {{user}}</h1></div>
