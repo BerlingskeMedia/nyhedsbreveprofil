@@ -1,46 +1,36 @@
 <div class="row">
-
 			<div class="col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
 				<h1>Din profil</h1>
-
-
-
-
-
-
-					<form action="" id="user-form" novalidate="novalidate" class="fv-form fv-form-bootstrap"><button type="submit" class="fv-hidden-submit" style="display: none; width: 0px; height: 0px;"></button>
-
-
-
+					<form novalidate="novalidate" class="fv-form fv-form-bootstrap"><button type="submit" class="fv-hidden-submit" style="display: none; width: 0px; height: 0px;"></button>
 					<div class="vertical">
 								<!-- Nav tabs -->
 								<ul class="nav nav-tabs" role="tablist">
-									<li class="active"><a href="#vtab1" role="tab" data-toggle="tab" aria-expanded="true"><i class="fa fa-home "></i> Navn og adresse</a></li>
-									<li class=""><a href="#vtab2" role="tab" data-toggle="tab" aria-expanded="false"><i class="fa fa-check"></i> Kontaktsamtykker</a></li>
-									<li class=""><a href="#vtab3" role="tab" data-toggle="tab" aria-expanded="false"><i class="fa fa-heart "></i> Dine interesser</a></li>
+									<li ng-class="{active: tab == 'details'}"><a ng-click="tab = 'details'" href="" role="tab" data-toggle="tab" aria-expanded="true"><i class="fa fa-home "></i> Navn og adresse</a></li>
+									<li ng-class="{active: tab == 'permissions'}"><a ng-click="tab = 'permissions'" href="" role="tab" data-toggle="tab" aria-expanded="false"><i class="fa fa-check"></i> Kontaktsamtykker</a></li>
+									<li ng-class="{active: tab == 'interests'}"><a ng-click="tab = 'interests'" href="" role="tab" data-toggle="tab" aria-expanded="false"><i class="fa fa-heart "></i> Dine interesser</a></li>
 								</ul>
 								<!-- Tab panes -->
 								<div class="tab-content">
-									<div class="tab-pane fade active in" id="vtab1">
+									<div ng-class="{active: tab == 'details'}" class="tab-pane" id="vtab1">
 										<h3 class="title">Navn og adresse</h3>
 														<div class="hidden-labels">
 					<div class="form-group required has-feedback">
 						<label for="exampleInputEmail1">Email</label>
-						<input type="email" class="form-control input-sm" id="id_email" name="email" value="henning@adnuvo.com" data-fv-field="email"><i class="form-control-feedback" data-fv-icon-for="email" style="display: none;"></i>
+						<input type="email" ng-model="user.email" class="form-control input-sm" id="id_email" name="email" value="henning@adnuvo.com" data-fv-field="email"><i class="form-control-feedback" data-fv-icon-for="email" style="display: none;"></i>
 					<small class="help-block" data-fv-validator="notEmpty" data-fv-for="email" data-fv-result="NOT_VALIDATED" style="display: none;">Du skal indtaste din email adresse</small><small class="help-block" data-fv-validator="emailAddress" data-fv-for="email" data-fv-result="NOT_VALIDATED" style="display: none;">Email adressen er ugyldig</small></div>
 
 					<div class="row">
 						<div class="col-sm-6">
 							<div class="form-group required has-feedback">
 								<label for="">Fornavn</label>
-								<input type="text" name="firstName" class="form-control input-sm" id="id_firstname" value="Henning" data-fv-field="firstName"><i class="form-control-feedback" data-fv-icon-for="firstName" style="display: none;"></i>
+								<input type="text" ng-model="user.fornavn" name="firstName" class="form-control input-sm" id="id_firstname" value="Henning" data-fv-field="firstName"><i class="form-control-feedback" data-fv-icon-for="firstName" style="display: none;"></i>
 							<small class="help-block" data-fv-validator="notEmpty" data-fv-for="firstName" data-fv-result="NOT_VALIDATED" style="display: none;">Fornavn er påkrævet</small></div>
 						</div>
 
 						<div class="col-sm-6">
 							<div class="form-group required has-feedback">
 								<label for="">Efternavn</label>
-								<input type="text" name="lastName" class="form-control input-sm" id="id_lastname" value="Jørgensen" data-fv-field="lastName"><i class="form-control-feedback" data-fv-icon-for="lastName" style="display: none;"></i>
+								<input type="text" ng-model="user.efternavn" name="lastName" class="form-control input-sm" id="id_lastname" value="Jørgensen" data-fv-field="lastName"><i class="form-control-feedback" data-fv-icon-for="lastName" style="display: none;"></i>
 							<small class="help-block" data-fv-validator="notEmpty" data-fv-for="lastName" data-fv-result="NOT_VALIDATED" style="display: none;">Efternavn er påkrævet</small></div>
 						</div>
 					</div>
@@ -148,14 +138,14 @@
 						<div class="col-xs-6 ">
 							<div class="form-group">
 								<label for="">Fødselsår</label>
-								<input type="text" class="form-control input-sm" id="id_year">
+								<input type="text" ng-model="user.foedselsaar" class="form-control input-sm" id="id_year">
 							</div>
 						</div>
 					</div>
 				</div>
 
 									</div>
-									<div class="tab-pane fade " id="vtab2">
+									<div ng-class="{active: tab == 'permissions'}" class="tab-pane" id="vtab2">
 										<h3 class="title">Kontaktsamtykker</h3>
 										<ul class="list-default ">
 											<li>
@@ -175,63 +165,17 @@
 										</ul>
 
 									</div>
-									<div class="tab-pane fade" id="vtab3">
+									<div class="tab-pane" ng-class="{active: tab == 'interests'}" id="vtab3">
 										<h3 class="title">Dine interesser</h3>
 										<p>Fortæl os hvad der interesserer dig. Så kan vi fremover sende dig skærddersyede mails, der matcher netop dine interesser.</p>
-										<div class="col-3">
-																						<div class="checkbox">
+										<div class="row">
+											<div ng-repeat="interest in interests" class="col-lg-4 col-sm-6 col-xs-12">
 												<label>
-													<input type="checkbox"> Egestas												</label>
+													<input checklist-model="$parent.user.interesser"
+													checklist-value="interest.interesse_id" type="checkbox" /> {{interest.interesse_navn}}
+												</label>
 											</div>
-																						<div class="checkbox">
-												<label>
-													<input type="checkbox"> Duis mollis												</label>
-											</div>
-																						<div class="checkbox">
-												<label>
-													<input type="checkbox"> Venenatis												</label>
-											</div>
-																						<div class="checkbox">
-												<label>
-													<input type="checkbox"> Integer posuere erat												</label>
-											</div>
-																						<div class="checkbox">
-												<label>
-													<input type="checkbox"> Egestas												</label>
-											</div>
-																						<div class="checkbox">
-												<label>
-													<input type="checkbox"> Donec id elit												</label>
-											</div>
-																						<div class="checkbox">
-												<label>
-													<input type="checkbox"> Donec sedodio dui												</label>
-											</div>
-																						<div class="checkbox">
-												<label>
-													<input type="checkbox"> Donec sed odio dui												</label>
-											</div>
-																						<div class="checkbox">
-												<label>
-													<input type="checkbox"> Donec ullamcorper												</label>
-											</div>
-																						<div class="checkbox">
-												<label>
-													<input type="checkbox"> Consectetur												</label>
-											</div>
-																						<div class="checkbox">
-												<label>
-													<input type="checkbox"> Risuseget urnamollis												</label>
-											</div>
-																						<div class="checkbox">
-												<label>
-													<input type="checkbox"> Nullam id dolor												</label>
-											</div>
-																						<div class="checkbox">
-												<label>
-													<input type="checkbox"> Nullam id dolor												</label>
-											</div>
-																					</div>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -241,7 +185,7 @@
 					<div class="row">
 						<div class="col-md-12">
 							<div class="module-top ">
-								<a href="?alert" class="btn btn-success pull-right ">Gem <i class="fa fa-angle-right"></i></a>
+								<button ng-click="update(user)" class="btn btn-success pull-right ">Gem <i class="fa fa-angle-right"></i></button>
 							</div>
 						</div>
 					</div>

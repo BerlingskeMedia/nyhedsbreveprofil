@@ -17,7 +17,7 @@ newsletterController.controller('newsletterController', ['$scope', '$routeParams
       var payload = {};
       payload.email = user.email;
       payload.fornavn = user.firstname;
-      payload.efternavn = user.efternavn;
+      payload.efternavn = user.lastname;
       payload.nyhedsbreve = user.newsletter_choices;
       payload.location_id = 1;
 
@@ -66,8 +66,32 @@ function($scope, $routeParams, $http) {
       //TODO handle error;
     });
   };
-}]).controller('profileController', ['$scope', '$routeParams', '$http',
-function($scope, $routeParams, $http) {
+}]).controller('profileController', ['$scope', '$routeParams', '$http', '$q',
+function($scope, $routeParams, $http, $q) {
+  var test = "fe50338207f2edab2f163186bf8d4627"; //TODO remove
+  var my_id = $routeParams.id;
+
+  var user = $http.get("/backend/users/" + my_id);
+  var newsletters = $http.get("/backend/users/" + my_id + "/nyhedsbreve");
+  var interests = $http.get("/backend/interesser");
+
+  $scope.tab = 'details';
+  $q.all([user, newsletters, interests]).then(function(resolved) {
+    $scope.user = resolved[0].data;
+    $scope.newsletters = resolved[1].data;
+    $scope.interests = resolved[2].data;
+  });
+
+  $scope.update = function(user) {
+    //TODO location id?
+    user.location_id = 1
+    $http.put("/backend/users/" + my_id, user).success(function(data, status, headers, config) {
+      console.log("hurra");
+    }).
+    error(function(data, status, headers, config) {
+      //TODO handle error;
+    });
+  };
 
 }]);
 
