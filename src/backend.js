@@ -4,7 +4,7 @@ var backend = {
   register: function (plugin, options, next) {
 
     plugin.route({
-      method: ['get', 'put', 'post', 'patch'],
+      method: ['get', 'put', 'post', 'patch', 'delete'],
       path: '/{path*}',
       handler: {
         proxy: {
