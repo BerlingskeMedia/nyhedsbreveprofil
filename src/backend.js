@@ -10,12 +10,10 @@ var backend = {
         proxy: {
           mapUri: function(request, callback) {
             callback(null, 'http://54.77.4.249:8000/' + request.params.path);
-          } //
+          }
         }
     }
     });
-
-
     next();
   }
 };
