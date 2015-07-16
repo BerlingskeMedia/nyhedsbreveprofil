@@ -37,7 +37,6 @@ newsletterController.controller('newsletterController', ['$scope', '$routeParams
       payload.interesser = user.interests_choices;
       $http.post("backend/users/" + user.my_id +  "/interesser", payload).
       success(function(data, status, headers, config) {
-        console.log("Hurra");
         $scope.state = "step4";
       }).
       error(function(data, status, headers, config) {
@@ -67,6 +66,9 @@ function($scope, $routeParams, $http) {
       //TODO handle error;
     });
   };
+}]).controller('profileController', ['$scope', '$routeParams', '$http',
+function($scope, $routeParams, $http) {
+
 }]);
 
 
@@ -89,9 +91,9 @@ newsletterApp.config(['$routeProvider',
         templateUrl: 'assets/partials/edit.html',
         // controller: 'faqController'
       }).
-      when('/me', {
-        templateUrl: 'assets/partials/me.html',
-        // controller: 'faqController'
+      when('/profile/:id', {
+        templateUrl: 'assets/partials/profile.html',
+        controller: 'profileController'
       }).
       otherwise({
         redirectTo: '/'
