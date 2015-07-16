@@ -1,174 +1,80 @@
 <div class="col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
 
 
+  <h1>Dine nyhedsbreve</h1>
+  <p>Her er en oversigt over dine nyhedsbreve, du er tilmeldt. Klik på "Afmeld" ud for de nyhedsbreve du ikke ønsker at modtage.</p>
+  <ul class="list-brand list-border">
+  	<li ng-repeat="newsletter in newsletters">
+  		<div class="row">
+  				<div class="col-sm-3 col-xs-4">
+  					<img src="/images/nl-bt.png" width="" height="" alt="" class="newsletter-logo">
+  				</div>
+  				<div class="col-sm-7 col-xs-5">
+  					<strong class="newsletter-title">{{newsletter.nyhedsbrev_navn}} <span>{{newsletter.nyhedsbrev_tag}}</span></strong>
+  					<small>{{newsletter.indhold}}</small>
+  				</div>
+  				<div class="col-sm-2 col-xs-2 text-right">
+  				    <a href="" ng-click="open(newsletter)" class="btn btn-xs btn-default">Afmeld</a>
+  						</div>
+            </div>
+
+  	</li>
+  </ul>
+
+  <script
+    type="text/ng-template"
+    id="modal.html">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            <h4 class="modal-title">Angiv venligst årsagen</h4>
+          </div>
+          <div class="modal-body">
+    <div class="radio">
+      <label>
+        <input type="radio" name="optionsRadios" id="radio1" value="option1">
+        I sender for mange mails
+      </label>
+    </div>
+    <div class="radio">
+      <label>
+        <input type="radio" name="optionsRadios" id="radio2" value="option1">
+        Indholdet i jeres mails er ikke relevant for mig
+      </label>
+    </div>
+    <div class="radio">
+      <label>
+        <input type="radio" name="optionsRadios" id="radio3" value="option1">
+        Jeg modtager for mange mails generelt
+      </label>
+    </div>
+    <div class="radio">
+      <label>
+        <input type="radio" name="optionsRadios" id="radio4" value="option1">
+        Jeg har deltaget i en konkurrence, men ønsker ikke at være tilmeldt
+      </label>
+    </div>
+    <div class="radio">
+      <label>
+        <input type="radio" name="optionsRadios" id="radio5" value="option1">
+        Jeg er blevet tilmeldt ved en fejl
+      </label>
+    </div>
+
+    <div class="radio">
+      <label>
+        <input type="radio" name="optionsRadios" id="radio6" value="option1">
+         <input type="text" class="form-control input-other" placeholder="Angiv anden årsag">
+      </label>
+    </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Annullér</button>
+            <a href="" ng-click="unsubscribe()" class="btn btn-primary">Afmeld</a>
+          </div>
+        </div><!-- /.modal-content -->
+  </script>
 
 
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-        <h4 class="modal-title">Angiv venligst årsagen</h4>
-      </div>
-      <div class="modal-body">
 
-
-<div class="radio">
-  <label>
-    <input type="radio" name="optionsRadios" id="radio1" value="option1">
-    I sender for mange mails
-  </label>
 </div>
-<div class="radio">
-  <label>
-    <input type="radio" name="optionsRadios" id="radio2" value="option1">
-    Indholdet i jeres mails er ikke relevant for mig
-  </label>
-</div>
-<div class="radio">
-  <label>
-    <input type="radio" name="optionsRadios" id="radio3" value="option1">
-    Jeg modtager for mange mails generelt
-  </label>
-</div>
-<div class="radio">
-  <label>
-    <input type="radio" name="optionsRadios" id="radio4" value="option1">
-    Jeg har deltaget i en konkurrence, men ønsker ikke at være tilmeldt
-  </label>
-</div>
-<div class="radio">
-  <label>
-    <input type="radio" name="optionsRadios" id="radio5" value="option1">
-    Jeg er blevet tilmeldt ved en fejl
-  </label>
-</div>
-
-<div class="radio">
-  <label>
-    <input type="radio" name="optionsRadios" id="radio6" value="option1">
-     <input type="text" class="form-control input-other" placeholder="Angiv anden årsag">
-  </label>
-</div>
-
-
-
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Annullér</button>
-        <a href="http://nyhedsbreve/my-subscriptions.php?user=goodboy&amp;alert" class="btn btn-primary">Afmeld</a>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
-					<h1>Dine nyhedsbreve</h1>
-					<p>Her er en oversigt over dine nyhedsbreve, du er tilmeldt. Klik på "Afmeld" ud for de nyhedsbreve du ikke ønsker at modtage.</p>
-
-
-
-
-
-								<ul class="list-brand list-border">
-									<li>
-										<div class="row">
-
-												<div class="col-sm-3 col-xs-4">
-													<img src="/images/nl-bt.png" width="" height="" alt="" class="newsletter-logo">
-												</div>
-												<div class="col-sm-7 col-xs-5">
-													<strong class="newsletter-title">BT Eftermiddag <span>Bt.dk</span></strong>
-													<small>Dictumst aliquet ligula placerat ultricies orci.</small>
-												</div>
-												<div class="col-sm-2 col-xs-2 text-right">
-												    <a href="#" class="btn btn-xs btn-default" data-toggle="modal" data-target="#myModal">Afmeld</a>
- 													</div>
-							            </div>
-
-									</li>
-
-									<li>
-										<div class="row">
-
-												<div class="col-sm-3 col-xs-4">
-													<img src="/images/nl-bt-breaking.png" width="" height="" alt="" class="newsletter-logo">
-												</div>
-												<div class="col-sm-7 col-xs-5">
-											         <strong class="newsletter-title">Breaking News <span>Bt.dk</span></strong>
-											              <small>Nunc nulla semper luctus dapibus phasellus.</small>
-								            	</div>
-								            	<div class="col-sm-2 col-xs-2 text-right">
-													<a href="#" class="btn btn-xs btn-default" data-toggle="modal" data-target="#myModal">Afmeld</a>
-												</div>
-
-							            </div>
-									</li>
-									<li>
-										<div class="row">
-
-												<div class="col-sm-3 col-xs-4">
-													<img src="/images/nl-bt-mode.png" width="" height="" alt="" class="newsletter-logo">
-												</div>
-												<div class="col-sm-7 col-xs-5">
-													<strong class="newsletter-title">Mode &amp; skønhed <span>Bt.dk</span></strong>
-													<small>Neque ligula interdum etiam erat lacinia.</small>
-								            	</div>
-								            	<div class="col-sm-2 col-xs-2 text-right">
-													<a href="#" class="btn btn-xs btn-default" data-toggle="modal" data-target="#myModal">Afmeld</a>
-												</div>
-
-							            </div>
-									</li>
-
-									<li>
-										<div class="row">
-
-												<div class="col-sm-3 col-xs-4">
-													<img src="/images/nl-godttip.png" alt="" class="newsletter-logo">
-												</div>
-												<div class="col-sm-7 col-xs-5">
-													<strong class="newsletter-title">Godt tip <span>Godttip.dk</span></strong>
-													<small>GodtTip.dk er en gratis service fra Berlingske Media med aktuelle tilbud fra de førende leverandører i landet. Udsendes løbende.</small>
-												</div>
-												<div class="col-sm-2 col-xs-2 text-right">
-													<a href="#" class="btn btn-xs btn-default" data-toggle="modal" data-target="#myModal">Afmeld</a>
-												</div>
-											</div>
-
-									</li>
-
-									<li>
-										<div class="row">
-
-												<div class="col-sm-3 col-xs-4">
-													<img src="/images/nl-business-ejendomme.png" width="" height="" alt="" class="newsletter-logo">
-												</div>
-												<div class="col-sm-7 col-xs-5">
-													<strong class="newsletter-title">Ejendomme <span>Business.dk</span>	</strong>
-													<small>Nyheder om ejendomme, byggeri og anlæg. Udsendes onsdag.</small>
-												</div>
-												<div class="col-sm-2 col-xs-2 text-right">
-													<a href="#" class="btn btn-xs btn-default" data-toggle="modal" data-target="#myModal">Afmeld</a>
-												</div>
-										</div>
-
-
-
-									</li>
-
-						        </ul>
-
-
-
-								<div class="row">
-
-
-
-
-
-
-
-
-					</div>
-
-				</div>

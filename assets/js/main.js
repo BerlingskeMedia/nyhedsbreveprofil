@@ -84,7 +84,7 @@ function($scope, $routeParams, $http, $q) {
 
   $scope.update = function(user) {
     //TODO location id?
-    user.location_id = 1
+    user.location_id = 1;
     $http.put("/backend/users/" + my_id, user).success(function(data, status, headers, config) {
       console.log("hurra");
     }).
@@ -92,6 +92,51 @@ function($scope, $routeParams, $http, $q) {
       //TODO handle error;
     });
   };
+
+}]).controller('editController', ['$scope', '$routeParams', '$http', '$q', '$modal',
+function($scope, $routeParams, $http, $q, $modal) {
+  var my_id = $routeParams.id;
+
+
+
+  var update = function() {
+    var my_newsletters = $http.get("/backend/users/" + my_id + "/nyhedsbreve");
+    var newsletters = $http.get("/backend/nyhedsbreve");
+    $q.all([newsletters, my_newsletters]).then(function(resolved) {
+      $scope.newsletters = resolved[0].data;
+      $scope.newsletter_choices = resolved[1].data;
+    });
+  };
+
+  $scope.unsubscribe = function(feedback) {
+    console.debug($scope.to_unsubscribe);
+    var payload = {}
+    //TODO location_id = ???
+    payload.location_id = 1;
+    payload.nyhedsbrev_id = $scope.to_unsubscribe.nyhedsbrev_id;
+    payload.user_feedback = "feedback";
+    $http.post("/backend/users/" + my_id + "/nyhedsbreve/delete", payload ).success(function(data, status, headers, config) {
+      update();
+      $scope.modalInstance.close();
+    }).
+    error(function(data, status, headers, config) {
+      $scope.modalInstance.close();
+    });
+
+  };
+
+  $scope.open = function(newsletter) {
+    $scope.to_unsubscribe = newsletter;
+    var modalInstance = $modal.open({
+      animation: $scope.animationsEnabled,
+      templateUrl: 'modal.html',
+      size: 'lg',
+      scope: $scope
+    });
+    $scope.modalInstance = modalInstance;
+  };
+
+  update();
 
 }]);
 
@@ -111,9 +156,9 @@ newsletterApp.config(['$routeProvider',
         templateUrl: 'assets/partials/login.html',
         controller: 'loginController'
       }).
-      when('/edit', {
+      when('/edit/:id', {
         templateUrl: 'assets/partials/edit.html',
-        // controller: 'faqController'
+        controller: 'editController'
       }).
       when('/profile/:id', {
         templateUrl: 'assets/partials/profile.html',
