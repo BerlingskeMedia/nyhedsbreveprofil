@@ -97,8 +97,6 @@ function($scope, $routeParams, $http, $q) {
 function($scope, $routeParams, $http, $q, $modal) {
   var my_id = $routeParams.id;
 
-
-
   var update = function() {
     var my_newsletters = $http.get("/backend/users/" + my_id + "/nyhedsbreve");
     var newsletters = $http.get("/backend/nyhedsbreve");
@@ -167,4 +165,8 @@ newsletterApp.config(['$routeProvider',
       otherwise({
         redirectTo: '/'
       });
+  }]).controller('MenuController', ['$scope', '$routeParams', '$http', '$q', '$rootScope',
+  function($scope, $routeParams, $http, $q, $rootScope) {
+    $rootScope.logged_in = true;
+
   }]);

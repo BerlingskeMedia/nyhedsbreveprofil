@@ -18,7 +18,7 @@
   <div class="container">
     <div class="row">
   		<div class="col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
-  			<nav class="main-nav">
+  			<nav class="main-nav" ng-controller="MenuController">
   				<ul>
   					<li>
   						<a href="#/"><i class="fa fa-home"></i>Nyhedsbreve</a>
@@ -29,10 +29,10 @@
   					<li class="mobile-nav hidden-mobile">
   						<a href="#faq"><i class="fa fa-question-circle"></i>FAQ</a>
   					</li>
-  					<li class="mobile-nav hidden-mobile">
+  					<li ng-show="$root.logged_in" class="mobile-nav hidden-mobile">
   						<a href="#edit/fe50338207f2edab2f163186bf8d4627"><i class="fa fa-envelope"></i>Dine nyhedsbreve</a>
   					</li>
-  					<li class="mobile-nav hidden-mobile">
+  					<li ng-show="$root.logged_in" class="mobile-nav hidden-mobile">
   						<a href="#/profile/fe50338207f2edab2f163186bf8d4627"><i class="fa fa-cog"></i>saltefars@das.dk</a>
   					  <a href="#login "><i class="fa fa-cog"></i>Log ind</a>
   					</li>
