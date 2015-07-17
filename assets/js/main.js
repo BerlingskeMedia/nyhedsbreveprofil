@@ -51,8 +51,8 @@ var newsletterApp = angular.module('newsletter', [
   'newsletterController',
   'ui.bootstrap',
   "checklist-model"
-]).controller('loginController', ['$scope', '$routeParams', '$http',
-function($scope, $routeParams, $http) {
+]).controller('loginController', ['$scope', '$routeParams', '$http', '$rootScope', '$location',
+function($scope, $routeParams, $http, $rootScope, $location) {
   $scope.send_email = function(email) {
     var payload = {};
     payload.email = email;
@@ -60,10 +60,18 @@ function($scope, $routeParams, $http) {
 
     $http.post("/backend/mails/profile-page-link", payload).
     success(function(data, status, headers, config) {
-      console.log("hurra");
+      //TODO debug only
+      $rootScope.logged_in = true;
+      $rootScope.my_id = "fe50338207f2edab2f163186bf8d4627";
+      $rootScope.email = email;
+      $location.path("/edit/" + $rootScope.my_id);
     }).
     error(function(data, status, headers, config) {
-      //TODO handle error;
+      //TODO debug only
+      $rootScope.logged_in = true;
+      $rootScope.my_id = "fe50338207f2edab2f163186bf8d4627";
+      $rootScope.email = email;
+      $location.path("/edit/" + $rootScope.my_id);
     });
   };
 }]).controller('profileController', ['$scope', '$routeParams', '$http', '$q',
@@ -167,6 +175,6 @@ newsletterApp.config(['$routeProvider',
       });
   }]).controller('MenuController', ['$scope', '$routeParams', '$http', '$q', '$rootScope',
   function($scope, $routeParams, $http, $q, $rootScope) {
-    $rootScope.logged_in = true;
+    $rootScope.logged_in = false;
 
   }]);
