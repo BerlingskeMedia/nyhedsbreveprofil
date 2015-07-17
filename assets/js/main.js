@@ -60,14 +60,14 @@ function($scope, $routeParams, $http, $rootScope, $location) {
 
     $http.post("/backend/mails/profile-page-link", payload).
     success(function(data, status, headers, config) {
-      //TODO debug only
+      //TODO testing only
       $rootScope.logged_in = true;
       $rootScope.my_id = "fe50338207f2edab2f163186bf8d4627";
       $rootScope.email = email;
       $location.path("/edit/" + $rootScope.my_id);
     }).
     error(function(data, status, headers, config) {
-      //TODO debug only
+      //TODO testing only
       $rootScope.logged_in = true;
       $rootScope.my_id = "fe50338207f2edab2f163186bf8d4627";
       $rootScope.email = email;
