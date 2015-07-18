@@ -78,7 +78,7 @@
 						<div class="col-xs-2">
 							<div class="form-group">
 								<label for="">Husnr.</label>
-								<input min="1" ng-model="user.husnummer" type="number" class="form-control input-sm" id="id_streetnumber">
+								<input min="1" ng-model="user.husnummer" type="text" class="form-control input-sm" id="id_streetnumber">
 							</div>
 						</div>
 					</div>
@@ -131,7 +131,7 @@
 						<div class="col-xs-6 ">
 							<div class="form-group">
 								<label for="">Fødselsår</label>
-								<input ng-model="user.foedselsaar" min="1900" max="2015" type="number" class="form-control input-sm" id="id_year">
+								<input ng-model="user.foedselsaar" min="1900" max="2015" type="text" class="form-control input-sm" id="id_year">
 							</div>
 						</div>
 					</div>
@@ -141,17 +141,10 @@
 									<div ng-class="{active: tab == 'permissions'}" class="tab-pane" id="vtab2">
 										<h3 class="title">Kontaktsamtykker</h3>
 										<ul class="list-default ">
-											<li>
+											<li ng-repeat="permission in permissions">
 												<div class="checkbox">
 													<label>
-														<input type="checkbox"> <strong class="xs-block">Tilbud fra partnere</strong><br><small>Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Nullam quis risus eget urna mollis ornare vel eu leo. Fusce dapibus, tellus ac cursus commodo.</small>
-													</label>
-												</div>
-											</li>
-											<li>
-												<div class="checkbox">
-													<label>
-														<input type="checkbox"> <strong>Datasamkøringssamtykke</strong><br><small>Socialdemokraterne har fyret op under en storstilet kampagne, der skal udstille Dansk Folkeparti som økonomisk uansvarlig. Og den slags negative kampagner findes der adskillige eksempler på i dansk politik, forklarer ekspert.</small>
+															<input checklist-model="$parent.user.nyhedsbreve" checklist-value="permission.nyhedsbrev_id" type="checkbox"> <small><strong class="xs-block">{{permission.nyhedsbrev_navn}}</strong><br>{{permission.indhold}}</small>
 													</label>
 												</div>
 											</li>

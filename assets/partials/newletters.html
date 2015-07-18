@@ -180,18 +180,11 @@
 					Kontaktsamtykker
 				</h4>
 
-				<ul class="list-default ">
-	<li>
+<ul class="list-default ">
+	<li ng-repeat="permission in permissions">
 		<div class="checkbox">
 			<label>
-				<input type="checkbox"> <small><strong class="xs-block">Tilbud fra partnere</strong><br>Duis facilisis fusce fringilla. Aliquam vitae mi quis ligula dapibus tempor. Praesent mauris tortor luctus ut aliquam at aliquam eu arcu.</small>
-			</label>
-		</div>
-	</li>
-	<li>
-		<div class="checkbox">
-			<label>
-				<input type="checkbox"> <small><strong>Datasamkøringssamtykke</strong><br>Fusce et risus nonummy neque euismod pretium. Donec dignissim ligula vitae ipsum. Maecenas a velit eu lectus blandit blandit.</small>
+					<input checklist-model="$parent.user.newsletter_choices" checklist-value="permission.nyhedsbrev_id" type="checkbox"> <small><strong class="xs-block">{{permission.nyhedsbrev_navn}}</strong><br>{{permission.indhold}}</small>
 			</label>
 		</div>
 	</li>

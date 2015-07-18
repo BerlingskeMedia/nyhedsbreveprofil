@@ -6,10 +6,12 @@ newsletterController.controller('newsletterController', ['$scope', '$routeParams
     var publishers = $http.get("/backend/publishers");
     var newsletters = $http.get("/backend/nyhedsbreve");
     var interests = $http.get("/backend/interesser");
-    $q.all([publishers, newsletters, interests]).then(function(resolved) {
+    var permissions = $http.get("/backend/nyhedsbreve?permission=1");
+    $q.all([publishers, newsletters, interests, permissions]).then(function(resolved) {
       $scope.publishers = resolved[0].data;
       $scope.newsletters = resolved[1].data;
       $scope.interests = resolved[2].data;
+      $scope.permissions = resolved[3].data;
       //TODO use param from path
       $scope.current_publisher = $scope.publishers[3];
     });
@@ -82,12 +84,14 @@ function($scope, $routeParams, $http, $q) {
   var user = $http.get("/backend/users/" + my_id);
   var newsletters = $http.get("/backend/users/" + my_id + "/nyhedsbreve");
   var interests = $http.get("/backend/interesser");
+  var permissions = $http.get("/backend/nyhedsbreve?permission=1");
 
   $scope.tab = 'details';
-  $q.all([user, newsletters, interests]).then(function(resolved) {
+  $q.all([user, newsletters, interests, permissions]).then(function(resolved) {
     $scope.user = resolved[0].data;
     $scope.newsletters = resolved[1].data;
     $scope.interests = resolved[2].data;
+    $scope.permissions = resolved[3].data;
   });
 
   $scope.update = function(user) {
@@ -116,7 +120,7 @@ function($scope, $routeParams, $http, $q, $modal) {
 
   $scope.unsubscribe = function(feedback) {
     console.debug($scope.to_unsubscribe);
-    var payload = {}
+    var payload = {};
     //TODO location_id = ???
     payload.location_id = 1;
     payload.nyhedsbrev_id = $scope.to_unsubscribe.nyhedsbrev_id;

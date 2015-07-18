@@ -9,7 +9,9 @@ var backend = {
       handler: {
         proxy: {
           mapUri: function(request, callback) {
-            callback(null, 'http://54.77.4.249:8000/' + request.params.path);
+            var query = request.url.search ? request.url.search : '';
+            var url = 'http://54.77.4.249:8000/' + request.params.path + query;
+            callback(null, url);
           }
         }
     }
