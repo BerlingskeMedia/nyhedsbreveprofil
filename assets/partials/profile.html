@@ -1,188 +1,198 @@
 <div class="row">
-			<div class="col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
-				<h1>Din profil</h1>
-				{{user}}
-					<form novalidate="novalidate" class="fv-form fv-form-bootstrap"><button type="submit" class="fv-hidden-submit" style="display: none; width: 0px; height: 0px;"></button>
-					<div class="vertical">
-								<!-- Nav tabs -->
-								<ul class="nav nav-tabs" role="tablist">
-									<li ng-class="{active: tab == 'details'}"><a ng-click="tab = 'details'" href="" role="tab" data-toggle="tab" aria-expanded="true"><i class="fa fa-home "></i> Navn og adresse</a></li>
-									<li ng-class="{active: tab == 'permissions'}"><a ng-click="tab = 'permissions'" href="" role="tab" data-toggle="tab" aria-expanded="false"><i class="fa fa-check"></i> Kontaktsamtykker</a></li>
-									<li ng-class="{active: tab == 'interests'}"><a ng-click="tab = 'interests'" href="" role="tab" data-toggle="tab" aria-expanded="false"><i class="fa fa-heart "></i> Dine interesser</a></li>
-								</ul>
-								<!-- Tab panes -->
-								<div class="tab-content">
-									<div ng-class="{active: tab == 'details'}" class="tab-pane" id="vtab1">
-										<h3 class="title">Navn og adresse</h3>
-														<div class="hidden-labels">
-					<div class="form-group required has-feedback">
-						<label for="exampleInputEmail1">Email</label>
-						<input type="email" ng-model="user.email" class="form-control input-sm" id="id_email" name="email" value="henning@adnuvo.com" data-fv-field="email"><i class="form-control-feedback" data-fv-icon-for="email" style="display: none;"></i>
-					<small class="help-block" data-fv-validator="notEmpty" data-fv-for="email" data-fv-result="NOT_VALIDATED" style="display: none;">Du skal indtaste din email adresse</small><small class="help-block" data-fv-validator="emailAddress" data-fv-for="email" data-fv-result="NOT_VALIDATED" style="display: none;">Email adressen er ugyldig</small></div>
+  <div class="col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
+    <h1>Din profil</h1>
+    {{user}}
+    <form class="fv-form fv-form-bootstrap" novalidate="novalidate">
+      <button class="fv-hidden-submit" style="display: none; width: 0px; height: 0px;" type="submit"></button>
+      <div class="vertical">
+<!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+          <li ng-class="{active: tab == 'details'}">
+            <a aria-expanded="true" data-toggle="tab" href="" ng-click="tab = 'details'" role="tab">
+              <i class="fa fa-home "></i>
+              Navn og adresse</a>
+          </li>
+          <li ng-class="{active: tab == 'permissions'}">
+            <a aria-expanded="false" data-toggle="tab" href="" ng-click="tab = 'permissions'" role="tab">
+              <i class="fa fa-check"></i>
+              Kontaktsamtykker</a>
+          </li>
+          <li ng-class="{active: tab == 'interests'}">
+            <a aria-expanded="false" data-toggle="tab" href="" ng-click="tab = 'interests'" role="tab">
+              <i class="fa fa-heart "></i>
+              Dine interesser</a>
+          </li>
+        </ul>
+<!-- Tab panes -->
+        <div class="tab-content">
+          <div class="tab-pane" id="vtab1" ng-class="{active: tab == 'details'}">
+            <h3 class="title">Navn og adresse</h3>
+            <div class="hidden-labels">
+              <div class="form-group required has-feedback">
+                <label for="exampleInputEmail1">Email</label>
+                <input class="form-control input-sm" data-fv-field="email" id="id_email" name="email" ng-disabled="true" ng-model="user.email" type="email" value="henning@adnuvo.com">
+                <i class="form-control-feedback" data-fv-icon-for="email" style="display: none;"></i>
+                <small class="help-block" data-fv-for="email" data-fv-result="NOT_VALIDATED" data-fv-validator="notEmpty" style="display: none;">Du skal indtaste din email adresse</small>
+                <small class="help-block" data-fv-for="email" data-fv-result="NOT_VALIDATED" data-fv-validator="emailAddress" style="display: none;">Email adressen er ugyldig</small>
+              </div>
 
-					<div class="row">
-						<div class="col-sm-6">
-							<div class="form-group required has-feedback">
-								<label for="">Fornavn</label>
-								<input type="text" ng-model="user.fornavn" name="firstName" class="form-control input-sm" id="id_firstname" value="Henning" data-fv-field="firstName"><i class="form-control-feedback" data-fv-icon-for="firstName" style="display: none;"></i>
-							<small class="help-block" data-fv-validator="notEmpty" data-fv-for="firstName" data-fv-result="NOT_VALIDATED" style="display: none;">Fornavn er påkrævet</small></div>
-						</div>
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="form-group required has-feedback">
+                    <label for="">Fornavn</label>
+                    <input class="form-control input-sm" data-fv-field="firstName" id="id_firstname" name="firstName" ng-model="user.fornavn" type="text" value="Henning">
+                    <i class="form-control-feedback" data-fv-icon-for="firstName" style="display: none;"></i>
+                    <small class="help-block" data-fv-for="firstName" data-fv-result="NOT_VALIDATED" data-fv-validator="notEmpty" style="display: none;">Fornavn er påkrævet</small>
+                  </div>
+                </div>
 
-						<div class="col-sm-6">
-							<div class="form-group required has-feedback">
-								<label for="">Efternavn</label>
-								<input type="text" ng-model="user.efternavn" name="lastName" class="form-control input-sm" id="id_lastname" value="Jørgensen" data-fv-field="lastName"><i class="form-control-feedback" data-fv-icon-for="lastName" style="display: none;"></i>
-							<small class="help-block" data-fv-validator="notEmpty" data-fv-for="lastName" data-fv-result="NOT_VALIDATED" style="display: none;">Efternavn er påkrævet</small></div>
-						</div>
-					</div>
+                <div class="col-sm-6">
+                  <div class="form-group required has-feedback">
+                    <label for="">Efternavn</label>
+                    <input class="form-control input-sm" data-fv-field="lastName" id="id_lastname" name="lastName" ng-model="user.efternavn" type="text" value="Jørgensen">
+                    <i class="form-control-feedback" data-fv-icon-for="lastName" style="display: none;"></i>
+                    <small class="help-block" data-fv-for="lastName" data-fv-result="NOT_VALIDATED" data-fv-validator="notEmpty" style="display: none;">Efternavn er påkrævet</small>
+                  </div>
+                </div>
+              </div>
 
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label for="">Land</label>
+                    <select class="form-control">
+                      <option>Danmark</option>
+                      <option>Tyskland</option>
+                      <option>Sverige</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
 
+              <div class="row">
+                <div class="col-xs-4 col-lg-2 col-md-3">
+                  <div class="form-group">
+                    <label for="">Postnr.</label>
+                    <input class="form-control input-sm" id="id_zip" max="9999" min="1000" name="zip" ng-model="user.postnummer_dk" type="number">
+                  </div>
+                </div>
+                <div class="col-xs-8 col-lg-10 col-md-9">
+                  <div class="form-group">
+                    <label for="">By</label>
+                    <input class="form-control input-sm" id="id_town" ng-model="user.bynavn" placeholder="" type="text">
+                  </div>
+                </div>
+              </div>
 
+              <div class="row">
+                <div class="col-xs-10">
+                  <label for="">Vejnavn</label>
+                  <input class="form-control input-sm" id="id_street" ng-model="user.vejnavn" placeholder="" type="text">
+                </div>
+                <div class="col-xs-2">
+                  <div class="form-group">
+                    <label for="">Husnr.</label>
+                    <input class="form-control input-sm" id="id_streetnumber" min="1" ng-model="user.husnummer" type="text">
+                  </div>
+                </div>
+              </div>
 
+              <div class="row">
 
-					<div class="row">
-						<div class="col-sm-6">
-							<div class="form-group">
-								<label for="">Land</label>
-								<select class="form-control">
-									<option>Danmark</option>
-									<option>Tyskland</option>
-									<option>Sverige</option>
-								</select>
-							</div>
-						</div>
-					</div>
+                <div class="col-xs-4 col-md-2">
+                  <div class="form-group">
+                    <label for="">Bogstav</label>
+                    <input class="form-control input-sm" id="id_streetletter" ng-model="user.husbogstav" type="text">
+                  </div>
+                </div>
 
+                <div class="col-xs-4 col-md-2">
+                  <div class="form-group">
+                    <label for="">Etage</label>
+                    <input class="form-control input-sm" id="id_floor" ng-model="user.etage" type="text">
+                  </div>
+                </div>
+                <div class="col-xs-4 col-md-2">
+                  <div class="form-group">
+                    <label for="">Side</label>
+                    <input class="form-control input-sm" id="id_side" ng-model="user.sideoer" type="text">
+                  </div>
+                </div>
+              </div>
 
+              <div class="checkbox">
+                <div class="form-group">
+                  <label class="">
+                    <input id="address_2" name="address_type" ng-model="user.firma_adresse" type="checkbox">
+                    <strong>Firmadresse</strong>
+                  </label>
+                </div>
+              </div>
 
-					<div class="row">
-						<div class="col-xs-4 col-lg-2 col-md-3">
-							<div class="form-group">
-								<label for="">Postnr.</label>
-								<input type="number" min="1000" max="9999" ng-model="user.postnummer_dk" name="zip" class="form-control input-sm" id="id_zip">
-							</div>
-						</div>
-						<div class="col-xs-8 col-lg-10 col-md-9">
-							<div class="form-group">
-								<label for="">By</label>
-								<input type="text" ng-model="user.bynavn" class="form-control input-sm" id="id_town" placeholder="">
-							</div>
-						</div>
-					</div>
+              <div class="form-group no-show">
+                <label for="">Firma</label>
+                <input class="form-control input-sm" id="id_company" type="text">
+              </div>
 
-					<div class="row">
-						<div class="col-xs-10">
-							<label for="">Vejnavn</label>
-							<input type="text" ng-model="user.vejnavn" class="form-control input-sm" id="id_street" placeholder="">
-						</div>
-						<div class="col-xs-2">
-							<div class="form-group">
-								<label for="">Husnr.</label>
-								<input min="1" ng-model="user.husnummer" type="text" class="form-control input-sm" id="id_streetnumber">
-							</div>
-						</div>
-					</div>
+              <div class="row">
+                <div class="col-xs-6">
+                  <div class="form-group">
+                    <label for="">Telefon</label>
+                    <input class="form-control input-sm" id="id_phone" ng-model="user.telefon" type="text">
+                  </div>
+                </div>
 
-					<div class="row">
+                <div class="col-xs-6 ">
+                  <div class="form-group">
+                    <label for="">Fødselsår</label>
+                    <input class="form-control input-sm" id="id_year" max="2015" min="1900" ng-model="user.foedselsaar" type="text">
+                  </div>
+                </div>
+              </div>
+            </div>
 
-						<div class="col-xs-4 col-md-2">
-							<div class="form-group">
-								<label for="">Bogstav</label>
-								<input ng-model="user.husbogstav" type="text" class="form-control input-sm" id="id_streetletter">
-							</div>
-						</div>
+          </div>
+          <div class="tab-pane" id="vtab2" ng-class="{active: tab == 'permissions'}">
+            <h3 class="title">Kontaktsamtykker</h3>
+            <ul class="list-default ">
+              <li ng-repeat="permission in permissions">
+                <div class="checkbox">
+                  <label>
+                    <input checklist-model="$parent.user.nyhedsbreve" checklist-value="permission.nyhedsbrev_id" ng-change="$parent.checkbox_change(this, permission.nyhedsbrev_id, 'nyhedsbreve')" type="checkbox">
+                    <small>
+                      <strong class="xs-block">{{permission.nyhedsbrev_navn}}</strong><br>{{permission.indhold}}</small>
+                  </label>
+                </div>
+              </li>
+            </ul>
 
+          </div>
+          <div class="tab-pane" id="vtab3" ng-class="{active: tab == 'interests'}">
+            <h3 class="title">Dine interesser</h3>
+            <p>Fortæl os hvad der interesserer dig. Så kan vi fremover sende dig skærddersyede mails, der matcher netop dine interesser.</p>
+            <div class="row">
+              <div class="col-lg-4 col-sm-6 col-xs-12" ng-repeat="interest in interests">
+                <label>
+                  <input checklist-model="$parent.user.interesser" checklist-value="interest.interesse_id" ng-change="$parent.checkbox_change(this, interest.interesse_id, 'interesser')" type="checkbox"/>
+                  {{interest.interesse_navn}}
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-						<div class="col-xs-4 col-md-2">
-							<div class="form-group">
-								<label for="">Etage</label>
-								<input ng-model="user.etage" type="text" class="form-control input-sm" id="id_floor">
-							</div>
-						</div>
-						<div class="col-xs-4 col-md-2">
-							<div class="form-group">
-								<label for="">Side</label>
-								<input ng-model="user.sideoer" type="text" class="form-control input-sm" id="id_side">
-							</div>
-						</div>
-					</div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="module-top ">
+            <button class="btn btn-success pull-right " ng-click="update(user)">Gem
+              <i class="fa fa-angle-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
 
-					<div class="checkbox">
-						<div class="form-group">
-							<label class="">
-								<input type="checkbox" name="address_type" id="address_2" ng-model="user.firma_adresse"> <strong>Firmadresse</strong>
-							</label>
-						</div>
-					</div>
+    </form>
+  </div>
 
-					<div class="form-group no-show">
-						<label for="">Firma</label>
-						<input type="text" class="form-control input-sm" id="id_company">
-					</div>
-
-					<div class="row">
-						<div class="col-xs-6">
-							<div class="form-group">
-								<label for="">Telefon</label>
-								<input ng-model="user.telefon" type="text" class="form-control input-sm" id="id_phone">
-							</div>
-						</div>
-
-						<div class="col-xs-6 ">
-							<div class="form-group">
-								<label for="">Fødselsår</label>
-								<input ng-model="user.foedselsaar" min="1900" max="2015" type="text" class="form-control input-sm" id="id_year">
-							</div>
-						</div>
-					</div>
-				</div>
-
-									</div>
-									<div ng-class="{active: tab == 'permissions'}" class="tab-pane" id="vtab2">
-										<h3 class="title">Kontaktsamtykker</h3>
-										<ul class="list-default ">
-											<li ng-repeat="permission in permissions">
-												<div class="checkbox">
-													<label>
-															<input checklist-model="$parent.user.nyhedsbreve" checklist-value="permission.nyhedsbrev_id" ng-change="$parent.checkbox_change(this, permission.nyhedsbrev_id, 'nyhedsbreve')" type="checkbox"> <small><strong class="xs-block">{{permission.nyhedsbrev_navn}}</strong><br>{{permission.indhold}}</small>
-													</label>
-												</div>
-											</li>
-										</ul>
-
-									</div>
-									<div class="tab-pane" ng-class="{active: tab == 'interests'}" id="vtab3">
-										<h3 class="title">Dine interesser</h3>
-										<p>Fortæl os hvad der interesserer dig. Så kan vi fremover sende dig skærddersyede mails, der matcher netop dine interesser.</p>
-										<div class="row">
-											<div ng-repeat="interest in interests" class="col-lg-4 col-sm-6 col-xs-12">
-												<label>
-													<input checklist-model="$parent.user.interesser"
-													checklist-value="interest.interesse_id" ng-change="$parent.checkbox_change(this, interest.interesse_id, 'interesser')" type="checkbox" /> {{interest.interesse_navn}}
-												</label>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-
-
-
-					<div class="row">
-						<div class="col-md-12">
-							<div class="module-top ">
-								<button ng-click="update(user)" class="btn btn-success pull-right ">Gem <i class="fa fa-angle-right"></i></button>
-							</div>
-						</div>
-					</div>
-
-
-	  			</form>
-			</div>
-
-
-
-
-
-
-	</div>
+</div>
