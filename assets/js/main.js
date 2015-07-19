@@ -132,15 +132,22 @@ function($scope, $routeParams, $http, $q) {
 
 }]).controller('editController', ['$scope', '$routeParams', '$http', '$q', '$modal',
 function($scope, $routeParams, $http, $q, $modal) {
+  $scope.reasons = ["I sender for mange mails", "Indholdet i jeres mails er ikke relevant for mig", "Jeg modtager for mange mails generelt", "Jeg har deltaget i en konkurrence, men ønsker ikke at være tilmeldt", "Jeg er blevet tilmeldt ved en fejl"];
   var my_id = $routeParams.id;
 
   var update = function() {
     var my_newsletters = $http.get("/backend/users/" + my_id + "/nyhedsbreve");
     var newsletters = $http.get("/backend/nyhedsbreve");
     $q.all([newsletters, my_newsletters]).then(function(resolved) {
+
       $scope.newsletters = resolved[0].data;
-      $scope.newsletter_choices = resolved[1].data;
+      $scope.my_subscriptions = resolved[1].data;
+
+      $scope.filtered_newsletters = $scope.newsletters.filter(function (newsletter) {
+        return $scope.my_subscriptions.indexOf(newsletter.nyhedsbrev_id) !== -1;
+        });
     });
+
   };
 
   $scope.unsubscribe = function(feedback) {
@@ -148,7 +155,7 @@ function($scope, $routeParams, $http, $q, $modal) {
     var payload = {};
     payload.location_id = 1;
     payload.nyhedsbrev_id = $scope.to_unsubscribe.nyhedsbrev_id;
-    payload.user_feedback = "feedback";
+    payload.user_feedback = feedback;
     $http.post("/backend/users/" + my_id + "/nyhedsbreve/delete", payload ).success(function(data, status, headers, config) {
       update();
       $scope.modalInstance.close();

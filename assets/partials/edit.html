@@ -2,24 +2,30 @@
 
 
   <h1>Dine nyhedsbreve</h1>
-  <p>Her er en oversigt over dine nyhedsbreve, du er tilmeldt. Klik på "Afmeld" ud for de nyhedsbreve du ikke ønsker at modtage.</p>
-  <ul class="list-brand list-border">
-  	<li ng-repeat="newsletter in newsletters">
-  		<div class="row">
-  				<div class="col-sm-3 col-xs-4">
-  					<img src="/images/nl-bt.png" width="" height="" alt="" class="newsletter-logo">
-  				</div>
-  				<div class="col-sm-7 col-xs-5">
-  					<strong class="newsletter-title">{{newsletter.nyhedsbrev_navn}} <span>{{newsletter.nyhedsbrev_tag}}</span></strong>
-  					<small>{{newsletter.indhold}}</small>
-  				</div>
-  				<div class="col-sm-2 col-xs-2 text-right">
-  				    <a href="" ng-click="open(newsletter)" class="btn btn-xs btn-default">Afmeld</a>
-  						</div>
-            </div>
+  <div ng-show="filtered_newsletters.length === 0">
+    <h2>Du er ikke tilmeldt nogen nyhedsbreve.</h2>
+    <p>Du kan tilmelde dig <a href="#/">her</a></p>
+  </div>
+  <div ng-show="filtered_newsletters.length != 0">
+    <p>Her er en oversigt over dine nyhedsbreve, du er tilmeldt. Klik på "Afmeld" ud for de nyhedsbreve du ikke ønsker at modtage.</p>
+    <ul class="list-brand list-border">
+    	<li ng-repeat="newsletter in filtered_newsletters">
+    		<div class="row">
+    				<div class="col-sm-3 col-xs-4">
+    					<img src="/images/nl-bt.png" width="" height="" alt="" class="newsletter-logo">
+    				</div>
+    				<div class="col-sm-7 col-xs-5">
+    					<strong class="newsletter-title">{{newsletter.nyhedsbrev_navn}} <span>{{newsletter.nyhedsbrev_tag}}</span></strong>
+    					<small>{{newsletter.indhold}}</small>
+    				</div>
+    				<div class="col-sm-2 col-xs-2 text-right">
+    				    <a href="" ng-click="open(newsletter)" class="btn btn-xs btn-default">Afmeld</a>
+    						</div>
+              </div>
 
-  	</li>
-  </ul>
+    	</li>
+    </ul>
+  </div>
 
   <script
     type="text/ng-template"
@@ -29,48 +35,27 @@
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
             <h4 class="modal-title">Angiv venligst årsagen</h4>
           </div>
-          <div class="modal-body">
-    <div class="radio">
-      <label>
-        <input type="radio" name="optionsRadios" id="radio1" value="option1">
-        I sender for mange mails
-      </label>
+  <div class="modal-body">
+{{selected_reason}}
+    <div class="reasons">
+      <div class="radio" ng-repeat="reason in reasons">
+        <label>
+          <input ng-model="$parent.selected_reason" type="radio" name="optionsRadios" ng-value="reason">
+          {{reason}}
+        </label>
+      </div>
+      <div class="radio">
+        <label>
+          <input type="radio" name="optionsRadios" ng-model="$parent.selected_reason" ng-value="$parent.custom_reason">
+           <input type="text" ng-model="$parent.custom_reason" class="form-control input-other" placeholder="Angiv anden årsag">
+        </label>
+      </div>
     </div>
-    <div class="radio">
-      <label>
-        <input type="radio" name="optionsRadios" id="radio2" value="option1">
-        Indholdet i jeres mails er ikke relevant for mig
-      </label>
-    </div>
-    <div class="radio">
-      <label>
-        <input type="radio" name="optionsRadios" id="radio3" value="option1">
-        Jeg modtager for mange mails generelt
-      </label>
-    </div>
-    <div class="radio">
-      <label>
-        <input type="radio" name="optionsRadios" id="radio4" value="option1">
-        Jeg har deltaget i en konkurrence, men ønsker ikke at være tilmeldt
-      </label>
-    </div>
-    <div class="radio">
-      <label>
-        <input type="radio" name="optionsRadios" id="radio5" value="option1">
-        Jeg er blevet tilmeldt ved en fejl
-      </label>
-    </div>
+  </div>
 
-    <div class="radio">
-      <label>
-        <input type="radio" name="optionsRadios" id="radio6" value="option1">
-         <input type="text" class="form-control input-other" placeholder="Angiv anden årsag">
-      </label>
-    </div>
-          </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Annullér</button>
-            <a href="" ng-click="unsubscribe()" class="btn btn-primary">Afmeld</a>
+            <a href="" ng-click="unsubscribe(selected_reason)" class="btn btn-primary">Afmeld</a>
           </div>
         </div><!-- /.modal-content -->
   </script>
