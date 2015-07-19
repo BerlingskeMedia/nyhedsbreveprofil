@@ -99,6 +99,7 @@ function($scope, $routeParams, $http, $q) {
     var payload = angular.copy(user);
     delete payload.interesser;
     delete payload.nyhedsbreve;
+    delete payload.email;
 
     user.location_id = 1;
 
