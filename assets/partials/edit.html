@@ -4,7 +4,7 @@
   <h1>Dine nyhedsbreve</h1>
   <div ng-show="filtered_newsletters.length === 0">
     <h2>Du er ikke tilmeldt nogen nyhedsbreve.</h2>
-    <p>Du kan tilmelde dig <a href="#/">her</a></p>
+    <p>Du kan tilmelde dig <a href="#/{{$root.my_id}}">her</a></p>
   </div>
   <div ng-show="filtered_newsletters.length != 0">
     <p>Her er en oversigt over dine nyhedsbreve, du er tilmeldt. Klik på "Afmeld" ud for de nyhedsbreve du ikke ønsker at modtage.</p>

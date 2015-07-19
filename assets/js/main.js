@@ -7,20 +7,49 @@ newsletterController.controller('newsletterController', ['$scope', '$routeParams
     var newsletters = $http.get("/backend/nyhedsbreve");
     var interests = $http.get("/backend/interesser");
     var permissions = $http.get("/backend/nyhedsbreve?permission=1");
-    $q.all([publishers, newsletters, interests, permissions]).then(function(resolved) {
+    var to_resolve = [publishers, newsletters, interests, permissions];
+
+    if (!angular.isUndefined($routeParams.id)) {
+      var user = $http.get("/backend/users/" + $routeParams.id);
+      to_resolve.push(user);
+    }
+
+    $q.all(to_resolve).then(function(resolved) {
       $scope.publishers = resolved[0].data;
       $scope.newsletters = resolved[1].data;
       $scope.interests = resolved[2].data;
       $scope.permissions = resolved[3].data;
       //TODO use param from path
-      $scope.current_publisher = $scope.publishers[3];
+      $scope.current_publisher = $scope.publishers[15];
+      if (angular.isDefined(resolved[4]) && resolved[4].status == 200) {
+        $scope.user = resolved[4].data;
+      }
+
     });
+    $scope.submit_step1 = function (user) {
+
+      if (!angular.isUndefined($scope.user)) {
+        var my_id = $scope.user.ekstern_id;
+        console.log($scope.user);
+        $scope.user.location_id = 1;
+        $http.put("/backend/users/" + my_id, $scope.user).success(function(data, status, headers, config) {
+
+          $location.path("/profile/" + my_id);
+        }).
+        error(function(data, status, headers, config) {
+          $location.path("/");
+        });
+
+      }
+      $scope.state = "step2";
+
+    };
     $scope.post_user = function(user) {
       var payload = {};
       payload.email = user.email;
       payload.fornavn = user.firstname;
       payload.efternavn = user.lastname;
-      payload.nyhedsbreve = user.newsletter_choices;
+      payload.nyhedsbreve = user.nyhedsbreve;
       payload.location_id = 1;
 
       $http.post("/backend/users", payload).
@@ -214,6 +243,7 @@ newsletterApp.config(['$routeProvider',
         $http.get("/backend/users/" + my_id).success(function(data, status, headers, config) {
           $scope.my_id = my_id;
           $rootScope.logged_in = true;
+          $rootScope.my_id = my_id;
           $scope.email = data.email;
         }).
         error(function(data, status, headers, config) {

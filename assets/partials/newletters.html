@@ -17,7 +17,7 @@
 	      </ul>
 	    </div>
 
-	  <a ng-click="state = 'step2'" class="btn btn-success pull-right">TILMELD <i class="fa fa-angle-right"></i></a>
+	  <a ng-click="submit_step1(user)" class="btn btn-success pull-right">TILMELD <i class="fa fa-angle-right"></i></a>
 		</section>
 
 		<section class="newsletters">
@@ -31,7 +31,7 @@
 								<div class="col-sm-9 col-xs-8">
 									<div class="checkbox">
 										<label>
-											<input type="checkbox" checklist-model="$parent.user.newsletter_choices" checklist-value="newsletter.nyhedsbrev_id"><strong class="newsletter-title">{{newsletter.nyhedsbrev_navn}}</strong>
+											<input type="checkbox" checklist-model="$parent.user.nyhedsbreve" checklist-value="newsletter.nyhedsbrev_id"><strong class="newsletter-title">{{newsletter.nyhedsbrev_navn}}</strong>
 											<small>{{newsletter.indhold}}</small>
 										</label>
 									</div>
@@ -44,7 +44,7 @@
 	</div>
 	<div class="col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
 			<div class="module-top text-right bottom-nav">
-				<a ng-click="state = 'step2'" class="btn btn-success">TILMELD <i class="fa fa-angle-right"></i></a>
+				<a ng-click="submit_step1()" class="btn btn-success">TILMELD <i class="fa fa-angle-right"></i></a>
 			</div>
 	</div>
 </div>
