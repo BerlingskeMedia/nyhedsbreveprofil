@@ -56,24 +56,22 @@ var newsletterApp = angular.module('newsletter', [
 ]).controller('loginController', ['$scope', '$routeParams', '$http', '$rootScope', '$location',
 function($scope, $routeParams, $http, $rootScope, $location) {
   $scope.send_email = function(email) {
+    if (!$scope.loginForm.$valid) {
+      return;
+    }
+    if ($scope.success) {
+      return;
+    }
     var payload = {};
     payload.email = email;
     payload.publisher_id = 1;
 
     $http.post("/backend/mails/profile-page-link", payload).
     success(function(data, status, headers, config) {
-      //TODO testing only
-      $rootScope.logged_in = true;
-      $rootScope.my_id = "fe50338207f2edab2f163186bf8d4627";
-      $rootScope.email = email;
-      $location.path("/edit/" + $rootScope.my_id);
+      $scope.success = true;
     }).
     error(function(data, status, headers, config) {
-      //TODO testing only
-      $rootScope.logged_in = true;
-      $rootScope.my_id = "fe50338207f2edab2f163186bf8d4627";
-      $rootScope.email = email;
-      $location.path("/edit/" + $rootScope.my_id);
+      $scope.success = true;
     });
   };
 }]).controller('profileController', ['$scope', '$routeParams', '$http', '$q',
