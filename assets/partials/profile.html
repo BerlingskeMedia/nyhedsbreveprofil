@@ -144,7 +144,7 @@
 											<li ng-repeat="permission in permissions">
 												<div class="checkbox">
 													<label>
-															<input checklist-model="$parent.user.nyhedsbreve" checklist-value="permission.nyhedsbrev_id" type="checkbox"> <small><strong class="xs-block">{{permission.nyhedsbrev_navn}}</strong><br>{{permission.indhold}}</small>
+															<input checklist-model="$parent.user.nyhedsbreve" checklist-value="permission.nyhedsbrev_id" ng-change="$parent.checkbox_change(this, permission.nyhedsbrev_id, 'nyhedsbreve')" type="checkbox"> <small><strong class="xs-block">{{permission.nyhedsbrev_navn}}</strong><br>{{permission.indhold}}</small>
 													</label>
 												</div>
 											</li>
@@ -158,7 +158,7 @@
 											<div ng-repeat="interest in interests" class="col-lg-4 col-sm-6 col-xs-12">
 												<label>
 													<input checklist-model="$parent.user.interesser"
-													checklist-value="interest.interesse_id" type="checkbox" /> {{interest.interesse_navn}}
+													checklist-value="interest.interesse_id" ng-change="$parent.checkbox_change(this, interest.interesse_id, 'interesser')" type="checkbox" /> {{interest.interesse_navn}}
 												</label>
 											</div>
 										</div>

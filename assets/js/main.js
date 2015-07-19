@@ -96,14 +96,39 @@ function($scope, $routeParams, $http, $q) {
 
   $scope.update = function(user) {
     //TODO location id?
+    var payload = angular.copy(user);
+    delete payload.interesser;
+    delete payload.nyhedsbreve;
+
     user.location_id = 1;
-    $http.put("/backend/users/" + my_id, user).success(function(data, status, headers, config) {
+
+    $http.put("/backend/users/" + my_id, payload).success(function(data, status, headers, config) {
       console.log("hurra");
     }).
     error(function(data, status, headers, config) {
       //TODO handle error;
     });
+
   };
+  $scope.checkbox_change = function(val, nid, type) {
+    var change_url = "/backend/users/" + my_id + "/" + type +"/" + nid + "?location_id=1";
+
+    var method;
+    if (val.checked) {
+      method = $http.post(change_url);
+    }
+    else {
+      method = $http.delete(change_url);
+    }
+    method.success(function(data, status, headers, config) {
+      console.debug("Change success");
+    }).
+    error(function(data, status, headers, config) {
+      console.debug("Change error");
+    });
+
+  };
+
 
 }]).controller('editController', ['$scope', '$routeParams', '$http', '$q', '$modal',
 function($scope, $routeParams, $http, $q, $modal) {
