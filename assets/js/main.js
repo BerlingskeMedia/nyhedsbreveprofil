@@ -104,7 +104,6 @@ function($scope, $routeParams, $http, $q) {
     user.location_id = 1;
 
     $http.put("/backend/users/" + my_id, payload).success(function(data, status, headers, config) {
-      console.log("hurra");
     }).
     error(function(data, status, headers, config) {
       //TODO handle error;
@@ -147,7 +146,6 @@ function($scope, $routeParams, $http, $q, $modal) {
   $scope.unsubscribe = function(feedback) {
     console.debug($scope.to_unsubscribe);
     var payload = {};
-    //TODO location_id = ???
     payload.location_id = 1;
     payload.nyhedsbrev_id = $scope.to_unsubscribe.nyhedsbrev_id;
     payload.user_feedback = "feedback";
