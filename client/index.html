@@ -21,19 +21,19 @@
   			<nav class="main-nav" ng-controller="MenuController">
   				<ul>
   					<li>
-  						<a href="#/"><i class="fa fa-home"></i>Nyhedsbreve</a>
+  						<a href="#/{{my_id}}"><i class="fa fa-home"></i>Nyhedsbreve</a>
   					</li>
   					<li>
-  						<a href="#/" class="navi-toggle">Menu<i class="fa fa-bars icon-square"></i></a>
+  						<a href="#/{{my_id}}" class="navi-toggle">Menu<i class="fa fa-bars icon-square"></i></a>
   					</li>
   					<li class="mobile-nav hidden-mobile">
-  						<a href="#faq"><i class="fa fa-question-circle"></i>FAQ</a>
+  						<a href="#faq/{{my_id}}"><i class="fa fa-question-circle"></i>FAQ</a>
   					</li>
-  					<li ng-show="$root.logged_in" class="mobile-nav hidden-mobile">
-  						<a href="#edit/{{$root.my_id}}"><i class="fa fa-envelope"></i>Dine nyhedsbreve</a>
+  					<li ng-show="logged_in" class="mobile-nav hidden-mobile">
+  						<a href="#edit/{{my_id}}"><i class="fa fa-envelope"></i>Dine nyhedsbreve</a>
   					</li>
   					<li class="mobile-nav hidden-mobile">
-  						<a ng-show="$root.logged_in" href="#/profile/{{$root.my_id}}"><i class="fa fa-cog"></i>{{$root.email}}</a>
+  						<a ng-show="$root.logged_in" href="#/profile/{{my_id}}"><i class="fa fa-cog"></i>{{email}}</a>
   					  <a ng-hide="$root.logged_in" href="#login"><i class="fa fa-cog"></i>Log ind</a>
   					</li>
   				</ul>
@@ -50,7 +50,7 @@
 	                    <a href="#">Ophavsret</a>
 	                    <a href="#">Vilkår</a>
 	                    <a href="#" class="cookie-link">Cookiepolitik</a>
-	                    <a href="faq.php#contact">Kontakt os</a>
+	                    <a href="#faq">Kontakt os</a>
 	                </p>
 	            </div>
 	        </div>

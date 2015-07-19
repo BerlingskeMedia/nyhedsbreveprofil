@@ -186,14 +186,10 @@ function($scope, $routeParams, $http, $q, $modal) {
 newsletterApp.config(['$routeProvider',
   function($routeProvider) {
     $routeProvider.
-      when('/', {
-        templateUrl: 'assets/partials/newletters.html',
-        controller: 'newsletterController'
-      }).
-      when('/faq', {
+      when('/faq/:id?', {
         templateUrl: 'assets/partials/faq.html',
       }).
-      when('/login', {
+      when('/login/:email?', {
         templateUrl: 'assets/partials/login.html',
         controller: 'loginController'
       }).
@@ -205,11 +201,31 @@ newsletterApp.config(['$routeProvider',
         templateUrl: 'assets/partials/profile.html',
         controller: 'profileController'
       }).
+      when('/:id?', {
+        templateUrl: 'assets/partials/newletters.html',
+        controller: 'newsletterController'
+      }).
       otherwise({
         redirectTo: '/'
       });
-  }]).controller('MenuController', ['$scope', '$routeParams', '$http', '$q', '$rootScope',
-  function($scope, $routeParams, $http, $q, $rootScope) {
-    $rootScope.logged_in = false;
+  }]).controller('MenuController', ['$scope', '$routeParams', '$http', '$q', '$rootScope', '$location',
+  function($scope, $routeParams, $http, $q, $rootScope, $location) {
+    $scope.$on('$routeChangeSuccess', function() {
+      var my_id = $routeParams.id;
+      if (my_id) {
+        $http.get("/backend/users/" + my_id).success(function(data, status, headers, config) {
+          $scope.my_id = my_id;
+          $rootScope.logged_in = true;
+          $scope.email = data.email;
+        }).
+        error(function(data, status, headers, config) {
+          $location.path('/');
+        });
+      }
+    });
+
+
+
+
 
   }]);
