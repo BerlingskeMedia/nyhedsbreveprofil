@@ -59,7 +59,7 @@ newsletterController.controller('newsletterController', ['$scope', '$routeParams
       }).
       error(function(data, status, headers, config) {
         console.error(data);
-        $location.path = "/login";
+        $location.path("/login/" + user.email);
       });
     };
     $scope.submit_interests = function(user) {
@@ -72,7 +72,6 @@ newsletterController.controller('newsletterController', ['$scope', '$routeParams
       }).
       error(function(data, status, headers, config) {
         console.error(data);
-        //TODO handle error
       });
     };
   }]);
@@ -84,6 +83,7 @@ var newsletterApp = angular.module('newsletter', [
   "checklist-model"
 ]).controller('loginController', ['$scope', '$routeParams', '$http', '$rootScope', '$location',
 function($scope, $routeParams, $http, $rootScope, $location) {
+  $scope.email = $routeParams.email;
   $scope.send_email = function(email) {
     if (!$scope.loginForm.$valid) {
       return;
