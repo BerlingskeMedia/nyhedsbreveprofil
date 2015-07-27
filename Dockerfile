@@ -15,6 +15,8 @@ RUN wget -O - http://nodejs.org/dist/v0.12.0/node-v0.12.0-linux-x64.tar.gz \
 WORKDIR /nyhedsbreve
 
 # Copying the code into image. Be aware no config files are including.
+COPY ./assets /nyhedsbreve/assets
+COPY ./bower_components /nyhedsbreve/bower_components
 COPY ./client /nyhedsbreve/client
 COPY ./node_modules /nyhedsbreve/node_modules
 COPY ./src /nyhedsbreve/src
