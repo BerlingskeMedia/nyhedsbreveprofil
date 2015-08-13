@@ -165,6 +165,7 @@ function($scope, $routeParams, $http, $q) {
     user.location_id = 1;
 
     $http.put("/backend/users/" + my_id, payload).success(function(data, status, headers, config) {
+      $scope.profileSaveSuccess = true;
     }).
     error(function(data, status, headers, config) {
       //TODO handle error;
@@ -183,6 +184,15 @@ function($scope, $routeParams, $http, $q) {
     }
     method.success(function(data, status, headers, config) {
       console.debug("Change success");
+      console.log(type);
+      if (type === 'nyhedsbreve') {
+        $scope.permissionSaveSuccess = true;
+        $scope.user.nyhedsbreve = data;
+      }
+      if (type === 'interesser') {
+        $scope.user.interesser = data;
+        $scope.interestsSaveSuccess = true;
+      }
     }).
     error(function(data, status, headers, config) {
       console.debug("Change error");
@@ -288,9 +298,4 @@ newsletterApp.config(['$routeProvider',
         });
       }
     });
-
-
-
-
-
   }]);
