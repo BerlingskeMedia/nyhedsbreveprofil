@@ -136,6 +136,7 @@ function($scope, $routeParams, $http, $q) {
   $scope.tab = 'details';
   $q.all([user, newsletters, interests, permissions]).then(function(resolved) {
     $scope.user = resolved[0].data;
+    $scope.user.foedselsaar = parseInt($scope.user.foedselsaar);
     $scope.newsletters = resolved[1].data;
     $scope.interests = resolved[2].data;
     $scope.permissions = resolved[3].data;
@@ -143,6 +144,19 @@ function($scope, $routeParams, $http, $q) {
 
   $scope.update = function(user) {
     //TODO location id?
+    if ($scope.userForm.$invalid) {
+      return;
+    }
+    if (!user.postnummer_dk) {
+      delete user.postnummer_dk;
+    }
+    if (!user.foedselsaar) {
+      delete user.foedselsaar;
+    }
+    if (user.foedselsaar) {
+      user.foedselsaar = user.foedselsaar.toString();
+    }
+
     var payload = angular.copy(user);
     delete payload.interesser;
     delete payload.nyhedsbreve;

@@ -72,7 +72,7 @@
 				<div class="col-sm-6">
 					<div class="form-group required">
 						<label for="">Efternavn</label>
-						<input type="text" ng-required="true" ng-model="user.efternavn" name="lastName" class="form-control input-sm" id="lastname">
+						<input type="text" ng-required="true" ng-model="user.efternavn" name="lastname" class="form-control input-sm" id="lastname">
 						<small ng-show="userForm.lastname.$dirty && userForm.lastname.$invalid" class="help-block">Efternavn er påkrævet</small>
 					</div>
 				</div>
@@ -182,7 +182,8 @@
 	<div ng-show="userExists">
 		<h1>Brugeren eksisterer allerede</h1>
 		<div ng-hide="emailSent">
-			<p>Den indtastede e-mail adresse eksisterer allerede i vores system. Klik <a href="" ng-click="sendLogin()">her</a> for at få tilsendt loginoplysninger på {{user.email}}</p>
+
+			<p>Den indtastede e-mail adresse eksisterer allerede i vores system. Klik <a href="" ng-click="sendPassword">her</a> for at få tilsendt loginoplysninger på {{user.email}}</p>
 		</div>
 		<div ng-show="emailSent">
 			Tjek din mail for et login.
