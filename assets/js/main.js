@@ -28,7 +28,7 @@ newsletterController.controller('newsletterController', ['$scope', '$routeParams
     });
     $scope.submit_step1 = function (user) {
 
-      if (!angular.isUndefined($scope.user)) {
+      if (!angular.isUndefined($scope.user) && false) {
         var my_id = $scope.user.ekstern_id;
         console.log($scope.user);
         $scope.user.location_id = 1;
