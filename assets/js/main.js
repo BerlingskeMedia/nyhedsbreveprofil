@@ -45,23 +45,43 @@ newsletterController.controller('newsletterController', ['$scope', '$routeParams
 
     };
     $scope.post_user = function(user) {
-      var payload = {};
-      payload.email = user.email;
-      payload.fornavn = user.firstname;
-      payload.efternavn = user.lastname;
-      payload.nyhedsbreve = user.nyhedsbreve;
-      payload.location_id = 1;
+      if ($scope.userForm.$invalid) {
+        return;
+      }
+      if (!user.postnummer_dk) {
+        delete user.postnummer_dk;
+      }
+      if (!user.foedselsaar) {
+        delete user.foedselsaar;
+      }
+      if (user.foedselsaar) {
+        user.foedselsaar = user.foedselsaar.toString();
+      }
+      // TODO handle location id
+      user.location_id = 1;
 
-      $http.post("/backend/users", payload).
+      $http.post("/backend/users", user).
       success(function(data, status, headers, config) {
         $scope.state = "step3";
         $scope.user.my_id = data.ekstern_id;
       }).
       error(function(data, status, headers, config) {
-        console.error(data);
-        $location.path("/login/" + user.email);
+        if (status === 409) {
+          $scope.userExists = true;
+        }
       });
     };
+    $scope.sendLogin = function() {
+      payload = {};
+      payload.email = $scope.user.email;
+      //TODO handle publisher_id;
+      payload.publisher_id = 1;
+      $http.post("/backend/mails/profile-page-link", payload).
+      success(function(data, status, headers, config) {
+        $scope.emailSent = true;
+      });
+    };
+
     $scope.submit_interests = function(user) {
       var payload = {};
       payload.location_id = 1;
@@ -100,7 +120,7 @@ function($scope, $routeParams, $http, $rootScope, $location) {
       $scope.success = true;
     }).
     error(function(data, status, headers, config) {
-      $scope.success = true;
+      //$scope.success = true;
     });
   };
 }]).controller('profileController', ['$scope', '$routeParams', '$http', '$q',
@@ -219,7 +239,7 @@ newsletterApp.config(['$routeProvider',
       when('/contact/:id?', {
         templateUrl: 'assets/partials/contact.html',
       }).
-      when('/login/:email?', {
+      when('/login', {
         templateUrl: 'assets/partials/login.html',
         controller: 'loginController'
       }).
