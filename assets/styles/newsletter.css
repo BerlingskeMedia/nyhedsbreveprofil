@@ -7672,7 +7672,7 @@ input[type="button"].btn-block {
 }
 .main-footer .cookie-link {
   padding-left: 17px;
-  background: url(/images/cookies.png) left center no-repeat;
+  background: url(../images/cookies.png) left center no-repeat;
 }
 .toggle-icon .toggle-header h5 {
   margin: 0;

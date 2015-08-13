@@ -3,169 +3,178 @@
 		<div class="col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
 			<h1>Nyhedsbreve</h1>
 			<p>Du kan tilmelde dig nyhedsbreve fra flere medier ved at klikke på logoerne. Herefter vælger du de nyhedsbreve, du vil modtage.</p>
-	  </div>
+		</div>
 	</header>
 	<div class="col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
 
 		<section class="newsletter-header">
 			<div class="btn-group" dropdown>
-	      <button type="button" class="btn btn-primary dropdown-toggle" dropdown-toggle>
-					{{current_publisher.publisher_navn}} <span class="caret"></span>
-	      </button>
-	      <ul class="dropdown-menu" role="menu">
-	        <li ng-repeat="publisher in publishers"><a href="" ng-click="$parent.current_publisher = publisher">{{publisher.publisher_navn}}</a></li>
-	      </ul>
-	    </div>
+				<button type="button" class="btn btn-primary dropdown-toggle" dropdown-toggle>
+					{{current_publisher.publisher_navn}}
+					<span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu" role="menu">
+					<li ng-repeat="publisher in publishers"><a href="" ng-click="$parent.current_publisher = publisher">{{publisher.publisher_navn}}</a></li>
+				</ul>
+			</div>
 
-	  <a ng-click="submit_step1(user)" class="btn btn-success pull-right">TILMELD <i class="fa fa-angle-right"></i></a>
+			<a ng-click="submit_step1(user)" class="btn btn-success pull-right">TILMELD <i class="fa fa-angle-right"></i></a>
 		</section>
 
 		<section class="newsletters">
 			<ul class="list-brand">
-	      <li ng-repeat="newsletter in newsletters | filter : {publisher_id : current_publisher.publisher_id}">
-	        <div class="li-body">
-							<div class="row">
-								<div class="col-sm-3 col-xs-4">
-									<img ng-src="{{current_publisher.publisher_toppic}} " class="newsletter-logo">
-								</div>
-								<div class="col-sm-9 col-xs-8">
-									<div class="checkbox">
-										<label>
-											<input type="checkbox" checklist-model="$parent.user.nyhedsbreve" checklist-value="newsletter.nyhedsbrev_id"><strong class="newsletter-title">{{newsletter.nyhedsbrev_navn}}</strong>
-											<small>{{newsletter.indhold}}</small>
-										</label>
-									</div>
+				<li ng-repeat="newsletter in newsletters | filter : {publisher_id : current_publisher.publisher_id}">
+					<div class="li-body">
+						<div class="row">
+							<div class="col-sm-3 col-xs-4">
+								<img ng-src="{{current_publisher.publisher_toppic}} " class="newsletter-logo">
+							</div>
+							<div class="col-sm-9 col-xs-8">
+								<div class="checkbox">
+									<label>
+										<input type="checkbox" checklist-model="$parent.user.nyhedsbreve" checklist-value="newsletter.nyhedsbrev_id">
+										<strong class="newsletter-title">{{newsletter.nyhedsbrev_navn}}</strong>
+										<small>{{newsletter.indhold}}</small>
+									</label>
 								</div>
 							</div>
-	          </div>
-	      </li>
-	    </ul>
-	  </section>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</section>
 	</div>
 	<div class="col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
-			<div class="module-top text-right bottom-nav">
-				<a ng-click="submit_step1()" class="btn btn-success">TILMELD <i class="fa fa-angle-right"></i></a>
-			</div>
+		<div class="module-top text-right bottom-nav">
+			<a ng-click="submit_step1()" class="btn btn-success">TILMELD <i class="fa fa-angle-right"></i></a>
+		</div>
 	</div>
 </div>
 <div ng-show="state == 'step2'" class="col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
-			<h1>Tilmeld dig</h1>
+	<h1>Tilmeld dig</h1>
 
-			<form method="post" id="user-form" class="fv-form fv-form-bootstrap">
-					<div class="form-group required">
-						<label for="exampleInputEmail1">Email</label>
-						<input type="email" ng-required ng-model="user.email" class="form-control input-sm" id="id_email" name="email">
+	<form method="post" id="user-form" class="fv-form fv-form-bootstrap">
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="form-group required">
+					<label for="exampleInputEmail1">Email</label>
+					<input type="email" ng-required ng-model="user.email" class="form-control input-sm" id="id_email" name="email">
+				</div>
+			</div>
 
-					<div class="row">
-						<div class="col-sm-6">
-							<div class="form-group required">
-								<label for="">Fornavn</label>
-								<input type="text" required ng-model="user.firstname" name="firstName" class="form-control input-sm" id="id_firstname" data-fv-field="firstName"></div>
-						</div>
+			<div class="col-sm-6">
+				<div class="form-group required">
+					<label for="">Fornavn</label>
+					<input type="text" required ng-model="user.firstname" name="firstName" class="form-control input-sm" id="id_firstname" data-fv-field="firstName">
+				</div>
+			</div>
 
-						<div class="col-sm-6">
-							<div class="form-group required">
-								<label for="">Efternavn</label>
-								<input type="text" ng-required ng-model="user.lastname" name="lastName" class="form-control input-sm" id="id_lastname" data-fv-field="lastName"></div>
-						</div>
+			<div class="col-sm-6">
+				<div class="form-group required">
+					<label for="">Efternavn</label>
+					<input type="text" ng-required ng-model="user.lastname" name="lastName" class="form-control input-sm" id="id_lastname" data-fv-field="lastName">
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<a ng-click="show_extrafields = !show_extrafields" class="toggle-form"><i ng-class="{'fa-caret-up': show_extrafields, 'fa-caret-down': !show_extrafields}" href="" class="fa"></i> Udfyld yderligere kontaktinformation</a>
+			</div>
+		</div>
+		<div ng-show="show_extrafields" class="">
+			<div class="row">
+				<div class="col-xs-4 col-lg-2 col-md-3">
+					<div class="form-group">
+						<label for="">Postnr.</label>
+						<input type="text" name="zip" class="form-control input-sm" id="id_zip">
 					</div>
-
-
-
-					<div class="row">
-						<div class="col-md-12">
-							<a ng-click="show_extrafields = !show_extrafields" class="toggle-form"><i ng-class="{'fa-caret-up': show_extrafields, 'fa-caret-down': !show_extrafields}" href="" class="fa"></i> Udfyld yderligere kontaktinformation</a>
-						</div>
+				</div>
+				<div class="col-xs-8 col-lg-10 col-md-9">
+					<div class="form-group">
+						<label for="">By</label>
+						<input type="text" class="form-control input-sm" id="id_town">
 					</div>
-
-					<div ng-show="show_extrafields" class="">
-					<div class="row">
-						<div class="col-xs-4 col-lg-2 col-md-3">
-							<div class="form-group">
-								<label for="">Postnr.</label>
-								<input type="text" name="zip" class="form-control input-sm" id="id_zip">
-							</div>
-						</div>
-						<div class="col-xs-8 col-lg-10 col-md-9">
-							<div class="form-group">
-								<label for="">By</label>
-								<input type="text" class="form-control input-sm" id="id_town">
-							</div>
-						</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-xs-8 col-sm-10">
+					<label for="">Vejnavn</label>
+					<input type="text" class="form-control input-sm" id="id_street">
+				</div>
+				<div class="col-xs-4 col-sm-2">
+					<div class="form-group">
+						<label for="">Husnr.</label>
+						<input type="text" class="form-control input-sm" id="id_streetnumber">
 					</div>
-					<div class="row">
-						<div class="col-xs-8 col-sm-10">
-							<label for="">Vejnavn</label>
-							<input type="text" class="form-control input-sm" id="id_street">
-						</div>
-						<div class="col-xs-4 col-sm-2">
-							<div class="form-group">
-								<label for="">Husnr.</label>
-								<input type="text" class="form-control input-sm" id="id_streetnumber">
-							</div>
-						</div>
+				</div>
+			</div>
+
+			<div class="row">
+
+				<div class="col-xs-4 col-md-2">
+					<div class="form-group">
+						<label for="">Bogstav</label>
+						<input type="text" class="form-control input-sm" id="id_streetletter">
 					</div>
-
-					<div class="row">
-
-						<div class="col-xs-4 col-md-2">
-							<div class="form-group">
-								<label for="">Bogstav</label>
-								<input type="text" class="form-control input-sm" id="id_streetletter">
-							</div>
-						</div>
-
-
-						<div class="col-xs-4 col-md-2">
-							<div class="form-group">
-								<label for="">Etage</label>
-								<input type="text" class="form-control input-sm" id="id_floor">
-							</div>
-						</div>
-						<div class="col-xs-4 col-md-2">
-							<div class="form-group">
-								<label for="">Side</label>
-								<input type="text" class="form-control input-sm" id="id_side">
-							</div>
-						</div>
-					</div>
-
-					<div class="row">
-						<div class="col-xs-6">
-							<div class="form-group">
-								<label for="">Telefon</label>
-								<input type="text" class="form-control input-sm" id="id_phone">
-							</div>
-						</div>
-
-						<div class="col-xs-6 ">
-							<div class="form-group">
-								<label for="">Fødselsår</label>
-								<input type="text" class="form-control input-sm" id="id_year">
-							</div>
-						</div>
-					</div>
-					</div><!-- hidden -->
 				</div>
 
+
+				<div class="col-xs-4 col-md-2">
+					<div class="form-group">
+						<label for="">Etage</label>
+						<input type="text" class="form-control input-sm" id="id_floor">
+					</div>
+				</div>
+				<div class="col-xs-4 col-md-2">
+					<div class="form-group">
+						<label for="">Side</label>
+						<input type="text" class="form-control input-sm" id="id_side">
+					</div>
+				</div>
+
+
+				<div class="col-xs-6">
+					<div class="form-group">
+						<label for="">Telefon</label>
+						<input type="text" class="form-control input-sm" id="id_phone">
+					</div>
+				</div>
+
+				<div class="col-xs-6 ">
+					<div class="form-group">
+						<label for="">Fødselsår</label>
+						<input type="text" class="form-control input-sm" id="id_year">
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12">
 				<h4>
 					Kontaktsamtykker
 				</h4>
 
-<ul class="list-default ">
-	<li ng-repeat="permission in permissions">
-		<div class="checkbox">
-			<label>
-					<input checklist-model="$parent.user.newsletter_choices" checklist-value="permission.nyhedsbrev_id" type="checkbox"> <small><strong class="xs-block">{{permission.nyhedsbrev_navn}}</strong><br>{{permission.indhold}}</small>
-			</label>
+				<ul class="list-default ">
+					<li ng-repeat="permission in permissions">
+						<div class="checkbox">
+							<label>
+								<input checklist-model="$parent.user.newsletter_choices" checklist-value="permission.nyhedsbrev_id" type="checkbox">
+								<small>
+									<strong class="xs-block">{{permission.nyhedsbrev_navn}}</strong>
+									<br>{{permission.indhold}}</small>
+							</label>
+						</div>
+					</li>
+				</ul>
+			</div>
 		</div>
-	</li>
-</ul>
-				<div class="module-top ">
-					<a ng-click="state = 'step1'" class="btn btn-link pull-left"><i class="fa fa-angle-left"></i> Flere nyhedsbreve</a>
-					<button type="submit" ng-click="post_user(user)" class="btn btn-success pull-right ">TILMELD <i class="fa fa-angle-right"></i></button>
-				</div>
-			</form>
+		<div class="row">
+			<div class="module-top ">
+				<a ng-click="state = 'step1'" class="btn btn-link pull-left"><i class="fa fa-angle-left"></i> Flere nyhedsbreve</a>
+				<button type="submit" ng-click="post_user(user)" class="btn btn-success pull-right ">TILMELD <i class="fa fa-angle-right"></i></button>
+			</div>
+		</div>
+	</form>
 </div>
 
 <div ng-show="state == 'step3'">
@@ -176,15 +185,14 @@
 		<div class="row">
 			<div ng-repeat="interest in interests" class="col-lg-4 col-sm-6 col-xs-12">
 				<label>
-					<input checklist-model="$parent.user.interests_choices"
-					checklist-value="interest.interesse_id" type="checkbox" /> {{interest.interesse_navn}}
+					<input checklist-model="$parent.user.interests_choices" checklist-value="interest.interesse_id" type="checkbox" /> {{interest.interesse_navn}}
 				</label>
 			</div>
 
 
 		</div>
 		<div class="module-top text-center">
-			<a href="" ng-click="state= 'step2'"class="btn btn-default btn-link pull-left"><i class="fa fa-angle-left"></i>Tilbage</a>
+			<a href="" ng-click="state= 'step2'" class="btn btn-default btn-link pull-left"><i class="fa fa-angle-left"></i>Tilbage</a>
 			<a ng-click="submit_interests(user); state= 'step4'" class="btn btn-success pull-right">Gem <i class="fa fa-angle-right"></i></a>
 		</div>
 	</div>
@@ -193,9 +201,11 @@
 	<div class="col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
 		<div class="alert alert-success mt-50" role="alert">
 			<h1>Tak for din interesse</h1>
-			<h4><strong>Du er endnu ikke tilmeldt.</strong></h4>
+			<h4>
+				<strong>Du er endnu ikke tilmeldt.</strong>
+			</h4>
 			<p>Vi har sendt dig en email med et link, hvor du skal bekræfte din tilmelding, for at fuldføre processen. </p>
 			<p>Dette link udløber om 48 timer. </p>
-			</div>
+		</div>
 	</div>
 </div>

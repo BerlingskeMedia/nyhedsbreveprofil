@@ -216,6 +216,9 @@ newsletterApp.config(['$routeProvider',
       when('/faq/:id?', {
         templateUrl: 'assets/partials/faq.html',
       }).
+      when('/contact/:id?', {
+        templateUrl: 'assets/partials/contact.html',
+      }).
       when('/login/:email?', {
         templateUrl: 'assets/partials/login.html',
         controller: 'loginController'
