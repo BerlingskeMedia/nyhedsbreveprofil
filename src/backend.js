@@ -1,5 +1,7 @@
 /*jshint node: true */
 
+var api_url = process.env.MDBAPI_ADDRESS + ':' + process.env.MDBAPI_PORT;
+
 var backend = {
   register: function (plugin, options, next) {
 
@@ -10,7 +12,7 @@ var backend = {
         proxy: {
           mapUri: function(request, callback) {
             var query = request.url.search ? request.url.search : '';
-            var url = 'http://54.77.4.249:8000/' + request.params.path + query;
+            var url = 'http://' + api_url + '/' + request.params.path + query;
             callback(null, url);
           }
         }
