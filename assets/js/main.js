@@ -24,8 +24,29 @@ newsletterController.controller('newsletterController', ['$scope', '$routeParams
       if (angular.isDefined(resolved[4]) && resolved[4].status == 200) {
         $scope.user = resolved[4].data;
       }
-
     });
+    $scope.onNewsletterChange = function(checkbox, newsletter) {
+      var url = "/backend/users/" + $scope.user.ekstern_id + '/nyhedsbreve/' + newsletter.nyhedsbrev_id;
+      if (!$scope.user) {
+        return;
+      }
+      var method;
+      if (checkbox.checked) {
+        //TODO add location_id
+        method = $http.post(url +"?location_id=1");
+      }
+      else {
+        method = $http.delete(url);
+      }
+      method.success(function(data) {
+        $scope.user.nyhedsbreve = data;
+        checkbox.$parent.created = checkbox.checked;
+        checkbox.$parent.deleted = !checkbox.checked;
+      }).error(function(error) {
+        console.error(error);
+      });
+    };
+
     $scope.submit_step1 = function (user) {
 
       if (!angular.isUndefined($scope.user) && false) {
