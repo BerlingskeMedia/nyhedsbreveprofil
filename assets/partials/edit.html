@@ -12,16 +12,13 @@
     <ul class="list-brand list-border">
       <li ng-repeat="newsletter in filtered_newsletters">
         <div class="row">
-          <div class="col-sm-3 col-xs-4">
-            <img alt="" class="newsletter-logo" height="" src="/images/nl-bt.png" width="">
-          </div>
-          <div class="col-sm-7 col-xs-5">
+          <div class="col-xs-offset-1 col-xs-8">
             <strong class="newsletter-title">{{newsletter.nyhedsbrev_navn}}
               <span>{{newsletter.nyhedsbrev_tag}}</span>
             </strong>
             <small>{{newsletter.indhold}}</small>
           </div>
-          <div class="col-sm-2 col-xs-2 text-right">
+          <div class="col-xs-2 text-right">
             <a class="btn btn-xs btn-default" href="" ng-click="open(newsletter)">Afmeld</a>
           </div>
         </div>
@@ -31,36 +28,40 @@
   </div>
 
   <script id="modal.html" type="text/ng-template">
-<div class="modal-content">
-  <div class="modal-header">
-    <button aria-label="Close" class="close" data-dismiss="modal" type="button">
-      <span aria-hidden="true">×</span>
-    </button>
-    <h4 class="modal-title">Angiv venligst årsagen</h4>
-  </div>
-  <div class="modal-body">
-    {{selected_reason}}
-    <div class="reasons">
-      <div class="radio" ng-repeat="reason in reasons">
-        <label>
-          <input name="optionsRadios" ng-model="$parent.selected_reason" ng-value="reason" type="radio">
-          {{reason}}
-        </label>
-      </div>
-      <div class="radio">
-        <label>
-          <input name="optionsRadios" ng-model="$parent.selected_reason" ng-value="$parent.custom_reason" type="radio">
-          <input class="form-control input-other" ng-model="$parent.custom_reason" placeholder="Angiv anden årsag" type="text">
-        </label>
+<form name="reasonForm">
+
+  <div class="modal-content">
+    <div class="modal-header">
+      <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+        <span aria-hidden="true">×</span>
+      </button>
+      <h4 class="modal-title">Angiv venligst årsagen</h4>
+    </div>
+    <div class="modal-body">
+      <div class="reasons">
+        <div class="radio" ng-repeat="reason in reasons">
+          <label>
+            <input name="optionsRadios" ng-model="$parent.$parent.selected_reason"
+            ng-value="reason" type="radio">
+            {{reason}}
+          </label>
+        </div>
+        <div class="radio">
+          <label>
+            <input class="form-control input-other"
+            ng-change="onchange(custom_reason)"
+            ng-model="custom_reason" placeholder="Angiv anden årsag" type="text">
+          </label>
+        </div>
       </div>
     </div>
-  </div>
 
-  <div class="modal-footer">
-    <button class="btn btn-default" data-dismiss="modal" type="button">Annullér</button>
-    <a class="btn btn-primary" href="" ng-click="unsubscribe(selected_reason)">Afmeld</a>
+    <div class="modal-footer">
+      <button class="btn btn-default" data-dismiss="modal" type="button">Annullér</button>
+      <a class="btn btn-primary" href="" ng-click="unsubscribe(selected_reason)">Afmeld</a>
+    </div>
   </div>
-</div>
+</form>
   </script>
 
 </div>

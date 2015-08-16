@@ -222,7 +222,10 @@ function($scope, $routeParams, $http, $q, $modal) {
   };
 
   $scope.unsubscribe = function(feedback) {
-    console.debug($scope.to_unsubscribe);
+    console.debug();
+    if (angular.isUndefined(feedback) || feedback === "") {
+      $scope.unsubscribeError = true;
+    }
     var payload = {};
     payload.location_id = 1;
     payload.nyhedsbrev_id = $scope.to_unsubscribe.nyhedsbrev_id;
@@ -246,6 +249,10 @@ function($scope, $routeParams, $http, $q, $modal) {
       scope: $scope
     });
     $scope.modalInstance = modalInstance;
+  };
+
+  $scope.onchange = function(value) {
+    $scope.selected_reason = value;
   };
 
   update();
