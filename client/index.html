@@ -23,17 +23,17 @@
   						<a ng-click="home()" href=""><i class="fa fa-home"></i> Nyhedsbreve</a>
   					</li>
   					<li>
-  						<a href="#/{{my_id}}" class="navi-toggle">Menu<i class="fa fa-bars icon-square"></i></a>
+  						<a ng-click="showMenu = !showMenu" href="" class="navi-toggle">Menu <i class="fa fa-bars icon-square"></i></a>
   					</li>
-  					<li class="mobile-nav hidden-mobile">
+  					<li ng-class="{'hidden-mobile': !showMenu}" class="mobile-nav">
   						<a href="#faq/{{my_id}}"><i class="fa fa-question-circle"></i> FAQ</a>
   					</li>
-  					<li ng-show="logged_in" class="mobile-nav hidden-mobile">
+  					<li ng-class="{'hidden-mobile': !showMenu}" ng-show="logged_in" class="mobile-nav">
   						<a href="#edit/{{my_id}}"><i class="fa fa-envelope"></i> Dine nyhedsbreve</a>
   					</li>
-  					<li class="mobile-nav hidden-mobile">
-  						<a ng-show="$root.logged_in" href="#/profile/{{my_id}}"><i class="fa fa-cog"></i> {{email}}</a>
-  					  <a ng-hide="$root.logged_in" href="#login"><i class="fa fa-cog"></i> Log ind</a>
+  					<li ng-class="{'hidden-mobile': !showMenu}" class="mobile-nav">
+  						<a ng-if="$root.logged_in" href="#/profile/{{my_id}}"><i class="fa fa-cog"></i> {{email}}</a>
+  					  <a ng-if="!$root.logged_in" href="#login"><i class="fa fa-cog"></i> Log ind</a>
   					</li>
   				</ul>
   			</nav>
