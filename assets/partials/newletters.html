@@ -17,7 +17,7 @@
 					<li ng-repeat="publisher in publishers"><a href="" ng-click="$parent.current_publisher = publisher">{{publisher.publisher_navn}}</a></li>
 				</ul>
 			</div>
-			<a ng-hide="user" ng-click="submit_step1(user)" class="btn btn-success pull-right">TILMELD <i class="fa fa-angle-right"></i></a>
+			<a ng-hide="loggedIn" ng-click="submit_step1(user)" class="btn btn-success pull-right">TILMELD <i class="fa fa-angle-right"></i></a>
 		</section>
 
 		<section class="newsletters">
@@ -47,7 +47,7 @@
 	</div>
 	<div class="col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
 		<div class="module-top text-right bottom-nav">
-			<a ng-hide="user" ng-click="submit_step1()" class="btn btn-success">TILMELD <i class="fa fa-angle-right"></i></a>
+			<a ng-hide="loggedIn" ng-click="submit_step1()" class="btn btn-success">TILMELD <i class="fa fa-angle-right"></i></a>
 		</div>
 	</div>
 </div>

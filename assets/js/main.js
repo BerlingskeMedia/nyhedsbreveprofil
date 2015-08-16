@@ -23,6 +23,7 @@ newsletterController.controller('newsletterController', ['$scope', '$routeParams
       $scope.current_publisher = $scope.publishers[15];
       if (angular.isDefined(resolved[4]) && resolved[4].status == 200) {
         $scope.user = resolved[4].data;
+        $scope.loggedIn = true;
       }
     });
     $scope.onNewsletterChange = function(checkbox, newsletter) {
@@ -243,10 +244,11 @@ function($scope, $routeParams, $http, $q, $modal) {
   };
 
   $scope.unsubscribe = function(feedback) {
-    console.debug();
     if (angular.isUndefined(feedback) || feedback === "") {
       $scope.unsubscribeError = true;
+      return;
     }
+    $scope.unsubscribeError = false;
     var payload = {};
     payload.location_id = 1;
     payload.nyhedsbrev_id = $scope.to_unsubscribe.nyhedsbrev_id;
@@ -311,7 +313,7 @@ newsletterApp.config(['$routeProvider',
         redirectTo: '/'
       });
   }]).controller('MenuController', ['$scope', '$routeParams', '$http', '$q', '$rootScope', '$location',
-  function($scope, $routeParams, $http, $q, $rootScope, $location) {
+  function($scope, $routeParams, $http, $q, $rootScope, $location, $route) {
     $scope.$on('$routeChangeSuccess', function() {
       var my_id = $routeParams.id;
       if (my_id) {
@@ -326,4 +328,17 @@ newsletterApp.config(['$routeProvider',
         });
       }
     });
+    $scope.home = function () {
+      // A minor hack to ensure reload on anonymous navigation from step{2-3-4} to step1
+      var url = "/#";
+      if ($scope.my_id) {
+        url = url + $scope.my_id;
+      }
+      else {
+        url = "/";
+      }
+      window.location = url;
+      $route.reload();
+
+    };
   }]);

@@ -38,6 +38,9 @@
       <h4 class="modal-title">Angiv venligst årsagen</h4>
     </div>
     <div class="modal-body">
+      <div ng-show="unsubscribeError">
+      <small class="error">Du skal angive en grund for at kunne afmelde nyhedsbrevet </small>
+      </div>
       <div class="reasons">
         <div class="radio" ng-repeat="reason in reasons">
           <label>
