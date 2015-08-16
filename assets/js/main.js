@@ -23,6 +23,8 @@ newsletterController.controller('newsletterController', ['$scope', '$routeParams
       $scope.current_publisher = $scope.publishers[15];
       if (angular.isDefined(resolved[4]) && resolved[4].status == 200) {
         $scope.user = resolved[4].data;
+        //Avoid numFmt conversion error
+        delete $scope.user.foedselsaar;
         $scope.loggedIn = true;
       }
     });
@@ -239,6 +241,18 @@ function($scope, $routeParams, $http, $q, $modal) {
       $scope.filtered_newsletters = $scope.newsletters.filter(function (newsletter) {
         return $scope.my_subscriptions.indexOf(newsletter.nyhedsbrev_id) !== -1;
         });
+      var nid = $routeParams.nid;
+      if (nid) {
+        var found = $scope.filtered_newsletters.some(function (el) {
+          return el.nyhedsbrev_id == nid;
+        });
+        if (found) {
+          $scope.filtered_newsletters = $scope.filtered_newsletters.filter(function (newsletter) {
+            return newsletter.nyhedsbrev_id == nid;
+            });
+        }
+      }
+
     });
 
   };
@@ -297,7 +311,7 @@ newsletterApp.config(['$routeProvider',
         templateUrl: 'assets/partials/login.html',
         controller: 'loginController'
       }).
-      when('/edit/:id', {
+      when('/edit/:id/:nid?', {
         templateUrl: 'assets/partials/edit.html',
         controller: 'editController'
       }).
