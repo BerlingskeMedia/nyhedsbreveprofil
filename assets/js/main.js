@@ -149,7 +149,6 @@ function($scope, $routeParams, $http, $rootScope, $location) {
   };
 }]).controller('profileController', ['$scope', '$routeParams', '$http', '$q',
 function($scope, $routeParams, $http, $q) {
-  var test = "fe50338207f2edab2f163186bf8d4627"; //TODO remove
   var my_id = $routeParams.id;
 
   var user = $http.get("/backend/users/" + my_id);
@@ -158,6 +157,10 @@ function($scope, $routeParams, $http, $q) {
   var permissions = $http.get("/backend/nyhedsbreve?permission=1");
 
   $scope.tab = 'details';
+  var state = $routeParams.state;
+  if (state) {
+    $scope.tab = state;
+  }
   $q.all([user, newsletters, interests, permissions]).then(function(resolved) {
     $scope.user = resolved[0].data;
     $scope.user.foedselsaar = parseInt($scope.user.foedselsaar);
@@ -315,7 +318,7 @@ newsletterApp.config(['$routeProvider',
         templateUrl: 'assets/partials/edit.html',
         controller: 'editController'
       }).
-      when('/profile/:id', {
+      when('/profile/:id/:state?', {
         templateUrl: 'assets/partials/profile.html',
         controller: 'profileController'
       }).
