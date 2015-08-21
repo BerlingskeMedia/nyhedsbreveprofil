@@ -31,11 +31,11 @@
               <a href="faq/{{my_id}}"><i class="fa fa-question-circle"></i> FAQ</a>
             </li>
             <li ng-class="{'hidden-mobile': !showMenu}" ng-show="logged_in" class="mobile-nav">
-              <a href="edit/{{my_id}}"><i class="fa fa-envelope"></i> Dine nyhedsbreve</a>
+              <a href="tilmeldt/{{my_id}}"><i class="fa fa-envelope"></i> Dine nyhedsbreve</a>
             </li>
             <li ng-class="{'hidden-mobile': !showMenu}" class="mobile-nav">
-              <a ng-if="$root.logged_in" href="/profile/{{my_id}}"><i class="fa fa-cog"></i> {{email}}</a>
-              <a ng-if="!$root.logged_in" href="login"><i class="fa fa-cog"></i> Log ind</a>
+              <a href="/oplysninger/{{my_id}}" ng-if="$root.logged_in"><i class="fa fa-cog"></i> {{email}}</a>
+              <a href="login" ng-if="!$root.logged_in"><i class="fa fa-cog"></i> Log ind</a>
             </li>
           </ul>
         </nav>
