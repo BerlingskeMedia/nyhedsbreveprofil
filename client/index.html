@@ -4,6 +4,7 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+  <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon.ico" />
 	<title>Nyhedsbreve</title>
   <link rel="stylesheet" href="/bower_components/components-font-awesome/css/font-awesome.min.css">
 	<link rel="stylesheet" href="/assets/styles/newsletter.css">
@@ -12,6 +13,7 @@
 	<script src="/bower_components/checklist-model/checklist-model.js"></script>
 	<script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
   <script src="/assets/js/main.js"></script>
+  <base href="/">
 </head>
 <body ng-app="newsletter">
   <div class="container">
@@ -26,14 +28,14 @@
   						<a ng-click="showMenu = !showMenu" href="" class="navi-toggle">Menu <i class="fa fa-bars icon-square"></i></a>
   					</li>
   					<li ng-class="{'hidden-mobile': !showMenu}" class="mobile-nav">
-  						<a href="#faq/{{my_id}}"><i class="fa fa-question-circle"></i> FAQ</a>
+  						<a href="faq/{{my_id}}"><i class="fa fa-question-circle"></i> FAQ</a>
   					</li>
   					<li ng-class="{'hidden-mobile': !showMenu}" ng-show="logged_in" class="mobile-nav">
-  						<a href="#edit/{{my_id}}"><i class="fa fa-envelope"></i> Dine nyhedsbreve</a>
+  						<a href="edit/{{my_id}}"><i class="fa fa-envelope"></i> Dine nyhedsbreve</a>
   					</li>
   					<li ng-class="{'hidden-mobile': !showMenu}" class="mobile-nav">
-  						<a ng-if="$root.logged_in" href="#/profile/{{my_id}}"><i class="fa fa-cog"></i> {{email}}</a>
-  					  <a ng-if="!$root.logged_in" href="#login"><i class="fa fa-cog"></i> Log ind</a>
+  						<a ng-if="$root.logged_in" href="/profile/{{my_id}}"><i class="fa fa-cog"></i> {{email}}</a>
+  					  <a ng-if="!$root.logged_in" href="login"><i class="fa fa-cog"></i> Log ind</a>
   					</li>
   				</ul>
   			</nav>

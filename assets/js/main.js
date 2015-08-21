@@ -1,5 +1,10 @@
 var newsletterController = angular.module('newsletterController', []);
 
+
+newsletterController.config(function ($locationProvider) {
+  $locationProvider.html5Mode(true);
+});
+
 var location_id = 1775;
 
 newsletterController.controller('newsletterController', ['$scope', '$routeParams', '$http', '$q', '$location' ,
@@ -349,7 +354,7 @@ newsletterApp.config(['$routeProvider',
     });
     $scope.home = function () {
       // A minor hack to ensure reload on anonymous navigation from step{2-3-4} to step1
-      var url = "/#";
+      var url = "/";
       if ($scope.my_id) {
         url = url + $scope.my_id;
       }

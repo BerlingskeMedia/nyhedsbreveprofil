@@ -4,7 +4,9 @@
   "description": "Kunde admin af nyhedsbreve",
   "main": "src/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/server.js",
+    "build": "docker build -t bmdako/nyhedsbreve:$npm_package_version . && docker tag -f bmdako/nyhedsbreve:$npm_package_version bmdako/nyhedsbreve:latest",
+    "push": "docker push bmdako/nyhedsbreve:$npm_package_version && docker push bmdako/nyhedsbreve:latest"
   },
   "repository": {
     "type": "git",

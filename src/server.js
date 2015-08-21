@@ -23,8 +23,7 @@ var client = {
       path: '/assets/{param*}',
       handler: {
         directory: {
-          path: 'assets',
-          index: true
+          path: 'assets'
         }
       }
     });
@@ -33,10 +32,7 @@ var client = {
       method: 'get',
       path: '/{param*}',
       handler: {
-        directory: {
-          path: 'client',
-          index: true
-        }
+        file: 'client/index.html'
       }
     });
 
@@ -57,7 +53,7 @@ var server = new Hapi.Server({
   }
 });
 
-server.connection({ port: 8000 });
+server.connection({ port: process.env.PORT ? process.env.PORT : 8000 });
 
 server.register(client, cb);
 server.register(backend, { routes: { prefix: '/backend' } }, cb);
