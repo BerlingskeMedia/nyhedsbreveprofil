@@ -5,7 +5,38 @@ var newsletterApp = angular.module('newsletter', [
   'ngRoute',
   'ui.bootstrap',
   "checklist-model"
-]).controller('newsletterController', ['$scope', '$routeParams', '$http', '$q', '$location' ,
+]).config(['$locationProvider', '$routeProvider',
+function($locationProvider, $routeProvider) {
+
+  $locationProvider.html5Mode(true);
+
+  $routeProvider.
+    when('/faq/:id?', {
+      templateUrl: 'assets/partials/faq.html',
+    }).
+    when('/contact/:id?', {
+      templateUrl: 'assets/partials/contact.html',
+    }).
+    when('/login', {
+      templateUrl: 'assets/partials/login.html',
+      controller: 'loginController'
+    }).
+    when('/tilmeldt/:id/:nid?', {
+      templateUrl: 'assets/partials/edit.html',
+      controller: 'editController'
+    }).
+    when('/oplysninger/:id/:state?', {
+      templateUrl: 'assets/partials/profile.html',
+      controller: 'profileController'
+    }).
+    when('/:id?', {
+      templateUrl: 'assets/partials/newletters.html',
+      controller: 'newsletterController'
+    }).
+    otherwise({
+      redirectTo: '/'
+    });
+}]).controller('newsletterController', ['$scope', '$routeParams', '$http', '$q', '$location' ,
 function($scope, $routeParams, $http, $q, $location) {
   $scope.state = "step1";
   var publishers = $http.get("/backend/publishers");
@@ -298,68 +329,33 @@ function($scope, $routeParams, $http, $q, $modal) {
 
   update();
 
-}]);
-
-
-
-newsletterApp.config(['$locationProvider', '$routeProvider',
-  function($locationProvider, $routeProvider) {
-
-    $locationProvider.html5Mode(true);
-
-    $routeProvider.
-      when('/faq/:id?', {
-        templateUrl: 'assets/partials/faq.html',
+}]).controller('MenuController', ['$scope', '$routeParams', '$http', '$q', '$rootScope', '$location',
+function($scope, $routeParams, $http, $q, $rootScope, $location, $route) {
+  $scope.$on('$routeChangeSuccess', function() {
+    var my_id = $routeParams.id;
+    if (my_id) {
+      $http.get("/backend/users/" + my_id).success(function(data, status, headers, config) {
+        $scope.my_id = my_id;
+        $rootScope.logged_in = true;
+        $rootScope.my_id = my_id;
+        $scope.email = data.email;
       }).
-      when('/contact/:id?', {
-        templateUrl: 'assets/partials/contact.html',
-      }).
-      when('/login', {
-        templateUrl: 'assets/partials/login.html',
-        controller: 'loginController'
-      }).
-      when('/tilmeldt/:id/:nid?', {
-        templateUrl: 'assets/partials/edit.html',
-        controller: 'editController'
-      }).
-      when('/oplysninger/:id/:state?', {
-        templateUrl: 'assets/partials/profile.html',
-        controller: 'profileController'
-      }).
-      when('/:id?', {
-        templateUrl: 'assets/partials/newletters.html',
-        controller: 'newsletterController'
-      }).
-      otherwise({
-        redirectTo: '/'
+      error(function(data, status, headers, config) {
+        $location.path('/');
       });
-  }]).controller('MenuController', ['$scope', '$routeParams', '$http', '$q', '$rootScope', '$location',
-  function($scope, $routeParams, $http, $q, $rootScope, $location, $route) {
-    $scope.$on('$routeChangeSuccess', function() {
-      var my_id = $routeParams.id;
-      if (my_id) {
-        $http.get("/backend/users/" + my_id).success(function(data, status, headers, config) {
-          $scope.my_id = my_id;
-          $rootScope.logged_in = true;
-          $rootScope.my_id = my_id;
-          $scope.email = data.email;
-        }).
-        error(function(data, status, headers, config) {
-          $location.path('/');
-        });
-      }
-    });
+    }
+  });
 
-    $scope.home = function () {
-      // A minor hack to ensure reload on anonymous navigation from step{2-3-4} to step1
-      var url = "/";
-      if ($scope.my_id) {
-        url = url + $scope.my_id;
-      }
-      else {
-        url = "/";
-      }
-      window.location = url;
-      $route.reload();
-    };
-  }]);
+  $scope.home = function () {
+    // A minor hack to ensure reload on anonymous navigation from step{2-3-4} to step1
+    var url = "/";
+    if ($scope.my_id) {
+      url = url + $scope.my_id;
+    }
+    else {
+      url = "/";
+    }
+    window.location = url;
+    $route.reload();
+  };
+}]);
