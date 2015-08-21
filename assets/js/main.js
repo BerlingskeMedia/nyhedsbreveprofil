@@ -1,5 +1,7 @@
 var newsletterController = angular.module('newsletterController', []);
 
+var location_id = 1775;
+
 newsletterController.controller('newsletterController', ['$scope', '$routeParams', '$http', '$q', '$location' ,
   function($scope, $routeParams, $http, $q, $location) {
     $scope.state = "step1";
@@ -36,7 +38,7 @@ newsletterController.controller('newsletterController', ['$scope', '$routeParams
       var method;
       if (checkbox.checked) {
         //TODO add location_id
-        method = $http.post(url +"?location_id=1");
+        method = $http.post(url +"?location_id=" + location_id);
       }
       else {
         method = $http.delete(url);
@@ -55,7 +57,7 @@ newsletterController.controller('newsletterController', ['$scope', '$routeParams
       if (!angular.isUndefined($scope.user) && false) {
         var my_id = $scope.user.ekstern_id;
         console.log($scope.user);
-        $scope.user.location_id = 1;
+        $scope.user.location_id = location_id;
         $http.put("/backend/users/" + my_id, $scope.user).success(function(data, status, headers, config) {
 
           $location.path("/profile/" + my_id);
@@ -82,7 +84,7 @@ newsletterController.controller('newsletterController', ['$scope', '$routeParams
         user.foedselsaar = user.foedselsaar.toString();
       }
       // TODO handle location id
-      user.location_id = 1;
+      user.location_id = location_id;
 
       $http.post("/backend/users", user).
       success(function(data, status, headers, config) {
@@ -108,7 +110,7 @@ newsletterController.controller('newsletterController', ['$scope', '$routeParams
 
     $scope.submit_interests = function(user) {
       var payload = {};
-      payload.location_id = 1;
+      payload.location_id = location_id;
       payload.interesser = user.interests_choices;
       $http.post("backend/users/" + user.my_id +  "/interesser", payload).
       success(function(data, status, headers, config) {
@@ -189,7 +191,7 @@ function($scope, $routeParams, $http, $q) {
     delete payload.nyhedsbreve;
     delete payload.email;
 
-    user.location_id = 1;
+    user.location_id = location_id;
 
     $http.put("/backend/users/" + my_id, payload).success(function(data, status, headers, config) {
       $scope.profileSaveSuccess = true;
@@ -200,7 +202,7 @@ function($scope, $routeParams, $http, $q) {
 
   };
   $scope.checkbox_change = function(val, nid, type) {
-    var change_url = "/backend/users/" + my_id + "/" + type +"/" + nid + "?location_id=1";
+    var change_url = "/backend/users/" + my_id + "/" + type +"/" + nid + "?location_id=" + location_id;
 
     var method;
     if (val.checked) {
@@ -267,7 +269,7 @@ function($scope, $routeParams, $http, $q, $modal) {
     }
     $scope.unsubscribeError = false;
     var payload = {};
-    payload.location_id = 1;
+    payload.location_id = location_id;
     payload.nyhedsbrev_id = $scope.to_unsubscribe.nyhedsbrev_id;
     payload.user_feedback = feedback;
     $http.post("/backend/users/" + my_id + "/nyhedsbreve/delete", payload ).success(function(data, status, headers, config) {
