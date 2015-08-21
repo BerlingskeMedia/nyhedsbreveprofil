@@ -1,60 +1,60 @@
 <!DOCTYPE html>
 <html lang="da">
 <head>
-	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
-  <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon.ico" />
-	<title>Nyhedsbreve</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+  <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon.png" />
+  <title>Nyhedsbreve</title>
   <link rel="stylesheet" href="/bower_components/components-font-awesome/css/font-awesome.min.css">
-	<link rel="stylesheet" href="/assets/styles/newsletter.css">
+  <link rel="stylesheet" href="/assets/styles/newsletter.css">
   <script src="/bower_components/angular/angular.min.js"></script>
   <script src="/bower_components/angular-route/angular-route.js"></script>
-	<script src="/bower_components/checklist-model/checklist-model.js"></script>
-	<script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+  <script src="/bower_components/checklist-model/checklist-model.js"></script>
+  <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
   <script src="/assets/js/main.js"></script>
   <base href="/">
 </head>
 <body ng-app="newsletter">
   <div class="container">
     <div class="row">
-  		<div class="col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
-  			<nav class="main-nav" ng-controller="MenuController">
-  				<ul>
-  					<li>
-  						<a ng-click="home()" href=""><i class="fa fa-home"></i> Nyhedsbreve</a>
-  					</li>
-  					<li>
-  						<a ng-click="showMenu = !showMenu" href="" class="navi-toggle">Menu <i class="fa fa-bars icon-square"></i></a>
-  					</li>
-  					<li ng-class="{'hidden-mobile': !showMenu}" class="mobile-nav">
-  						<a href="faq/{{my_id}}"><i class="fa fa-question-circle"></i> FAQ</a>
-  					</li>
-  					<li ng-class="{'hidden-mobile': !showMenu}" ng-show="logged_in" class="mobile-nav">
-  						<a href="edit/{{my_id}}"><i class="fa fa-envelope"></i> Dine nyhedsbreve</a>
-  					</li>
-  					<li ng-class="{'hidden-mobile': !showMenu}" class="mobile-nav">
-  						<a ng-if="$root.logged_in" href="/profile/{{my_id}}"><i class="fa fa-cog"></i> {{email}}</a>
-  					  <a ng-if="!$root.logged_in" href="login"><i class="fa fa-cog"></i> Log ind</a>
-  					</li>
-  				</ul>
-  			</nav>
-  		</div>
-  	</div><!-- row -->
-		<div ng-view></div>
+      <div class="col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
+        <nav class="main-nav" ng-controller="MenuController">
+          <ul>
+            <li>
+              <a ng-click="home()" href=""><i class="fa fa-home"></i> Nyhedsbreve</a>
+            </li>
+            <li>
+              <a ng-click="showMenu = !showMenu" href="" class="navi-toggle">Menu <i class="fa fa-bars icon-square"></i></a>
+            </li>
+            <li ng-class="{'hidden-mobile': !showMenu}" class="mobile-nav">
+              <a href="faq/{{my_id}}"><i class="fa fa-question-circle"></i> FAQ</a>
+            </li>
+            <li ng-class="{'hidden-mobile': !showMenu}" ng-show="logged_in" class="mobile-nav">
+              <a href="edit/{{my_id}}"><i class="fa fa-envelope"></i> Dine nyhedsbreve</a>
+            </li>
+            <li ng-class="{'hidden-mobile': !showMenu}" class="mobile-nav">
+              <a ng-if="$root.logged_in" href="/profile/{{my_id}}"><i class="fa fa-cog"></i> {{email}}</a>
+              <a ng-if="!$root.logged_in" href="login"><i class="fa fa-cog"></i> Log ind</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div><!-- row -->
+    <div ng-view></div>
   </div>
-	<footer class="main-footer">
-	    <div class="container">
-	        <div class="col-xs-12">
-	            <div class="text-center">
-	                <p>
-	                    <a target="_blank" href="http://www.berlingskemedia.dk/ophavsret-og-vilkaar/">Ophavsret og Vilkår</a>
-	                    <a target="_blank" href="http://www.berlingskemedia.dk/cookie-og-privatlivspolitik/" class="cookie-link">Cookiepolitik</a>
-	                    <a href="#contact">Kontakt os</a>
-	                </p>
-	            </div>
-	        </div>
-	    </div>
-	</footer>
+  <footer class="main-footer">
+      <div class="container">
+          <div class="col-xs-12">
+              <div class="text-center">
+                  <p>
+                      <a target="_blank" href="http://www.berlingskemedia.dk/ophavsret-og-vilkaar/">Ophavsret og Vilkår</a>
+                      <a target="_blank" href="http://www.berlingskemedia.dk/cookie-og-privatlivspolitik/" class="cookie-link">Cookiepolitik</a>
+                      <a href="#contact">Kontakt os</a>
+                  </p>
+              </div>
+          </div>
+      </div>
+  </footer>
 </body>
 </html>
