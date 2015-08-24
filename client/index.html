@@ -22,20 +22,21 @@
         <nav class="main-nav" ng-controller="MenuController">
           <ul>
             <li>
-              <a ng-click="home()" href=""><i class="fa fa-home"></i> Nyhedsbreve</a>
+              <!-- <a ng-click="home()" href=""><i class="fa fa-home"></i> Nyhedsbreve</a> -->
+              <a href="nyhedsbreve"><i class="fa fa-home"></i> Nyhedsbreve</a>
             </li>
             <li>
               <a ng-click="showMenu = !showMenu" href="" class="navi-toggle">Menu <i class="fa fa-bars icon-square"></i></a>
             </li>
             <li ng-class="{'hidden-mobile': !showMenu}" class="mobile-nav">
-              <a href="faq/{{my_id}}"><i class="fa fa-question-circle"></i> FAQ</a>
+              <a href="faq"><i class="fa fa-question-circle"></i> FAQ</a>
             </li>
-            <li ng-class="{'hidden-mobile': !showMenu}" ng-show="logged_in" class="mobile-nav">
-              <a href="tilmeldt/{{my_id}}"><i class="fa fa-envelope"></i> Dine nyhedsbreve</a>
+            <li ng-class="{'hidden-mobile': !showMenu}" ng-show="loggedIn" class="mobile-nav">
+              <a href="tilmeldt"><i class="fa fa-envelope"></i> Dine nyhedsbreve</a>
             </li>
             <li ng-class="{'hidden-mobile': !showMenu}" class="mobile-nav">
-              <a href="/oplysninger/{{my_id}}" ng-if="$root.logged_in"><i class="fa fa-cog"></i> {{email}}</a>
-              <a href="login" ng-if="!$root.logged_in"><i class="fa fa-cog"></i> Log ind</a>
+              <a href="oplysninger" ng-if="loggedIn"><i class="fa fa-cog"></i> {{email}}</a>
+              <a href="login" ng-if="!loggedIn"><i class="fa fa-cog"></i> Log ind</a>
             </li>
           </ul>
         </nav>
@@ -50,7 +51,7 @@
                   <p>
                       <a target="_blank" href="http://www.berlingskemedia.dk/ophavsret-og-vilkaar/">Ophavsret og Vilkår</a>
                       <a target="_blank" href="http://www.berlingskemedia.dk/cookie-og-privatlivspolitik/" class="cookie-link">Cookiepolitik</a>
-                      <a href="#contact">Kontakt os</a>
+                      <a href="kontakt">Kontakt os</a>
                   </p>
               </div>
           </div>

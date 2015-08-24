@@ -27,6 +27,7 @@
           <div class="tab-pane" id="vtab1" ng-class="{active: tab == 'details'}">
             <h3 class="title">Navn og adresse</h3>
             <small class="savesucess" ng-show="profileSaveSuccess"><i class="fa fa-check"></i> Dine oplysninger blev opdateret</small>
+            <small class="savesucess" ng-show="profileSaveError"><i class="fa fa-ban"></i> <strong>Fejl</strong> Dine oplysninger er ikke blevet opdateret</small>
 
             <div class="hidden-labels">
               <div class="form-group required has-feedback">
@@ -57,7 +58,7 @@
                 <div class="col-xs-6 col-md-3">
                   <div class="form-group">
                     <label for="">Postnr.</label>
-                    <input min="999" max="9999" ng-model="user.postnummer_dk" type="number" name="zip" class="form-control input-sm" id="zip">
+                    <input min="999" max="9999" ng-model="user.postnummer" type="number" name="zip" class="form-control input-sm" id="zip">
                     <small ng-show="userForm.zip.$dirty && userForm.zip.$invalid" class="help-block">Indtast et gyldigt postnummer</small>
                   </div>
                 </div>

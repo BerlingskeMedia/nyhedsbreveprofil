@@ -11,33 +11,61 @@ function($locationProvider, $routeProvider) {
   $locationProvider.html5Mode(true);
 
   $routeProvider.
-    when('/faq/:id?', {
+    when('/faq', {
       templateUrl: 'assets/partials/faq.html',
     }).
-    when('/contact/:id?', {
+    when('/kontakt', {
       templateUrl: 'assets/partials/contact.html',
     }).
-    when('/login', {
+    when('/login/:id?', {
       templateUrl: 'assets/partials/login.html',
       controller: 'loginController'
     }).
-    when('/tilmeldt/:id/:nid?', {
+    when('/tilmeldt/:nid?', {
       templateUrl: 'assets/partials/edit.html',
-      controller: 'editController'
+      controller: 'subscriptionsController'
     }).
-    when('/oplysninger/:id/:state?', {
+    when('/oplysninger/:tab?', {
       templateUrl: 'assets/partials/profile.html',
       controller: 'profileController'
     }).
-    when('/:id?', {
+    when('/nyhedsbreve/:id?', {
       templateUrl: 'assets/partials/newletters.html',
       controller: 'newsletterController'
     }).
     otherwise({
-      redirectTo: '/'
+      redirectTo: '/nyhedsbreve'
     });
-}]).controller('newsletterController', ['$scope', '$routeParams', '$http', '$q', '$location' ,
-function($scope, $routeParams, $http, $q, $location) {
+}]).factory('User', ['$http',
+function ($http) {
+  return {
+    login: function (ekstern_id) {
+      return $http.get("/backend/users/" + ekstern_id).then(function (response) {
+        if (response.status === 200 && response.data) {
+          window.sessionStorage.setItem('ekstern_id', response.data.ekstern_id);
+          window.sessionStorage.setItem('User', JSON.stringify(response.data));
+        } else {
+          // TODO: Perhaps do nothing but show that user was not found. (invalid link). Try the "send email" opstion
+        }
+      });
+    },
+    logout: function () {
+      window.sessionStorage.setItem('ekstern_id', null);
+      window.sessionStorage.setItem('User', null);
+    },
+    getData: function () {
+      return JSON.parse(window.sessionStorage.getItem('User'));
+    },
+    getExternalId: function () {
+      return window.sessionStorage.getItem('ekstern_id');
+    },
+    isLoggedIn: function () {
+      return window.sessionStorage.getItem('ekstern_id') !== null;
+    }
+  };
+}]).controller('newsletterController', ['$scope', '$routeParams', '$http', '$q', '$location', 'User',
+function ($scope, $routeParams, $http, $q, $location, User) {
+
   $scope.state = "step1";
   var publishers = $http.get("/backend/publishers");
   var newsletters = $http.get("/backend/nyhedsbreve");
@@ -88,7 +116,6 @@ function($scope, $routeParams, $http, $q, $location) {
   };
 
   $scope.submit_step1 = function (user) {
-
     if (!angular.isUndefined($scope.user) && false) {
       var my_id = $scope.user.ekstern_id;
       console.log($scope.user);
@@ -102,8 +129,8 @@ function($scope, $routeParams, $http, $q, $location) {
       });
 
     }
-    $scope.state = "step2";
 
+    $scope.state = "step2";
   };
 
   $scope.post_user = function(user) {
@@ -158,9 +185,25 @@ function($scope, $routeParams, $http, $q, $location) {
     });
   };
 
-}]).controller('loginController', ['$scope', '$routeParams', '$http', '$rootScope', '$location',
-function($scope, $routeParams, $http, $rootScope, $location) {
+}]).controller('loginController', ['$scope', '$routeParams', '$http', '$rootScope', '$location', 'User',
+function ($scope, $routeParams, $http, $rootScope, $location, User) {
+
   $scope.email = $routeParams.email;
+
+  if ($routeParams.id) {
+    User.login($routeParams.id).then(function (response) {
+      if (User.isLoggedIn()) {
+        $location.path('nyhedsbreve');
+      } else {
+        // TODO: Perhaps do nothing but show that user was not found. (invalid link). Try the "send email" opstion
+      }
+    });
+  }
+
+  if (User.isLoggedIn()) {
+    $location.path('nyhedsbreve');
+  }
+
   $scope.send_email = function(email) {
     if (!$scope.loginForm.$valid) {
       return;
@@ -172,31 +215,32 @@ function($scope, $routeParams, $http, $rootScope, $location) {
     payload.email = email;
     payload.publisher_id = 1;
 
-    $http.post("/backend/mails/profile-page-link", payload).
-    success(function(data, status, headers, config) {
-      $scope.success = true;
-    }).
-    error(function(data, status, headers, config) {
-      //$scope.success = true;
+    $http.post("/backend/mails/profile-page-link", payload).then( function (response) {
+      if (response.status === 200) {
+        $scope.success = true;
+      }
     });
   };
 
-}]).controller('profileController', ['$scope', '$routeParams', '$http', '$q',
-function($scope, $routeParams, $http, $q) {
-  var my_id = $routeParams.id;
+}]).controller('profileController', ['$scope', '$routeParams', '$http', '$q', '$location', 'User',
+function ($scope, $routeParams, $http, $q, $location, User) {
+  if (!User.isLoggedIn()) {
+    return $location.path('login');
+  }
 
-  var user = $http.get("/backend/users/" + my_id);
-  var newsletters = $http.get("/backend/users/" + my_id + "/nyhedsbreve");
+  var ekstern_id = User.getExternalId();
+  var userData = User.getData();
+
+  var user = $http.get("/backend/users/" + ekstern_id);
+  var newsletters = $http.get("/backend/users/" + ekstern_id + "/nyhedsbreve");
   var interests = $http.get("/backend/interesser");
   var permissions = $http.get("/backend/nyhedsbreve?permission=1");
 
-  $scope.tab = 'details';
-  var state = $routeParams.state;
-  if (state) {
-    $scope.tab = state;
-  }
+  $scope.tab = $routeParams.tab ? $routeParams.tab : 'details';
+
   $q.all([user, newsletters, interests, permissions]).then(function(resolved) {
     $scope.user = resolved[0].data;
+    $scope.user.postnummer = parseInt($scope.user.postnummer);
     $scope.user.foedselsaar = parseInt($scope.user.foedselsaar);
     $scope.newsletters = resolved[1].data;
     $scope.interests = resolved[2].data;
@@ -204,38 +248,38 @@ function($scope, $routeParams, $http, $q) {
   });
 
   $scope.update = function(user) {
-    //TODO location id?
     if ($scope.userForm.$invalid) {
       return;
     }
-    if (!user.postnummer_dk) {
-      delete user.postnummer_dk;
-    }
-    if (!user.foedselsaar) {
-      delete user.foedselsaar;
-    }
-    if (user.foedselsaar) {
-      user.foedselsaar = user.foedselsaar.toString();
-    }
 
     var payload = angular.copy(user);
+    payload.location_id = location_id;
     delete payload.interesser;
     delete payload.nyhedsbreve;
     delete payload.email;
 
-    user.location_id = location_id;
+    if (user.foedselsaar) {
+      payload.foedselsaar = user.foedselsaar.toString();
+    } else {
+      delete payload.foedselsaar;
+    }
+    
+    if (user.postnummer) {
+      payload.postnummer = user.postnummer.toString();
+    }
 
-    $http.put("/backend/users/" + my_id, payload).success(function(data, status, headers, config) {
-      $scope.profileSaveSuccess = true;
-    }).
-    error(function(data, status, headers, config) {
-      //TODO handle error;
+    $http.put("/backend/users/" + ekstern_id, payload).then(function (response) {
+      if (response.status === 200) {
+        $scope.profileSaveSuccess = true;
+      } else {
+        console.log(response);
+        $scope.profileSaveError = true;
+      }
     });
-
   };
 
   $scope.checkbox_change = function(val, nid, type) {
-    var change_url = "/backend/users/" + my_id + "/" + type +"/" + nid + "?location_id=" + location_id;
+    var change_url = "/backend/users/" + ekstern_id + "/" + type +"/" + nid + "?location_id=" + location_id;
 
     var method;
     if (val.checked) {
@@ -262,14 +306,20 @@ function($scope, $routeParams, $http, $q) {
 
   };
 
-}]).controller('editController', ['$scope', '$routeParams', '$http', '$q', '$modal',
-function($scope, $routeParams, $http, $q, $modal) {
-  $scope.reasons = ["I sender for mange mails", "Indholdet i jeres mails er ikke relevant for mig", "Jeg modtager for mange mails generelt", "Jeg har deltaget i en konkurrence, men ønsker ikke at være tilmeldt", "Jeg er blevet tilmeldt ved en fejl"];
-  var my_id = $routeParams.id;
+}]).controller('subscriptionsController', ['$scope', '$routeParams', '$http', '$q', '$modal', '$location', 'User',
+function ($scope, $routeParams, $http, $q, $modal, $location, User) {
+  $scope.reasons = [
+    "I sender for mange mails",
+    "Indholdet i jeres mails er ikke relevant for mig",
+    "Jeg modtager for mange mails generelt",
+    "Jeg har deltaget i en konkurrence, men ønsker ikke at være tilmeldt",
+    "Jeg er blevet tilmeldt ved en fejl"];
 
-  var update = function() {
-    var my_newsletters = $http.get("/backend/users/" + my_id + "/nyhedsbreve");
+  function update () {
+
+    var my_newsletters = $http.get("/backend/users/" + User.getExternalId() + "/nyhedsbreve");
     var newsletters = $http.get("/backend/nyhedsbreve");
+
     $q.all([newsletters, my_newsletters]).then(function(resolved) {
 
       $scope.newsletters = resolved[0].data;
@@ -277,7 +327,7 @@ function($scope, $routeParams, $http, $q, $modal) {
 
       $scope.filtered_newsletters = $scope.newsletters.filter(function (newsletter) {
         return $scope.my_subscriptions.indexOf(newsletter.nyhedsbrev_id) !== -1;
-        });
+      });
       var nid = $routeParams.nid;
       if (nid) {
         var found = $scope.filtered_newsletters.some(function (el) {
@@ -286,7 +336,7 @@ function($scope, $routeParams, $http, $q, $modal) {
         if (found) {
           $scope.filtered_newsletters = $scope.filtered_newsletters.filter(function (newsletter) {
             return newsletter.nyhedsbrev_id == nid;
-            });
+          });
         }
       }
     });
@@ -302,7 +352,7 @@ function($scope, $routeParams, $http, $q, $modal) {
     payload.location_id = location_id;
     payload.nyhedsbrev_id = $scope.to_unsubscribe.nyhedsbrev_id;
     payload.user_feedback = feedback;
-    $http.post("/backend/users/" + my_id + "/nyhedsbreve/delete", payload ).success(function(data, status, headers, config) {
+    $http.post("/backend/users/" + User.getExternalId() + "/nyhedsbreve/delete", payload ).success(function(data, status, headers, config) {
       update();
       $scope.modalInstance.close();
     }).
@@ -327,35 +377,56 @@ function($scope, $routeParams, $http, $q, $modal) {
     $scope.selected_reason = value;
   };
 
-  update();
 
-}]).controller('MenuController', ['$scope', '$routeParams', '$http', '$q', '$rootScope', '$location',
-function($scope, $routeParams, $http, $q, $rootScope, $location, $route) {
-  $scope.$on('$routeChangeSuccess', function() {
-    var my_id = $routeParams.id;
-    if (my_id) {
-      $http.get("/backend/users/" + my_id).success(function(data, status, headers, config) {
-        $scope.my_id = my_id;
-        $rootScope.logged_in = true;
-        $rootScope.my_id = my_id;
-        $scope.email = data.email;
-      }).
-      error(function(data, status, headers, config) {
-        $location.path('/');
+  if (!User.isLoggedIn()) {
+    var search = $location.search();
+    console.log('search', search);
+    if (search.ekstern_id || search.id || search.login) {
+      User.login(search.ekstern_id ? search.ekstern_id : search.id ? search.id : search.login).then(function () {
+        update();
       });
+    } else {
+      $location.path('login');
     }
+  } else {
+    update();
+  }
+}]).controller('MenuController', ['$scope', '$routeParams', '$http', '$q', '$rootScope', '$location', 'User',
+function ($scope, $routeParams, $http, $q, $rootScope, $location, User) {
+
+  $scope.$on('$routeChangeSuccess', function () {
+    $scope.loggedIn = User.isLoggedIn();
+
+    if ($scope.loggedIn) {
+      $scope.ekstern_id = User.getExternalId();
+      var user = User.getData();
+      $scope.email = user.email;
+    }
+
+    // var my_id = $routeParams.id;
+    // if (my_id) {
+    //   $http.get("/backend/users/" + my_id).success(function(data, status, headers, config) {
+    //     $scope.my_id = my_id;
+    //     $rootScope.logged_in = true;
+    //     $rootScope.my_id = my_id;
+    //     $scope.email = data.email;
+    //   }).
+    //   error(function(data, status, headers, config) {
+    //     $location.path('/');
+    //   });
+    // }
   });
 
-  $scope.home = function () {
-    // A minor hack to ensure reload on anonymous navigation from step{2-3-4} to step1
-    var url = "/";
-    if ($scope.my_id) {
-      url = url + $scope.my_id;
-    }
-    else {
-      url = "/";
-    }
-    window.location = url;
-    $route.reload();
-  };
+  // $scope.home = function () {
+  //   // A minor hack to ensure reload on anonymous navigation from step{2-3-4} to step1
+  //   var url = "/";
+  //   if ($scope.my_id) {
+  //     url = url + $scope.my_id;
+  //   }
+  //   else {
+  //     url = "/";
+  //   }
+  //   window.location = url;
+  //   $route.reload();
+  // };
 }]);
