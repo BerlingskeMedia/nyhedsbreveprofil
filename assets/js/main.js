@@ -66,17 +66,22 @@ function ($http) {
 }]).controller('newsletterController', ['$scope', '$routeParams', '$http', '$q', '$location', 'User',
 function ($scope, $routeParams, $http, $q, $location, User) {
 
+  if (User.isLoggedIn()) {
+    $http.get("/backend/users/" + User.getExternalId()).then(function (response) {
+      if (response.status === 200) {
+        $scope.user = response.data;
+        $scope.loggedIn = true;
+      }
+    });
+  }
+
   $scope.state = "step1";
+
   var publishers = $http.get("/backend/publishers");
   var newsletters = $http.get("/backend/nyhedsbreve");
   var interests = $http.get("/backend/interesser");
   var permissions = $http.get("/backend/nyhedsbreve?permission=1");
   var to_resolve = [publishers, newsletters, interests, permissions];
-
-  if (!angular.isUndefined($routeParams.id)) {
-    var user = $http.get("/backend/users/" + $routeParams.id);
-    to_resolve.push(user);
-  }
 
   $q.all(to_resolve).then(function(resolved) {
     $scope.publishers = resolved[0].data;
@@ -85,37 +90,36 @@ function ($scope, $routeParams, $http, $q, $location, User) {
     $scope.permissions = resolved[3].data;
     //TODO use param from path
     $scope.current_publisher = $scope.publishers[15];
-    if (angular.isDefined(resolved[4]) && resolved[4].status == 200) {
-      $scope.user = resolved[4].data;
-      //Avoid numFmt conversion error
-      delete $scope.user.foedselsaar;
-      $scope.loggedIn = true;
-    }
   });
 
-  $scope.onNewsletterChange = function(checkbox, newsletter) {
-    var url = "/backend/users/" + $scope.user.ekstern_id + '/nyhedsbreve/' + newsletter.nyhedsbrev_id;
-    if (!$scope.user) {
-      return;
+  $scope.toggleSubscription = function(checkbox, nyhedsbrev_id) {
+    if (User.isLoggedIn()) {
+      var url = "/backend/users/" + User.getExternalId() + '/nyhedsbreve/' + nyhedsbrev_id;
+
+      var request;
+      if (checkbox.checked) {
+        request = $http.post(url +"?location_id=" + location_id);
+      }
+      else {
+        request = $http.delete(url);
+      }
+      request.then(function (response) {
+        console.log(response);
+        if (response.status === 200) {
+          $scope.user.nyhedsbreve = response.data;
+          checkbox.$parent.created = checkbox.checked;
+          checkbox.$parent.deleted = !checkbox.checked;
+        } else {
+          console.error(error);
+        }
+      });
+    } else {
+      // Continue here!
+      console.log($scope.user)
     }
-    var method;
-    if (checkbox.checked) {
-      //TODO add location_id
-      method = $http.post(url +"?location_id=" + location_id);
-    }
-    else {
-      method = $http.delete(url);
-    }
-    method.success(function(data) {
-      $scope.user.nyhedsbreve = data;
-      checkbox.$parent.created = checkbox.checked;
-      checkbox.$parent.deleted = !checkbox.checked;
-    }).error(function(error) {
-      console.error(error);
-    });
   };
 
-  $scope.submit_step1 = function (user) {
+  $scope.submit_step1 = function () {
     if (!angular.isUndefined($scope.user) && false) {
       var my_id = $scope.user.ekstern_id;
       console.log($scope.user);
@@ -229,7 +233,6 @@ function ($scope, $routeParams, $http, $q, $location, User) {
   }
 
   var ekstern_id = User.getExternalId();
-  var userData = User.getData();
 
   var user = $http.get("/backend/users/" + ekstern_id);
   var newsletters = $http.get("/backend/users/" + ekstern_id + "/nyhedsbreve");

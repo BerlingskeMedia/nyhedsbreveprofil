@@ -17,7 +17,7 @@
           <li ng-repeat="publisher in publishers"><a href="" ng-click="$parent.current_publisher = publisher">{{publisher.publisher_navn}}</a></li>
         </ul>
       </div>
-      <a ng-hide="loggedIn" ng-click="submit_step1(user)" class="btn btn-success pull-right">TILMELD <i class="fa fa-angle-right"></i></a>
+      <a ng-hide="loggedIn" ng-click="submit_step1()" class="btn btn-success pull-right">TILMELD <i class="fa fa-angle-right"></i></a>
     </section>
 
     <section class="newsletters">
@@ -29,7 +29,7 @@
                 <div class="checkbox">
                   <label>
                     <input type="checkbox" checklist-model="$parent.user.nyhedsbreve" checklist-value="newsletter.nyhedsbrev_id"
-                    ng-change="onNewsletterChange(this, newsletter)">
+                    ng-change="toggleSubscription(this, newsletter.nyhedsbrev_id)">
                     <strong class="newsletter-title">{{newsletter.nyhedsbrev_navn}}</strong>
                     <small>{{newsletter.indhold}}</small>
                   </label>
