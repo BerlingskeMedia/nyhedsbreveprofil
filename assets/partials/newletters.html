@@ -181,7 +181,7 @@
       <div class="row">
         <div class="module-top ">
           <a ng-click="state = 'step1'" class="btn btn-link pull-left"><i class="fa fa-angle-left"></i> Flere nyhedsbreve</a>
-          <button type="submit" ng-click="create_user()" ng-class="{'btn-invalid ': userForm.$invalid, 'btn-success': userForm.$valid}" class="btn pull-right ">TILMELD <i class="fa fa-angle-right"></i></button>
+          <button type="submit" ng-click="submit_step2()" ng-class="{'btn-invalid ': userForm.$invalid, 'btn-success': userForm.$valid}" class="btn pull-right ">TILMELD <i class="fa fa-angle-right"></i></button>
         </div>
       </div>
     </form>
@@ -214,11 +214,24 @@
     </div>
     <div class="module-top text-center">
       <a href="" ng-click="state= 'step2'" class="btn btn-default btn-link pull-left"><i class="fa fa-angle-left"></i>Tilbage</a>
-      <a ng-click="submit_interests(user); state= 'step4'" class="btn btn-success pull-right">Gem <i class="fa fa-angle-right"></i></a>
+      <a ng-click="submit_step3(user); state= 'step4'" class="btn btn-success pull-right">Gem <i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 </div>
 <div ng-show="state == 'step4'">
+  <div class="col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
+    <div class="alert alert-success mt-50" role="alert">
+      <h1>Tak for din interesse</h1>
+      <h4>
+        <strong>Du er endnu ikke tilmeldt.</strong>
+      </h4>
+      <p>Vi har sendt dig en email med et link, hvor du skal bekræfte din tilmelding, for at fuldføre processen. </p>
+      <p>Dette link udløber om 48 timer. </p>
+    </div>
+  </div>
+</div>
+
+<div ng-show="routeParam.step == 'step4'">
   <div class="col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
     <div class="alert alert-success mt-50" role="alert">
       <h1>Tak for din interesse</h1>

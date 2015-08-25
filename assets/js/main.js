@@ -84,7 +84,7 @@ function($locationProvider, $routeProvider) {
         login: 'LoginService'
       }
     }).
-    when('/tilmeldt/:nid?', {
+    when('/tilmeldt/:nyhedsbrev_id?', {
       templateUrl: 'assets/partials/edit.html',
       controller: 'subscriptionsController',
       resolve: {
@@ -98,7 +98,21 @@ function($locationProvider, $routeProvider) {
         login: 'LoginService'
       }
     }).
-    when('/nyhedsbreve/:id?', {
+    when('/nyhedsbreve/:publisher_id?', {
+      templateUrl: 'assets/partials/newletters.html',
+      controller: 'newsletterController',
+      resolve: {
+        login: 'LoginService'
+      }
+    }).
+    when('/tilmeld', {
+      templateUrl: 'assets/partials/newletters.html',
+      controller: 'newsletterController',
+      resolve: {
+        login: 'LoginService'
+      }
+    }).
+    when('/interesser', {
       templateUrl: 'assets/partials/newletters.html',
       controller: 'newsletterController',
       resolve: {
@@ -128,7 +142,29 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
         $location.path('login');
       }
     });
+  } else {
+    var basket = getBasket();
+    console.log('load', basket);
+    if (basket) {
+      $scope.user = basket;
+    }
   }
+
+  function getBasket () {
+    return JSON.parse(window.sessionStorage.getItem('basket'));
+  }
+
+  function saveBasket () {
+    console.log('save', $scope.user);
+    window.sessionStorage.setItem('basket', JSON.stringify($scope.user));
+  }
+
+  function removeBasket () {
+    window.sessionStorage.removeItem('basket');
+  }
+
+  $scope.routeParams = $routeParams
+  console.log('$routeParams', $routeParams);
 
   $scope.state = "step1";
 
@@ -168,18 +204,21 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
         }
       });
     } else {
+      console.log('before', $scope.user)
+      saveBasket();
+      console.log('after', $scope.user)
       // Continue here!
-      console.log($scope.user)
     }
   };
 
   $scope.submit_step1 = function () {
     if (!UserService.isLoggedIn()) {
+      saveBasket();
       $scope.state = "step2";
     }
   };
 
-  $scope.create_user = function () {
+  $scope.submit_step2 = function () {
     if ($scope.userForm.$invalid) {
       return;
     }
@@ -196,6 +235,7 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
     $http.post("/backend/users", $scope.user).then(function (response) {
       $scope.state = "step3";
       UserService.setExternalId(response.data.ekstern_id);
+      removeBasket();
     }, function (error) {
       console.log('create_user error', error);
       if (error.status === 409) {
@@ -216,7 +256,7 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
     });
   };
 
-  $scope.submit_interests = function(user) {
+  $scope.submit_step3 = function(user) {
     var payload = {};
     payload.location_id = location_id;
     payload.interesser = user.interests_choices;
@@ -358,14 +398,15 @@ function ($scope, $routeParams, $http, $q, $modal, $location, UserService) {
       $scope.filtered_newsletters = $scope.newsletters.filter(function (newsletter) {
         return $scope.my_subscriptions.indexOf(newsletter.nyhedsbrev_id) !== -1;
       });
-      var nid = $routeParams.nid;
-      if (nid) {
+
+      var nyhedsbrev_id = $routeParams.nyhedsbrev_id;
+      if (nyhedsbrev_id) {
         var found = $scope.filtered_newsletters.some(function (el) {
-          return el.nyhedsbrev_id == nid;
+          return el.nyhedsbrev_id == nyhedsbrev_id;
         });
         if (found) {
           $scope.filtered_newsletters = $scope.filtered_newsletters.filter(function (newsletter) {
-            return newsletter.nyhedsbrev_id == nid;
+            return newsletter.nyhedsbrev_id == nyhedsbrev_id;
           });
         }
       }
