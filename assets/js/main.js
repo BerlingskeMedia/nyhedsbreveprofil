@@ -106,10 +106,12 @@ function($locationProvider, $routeProvider) {
 function ($scope, $routeParams, $http, $q, $location, UserService) {
 
   if (UserService.isLoggedIn()) {
-    $http.get("/backend/users/" + UserService.getExternalId()).then(function (response) {
+    UserService.getData().then(function (response) {
       if (response.status === 200) {
         $scope.user = response.data;
         $scope.loggedIn = true;
+      } else {
+        $location.path('login');
       }
     });
   }
@@ -231,16 +233,6 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
 function ($scope, $routeParams, $http, $rootScope, $location, UserService, login) {
   // $scope.email = $routeParams.email;
 
-  // if ($routeParams.id) {
-  //   UserService.login($routeParams.id).then(function (response) {
-  //     if (UserService.isLoggedIn()) {
-  //       $location.path('nyhedsbreve');
-  //     } else {
-  //       // TODO: Perhaps do nothing but show that user was not found. (invalid link). Try the "send email" opstion
-  //     }
-  //   });
-  // }
-
   if (UserService.isLoggedIn()) {
     $location.path('nyhedsbreve');
   }
@@ -348,7 +340,6 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
 
 }]).controller('subscriptionsController', ['$scope', '$routeParams', '$http', '$q', '$modal', '$location', 'UserService',
 function ($scope, $routeParams, $http, $q, $modal, $location, UserService) {
-  console.log('subscriptionsController', UserService.isLoggedIn());
   $scope.reasons = [
     "I sender for mange mails",
     "Indholdet i jeres mails er ikke relevant for mig",
