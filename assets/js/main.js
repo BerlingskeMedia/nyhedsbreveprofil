@@ -179,7 +179,7 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
     }
   };
 
-  $scope.createUser = function () {
+  $scope.create_user = function () {
     if ($scope.userForm.$invalid) {
       return;
     }
@@ -197,14 +197,14 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
       $scope.state = "step3";
       UserService.setExternalId(response.data.ekstern_id);
     }, function (error) {
-      console.log('createUser error', error);
+      console.log('create_user error', error);
       if (error.status === 409) {
         $scope.userExists = true;
       }
     });
   };
 
-  $scope.sendLogin = function() {
+  $scope.send_login = function() {
     payload = {};
     payload.email = $scope.user.email;
     //TODO handle publisher_id;
