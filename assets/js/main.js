@@ -40,11 +40,12 @@ function ($http, $location, UserService) {
         } else {
           // TODO: Perhaps do nothing but show that user was not found. (invalid link). Try the "send email" opstion
         }
+
+        $location.search('eksternid', null);
+        $location.search('id', null);
+        $location.search('userid', null);
       });
 
-      $location.search('eksternid', null);
-      $location.search('id', null);
-      $location.search('userid', null);
     } else {
       // var p = $q.defer();
       // return p.promise;
@@ -142,13 +143,12 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
         request = $http.delete(url);
       }
       request.then(function (response) {
-        console.log(response);
         if (response.status === 200) {
           $scope.user.nyhedsbreve = response.data;
           checkbox.$parent.created = checkbox.checked;
           checkbox.$parent.deleted = !checkbox.checked;
         } else {
-          console.error(error);
+          console.error(response);
         }
       });
     } else {
