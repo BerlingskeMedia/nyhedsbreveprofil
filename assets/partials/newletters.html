@@ -17,7 +17,7 @@
           <li ng-repeat="publisher in publishers"><a href="" ng-click="$parent.current_publisher = publisher">{{publisher.publisher_navn}}</a></li>
         </ul>
       </div>
-      <a ng-hide="loggedIn" ng-click="submit_step1()" class="btn btn-success pull-right">TILMELD <i class="fa fa-angle-right"></i></a>
+      <a ng-hide="loggedIn" ng-click="submit_step1()" class="btn btn-success pull-right">NÆSTE <i class="fa fa-angle-right"></i></a>
     </section>
 
     <section class="newsletters">
@@ -29,7 +29,7 @@
                 <div class="checkbox">
                   <label>
                     <input type="checkbox" checklist-model="$parent.user.nyhedsbreve" checklist-value="newsletter.nyhedsbrev_id"
-                    ng-change="toggleSubscription(this, newsletter.nyhedsbrev_id)">
+                      ng-change="toggleSubscription(this, newsletter.nyhedsbrev_id)">
                     <strong class="newsletter-title">{{newsletter.nyhedsbrev_navn}}</strong>
                     <small>{{newsletter.indhold}}</small>
                   </label>
@@ -47,10 +47,12 @@
   </div>
   <div class="col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
     <div class="module-top text-right bottom-nav">
-      <a ng-hide="loggedIn" ng-click="submit_step1()" class="btn btn-success">TILMELD <i class="fa fa-angle-right"></i></a>
+      <a ng-hide="loggedIn" ng-click="submit_step1()" class="btn btn-success">NÆSTE <i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 </div>
+
+
 <div ng-show="state == 'step2'" class="col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
   <div ng-hide="userExists">
     <h1>Tilmeld dig</h1>
@@ -165,7 +167,8 @@
             <li ng-repeat="permission in permissions">
               <div class="checkbox">
                 <label>
-                  <input checklist-model="$parent.user.nyhedsbreve" checklist-value="permission.nyhedsbrev_id" type="checkbox">
+                  <input type="checkbox" checklist-model="$parent.user.nyhedsbreve" checklist-value="permission.nyhedsbrev_id"
+                    ng-change="toggleSubscription(this, permission.nyhedsbrev_id)">
                   <small>
                     <strong class="xs-block">{{permission.nyhedsbrev_navn}}</strong>
                     <br>{{permission.indhold}}</small>
@@ -178,7 +181,7 @@
       <div class="row">
         <div class="module-top ">
           <a ng-click="state = 'step1'" class="btn btn-link pull-left"><i class="fa fa-angle-left"></i> Flere nyhedsbreve</a>
-          <button type="submit" ng-click="post_user(user)" ng-class="{'btn-invalid ': userForm.$invalid, 'btn-success': userForm.$valid}" class="btn pull-right ">TILMELD <i class="fa fa-angle-right"></i></button>
+          <button type="submit" ng-click="createUser()" ng-class="{'btn-invalid ': userForm.$invalid, 'btn-success': userForm.$valid}" class="btn pull-right ">TILMELD <i class="fa fa-angle-right"></i></button>
         </div>
       </div>
     </form>

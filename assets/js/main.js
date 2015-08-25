@@ -15,12 +15,17 @@ function ($http) {
     window.sessionStorage.setItem('ekstern_id', ekstern_id);
   }
 
+  function removeExternalId (ekstern_id) {
+    window.sessionStorage.removeItem('ekstern_id');
+  }
+
   return {
     getData: function () {
       return $http.get("/backend/users/" + getExternalId());
     },
     getExternalId: getExternalId,
     setExternalId: setExternalId,
+    removeExternalId: removeExternalId,
     isLoggedIn: function () {
       return getExternalId() !== null;
     }
@@ -30,26 +35,27 @@ function ($http, $location, UserService) {
   return function () {
 
     var search = $location.search();
-    if (search.eksternid || search.id || search.userid) {
+    var ekstern_id =
+      UserService.isLoggedIn() ? UserService.getExternalId()
+      : search.eksternid ? search.eksternid
+      : search.userid ? search.userid
+      : search.id ? search.id
+      : null;
 
-      var ekstern_id = search.eksternid ? search.eksternid : search.id ? search.id : search.userid;
-
+    if (ekstern_id !== null) {
       return $http.get("/backend/users/" + ekstern_id).then(function (response) {
-        if (response.status === 200 && response.data) {
-          UserService.setExternalId(ekstern_id);
-        } else {
-          // TODO: Perhaps do nothing but show that user was not found. (invalid link). Try the "send email" opstion
-        }
+        UserService.setExternalId(ekstern_id);
 
         $location.search('eksternid', null);
-        $location.search('id', null);
         $location.search('userid', null);
+        $location.search('id', null);
+
+      }, function (error) {
+        UserService.removeExternalId();
+        $location.path('login');
       });
 
     } else {
-      // var p = $q.defer();
-      // return p.promise;
-      // p.reject();
       return false;
     }
   }();
@@ -105,11 +111,19 @@ function($locationProvider, $routeProvider) {
 }]).controller('newsletterController', ['$scope', '$routeParams', '$http', '$q', '$location', 'UserService',
 function ($scope, $routeParams, $http, $q, $location, UserService) {
 
-  if (UserService.isLoggedIn()) {
+  $scope.user = {
+    email: '',
+    nyhedsbreve: [],
+    interesser: [],
+    location_id: location_id
+  };
+
+  $scope.loggedIn = UserService.isLoggedIn();
+
+  if ($scope.loggedIn) {
     UserService.getData().then(function (response) {
       if (response.status === 200) {
         $scope.user = response.data;
-        $scope.loggedIn = true;
       } else {
         $location.path('login');
       }
@@ -160,46 +174,31 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
   };
 
   $scope.submit_step1 = function () {
-    if (!angular.isUndefined($scope.user) && false) {
-      var my_id = $scope.user.ekstern_id;
-      console.log($scope.user);
-      $scope.user.location_id = location_id;
-      $http.put("/backend/users/" + my_id, $scope.user).success(function(data, status, headers, config) {
-
-        $location.path("/profile/" + my_id);
-      }).
-      error(function(data, status, headers, config) {
-        $location.path("/");
-      });
-
+    if (!UserService.isLoggedIn()) {
+      $scope.state = "step2";
     }
-
-    $scope.state = "step2";
   };
 
-  $scope.post_user = function(user) {
+  $scope.createUser = function () {
     if ($scope.userForm.$invalid) {
       return;
     }
-    if (!user.postnummer_dk) {
-      delete user.postnummer_dk;
+    if (!$scope.user.postnummer_dk) {
+      delete $scope.user.postnummer_dk;
     }
-    if (!user.foedselsaar) {
-      delete user.foedselsaar;
+    if (!$scope.user.foedselsaar) {
+      delete $scope.user.foedselsaar;
     }
-    if (user.foedselsaar) {
-      user.foedselsaar = user.foedselsaar.toString();
+    if ($scope.user.foedselsaar) {
+      $scope.user.foedselsaar = $scope.user.foedselsaar.toString();
     }
-    // TODO handle location id
-    user.location_id = location_id;
 
-    $http.post("/backend/users", user).
-    success(function(data, status, headers, config) {
+    $http.post("/backend/users", $scope.user).then(function (response) {
       $scope.state = "step3";
-      $scope.user.my_id = data.ekstern_id;
-    }).
-    error(function(data, status, headers, config) {
-      if (status === 409) {
+      UserService.setExternalId(response.data.ekstern_id);
+    }, function (error) {
+      console.log('createUser error', error);
+      if (error.status === 409) {
         $scope.userExists = true;
       }
     });
@@ -210,9 +209,10 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
     payload.email = $scope.user.email;
     //TODO handle publisher_id;
     payload.publisher_id = 1;
-    $http.post("/backend/mails/profile-page-link", payload).
-    success(function(data, status, headers, config) {
-      $scope.emailSent = true;
+    $http.post("/backend/mails/profile-page-link", payload).then(function (response) {
+      if (response.status === 200) {
+        $scope.emailSent = true;
+      }
     });
   };
 
@@ -220,12 +220,12 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
     var payload = {};
     payload.location_id = location_id;
     payload.interesser = user.interests_choices;
-    $http.post("backend/users/" + user.my_id +  "/interesser", payload).
-    success(function(data, status, headers, config) {
-      $scope.state = "step4";
-    }).
-    error(function(data, status, headers, config) {
-      console.error(data);
+    $http.post("backend/users/" + UserService.getExternalId() +  "/interesser", payload).then(function (response) {
+      if (response.status === 200) {
+        $scope.state = "step4";
+      } else {
+        console.error(data);
+      }
     });
   };
 
@@ -257,12 +257,12 @@ function ($scope, $routeParams, $http, $rootScope, $location, UserService, login
 
 }]).controller('profileController', ['$scope', '$routeParams', '$http', '$q', '$location', 'UserService',
 function ($scope, $routeParams, $http, $q, $location, UserService) {
+
   if (!UserService.isLoggedIn()) {
     return $location.path('login');
   }
 
   var ekstern_id = UserService.getExternalId();
-
   var user = $http.get("/backend/users/" + ekstern_id);
   var newsletters = $http.get("/backend/users/" + ekstern_id + "/nyhedsbreve");
   var interests = $http.get("/backend/interesser");
@@ -321,8 +321,6 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
       method = $http.delete(change_url);
     }
     method.success(function(data, status, headers, config) {
-      console.debug("Change success");
-      console.log(type);
       if (type === 'nyhedsbreve') {
         $scope.permissionSaveSuccess = true;
         $scope.user.nyhedsbreve = data;
