@@ -155,7 +155,7 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
     });
   } else {
     var basket = getBasket();
-    if (basket) {
+    if (basket !== null) {
       $scope.user = basket;
     }
   }
@@ -333,7 +333,7 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
       delete payload.foedselsaar;
     }
     
-    if (user.postnummer) {
+    if (user.postnummer !== null) {
       payload.postnummer = user.postnummer.toString();
     }
 
