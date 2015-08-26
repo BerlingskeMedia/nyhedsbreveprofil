@@ -383,10 +383,13 @@ function ($scope, $routeParams, $http, $q, $modal, $location, UserService) {
     var my_newsletters = $http.get("/backend/users/" + UserService.getExternalId() + "/nyhedsbreve");
     var newsletters = $http.get("/backend/nyhedsbreve");
 
+
     $q.all([newsletters, my_newsletters]).then(function(resolved) {
 
       $scope.newsletters = resolved[0].data;
       $scope.my_subscriptions = resolved[1].data;
+
+      console.log($scope.my_subscriptions);
 
       $scope.filtered_newsletters = $scope.newsletters.filter(function (newsletter) {
         return $scope.my_subscriptions.indexOf(newsletter.nyhedsbrev_id) !== -1;

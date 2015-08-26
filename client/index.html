@@ -33,6 +33,8 @@
             </li>
             <li ng-class="{'hidden-mobile': !showMenu}" ng-show="loggedIn" class="mobile-nav">
               <a href="tilmeldt"><i class="fa fa-envelope"></i> Dine nyhedsbreve</a>
+              <!-- Used for testing only -->
+              <small><a href="tilmeldt?eksternid={{ ekstern_id }}" style="color: lightgrey;"><i class="fa fa-bookmark"></i></a></small>
             </li>
             <li ng-class="{'hidden-mobile': !showMenu}" class="mobile-nav">
               <a href="oplysninger" ng-if="loggedIn"><i class="fa fa-cog"></i> {{email}}</a>
