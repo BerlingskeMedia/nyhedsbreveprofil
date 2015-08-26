@@ -1,7 +1,10 @@
 var gulp = require('gulp');
-    spawn = require('child_process').spawn;
+    spawn = require('child_process').spawn,
+    less = require('gulp-less'),
+    path = require('path');
 
-gulp.task('default', ['server']);
+gulp.task('default', ['less:watch', 'server']);
+gulp.task('build', ['less']);
 
 var node;
 
@@ -14,4 +17,17 @@ gulp.task('start_server', function() {
 
 gulp.task('server', ['start_server'], function () {
   gulp.watch(['./src/**.js'], ['start_server']);
+});
+
+ 
+gulp.task('less', function () {
+  return gulp.src('./assets/less/main.less')
+    .pipe(less({
+      paths: [ path.join(__dirname, 'less', 'includes') ]
+    }))
+    .pipe(gulp.dest('./assets/styles'));
+});
+
+gulp.task('less:watch', function () {
+  gulp.watch('./assets/less/**/*.less', ['less']);
 });

@@ -91,13 +91,6 @@ function($locationProvider, $routeProvider) {
         login: 'LoginService'
       }
     }).
-    when('/oplysninger/:tab?', {
-      templateUrl: 'assets/partials/profile.html',
-      controller: 'profileController',
-      resolve: {
-        login: 'LoginService'
-      }
-    }).
     when('/nyhedsbreve/:publisher_id?', {
       templateUrl: 'assets/partials/newletters.html',
       controller: 'newsletterController',
@@ -105,15 +98,29 @@ function($locationProvider, $routeProvider) {
         login: 'LoginService'
       }
     }).
-    when('/tilmeld', {
-      templateUrl: 'assets/partials/newletters.html',
+    when('/oplysninger/:tab?', {
+      templateUrl: 'assets/partials/profile.html',
+      controller: 'editProfileController',
+      resolve: {
+        login: 'LoginService'
+      }
+    }).
+    when('/opret/profil', {
+      templateUrl: 'assets/partials/opret_step2.html',
       controller: 'newsletterController',
       resolve: {
         login: 'LoginService'
       }
     }).
-    when('/interesser', {
-      templateUrl: 'assets/partials/newletters.html',
+    when('/opret/interesser', {
+      templateUrl: 'assets/partials/opret_step3.html',
+      controller: 'newsletterController',
+      resolve: {
+        login: 'LoginService'
+      }
+    }).
+    when('/opret/tak', {
+      templateUrl: 'assets/partials/opret_step4.html',
       controller: 'newsletterController',
       resolve: {
         login: 'LoginService'
@@ -135,6 +142,10 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
   $scope.loggedIn = UserService.isLoggedIn();
 
   if ($scope.loggedIn) {
+    if ($location.path().indexOf('/opret') === 0) {
+      return $location.path('oplysninger');
+    }
+
     UserService.getData().then(function (response) {
       if (response.status === 200) {
         $scope.user = response.data;
@@ -144,7 +155,6 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
     });
   } else {
     var basket = getBasket();
-    console.log('load', basket);
     if (basket) {
       $scope.user = basket;
     }
@@ -152,21 +162,17 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
 
   function getBasket () {
     return JSON.parse(window.sessionStorage.getItem('basket'));
+    console.log('getBasket', JSON.parse(window.sessionStorage.getItem('basket')));
   }
 
   function saveBasket () {
-    console.log('save', $scope.user);
+    console.log('saveBasket', $scope.user);
     window.sessionStorage.setItem('basket', JSON.stringify($scope.user));
   }
 
   function removeBasket () {
     window.sessionStorage.removeItem('basket');
   }
-
-  $scope.routeParams = $routeParams
-  console.log('$routeParams', $routeParams);
-
-  $scope.state = "step1";
 
   var publishers = $http.get("/backend/publishers");
   var newsletters = $http.get("/backend/nyhedsbreve");
@@ -195,26 +201,23 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
         request = $http.delete(url);
       }
       request.then(function (response) {
-        if (response.status === 200) {
-          $scope.user.nyhedsbreve = response.data;
-          checkbox.$parent.created = checkbox.checked;
-          checkbox.$parent.deleted = !checkbox.checked;
-        } else {
-          console.error(response);
-        }
+        $scope.user.nyhedsbreve = response.data;
+        checkbox.$parent.created = checkbox.checked;
+        checkbox.$parent.deleted = !checkbox.checked;
+      }, function (error) {
+        console.error(response);
       });
     } else {
       console.log('before', $scope.user)
       saveBasket();
       console.log('after', $scope.user)
-      // Continue here!
     }
   };
 
   $scope.submit_step1 = function () {
     if (!UserService.isLoggedIn()) {
       saveBasket();
-      $scope.state = "step2";
+      $location.path('opret/profil')
     }
   };
 
@@ -233,42 +236,38 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
     }
 
     $http.post("/backend/users", $scope.user).then(function (response) {
-      $scope.state = "step3";
+      // $scope.state = "step3";
+      $location.path('opret/interesser');
       UserService.setExternalId(response.data.ekstern_id);
       removeBasket();
     }, function (error) {
-      console.log('create_user error', error);
+      console.error('create_user error', error);
       if (error.status === 409) {
         $scope.userExists = true;
       }
     });
   };
 
-  $scope.send_login = function() {
+  $scope.send_login = function () {
     payload = {};
     payload.email = $scope.user.email;
     //TODO handle publisher_id;
     payload.publisher_id = 1;
     $http.post("/backend/mails/profile-page-link", payload).then(function (response) {
-      if (response.status === 200) {
-        $scope.emailSent = true;
-      }
+      $scope.emailSent = true;
     });
   };
 
-  $scope.submit_step3 = function(user) {
+  $scope.submit_step3 = function () {
     var payload = {};
     payload.location_id = location_id;
-    payload.interesser = user.interests_choices;
+    payload.interesser = $scope.user.interests_choices;
     $http.post("backend/users/" + UserService.getExternalId() +  "/interesser", payload).then(function (response) {
-      if (response.status === 200) {
-        $scope.state = "step4";
-      } else {
-        console.error(data);
-      }
+      $location.path('opret/tak')
+    }, function (error) {
+      console.error(error);
     });
   };
-
 }]).controller('loginController', ['$scope', '$routeParams', '$http', '$rootScope', '$location', 'UserService',
 function ($scope, $routeParams, $http, $rootScope, $location, UserService, login) {
   // $scope.email = $routeParams.email;
@@ -289,13 +288,11 @@ function ($scope, $routeParams, $http, $rootScope, $location, UserService, login
     payload.publisher_id = 1;
 
     $http.post("/backend/mails/profile-page-link", payload).then( function (response) {
-      if (response.status === 200) {
-        $scope.success = true;
-      }
+      $scope.success = true;
     });
   };
 
-}]).controller('profileController', ['$scope', '$routeParams', '$http', '$q', '$location', 'UserService',
+}]).controller('editProfileController', ['$scope', '$routeParams', '$http', '$q', '$location', 'UserService',
 function ($scope, $routeParams, $http, $q, $location, UserService) {
 
   if (!UserService.isLoggedIn()) {
@@ -341,12 +338,10 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
     }
 
     $http.put("/backend/users/" + ekstern_id, payload).then(function (response) {
-      if (response.status === 200) {
-        $scope.profileSaveSuccess = true;
-      } else {
-        console.log(response);
-        $scope.profileSaveError = true;
-      }
+      $scope.profileSaveSuccess = true;
+    }, function (error) {
+      console.error(error);
+      $scope.profileSaveError = true;
     });
   };
 
@@ -360,20 +355,18 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
     else {
       method = $http.delete(change_url);
     }
-    method.success(function(data, status, headers, config) {
+    method.then(function (response) {
       if (type === 'nyhedsbreve') {
         $scope.permissionSaveSuccess = true;
-        $scope.user.nyhedsbreve = data;
+        $scope.user.nyhedsbreve = response.data;
       }
       if (type === 'interesser') {
-        $scope.user.interesser = data;
+        $scope.user.interesser = response.data;
         $scope.interestsSaveSuccess = true;
       }
-    }).
-    error(function(data, status, headers, config) {
-      console.debug("Change error");
+    }, function (error) {
+      console.error("Change error", error);
     });
-
   };
 
 }]).controller('subscriptionsController', ['$scope', '$routeParams', '$http', '$q', '$modal', '$location', 'UserService',

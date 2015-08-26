@@ -1,0 +1,144 @@
+<div class="col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
+  <div ng-hide="userExists">
+    <h1>Tilmeld dig</h1>
+
+    <form method="post" name="userForm" novalidate="novalidate" class="fv-form fv-form-bootstrap">
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="form-group required">
+            <label for="exampleInputEmail1">Email</label>
+            <input type="email" ng-required="true" ng-model="user.email" class="form-control input-sm" id="email" name="email">
+            <small ng-show="userForm.email.$dirty && userForm.email.$invalid" class="help-block">Email adressen er ugyldig</small>
+          </div>
+        </div>
+
+        <div class="col-sm-6">
+          <div class="form-group required">
+            <label for="">Fornavn</label>
+            <input type="text" ng-required="true" ng-model="user.fornavn" name="firstName" class="form-control input-sm" id="firstname">
+            <small ng-show="userForm.firstName.$dirty && userForm.firstName.$invalid" class="help-block">Fornavn er påkrævet</small>
+          </div>
+        </div>
+
+        <div class="col-sm-6">
+          <div class="form-group required">
+            <label for="">Efternavn</label>
+            <input type="text" ng-required="true" ng-model="user.efternavn" name="lastname" class="form-control input-sm" id="lastname">
+            <small ng-show="userForm.lastname.$dirty && userForm.lastname.$invalid" class="help-block">Efternavn er påkrævet</small>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <a href="" ng-click="show_extrafields = !show_extrafields" class="toggle-form"><i ng-class="{'fa-caret-up': show_extrafields, 'fa-caret-down': !show_extrafields}" href="" class="fa"></i> Udfyld yderligere kontaktinformation</a>
+        </div>
+      </div>
+      <div ng-show="show_extrafields" class="">
+        <div class="row">
+          <div class="col-xs-4 col-lg-2 col-md-3">
+            <div class="form-group">
+              <label for="">Postnr.</label>
+              <input min="999" max="9999" ng-model="user.postnummer_dk" type="number" name="zip" class="form-control input-sm" id="zip">
+              <small ng-show="userForm.zip.$dirty && userForm.zip.$invalid" class="help-block">Indtast et gyldigt postnummer</small>
+            </div>
+          </div>
+          <div class="col-xs-8 col-lg-10 col-md-9">
+            <div class="form-group">
+              <label for="">By</label>
+              <input ng-model="user.bynavn" type="text" class="form-control input-sm" id="id_town">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-8 col-sm-10">
+            <label for="">Vejnavn</label>
+            <input ng-model="user.vejnavn" type="text" class="form-control input-sm" id="id_street">
+          </div>
+          <div class="col-xs-4 col-sm-2">
+            <div class="form-group">
+              <label for="">Husnr.</label>
+              <input ng-model="user.husnummer" type="text" class="form-control input-sm" id="id_streetnumber">
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+
+          <div class="col-xs-4 col-md-2">
+            <div class="form-group">
+              <label for="">Bogstav</label>
+              <input ng-model="user.husbogstav" type="text" class="form-control input-sm" id="id_streetletter">
+            </div>
+          </div>
+
+
+          <div class="col-xs-4 col-md-2">
+            <div class="form-group">
+              <label for="">Etage</label>
+              <input ng-model="user.etage" type="text" class="form-control input-sm" id="id_floor">
+            </div>
+          </div>
+          <div class="col-xs-4 col-md-2">
+            <div class="form-group">
+              <label for="">Side</label>
+              <input type="text" class="form-control input-sm" ng-model="user.sidedoer" id="id_side">
+            </div>
+          </div>
+
+
+          <div class="col-xs-6">
+            <div class="form-group">
+              <label for="">Telefon</label>
+              <input class="form-control input-sm" id="id_phone" ng-model="user.telefon" type="text">
+            </div>
+          </div>
+
+          <div class="col-xs-6 ">
+            <div class="form-group">
+              <label for="">Fødselsår</label>
+              <input class="form-control input-sm" name="birthyear" max="2015" min="1900" ng-model="user.foedselsaar" type="number">
+              <small ng-show="userForm.birthyear.$dirty && userForm.birthyear.$invalid" class="help-block">Indtast et gyldigt fødselsår</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12">
+          <h4>
+            Kontaktsamtykker
+          </h4>
+
+          <ul class="list-default ">
+            <li ng-repeat="permission in permissions">
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" checklist-model="$parent.user.nyhedsbreve" checklist-value="permission.nyhedsbrev_id"
+                    ng-change="toggleSubscription(this, permission.nyhedsbrev_id)">
+                  <small>
+                    <strong class="xs-block">{{permission.nyhedsbrev_navn}}</strong>
+                    <br>{{permission.indhold}}</small>
+                </label>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="row">
+        <div class="module-top ">
+          <a ng-href="nyhedsbreve" class="btn btn-link pull-left"><i class="fa fa-angle-left"></i> Flere nyhedsbreve</a>
+          <button type="submit" ng-click="submit_step2()" ng-class="{'btn-invalid ': userForm.$invalid, 'btn-success': userForm.$valid}" class="btn pull-right ">TILMELD <i class="fa fa-angle-right"></i></button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div ng-show="userExists">
+    <h1>Brugeren eksisterer allerede</h1>
+    <div ng-hide="emailSent">
+
+      <p>Den indtastede e-mail adresse eksisterer allerede i vores system. Klik <a href="" ng-click="send_login()">her</a> for at få tilsendt loginoplysninger på {{user.email}}</p>
+    </div>
+    <div ng-show="emailSent">
+      Tjek din mail for et login.
+    </div>
+  </div>
+</div>

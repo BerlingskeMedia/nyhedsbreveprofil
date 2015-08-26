@@ -1,0 +1,18 @@
+<div class="col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
+  <h1>Dine interesser</h1>
+
+  <p>Fortæl os hvad der interesserer dig. Så kan vi fremover sende dig skærddersyede mails, der matcher netop dine interesser.</p>
+  <div class="row">
+    <div ng-repeat="interest in interests" class="col-lg-4 col-sm-6 col-xs-12">
+      <label>
+        <input checklist-model="$parent.user.interests_choices" checklist-value="interest.interesse_id" type="checkbox" /> {{interest.interesse_navn}}
+      </label>
+    </div>
+
+
+  </div>
+  <div class="module-top text-center">
+    <!-- <a href="" ng-click="state= 'step2'" class="btn btn-default btn-link pull-left"><i class="fa fa-angle-left"></i>Tilbage</a> -->
+    <a ng-click="submit_step3(); state= 'step4'" class="btn btn-success pull-right">Gem <i class="fa fa-angle-right"></i></a>
+  </div>
+</div>

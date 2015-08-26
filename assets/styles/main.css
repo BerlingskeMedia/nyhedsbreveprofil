@@ -7901,3 +7901,18 @@ input[type="button"].btn-block {
 .fv-form-uikit .fv-has-error label {
   color: #d85030;
 }
+.newsletter-notification {
+  width: 50%;
+  margin-top: 12px;
+  padding: 7px;
+}
+.savesucess.hide-opacity {
+  opacity: 0;
+}
+.savesucess {
+  -webkit-transition: opacity 3s ease-in-out;
+  -moz-transition: opacity 3s ease-in-out;
+  -ms-transition: opacity 3s ease-in-out;
+  -o-transition: opacity 3s ease-in-out;
+  opacity: 1;
+}
