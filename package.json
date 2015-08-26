@@ -1,6 +1,6 @@
 {
   "name": "nyhedsbreve",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Kunde admin af nyhedsbreve",
   "main": "src/server.js",
   "scripts": {
