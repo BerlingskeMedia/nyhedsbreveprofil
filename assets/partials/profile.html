@@ -26,8 +26,12 @@
         <div class="tab-content">
           <div class="tab-pane" id="vtab1" ng-class="{active: tab == 'details'}">
             <h3 class="title">Navn og adresse</h3>
-            <small class="savesucess" ng-show="profileSaveSuccess"><i class="fa fa-check"></i> Dine oplysninger blev opdateret</small>
-            <small class="savesucess" ng-show="profileSaveError"><i class="fa fa-ban"></i> <strong>Fejl</strong> Dine oplysninger er ikke blevet opdateret</small>
+            <p ng-show="profileSaveSuccess">
+              <small class="newsletter-notification alert alert-success"><i class="fa fa-check"></i> Dine oplysninger blev opdateret</small>
+            </p>
+            <p ng-show="profileSaveError">
+              <small class="newsletter-notification alert alert-danger"><i class="fa fa-ban"></i> <strong>Fejl</strong> Dine oplysninger er ikke blevet opdateret</small>
+            <p>
 
             <div class="hidden-labels">
               <div class="form-group required has-feedback">
@@ -136,7 +140,7 @@
           </div>
           <div class="tab-pane" id="vtab2" ng-class="{active: tab == 'permissions'}">
             <h3 class="title">Kontaktsamtykker</h3>
-            <small class="savesucess" ng-show="permissionSaveSuccess"><i class="fa fa-check"></i> Dine kontaktsamtykker er blevet opdateret</small>
+            <small class="newsletter-notification alert alert-success" ng-show="permissionSaveSuccess"><i class="fa fa-check"></i> Dine kontaktsamtykker er blevet opdateret</small>
             <ul class="list-default ">
               <li ng-repeat="permission in permissions">
                 <div class="checkbox">
@@ -153,7 +157,7 @@
           <div class="tab-pane" id="vtab3" ng-class="{active: tab == 'interests'}">
             <h3 class="title">Dine interesser</h3>
             <p>
-              <small class="savesucess" ng-show="interestsSaveSuccess"><i class="fa fa-check"></i> Dine interesser er blevet opdateret</small>
+              <small class="newsletter-notification alert alert-success" ng-show="interestsSaveSuccess"><i class="fa fa-check"></i> Dine interesser er blevet opdateret</small>
             <p>
             <p>Fortæl os hvad der interesserer dig. Så kan vi fremover sende dig skærddersyede mails, der matcher netop dine interesser.</p>
             <div class="row">
