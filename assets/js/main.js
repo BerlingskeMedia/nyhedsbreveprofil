@@ -24,9 +24,9 @@ function ($http) {
     console.log('getBasket', JSON.parse(window.sessionStorage.getItem('basket')));
   }
 
-  function saveBasket () {
-    console.log('saveBasket', $scope.user);
-    window.sessionStorage.setItem('basket', JSON.stringify($scope.user));
+  function saveBasket (data) {
+    console.log('saveBasket', data);
+    window.sessionStorage.setItem('basket', JSON.stringify(data));
   }
 
   function clearBasket () {
@@ -191,7 +191,7 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
   var newsletters = $http.get("/backend/nyhedsbreve?orderBy=sort_id&orderDirection=asc"); // newsletters
   var permissions = $http.get("/backend/nyhedsbreve?permission=1"); // opret_step2
   var interests = $http.get("/backend/interesser"); // opret_step3
-  var to_resolve = [publishers, newsletters, interests, permissions];
+  var to_resolve = [publishers, newsletters, permissions, interests];
 
   $q.all(to_resolve).then(function(resolved) {
     $scope.publishers = resolved[0].data;
@@ -236,14 +236,14 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
       });
     } else {
       console.log('before', $scope.user)
-      UserService.saveBasket();
+      UserService.saveBasket($scope.user);
       console.log('after', $scope.user)
     }
   };
 
   $scope.submit_step1 = function () {
     if (!UserService.isLoggedIn()) {
-      saveBasket();
+      UserService.saveBasket($scope.user);
       $location.path('opret/profil')
     }
   };
