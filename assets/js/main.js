@@ -189,7 +189,7 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
 
   var publishers = $http.get("/backend/publishers?orderBy=publisher_navn&orderDirection=asc"); // newsletters
   var newsletters = $http.get("/backend/nyhedsbreve?orderBy=sort_id&orderDirection=asc"); // newsletters
-  var permissions = $http.get("/backend/nyhedsbreve?permission=1"); // opret_step2
+  var permissions = $http.get("/backend/nyhedsbreve?permission=1&orderBy=sort_id&orderDirection=asc"); // opret_step2
   var interests = $http.get("/backend/interesser"); // opret_step3
   var to_resolve = [publishers, newsletters, permissions, interests];
 

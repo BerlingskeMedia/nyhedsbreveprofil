@@ -30,7 +30,9 @@
       </div>
       <div class="row">
         <div class="col-md-12">
-          <a href="" ng-click="show_extrafields = !show_extrafields" class="toggle-form"><i ng-class="{'fa-caret-up': show_extrafields, 'fa-caret-down': !show_extrafields}" href="" class="fa"></i> Udfyld yderligere kontaktinformation</a>
+          <a href="" ng-click="show_extrafields = !show_extrafields" class="toggle-form">
+            <i ng-class="{'fa-caret-up': show_extrafields, 'fa-caret-down': !show_extrafields}" href="" class="fa"></i> Fold ud og skriv yderligere kontaktinformationer
+          </a>
         </div>
       </div>
       <div ng-show="show_extrafields" class="">
@@ -116,8 +118,17 @@
                     ng-change="toggleSubscription(this, permission.nyhedsbrev_id)">
                   <small>
                     <strong class="xs-block">{{permission.nyhedsbrev_navn}}</strong>
-                    <br>{{permission.indhold}}</small>
+                  </small>
                 </label>
+                <small>
+                  <a class="show_permission_info" role="button" ng-click="permission.show_indhold = true" ng-hide="permission.show_indhold">Vis info <i class="fa fa-angle-down"></i></a>
+                  <a class="show_permission_info" role="button" ng-click="permission.show_indhold = false" ng-show="permission.show_indhold">Skjul info <i class="fa fa-angle-up"></i></a>
+                </small>
+                <p class="permission_info">
+                  <small>
+                    <span ng-show="permission.show_indhold">{{permission.indhold}}</span>
+                  </small>
+                </p>
               </div>
             </li>
           </ul>

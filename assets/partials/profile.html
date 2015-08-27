@@ -147,8 +147,18 @@
                   <label>
                     <input checklist-model="$parent.user.nyhedsbreve" checklist-value="permission.nyhedsbrev_id" ng-change="$parent.checkbox_change(this, permission.nyhedsbrev_id, 'nyhedsbreve')" type="checkbox">
                     <small>
-                      <strong class="xs-block">{{permission.nyhedsbrev_navn}}</strong><br>{{permission.indhold}}</small>
+                      <strong class="xs-block">{{permission.nyhedsbrev_navn}}</strong>
+                    </small>
                   </label>
+                  <small>
+                    <a class="show_permission_info" role="button" ng-click="permission.show_indhold = true" ng-hide="permission.show_indhold">Vis info <i class="fa fa-angle-down"></i></a>
+                    <a class="show_permission_info" role="button" ng-click="permission.show_indhold = false" ng-show="permission.show_indhold">Skjul info <i class="fa fa-angle-up"></i></a>
+                  </small>
+                  <p class="permission_info">
+                    <small>
+                      <span ng-show="permission.show_indhold">{{permission.indhold}}</span>
+                    </small>
+                  </p>
                 </div>
               </li>
             </ul>
@@ -159,7 +169,7 @@
             <p>
               <small class="newsletter-notification alert alert-success" ng-show="interestsSaveSuccess"><i class="fa fa-check"></i> Dine interesser er blevet opdateret</small>
             <p>
-            <p>Fortæl os hvad der interesserer dig. Så kan vi fremover sende dig skærddersyede mails, der matcher netop dine interesser.</p>
+            <p>Fortæl os, hvad du interesserer dig for, så vi kan sende dig relevante tilbud og nyhedsbreve.</p>
             <div class="row">
               <div class="col-lg-4 col-sm-6 col-xs-12" ng-repeat="interest in interests">
                 <label>

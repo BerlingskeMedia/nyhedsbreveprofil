@@ -7644,7 +7644,6 @@ input[type="button"].btn-block {
 }
 .main-footer {
   font-size: 87%;
-  margin: 2em 0;
 }
 .main-footer:before,
 .main-footer:after {
@@ -7915,4 +7914,10 @@ input[type="button"].btn-block {
   -ms-transition: opacity 3s ease-in-out;
   -o-transition: opacity 3s ease-in-out;
   opacity: 1;
+}
+.permission_info {
+  padding-left: 20px;
+}
+.show_permission_info {
+  color: #AC999F;
 }
