@@ -33,6 +33,15 @@ function ($http) {
     window.sessionStorage.removeItem('basket');
   }
 
+  function sendLoginEmail (email) {
+
+    var payload = {};
+    payload.email = email;
+    payload.publisher_id = 1;
+
+    return $http.post("/backend/mails/profile-page-link", payload);
+  }
+
   return {
     getData: function () {
       return $http.get("/backend/users/" + getExternalId());
@@ -46,6 +55,7 @@ function ($http) {
     getBasket: getBasket,
     saveBasket: saveBasket,
     clearBasket: clearBasket,
+    sendLoginEmail: sendLoginEmail
   };
 }]).factory('LoginService', ['$http', '$location', 'UserService',
 function ($http, $location, UserService) {
@@ -108,7 +118,7 @@ function($locationProvider, $routeProvider) {
         login: 'LoginService'
       }
     }).
-    when('/nyhedsbreve/:publisher_id?', {
+    when('/nyhedsbreve/:publisher?', {
       templateUrl: 'assets/partials/newletters.html',
       controller: 'newsletterController',
       resolve: {
@@ -177,8 +187,8 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
     }
   }
 
-  var publishers = $http.get("/backend/publishers"); // newsletters
-  var newsletters = $http.get("/backend/nyhedsbreve"); // newsletters
+  var publishers = $http.get("/backend/publishers?orderBy=publisher_navn&orderDirection=asc"); // newsletters
+  var newsletters = $http.get("/backend/nyhedsbreve?orderBy=sort_id&orderDirection=asc"); // newsletters
   var permissions = $http.get("/backend/nyhedsbreve?permission=1"); // opret_step2
   var interests = $http.get("/backend/interesser"); // opret_step3
   var to_resolve = [publishers, newsletters, interests, permissions];
@@ -188,8 +198,22 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
     $scope.newsletters = resolved[1].data;
     $scope.permissions = resolved[2].data;
     $scope.interests = resolved[3].data;
-    //TODO use param from path
-    $scope.current_publisher = $scope.publishers[15];
+
+    if ($routeParams.publisher) {
+      $scope.publishers.forEach(function (publisher) {
+        if ($routeParams.publisher == publisher.publisher_id) {
+          $scope.current_publisher = publisher;
+        }
+      });
+    }
+
+    if ($scope.current_publisher === undefined) {
+      $scope.current_publisher = $scope.publishers[0];
+    }
+
+    $scope.newsletters.forEach(function (newsletter) {
+      newsletter.logo_url = 'http://nlstatic.berlingskemedia.dk/newsletter_logos/' + newsletter.newsletter_id + '.png';
+    });
   });
 
   $scope.toggleSubscription = function(checkbox, nyhedsbrev_id) {
@@ -252,11 +276,7 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
   };
 
   $scope.send_login = function () {
-    payload = {};
-    payload.email = $scope.user.email;
-    //TODO handle publisher_id;
-    payload.publisher_id = 1;
-    $http.post("/backend/mails/profile-page-link", payload).then(function (response) {
+    UserService.sendLoginEmail($scope.user.email).then( function (response) {
       $scope.emailSent = true;
     });
   };
@@ -273,7 +293,6 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
   };
 }]).controller('loginController', ['$scope', '$routeParams', '$http', '$rootScope', '$location', 'UserService',
 function ($scope, $routeParams, $http, $rootScope, $location, UserService, login) {
-  // $scope.email = $routeParams.email;
 
   if (UserService.isLoggedIn()) {
     $location.path('nyhedsbreve');
@@ -286,11 +305,8 @@ function ($scope, $routeParams, $http, $rootScope, $location, UserService, login
     if ($scope.success) {
       return;
     }
-    var payload = {};
-    payload.email = email;
-    payload.publisher_id = 1;
 
-    $http.post("/backend/mails/profile-page-link", payload).then( function (response) {
+    UserService.sendLoginEmail(email).then( function (response) {
       $scope.success = true;
     });
   };

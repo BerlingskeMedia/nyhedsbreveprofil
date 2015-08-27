@@ -16,6 +16,7 @@
         <ul class="dropdown-menu" role="menu">
           <li ng-repeat="publisher in publishers">
             <a href="" ng-click="$parent.current_publisher = publisher">{{publisher.publisher_navn}}</a>
+            <!-- <a ng-href="nyhedsbreve/{{ publisher.publisher_id}} ">{{publisher.publisher_navn}}</a> -->
           </li>
         </ul>
       </div>
@@ -24,7 +25,7 @@
 
     <section class="newsletters">
       <ul class="list-brand">
-        <li ng-repeat="newsletter in newsletters | filter : {publisher_id : current_publisher.publisher_id}">
+        <li ng-repeat="newsletter in newsletters | filter : {publisher_id : current_publisher.publisher_id} : true">
           <div class="li-body">
             <div class="row">
               <div class="col-xs-offset-1 col-xs-10">
@@ -36,9 +37,11 @@
                     <small>{{newsletter.indhold}}</small>
                   </label>
                   <div ng-show="deleted" class="newsletter-notification alert alert-danger">
-                    <i class="fa fa-check"></i> Du er nu frameldt nyhedsbrevet</small>
+                    </small><i class="fa fa-check"></i> Du er nu frameldt nyhedsbrevet</small>
                   </div>
-                  <div ng-show="created" class="newsletter-notification alert alert-success"><i class="fa fa-check"></i> Du er nu tilmeldt nyhedsbrevet</small></div>
+                  <div ng-show="created" class="newsletter-notification alert alert-success">
+                    </small><i class="fa fa-check"></i> Du er nu tilmeldt nyhedsbrevet</small>
+                  </div>
                 </div>
               </div>
             </div>
@@ -47,9 +50,9 @@
       </ul>
     </section>
   </div>
-  <div class="col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
+  <div ng-hide="loggedIn" class="col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
     <div class="module-top text-right bottom-nav">
-      <a ng-hide="loggedIn" ng-click="submit_step1()" class="btn btn-success">NÆSTE <i class="fa fa-angle-right"></i></a>
+      <a ng-click="submit_step1()" class="btn btn-success">NÆSTE <i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 </div>
