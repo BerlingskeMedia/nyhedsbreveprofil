@@ -19,6 +19,20 @@ function ($http) {
     window.sessionStorage.removeItem('ekstern_id');
   }
 
+  function getBasket () {
+    return JSON.parse(window.sessionStorage.getItem('basket'));
+    console.log('getBasket', JSON.parse(window.sessionStorage.getItem('basket')));
+  }
+
+  function saveBasket () {
+    console.log('saveBasket', $scope.user);
+    window.sessionStorage.setItem('basket', JSON.stringify($scope.user));
+  }
+
+  function clearBasket () {
+    window.sessionStorage.removeItem('basket');
+  }
+
   return {
     getData: function () {
       return $http.get("/backend/users/" + getExternalId());
@@ -28,7 +42,10 @@ function ($http) {
     removeExternalId: removeExternalId,
     isLoggedIn: function () {
       return getExternalId() !== null;
-    }
+    },
+    getBasket: getBasket,
+    saveBasket: saveBasket,
+    clearBasket: clearBasket,
   };
 }]).factory('LoginService', ['$http', '$location', 'UserService',
 function ($http, $location, UserService) {
@@ -154,37 +171,23 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
       }
     });
   } else {
-    var basket = getBasket();
+    var basket = UserService.getBasket();
     if (basket !== null) {
       $scope.user = basket;
     }
   }
 
-  function getBasket () {
-    return JSON.parse(window.sessionStorage.getItem('basket'));
-    console.log('getBasket', JSON.parse(window.sessionStorage.getItem('basket')));
-  }
-
-  function saveBasket () {
-    console.log('saveBasket', $scope.user);
-    window.sessionStorage.setItem('basket', JSON.stringify($scope.user));
-  }
-
-  function removeBasket () {
-    window.sessionStorage.removeItem('basket');
-  }
-
-  var publishers = $http.get("/backend/publishers");
-  var newsletters = $http.get("/backend/nyhedsbreve");
-  var interests = $http.get("/backend/interesser");
-  var permissions = $http.get("/backend/nyhedsbreve?permission=1");
+  var publishers = $http.get("/backend/publishers"); // newsletters
+  var newsletters = $http.get("/backend/nyhedsbreve"); // newsletters
+  var permissions = $http.get("/backend/nyhedsbreve?permission=1"); // opret_step2
+  var interests = $http.get("/backend/interesser"); // opret_step3
   var to_resolve = [publishers, newsletters, interests, permissions];
 
   $q.all(to_resolve).then(function(resolved) {
     $scope.publishers = resolved[0].data;
     $scope.newsletters = resolved[1].data;
-    $scope.interests = resolved[2].data;
-    $scope.permissions = resolved[3].data;
+    $scope.permissions = resolved[2].data;
+    $scope.interests = resolved[3].data;
     //TODO use param from path
     $scope.current_publisher = $scope.publishers[15];
   });
@@ -209,7 +212,7 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
       });
     } else {
       console.log('before', $scope.user)
-      saveBasket();
+      UserService.saveBasket();
       console.log('after', $scope.user)
     }
   };
@@ -239,7 +242,7 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
       // $scope.state = "step3";
       $location.path('opret/interesser');
       UserService.setExternalId(response.data.ekstern_id);
-      removeBasket();
+      UserService.clearBasket();
     }, function (error) {
       console.error('create_user error', error);
       if (error.status === 409) {
