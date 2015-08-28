@@ -201,13 +201,15 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
 
     if ($routeParams.publisher) {
       $scope.publishers.forEach(function (publisher) {
-        if ($routeParams.publisher == publisher.publisher_id) {
+        if ($routeParams.publisher == publisher.publisher_id || angular.lowercase($routeParams.publisher) === angular.lowercase(publisher.publisher_navn)) {
           $scope.current_publisher = publisher;
+          $scope.h1_prefix = publisher.publisher_navn + ' ';
         }
       });
     }
 
     if ($scope.current_publisher === undefined) {
+      $scope.show_publisher_selector = true;
       $scope.current_publisher = $scope.publishers[0];
     }
 
