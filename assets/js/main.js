@@ -126,31 +126,28 @@ function($locationProvider, $routeProvider) {
       }
     }).
     when('/oplysninger/:tab?', {
-      templateUrl: 'assets/partials/profile.html',
+      templateUrl: 'assets/partials/editProfile.html',
       controller: 'editProfileController',
       resolve: {
         login: 'LoginService'
       }
     }).
     when('/opret/profil', {
-      templateUrl: 'assets/partials/opret_step2.html',
+      templateUrl: 'assets/partials/createProfile.html',
       controller: 'createProfileController',
       resolve: {
         login: 'LoginService'
       }
     }).
     when('/opret/interesser', {
-      templateUrl: 'assets/partials/opret_step3.html',
+      templateUrl: 'assets/partials/addInterests.html',
       controller: 'addInterestsController',
       resolve: {
         login: 'LoginService'
       }
     }).
     when('/opret/tak', {
-      templateUrl: 'assets/partials/opret_step4.html',
-      resolve: {
-        login: 'LoginService'
-      }
+      templateUrl: 'assets/partials/createProfileDone.html'
     }).
     otherwise({
       redirectTo: '/nyhedsbreve'
@@ -289,15 +286,6 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
 
 }]).controller('addInterestsController', ['$scope', '$routeParams', '$http', '$q', '$location', 'UserService',
 function ($scope, $routeParams, $http, $q, $location, UserService) {
-
-  if (UserService.isLoggedIn()) {
-    $location.path('oplysninger');
-  } else {
-    var basket = UserService.getBasket();
-    if (basket !== null) {
-      $scope.user = basket;
-    }
-  }
 
   $http.get("/backend/interesser").then(function (response) {
     $scope.interests = response.data;
