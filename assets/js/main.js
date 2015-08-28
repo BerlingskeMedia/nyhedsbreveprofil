@@ -20,21 +20,22 @@ function ($http) {
   }
 
   function getBasket () {
-    return JSON.parse(window.sessionStorage.getItem('basket'));
-    console.log('getBasket', JSON.parse(window.sessionStorage.getItem('basket')));
+    var basket = JSON.parse(window.sessionStorage.getItem('nyhedsbreve'));
+    return basket !== null ? basket : [];
   }
 
-  function saveBasket (data) {
-    console.log('saveBasket', data);
-    window.sessionStorage.setItem('basket', JSON.stringify(data));
+  function addToBasket (nyhedsbrev_id) {
+    var basket = window.sessionStorage.getItem('nyhedsbreve');
+    basket = basket !== null ? JSON.parse(basket) : [];
+    basket.push(nyhedsbrev_id);
+    window.sessionStorage.setItem('nyhedsbreve', JSON.stringify(basket));
   }
 
   function clearBasket () {
-    window.sessionStorage.removeItem('basket');
+    window.sessionStorage.removeItem('nyhedsbreve');
   }
 
   function sendLoginEmail (email) {
-
     var payload = {};
     payload.email = email;
     payload.publisher_id = 1;
@@ -53,7 +54,7 @@ function ($http) {
       return getExternalId() !== null;
     },
     getBasket: getBasket,
-    saveBasket: saveBasket,
+    addToBasket: addToBasket,
     clearBasket: clearBasket,
     sendLoginEmail: sendLoginEmail
   };
@@ -155,13 +156,6 @@ function($locationProvider, $routeProvider) {
 }]).controller('newsletterController', ['$scope', '$routeParams', '$http', '$q', '$location', 'UserService',
 function ($scope, $routeParams, $http, $q, $location, UserService) {
 
-  $scope.user = {
-    email: '',
-    nyhedsbreve: [],
-    interesser: [],
-    location_id: location_id
-  };
-
   $scope.loggedIn = UserService.isLoggedIn();
 
   if ($scope.loggedIn) {
@@ -172,10 +166,9 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
       $location.path('login');
     });
   } else {
-    var basket = UserService.getBasket();
-    if (basket !== null) {
-      $scope.user = basket;
-    }
+    $scope.user = {
+      nyhedsbreve: UserService.getBasket()
+    };
   }
 
   $http.get("/backend/publishers?orderBy=publisher_navn&orderDirection=asc").then(function (response) {
@@ -229,15 +222,12 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
         console.error(response);
       });
     } else {
-      console.log('before', $scope.user)
-      UserService.saveBasket($scope.user);
-      console.log('after', $scope.user)
+      UserService.addToBasket(nyhedsbrev_id);
     }
   };
 
   $scope.createProfile = function () {
     if (!UserService.isLoggedIn()) {
-      UserService.saveBasket($scope.user);
       $location.path('opret/profil')
     }
   };
@@ -247,11 +237,15 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
   if (UserService.isLoggedIn()) {
     $location.path('oplysninger');
   } else {
-    var basket = UserService.getBasket();
-    if (basket !== null) {
-      $scope.user = basket;
-    }
+    $scope.user = {
+      email: '',
+      nyhedsbreve: UserService.getBasket(),
+      interesser: [],
+      location_id: location_id
+    };
   }
+
+  console.log($scope.user);
 
   $http.get("/backend/nyhedsbreve?permission=1&orderBy=sort_id&orderDirection=asc").then(function (response) {
     $scope.permissions = response.data;
@@ -425,7 +419,7 @@ function ($scope, $routeParams, $http, $q, $modal, $location, UserService) {
       $scope.newsletters = resolved[0].data;
       $scope.my_subscriptions = resolved[1].data;
 
-      console.log($scope.my_subscriptions);
+      console.log('tilmeldt:',$scope.my_subscriptions);
 
       $scope.filtered_newsletters = $scope.newsletters.filter(function (newsletter) {
         return $scope.my_subscriptions.indexOf(newsletter.nyhedsbrev_id) !== -1;
