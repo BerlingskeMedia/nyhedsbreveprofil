@@ -27,7 +27,10 @@
         <li ng-repeat="newsletter in newsletters | filter : {publisher_id : current_publisher.publisher_id} : true">
           <div class="li-body">
             <div class="row">
-              <div class="col-xs-offset-1 col-xs-10">
+              <div class="col-xs-1">
+                <img width="40px" src="{{ newsletter.logo_url }}" alt="" />
+              </div>
+              <div class="col-xs-10">
                 <div class="checkbox">
                   <label>
                     <input type="checkbox" checklist-model="$parent.user.nyhedsbreve" checklist-value="newsletter.nyhedsbrev_id"
@@ -51,7 +54,7 @@
   </div>
   <div ng-hide="loggedIn" class="col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
     <div class="module-top text-right bottom-nav">
-      <a ng-click="submit_step1()" class="btn btn-success">NÆSTE <i class="fa fa-angle-right"></i></a>
+      <a ng-click="createProfile()" class="btn btn-success">NÆSTE <i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 </div>

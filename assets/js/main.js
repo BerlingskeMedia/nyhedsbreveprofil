@@ -134,21 +134,20 @@ function($locationProvider, $routeProvider) {
     }).
     when('/opret/profil', {
       templateUrl: 'assets/partials/opret_step2.html',
-      controller: 'newsletterController',
+      controller: 'createProfileController',
       resolve: {
         login: 'LoginService'
       }
     }).
     when('/opret/interesser', {
       templateUrl: 'assets/partials/opret_step3.html',
-      controller: 'newsletterController',
+      controller: 'addInterestsController',
       resolve: {
         login: 'LoginService'
       }
     }).
     when('/opret/tak', {
       templateUrl: 'assets/partials/opret_step4.html',
-      controller: 'newsletterController',
       resolve: {
         login: 'LoginService'
       }
@@ -169,16 +168,11 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
   $scope.loggedIn = UserService.isLoggedIn();
 
   if ($scope.loggedIn) {
-    if ($location.path().indexOf('/opret') === 0) {
-      return $location.path('oplysninger');
-    }
-
     UserService.getData().then(function (response) {
-      if (response.status === 200) {
-        $scope.user = response.data;
-      } else {
-        $location.path('login');
-      }
+      $scope.user = response.data;
+    }, function (error) {
+      console.error(error);
+      $location.path('login');
     });
   } else {
     var basket = UserService.getBasket();
@@ -189,15 +183,15 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
 
   var publishers = $http.get("/backend/publishers?orderBy=publisher_navn&orderDirection=asc"); // newsletters
   var newsletters = $http.get("/backend/nyhedsbreve?orderBy=sort_id&orderDirection=asc"); // newsletters
-  var permissions = $http.get("/backend/nyhedsbreve?permission=1&orderBy=sort_id&orderDirection=asc"); // opret_step2
-  var interests = $http.get("/backend/interesser"); // opret_step3
-  var to_resolve = [publishers, newsletters, permissions, interests];
+  // var permissions = $http.get("/backend/nyhedsbreve?permission=1&orderBy=sort_id&orderDirection=asc"); // opret_step2
+  // var interests = $http.get("/backend/interesser"); // opret_step3
+  var to_resolve = [publishers, newsletters];
 
   $q.all(to_resolve).then(function(resolved) {
     $scope.publishers = resolved[0].data;
     $scope.newsletters = resolved[1].data;
-    $scope.permissions = resolved[2].data;
-    $scope.interests = resolved[3].data;
+    // $scope.permissions = resolved[2].data;
+    // $scope.interests = resolved[3].data;
 
     if ($routeParams.publisher) {
       $scope.publishers.forEach(function (publisher) {
@@ -214,7 +208,7 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
     }
 
     $scope.newsletters.forEach(function (newsletter) {
-      newsletter.logo_url = 'http://nlstatic.berlingskemedia.dk/newsletter_logos/' + newsletter.newsletter_id + '.png';
+      newsletter.logo_url = 'http://nlstatic.berlingskemedia.dk/newsletter_logos/' + newsletter.nyhedsbrev_id + '.png';
     });
   });
 
@@ -243,14 +237,79 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
     }
   };
 
-  $scope.submit_step1 = function () {
+  $scope.createProfile = function () {
     if (!UserService.isLoggedIn()) {
       UserService.saveBasket($scope.user);
       $location.path('opret/profil')
     }
   };
 
-  $scope.submit_step2 = function () {
+  // $scope.submit_step2 = function () {
+  //   if ($scope.userForm.$invalid) {
+  //     return;
+  //   }
+  //   if (!$scope.user.postnummer_dk) {
+  //     delete $scope.user.postnummer_dk;
+  //   }
+  //   if (!$scope.user.foedselsaar) {
+  //     delete $scope.user.foedselsaar;
+  //   }
+  //   if ($scope.user.foedselsaar) {
+  //     $scope.user.foedselsaar = $scope.user.foedselsaar.toString();
+  //   }
+
+  //   $http.post("/backend/users", $scope.user).then(function (response) {
+  //     // $scope.state = "step3";
+  //     $location.path('opret/interesser');
+  //     UserService.setExternalId(response.data.ekstern_id);
+  //     UserService.clearBasket();
+  //   }, function (error) {
+  //     console.error('create_user error', error);
+  //     if (error.status === 409) {
+  //       $scope.userExists = true;
+  //     }
+  //   });
+  // };
+
+  // $scope.send_login = function () {
+  //   UserService.sendLoginEmail($scope.user.email).then( function (response) {
+  //     $scope.emailSent = true;
+  //   });
+  // };
+
+  // $scope.submit_step3 = function () {
+  //   var payload = {};
+  //   payload.location_id = location_id;
+  //   payload.interesser = $scope.user.interests_choices;
+  //   $http.post("backend/users/" + UserService.getExternalId() +  "/interesser", payload).then(function (response) {
+  //     $location.path('opret/tak')
+  //   }, function (error) {
+  //     console.error(error);
+  //   });
+  // };
+}]).controller('createProfileController', ['$scope', '$routeParams', '$http', '$q', '$location', 'UserService',
+function ($scope, $routeParams, $http, $q, $location, UserService) {
+
+  if (UserService.isLoggedIn()) {
+    $location.path('oplysninger');
+  } else {
+    var basket = UserService.getBasket();
+    if (basket !== null) {
+      $scope.user = basket;
+    }
+  }
+
+  $http.get("/backend/nyhedsbreve?permission=1&orderBy=sort_id&orderDirection=asc").then(function (response) {
+    $scope.permissions = response.data;
+  });
+
+  $scope.send_login = function () {
+    UserService.sendLoginEmail($scope.user.email).then( function (response) {
+      $scope.emailSent = true;
+    });
+  };
+
+  $scope.submit = function () {
     if ($scope.userForm.$invalid) {
       return;
     }
@@ -265,25 +324,35 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
     }
 
     $http.post("/backend/users", $scope.user).then(function (response) {
-      // $scope.state = "step3";
-      $location.path('opret/interesser');
       UserService.setExternalId(response.data.ekstern_id);
       UserService.clearBasket();
+      $location.path('opret/interesser');
     }, function (error) {
-      console.error('create_user error', error);
       if (error.status === 409) {
         $scope.userExists = true;
+      } else {
+        console.error('create_user error', error);
       }
     });
   };
 
-  $scope.send_login = function () {
-    UserService.sendLoginEmail($scope.user.email).then( function (response) {
-      $scope.emailSent = true;
-    });
-  };
+}]).controller('addInterestsController', ['$scope', '$routeParams', '$http', '$q', '$location', 'UserService',
+function ($scope, $routeParams, $http, $q, $location, UserService) {
 
-  $scope.submit_step3 = function () {
+  if (UserService.isLoggedIn()) {
+    $location.path('oplysninger');
+  } else {
+    var basket = UserService.getBasket();
+    if (basket !== null) {
+      $scope.user = basket;
+    }
+  }
+
+  $http.get("/backend/interesser").then(function (response) {
+    $scope.interests = response.data;
+  });
+
+  $scope.submit = function () {
     var payload = {};
     payload.location_id = location_id;
     payload.interesser = $scope.user.interests_choices;
@@ -293,6 +362,7 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
       console.error(error);
     });
   };
+
 }]).controller('loginController', ['$scope', '$routeParams', '$http', '$rootScope', '$location', 'UserService',
 function ($scope, $routeParams, $http, $rootScope, $location, UserService, login) {
 

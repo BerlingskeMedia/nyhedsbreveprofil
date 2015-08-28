@@ -27,6 +27,20 @@
             <small ng-show="userForm.lastname.$dirty && userForm.lastname.$invalid" class="help-block">Efternavn er påkrævet</small>
           </div>
         </div>
+        <div class="col-xs-4 col-lg-2 col-md-3">
+          <div class="form-group required">
+            <label for="">Postnr.</label>
+            <input min="999" max="9999" ng-model="user.postnummer_dk" ng-required="true" type="number" name="zip" class="form-control input-sm" id="zip">
+            <small ng-show="userForm.zip.$dirty && userForm.zip.$invalid" class="help-block">Indtast et gyldigt postnummer</small>
+          </div>
+        </div>
+        <div class="col-xs-8 col-lg-10 col-md-9">
+          <div class="form-group required">
+            <label for="">By</label>
+            <input ng-model="user.bynavn" ng-required="true" type="text" class="form-control input-sm" name="town" id="town">
+            <small ng-show="userForm.town.$dirty && userForm.town.$invalid" class="help-block">Indtast by</small>
+          </div>
+        </div>
       </div>
       <div class="row">
         <div class="col-md-12">
@@ -36,21 +50,6 @@
         </div>
       </div>
       <div ng-show="show_extrafields" class="">
-        <div class="row">
-          <div class="col-xs-4 col-lg-2 col-md-3">
-            <div class="form-group">
-              <label for="">Postnr.</label>
-              <input min="999" max="9999" ng-model="user.postnummer_dk" type="number" name="zip" class="form-control input-sm" id="zip">
-              <small ng-show="userForm.zip.$dirty && userForm.zip.$invalid" class="help-block">Indtast et gyldigt postnummer</small>
-            </div>
-          </div>
-          <div class="col-xs-8 col-lg-10 col-md-9">
-            <div class="form-group">
-              <label for="">By</label>
-              <input ng-model="user.bynavn" type="text" class="form-control input-sm" id="id_town">
-            </div>
-          </div>
-        </div>
         <div class="row">
           <div class="col-xs-8 col-sm-10">
             <label for="">Vejnavn</label>
@@ -137,7 +136,7 @@
       <div class="row">
         <div class="module-top ">
           <a ng-href="nyhedsbreve" class="btn btn-link pull-left"><i class="fa fa-angle-left"></i> Flere nyhedsbreve</a>
-          <button type="submit" ng-click="submit_step2()" ng-class="{'btn-invalid ': userForm.$invalid, 'btn-success': userForm.$valid}" class="btn pull-right ">TILMELD <i class="fa fa-angle-right"></i></button>
+          <button type="submit" ng-click="submit()" ng-class="{'btn-invalid ': userForm.$invalid, 'btn-success': userForm.$valid}" class="btn pull-right ">TILMELD <i class="fa fa-angle-right"></i></button>
         </div>
       </div>
     </form>
