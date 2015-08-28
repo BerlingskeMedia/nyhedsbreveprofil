@@ -196,6 +196,7 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
     }
   });
 
+
   $http.get("/backend/nyhedsbreve?orderBy=sort_id&orderDirection=asc").then(function (response) {
     $scope.newsletters = response.data;
 
@@ -203,6 +204,11 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
       newsletter.logo_url = 'http://nlstatic.berlingskemedia.dk/newsletter_logos/' + newsletter.nyhedsbrev_id + '.png';
     });
   });
+
+
+  $scope.setCurrentPublisher = function (publisher) {
+    $scope.current_publisher = publisher;
+  };
 
   $scope.toggleSubscription = function(checkbox, nyhedsbrev_id) {
     if (UserService.isLoggedIn()) {

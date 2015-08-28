@@ -15,7 +15,7 @@
         </button>
         <ul class="dropdown-menu" role="menu">
           <li ng-repeat="publisher in publishers">
-            <a href="" ng-click="$parent.current_publisher = publisher">{{publisher.publisher_navn}}</a>
+            <a href="" ng-click="setCurrentPublisher(publisher)">{{publisher.publisher_navn}}</a>
           </li>
         </ul>
       </div>
@@ -28,13 +28,17 @@
           <div class="li-body">
             <div class="row">
               <div class="col-xs-1">
-                <img width="40px" src="{{ newsletter.logo_url }}" alt="" />
+                <div class="newsletter_logo">
+                  <label for="label_nes_{{ $index }}">
+                    <img width="40px" src="{{ newsletter.logo_url }}" alt="" />
+                  </label>
+                </div>
               </div>
               <div class="col-xs-10">
                 <div class="checkbox">
                   <label>
                     <input type="checkbox" checklist-model="$parent.user.nyhedsbreve" checklist-value="newsletter.nyhedsbrev_id"
-                      ng-change="toggleSubscription(this, newsletter.nyhedsbrev_id)">
+                      ng-change="toggleSubscription(this, newsletter.nyhedsbrev_id)" id="label_nes_{{ $index }}">
                     <strong class="newsletter-title">{{newsletter.nyhedsbrev_navn}}</strong>
                     <small>{{newsletter.indhold}}</small>
                   </label>
