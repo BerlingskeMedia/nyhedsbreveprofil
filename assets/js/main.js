@@ -181,17 +181,8 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
     }
   }
 
-  var publishers = $http.get("/backend/publishers?orderBy=publisher_navn&orderDirection=asc"); // newsletters
-  var newsletters = $http.get("/backend/nyhedsbreve?orderBy=sort_id&orderDirection=asc"); // newsletters
-  // var permissions = $http.get("/backend/nyhedsbreve?permission=1&orderBy=sort_id&orderDirection=asc"); // opret_step2
-  // var interests = $http.get("/backend/interesser"); // opret_step3
-  var to_resolve = [publishers, newsletters];
-
-  $q.all(to_resolve).then(function(resolved) {
-    $scope.publishers = resolved[0].data;
-    $scope.newsletters = resolved[1].data;
-    // $scope.permissions = resolved[2].data;
-    // $scope.interests = resolved[3].data;
+  $http.get("/backend/publishers?orderBy=publisher_navn&orderDirection=asc").then(function (response) {
+    $scope.publishers = response.data;
 
     if ($routeParams.publisher) {
       $scope.publishers.forEach(function (publisher) {
@@ -206,6 +197,10 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
       $scope.show_publisher_selector = true;
       $scope.current_publisher = $scope.publishers[0];
     }
+  });
+
+  $http.get("/backend/nyhedsbreve?orderBy=sort_id&orderDirection=asc").then(function (response) {
+    $scope.newsletters = response.data;
 
     $scope.newsletters.forEach(function (newsletter) {
       newsletter.logo_url = 'http://nlstatic.berlingskemedia.dk/newsletter_logos/' + newsletter.nyhedsbrev_id + '.png';
@@ -243,50 +238,6 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
       $location.path('opret/profil')
     }
   };
-
-  // $scope.submit_step2 = function () {
-  //   if ($scope.userForm.$invalid) {
-  //     return;
-  //   }
-  //   if (!$scope.user.postnummer_dk) {
-  //     delete $scope.user.postnummer_dk;
-  //   }
-  //   if (!$scope.user.foedselsaar) {
-  //     delete $scope.user.foedselsaar;
-  //   }
-  //   if ($scope.user.foedselsaar) {
-  //     $scope.user.foedselsaar = $scope.user.foedselsaar.toString();
-  //   }
-
-  //   $http.post("/backend/users", $scope.user).then(function (response) {
-  //     // $scope.state = "step3";
-  //     $location.path('opret/interesser');
-  //     UserService.setExternalId(response.data.ekstern_id);
-  //     UserService.clearBasket();
-  //   }, function (error) {
-  //     console.error('create_user error', error);
-  //     if (error.status === 409) {
-  //       $scope.userExists = true;
-  //     }
-  //   });
-  // };
-
-  // $scope.send_login = function () {
-  //   UserService.sendLoginEmail($scope.user.email).then( function (response) {
-  //     $scope.emailSent = true;
-  //   });
-  // };
-
-  // $scope.submit_step3 = function () {
-  //   var payload = {};
-  //   payload.location_id = location_id;
-  //   payload.interesser = $scope.user.interests_choices;
-  //   $http.post("backend/users/" + UserService.getExternalId() +  "/interesser", payload).then(function (response) {
-  //     $location.path('opret/tak')
-  //   }, function (error) {
-  //     console.error(error);
-  //   });
-  // };
 }]).controller('createProfileController', ['$scope', '$routeParams', '$http', '$q', '$location', 'UserService',
 function ($scope, $routeParams, $http, $q, $location, UserService) {
 
@@ -472,7 +423,7 @@ function ($scope, $routeParams, $http, $q, $modal, $location, UserService) {
   function update () {
 
     var my_newsletters = $http.get("/backend/users/" + UserService.getExternalId() + "/nyhedsbreve");
-    var newsletters = $http.get("/backend/nyhedsbreve");
+    var newsletters = $http.get("/backend/nyhedsbreve?orderBy=nyhedsbrev_navn&orderDirection=asc");
 
 
     $q.all([newsletters, my_newsletters]).then(function(resolved) {
