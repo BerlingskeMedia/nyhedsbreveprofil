@@ -143,7 +143,7 @@
             <small class="newsletter-notification alert alert-success" ng-show="permissionSaveSuccess"><i class="fa fa-check"></i> Dine kontaktsamtykker er blevet opdateret</small>
             <ul class="list-default ">
               <li ng-repeat="permission in permissions">
-                <div class="checkbox">
+                <div class="checkbox" ng-if="permission.hidden === 0 || $parent.user.nyhedsbreve.indexOf(permission.nyhedsbrev_id) > -1">
                   <label>
                     <input checklist-model="$parent.user.nyhedsbreve" checklist-value="permission.nyhedsbrev_id" ng-change="$parent.checkbox_change(this, permission.nyhedsbrev_id, 'nyhedsbreve')" type="checkbox">
                     <small>
