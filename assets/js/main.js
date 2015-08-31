@@ -231,8 +231,8 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
       $location.path('opret/profil')
     }
   };
-}]).controller('createProfileController', ['$scope', '$routeParams', '$http', '$q', '$location', 'UserService',
-function ($scope, $routeParams, $http, $q, $location, UserService) {
+}]).controller('createProfileController', ['$scope', '$routeParams', '$http', '$q', '$location', '$sce', 'UserService',
+function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
 
   if (UserService.isLoggedIn()) {
     $location.path('oplysninger');
@@ -249,6 +249,9 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
 
   $http.get("/backend/nyhedsbreve?permission=1&orderBy=sort_id&orderDirection=asc").then(function (response) {
     $scope.permissions = response.data;
+    $scope.permissions.forEach(function (permission) {
+      permission.indhold_safe = $sce.trustAsHtml(permission.indhold);
+    });
   });
 
   $scope.send_login = function () {
@@ -322,8 +325,8 @@ function ($scope, $routeParams, $http, $rootScope, $location, UserService, login
     });
   };
 
-}]).controller('editProfileController', ['$scope', '$routeParams', '$http', '$q', '$location', 'UserService',
-function ($scope, $routeParams, $http, $q, $location, UserService) {
+}]).controller('editProfileController', ['$scope', '$routeParams', '$http', '$q', '$location', '$sce', 'UserService',
+function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
 
   if (!UserService.isLoggedIn()) {
     return $location.path('login');
@@ -344,6 +347,9 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
     $scope.newsletters = resolved[1].data;
     $scope.interests = resolved[2].data;
     $scope.permissions = resolved[3].data;
+    $scope.permissions.forEach(function (permission) {
+      permission.indhold_safe = $sce.trustAsHtml(permission.indhold);
+    });
   });
 
   $scope.update = function(user) {

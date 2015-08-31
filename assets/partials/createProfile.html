@@ -111,7 +111,7 @@
 
           <ul class="list-default ">
             <li ng-repeat="permission in permissions">
-              <div class="checkbox">
+              <div class="checkbox" ng-if="permission.hidden === 0">
                 <label>
                   <input type="checkbox" checklist-model="$parent.user.nyhedsbreve" checklist-value="permission.nyhedsbrev_id"
                     ng-change="toggleSubscription(this, permission.nyhedsbrev_id)">
@@ -125,7 +125,7 @@
                 </small>
                 <p class="permission_info">
                   <small>
-                    <span ng-show="permission.show_indhold">{{permission.indhold}}</span>
+                    <span ng-show="permission.show_indhold" ng-bind-html="permission.indhold_safe"></span>
                   </small>
                 </p>
               </div>

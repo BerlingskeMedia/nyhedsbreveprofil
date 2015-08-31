@@ -156,7 +156,7 @@
                   </small>
                   <p class="permission_info">
                     <small>
-                      <span ng-show="permission.show_indhold">{{permission.indhold}}</span>
+                      <span ng-show="permission.show_indhold" ng-bind-html="permission.indhold_safe"></span>
                     </small>
                   </p>
                 </div>
