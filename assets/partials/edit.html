@@ -16,7 +16,7 @@
             <strong class="newsletter-title">{{newsletter.nyhedsbrev_navn}}
               <span>{{newsletter.nyhedsbrev_tag}}</span>
             </strong>
-            <small>{{newsletter.indhold}}</small>
+            <small ng-bind-html="newsletter.indhold_safe"></small>
           </div>
           <div class="col-xs-2 text-right">
             <a class="btn btn-xs btn-default" href="" ng-click="open(newsletter)">Afmeld</a>

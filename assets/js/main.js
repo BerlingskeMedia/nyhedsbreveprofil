@@ -406,8 +406,8 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
     });
   };
 
-}]).controller('subscriptionsController', ['$scope', '$routeParams', '$http', '$q', '$modal', '$location', 'UserService',
-function ($scope, $routeParams, $http, $q, $modal, $location, UserService) {
+}]).controller('subscriptionsController', ['$scope', '$routeParams', '$http', '$q', '$modal', '$location', '$sce', 'UserService',
+function ($scope, $routeParams, $http, $q, $modal, $location, $sce, UserService) {
   $scope.reasons = [
     "I sender for mange mails",
     "Indholdet i jeres mails er ikke relevant for mig",
@@ -424,6 +424,10 @@ function ($scope, $routeParams, $http, $q, $modal, $location, UserService) {
     $q.all([newsletters, my_newsletters]).then(function(resolved) {
 
       $scope.newsletters = resolved[0].data;
+      $scope.newsletters.forEach(function (newsletter) {
+        newsletter.indhold_safe = $sce.trustAsHtml(newsletter.indhold);
+      });
+
       $scope.my_subscriptions = resolved[1].data;
 
       console.log('tilmeldt:',$scope.my_subscriptions);
