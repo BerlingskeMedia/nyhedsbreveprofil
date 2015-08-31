@@ -55,6 +55,14 @@ var server = new Hapi.Server({
 
 server.connection({ port: process.env.PORT ? process.env.PORT : 8000 });
 
+server.route({
+  method: 'GET',
+  path: '/healthcheck',
+  handler: function (request, reply) {
+    return reply('OK');
+  }
+});
+
 server.register(client, cb);
 server.register(backend, { routes: { prefix: '/backend' } }, cb);
 

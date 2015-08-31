@@ -5,8 +5,8 @@
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
-    "build": "docker build -t bmdako/nyhedsbreve:$npm_package_version . && docker tag -f bmdako/nyhedsbreve:$npm_package_version bmdako/nyhedsbreve:latest",
-    "push": "docker push bmdako/nyhedsbreve:$npm_package_version && docker push bmdako/nyhedsbreve:latest"
+    "build": "docker build -t berlingskemedia/nyhedsbreve:$npm_package_version . && docker tag -f berlingskemedia/nyhedsbreve:$npm_package_version berlingskemedia/nyhedsbreve:latest",
+    "push": "docker push berlingskemedia/nyhedsbreve:$npm_package_version && docker push berlingskemedia/nyhedsbreve:latest"
   },
   "repository": {
     "type": "git",
