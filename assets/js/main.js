@@ -153,8 +153,8 @@ function($locationProvider, $routeProvider) {
     otherwise({
       redirectTo: '/nyhedsbreve'
     });
-}]).controller('newsletterController', ['$scope', '$routeParams', '$http', '$q', '$location', 'UserService',
-function ($scope, $routeParams, $http, $q, $location, UserService) {
+}]).controller('newsletterController', ['$scope', '$routeParams', '$http', '$q', '$location', '$sce', 'UserService',
+function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
 
   $scope.loggedIn = UserService.isLoggedIn();
 
@@ -195,6 +195,7 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
 
     $scope.newsletters.forEach(function (newsletter) {
       newsletter.logo_url = 'http://nlstatic.berlingskemedia.dk/newsletter_logos/' + newsletter.nyhedsbrev_id + '.png';
+      newsletter.indhold_safe = $sce.trustAsHtml(newsletter.indhold);
     });
   });
 
