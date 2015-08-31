@@ -25,7 +25,7 @@
     <section class="newsletters">
       <ul class="list-brand">
         <li ng-repeat="newsletter in newsletters | filter : {publisher_id : current_publisher.publisher_id} : true">
-          <div class="li-body">
+          <div class="li-body" ng-if="newsletter.hidden === 0">
             <div class="row">
               <div class="col-xs-1">
                 <div class="newsletter_logo">
