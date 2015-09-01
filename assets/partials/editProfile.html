@@ -60,10 +60,11 @@
                     <small ng-show="userForm.zip.$dirty && userForm.zip.$invalid" class="help-block">Indtast et gyldigt postnummer</small>
                   </div>
                 </div>
-                <div class="col-xs-6 col-md-9">
+                <div class="col-xs-6 col-md-3">
                   <div class="form-group required">
-                    <label for="">By</label>
-                    <input class="form-control input-sm" id="town" ng-model="user.bynavn" ng-required="true" placeholder="" type="text">
+                    <label for="">Fødselsår</label>
+                    <input class="form-control input-sm" name="birthyear" max="2015" min="1900" ng-model="user.foedselsaar" ng-required="true" type="number">
+                    <small ng-show="userForm.birthyear.$dirty && userForm.birthyear.$invalid" class="help-block">Indtast et gyldigt fødselsår</small>
                   </div>
                 </div>
               </div>
@@ -105,18 +106,16 @@
               </div>
 
               <div class="row">
-                <div class="col-xs-6">
+                <div class="col-xs-6 col-sm-9">
+                  <div class="form-group">
+                    <label for="">By</label>
+                    <input class="form-control input-sm" id="town" ng-model="user.bynavn" placeholder="" type="text">
+                  </div>
+                </div>
+                <div class="col-xs-4 col-sm-3">
                   <div class="form-group">
                     <label for="">Telefon</label>
                     <input class="form-control input-sm" id="id_phone" ng-model="user.telefon" type="text">
-                  </div>
-                </div>
-
-                <div class="col-xs-6 ">
-                  <div class="form-group">
-                    <label for="">Fødselsår</label>
-                    <input class="form-control input-sm" name="birthyear" max="2015" min="1900" ng-model="user.foedselsaar" type="number">
-                    <small ng-show="userForm.birthyear.$dirty && userForm.birthyear.$invalid" class="help-block">Indtast et gyldigt fødselsår</small>
                   </div>
                 </div>
               </div>

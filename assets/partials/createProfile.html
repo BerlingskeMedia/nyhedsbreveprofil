@@ -34,11 +34,11 @@
             <small ng-show="userForm.zip.$dirty && userForm.zip.$invalid" class="help-block">Indtast et gyldigt postnummer</small>
           </div>
         </div>
-        <div class="col-xs-8 col-lg-10 col-md-9">
+        <div class="col-xs-4 col-lg-2 col-md-3">
           <div class="form-group required">
-            <label for="">By</label>
-            <input ng-model="user.bynavn" ng-required="true" type="text" class="form-control input-sm" name="town" id="town">
-            <small ng-show="userForm.town.$dirty && userForm.town.$invalid" class="help-block">Indtast by</small>
+            <label for="">Fødselsår</label>
+            <input class="form-control input-sm" name="birthyear" max="2015" min="1900" ng-model="user.foedselsaar" ng-required="true" type="number">
+            <small ng-show="userForm.birthyear.$dirty && userForm.birthyear.$invalid" class="help-block">Indtast et gyldigt fødselsår</small>
           </div>
         </div>
       </div>
@@ -89,16 +89,16 @@
 
           <div class="col-xs-6">
             <div class="form-group">
-              <label for="">Telefon</label>
-              <input class="form-control input-sm" id="id_phone" ng-model="user.telefon" type="text">
+              <label for="">By</label>
+              <input ng-model="user.bynavn" type="text" class="form-control input-sm" name="town" id="town">
+              <small ng-show="userForm.town.$dirty && userForm.town.$invalid" class="help-block">Indtast by</small>
             </div>
           </div>
 
-          <div class="col-xs-6 ">
+          <div class="col-xs-4 col-md-2">
             <div class="form-group">
-              <label for="">Fødselsår</label>
-              <input class="form-control input-sm" name="birthyear" max="2015" min="1900" ng-model="user.foedselsaar" type="number">
-              <small ng-show="userForm.birthyear.$dirty && userForm.birthyear.$invalid" class="help-block">Indtast et gyldigt fødselsår</small>
+              <label for="">Telefon</label>
+              <input class="form-control input-sm" id="id_phone" ng-model="user.telefon" type="text">
             </div>
           </div>
         </div>
