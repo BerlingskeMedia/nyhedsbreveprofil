@@ -7,17 +7,17 @@
 <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist">
           <li ng-class="{active: tab == 'kontakt'}">
-            <a aria-expanded="true" data-toggle="tab" href="" ng-click="tab = 'kontakt'" role="tab">
+            <a aria-expanded="true" data-toggle="tab" href="" ng-click="setTab('kontakt')" role="tab">
               <i class="fa fa-home "></i>
               Navn og adresse</a>
           </li>
           <li ng-class="{active: tab == 'interesser'}">
-            <a aria-expanded="false" data-toggle="tab" href="" ng-click="tab = 'interesser'" role="tab">
+            <a aria-expanded="false" data-toggle="tab" href="" ng-click="setTab('interesser')" role="tab">
               <i class="fa fa-heart "></i>
               Dine interesser</a>
           </li>
           <li ng-class="{active: tab == 'kontaktsamtykker'}">
-            <a aria-expanded="false" data-toggle="tab" href="" ng-click="tab = 'kontaktsamtykker'" role="tab">
+            <a aria-expanded="false" data-toggle="tab" href="" ng-click="setTab('kontaktsamtykker')" role="tab">
               <i class="fa fa-check"></i>
               Kontaktsamtykker</a>
           </li>

@@ -342,11 +342,12 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
   var interests = $http.get("/backend/interesser");
   var permissions = $http.get("/backend/nyhedsbreve?permission=1");
 
-  if (['kontakt','interesser','kontaktsamtykker'].indexOf($routeParams.tab) === -1) {
+  if (!validTab($routeParams.tab)) {
     $location.path('oplysninger');
   }
 
   $scope.tab = $routeParams.tab ? $routeParams.tab : 'kontakt';
+
 
   $q.all([user, newsletters, interests, permissions]).then(function(resolved) {
     $scope.user = resolved[0].data;
@@ -359,6 +360,20 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
       permission.indhold_safe = $sce.trustAsHtml(permission.indhold);
     });
   });
+
+  $scope.setTab = function (tab) {
+    if (validTab(tab)) {
+      $scope.tab = tab;
+      $location.path('oplysninger/' + tab);
+    } else {
+      $scope.tab = 'kontakt';
+      $location.path('oplysninger');
+    }
+  };
+
+  function validTab (tab) {
+    return ['kontakt','interesser','kontaktsamtykker'].indexOf(tab) > -1;
+  }
 
   $scope.update = function(user) {
     if ($scope.userForm.$invalid) {
