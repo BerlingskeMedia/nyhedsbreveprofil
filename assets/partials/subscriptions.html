@@ -37,7 +37,7 @@
 
   <div class="modal-content">
     <div class="modal-header">
-      <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+      <button aria-label="Close" class="close" data-dismiss="modal" ng-click="close()" type="button">
         <span aria-hidden="true">×</span>
       </button>
       <h4 class="modal-title">Angiv venligst årsagen</h4>
@@ -65,7 +65,7 @@
     </div>
 
     <div class="modal-footer">
-      <button class="btn btn-default" data-dismiss="modal" type="button">Annullér</button>
+      <button class="btn btn-default" data-dismiss="modal" type="button" ng-click="close()">Annullér</button>
       <a class="btn btn-primary" href="" ng-click="unsubscribe(selected_reason)">Afmeld</a>
     </div>
   </div>

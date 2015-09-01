@@ -113,7 +113,7 @@ function($locationProvider, $routeProvider) {
       }
     }).
     when('/tilmeldt/:nyhedsbrev_id?', {
-      templateUrl: 'assets/partials/edit.html',
+      templateUrl: 'assets/partials/subscriptions.html',
       controller: 'subscriptionsController',
       resolve: {
         login: 'LoginService'
@@ -459,20 +459,12 @@ function ($scope, $routeParams, $http, $q, $modal, $location, $sce, UserService)
       console.log('tilmeldt:',$scope.my_subscriptions);
 
       $scope.filtered_newsletters = $scope.newsletters.filter(function (newsletter) {
-        return $scope.my_subscriptions.indexOf(newsletter.nyhedsbrev_id) !== -1;
-      });
-
-      var nyhedsbrev_id = $routeParams.nyhedsbrev_id;
-      if (nyhedsbrev_id) {
-        var found = $scope.filtered_newsletters.some(function (el) {
-          return el.nyhedsbrev_id == nyhedsbrev_id;
-        });
-        if (found) {
-          $scope.filtered_newsletters = $scope.filtered_newsletters.filter(function (newsletter) {
-            return newsletter.nyhedsbrev_id == nyhedsbrev_id;
-          });
+        if ($routeParams.nyhedsbrev_id) {
+          return newsletter.nyhedsbrev_id == $routeParams.nyhedsbrev_id;
+        } else {
+          return $scope.my_subscriptions.indexOf(newsletter.nyhedsbrev_id) !== -1;
         }
-      }
+      });
     });
   };
 
@@ -487,7 +479,14 @@ function ($scope, $routeParams, $http, $q, $modal, $location, $sce, UserService)
     payload.nyhedsbrev_id = $scope.to_unsubscribe.nyhedsbrev_id;
     payload.user_feedback = feedback;
     $http.post("/backend/users/" + UserService.getExternalId() + "/nyhedsbreve/delete", payload ).success(function(data, status, headers, config) {
-      update();
+
+      // If the user has a direct link, he/she will be redirected to the publishers newsletter page
+      if ($routeParams.nyhedsbrev_id) {
+        $location.path('nyhedsbreve/' + $scope.filtered_newsletters[0].publisher_id);
+      } else {
+        update();
+      }
+
       $scope.modalInstance.close();
     }).
     error(function(data, status, headers, config) {
@@ -505,6 +504,10 @@ function ($scope, $routeParams, $http, $q, $modal, $location, $sce, UserService)
       scope: $scope
     });
     $scope.modalInstance = modalInstance;
+  };
+
+  $scope.close = function () {
+    $scope.modalInstance.close();
   };
 
   $scope.onchange = function(value) {
