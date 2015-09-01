@@ -133,6 +133,9 @@ function($locationProvider, $routeProvider) {
         login: 'LoginService'
       }
     }).
+    when('/interesser', {
+      redirectTo: '/oplysninger/interesser'
+    }).
     when('/kontaktsamtykker', {
       redirectTo: '/oplysninger/kontaktsamtykker'
     }).
