@@ -12,7 +12,12 @@
     <ul class="list-brand list-border">
       <li ng-repeat="newsletter in filtered_newsletters">
         <div class="row">
-          <div class="col-xs-offset-1 col-xs-8">
+          <div class="col-xs-1">
+            <div class="newsletter_logo">
+              <img width="40px" src="{{ newsletter.logo_url }}" alt="" />
+            </div>
+          </div>
+          <div class="col-xs-8">
             <strong class="newsletter-title">{{newsletter.nyhedsbrev_navn}}
               <span>{{newsletter.nyhedsbrev_tag}}</span>
             </strong>

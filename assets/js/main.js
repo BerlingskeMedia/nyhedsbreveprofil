@@ -343,7 +343,7 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
   var user = $http.get("/backend/users/" + ekstern_id);
   var newsletters = $http.get("/backend/users/" + ekstern_id + "/nyhedsbreve");
   var interests = $http.get("/backend/interesser");
-  var permissions = $http.get("/backend/nyhedsbreve?permission=1");
+  var permissions = $http.get("/backend/nyhedsbreve?permission=1&orderBy=sort_id&orderDirection=asc");
 
   if (!validTab($routeParams.tab)) {
     $location.path('oplysninger');
@@ -450,6 +450,7 @@ function ($scope, $routeParams, $http, $q, $modal, $location, $sce, UserService)
 
       $scope.newsletters = resolved[0].data;
       $scope.newsletters.forEach(function (newsletter) {
+        newsletter.logo_url = 'http://nlstatic.berlingskemedia.dk/newsletter_logos/' + newsletter.nyhedsbrev_id + '.png';
         newsletter.indhold_safe = $sce.trustAsHtml(newsletter.indhold);
       });
 
