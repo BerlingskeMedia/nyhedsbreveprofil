@@ -7669,6 +7669,9 @@ input[type="button"].btn-block {
 .main-footer a:hover {
   color: #666;
 }
+.main-footer span {
+  color: #999;
+}
 .main-footer .cookie-link {
   padding-left: 17px;
   background: url(../images/cookies.png) left center no-repeat;
