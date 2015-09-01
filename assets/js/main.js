@@ -133,6 +133,9 @@ function($locationProvider, $routeProvider) {
         login: 'LoginService'
       }
     }).
+    when('/kontaktsamtykker', {
+      redirectTo: '/oplysninger/kontaktsamtykker'
+    }).
     when('/opret/profil', {
       templateUrl: 'assets/partials/createProfile.html',
       controller: 'createProfileController',
@@ -339,7 +342,11 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
   var interests = $http.get("/backend/interesser");
   var permissions = $http.get("/backend/nyhedsbreve?permission=1");
 
-  $scope.tab = $routeParams.tab ? $routeParams.tab : 'details';
+  if (['kontakt','interesser','kontaktsamtykker'].indexOf($routeParams.tab) === -1) {
+    $location.path('oplysninger');
+  }
+
+  $scope.tab = $routeParams.tab ? $routeParams.tab : 'kontakt';
 
   $q.all([user, newsletters, interests, permissions]).then(function(resolved) {
     $scope.user = resolved[0].data;
