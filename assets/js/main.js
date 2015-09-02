@@ -522,6 +522,9 @@ function ($scope, $routeParams, $http, $q, $modal, $location, $sce, UserService)
   }
 }]).controller('MenuController', ['$scope', '$routeParams', '$http', '$q', '$rootScope', '$location', 'UserService',
 function ($scope, $routeParams, $http, $q, $rootScope, $location, UserService) {
+
+  $scope.testenvironment = $location.host().indexOf('profil.berlingskemedia.dk') === -1;
+
   $scope.$on('$routeChangeSuccess', function () {
     $scope.loggedIn = UserService.isLoggedIn();
     if ($scope.loggedIn) {
