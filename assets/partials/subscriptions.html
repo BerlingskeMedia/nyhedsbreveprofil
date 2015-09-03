@@ -12,18 +12,18 @@
       <ul class="list-brand list-border">
         <li ng-repeat="newsletter in filtered_newsletters">
           <div class="row">
-            <div class="col-xs-2">
-              <div class="newsletter_logo">
-                <img width="40px" src="{{ newsletter.logo_url }}" alt="" />
+            <div class="col-xs-4 col-sm-2 col-md-2 col-lg-2">
+              <div class="newsletter_logo center-block">
+                <img src="{{ newsletter.logo_url }}" class="center-block img-responsive" alt="" />
               </div>
             </div>
-            <div class="col-xs-7">
+            <div class="col-xs-5 col-sm-8 col-md-9 col-lg-9">
               <strong class="newsletter-title">{{newsletter.nyhedsbrev_navn}}
                 <span>{{newsletter.nyhedsbrev_tag}}</span>
               </strong>
               <small ng-bind-html="newsletter.indhold_safe"></small>
             </div>
-            <div class="col-xs-3 text-right">
+            <div class="col-xs-3 col-sm-2 col-md-1 col-lg-1 text-right">
               <a class="btn btn-xs btn-default" href="" ng-click="open(newsletter)">Afmeld</a>
             </div>
           </div>
