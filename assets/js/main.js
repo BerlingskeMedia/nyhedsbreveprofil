@@ -181,17 +181,23 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
     $scope.publishers = response.data;
 
     if ($routeParams.publisher) {
-      $scope.publishers.forEach(function (publisher) {
+      var publisher_exists = $scope.publishers.some(function (publisher) {
         if ($routeParams.publisher == publisher.publisher_id || angular.lowercase($routeParams.publisher) === angular.lowercase(publisher.publisher_navn)) {
           $scope.current_publisher = publisher;
           $scope.h1_prefix = publisher.publisher_navn + ' ';
+          return true;
+        } else {
+          return false;
         }
       });
-    }
 
-    if ($scope.current_publisher === undefined) {
-      $scope.show_publisher_selector = true;
+      if (!publisher_exists) {
+        $location.path('nyhedsbreve')
+      }
+
+    } else {
       $scope.current_publisher = $scope.publishers[0];
+      $scope.show_publisher_selector = true;
     }
   });
 

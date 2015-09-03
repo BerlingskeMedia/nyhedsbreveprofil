@@ -41,7 +41,7 @@
                   <label>
                     <input type="checkbox" checklist-model="$parent.user.nyhedsbreve" checklist-value="newsletter.nyhedsbrev_id"
                       ng-change="toggleSubscription(this, newsletter.nyhedsbrev_id)" id="label_nes_{{ $index }}">
-                    <strong class="newsletter-title" data-newsletter-id="{{ newsletter.nyhedsbrev_id }}">{{newsletter.nyhedsbrev_navn}}</strong>
+                    <strong class="newsletter-title"  data-publisher-id="{{ newsletter.publisher_id }}" data-newsletter-id="{{ newsletter.nyhedsbrev_id }}">{{newsletter.nyhedsbrev_navn}}</strong>
                     <small ng-bind-html="newsletter.indhold_safe"></small>
                     <!-- <div><em><small>Udsendes {{ newsletter.tidspunkt }}</small></em></div> -->
                   </label>
