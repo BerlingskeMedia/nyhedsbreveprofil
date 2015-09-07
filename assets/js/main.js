@@ -196,7 +196,16 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
       }
 
     } else {
-      $scope.current_publisher = $scope.publishers[0];
+      $scope.publishers.forEach(function (publisher) {
+        if (publisher.publisher_navn === 'Berlingske') {
+          $scope.current_publisher = publisher;
+        }
+      });
+
+      if ($scope.current_publisher === undefined) {
+        $scope.current_publisher = $scope.publishers[0];
+      }
+
       $scope.show_publisher_selector = true;
     }
   });
