@@ -178,46 +178,50 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
   }
 
   $http.get("/backend/publishers?orderBy=publisher_navn&orderDirection=asc").then(function (response) {
-    $scope.publishers = response.data;
+    if (response.data) {
+      $scope.publishers = response.data;
 
-    if ($routeParams.publisher) {
-      var publisher_exists = $scope.publishers.some(function (publisher) {
-        if ($routeParams.publisher == publisher.publisher_id || angular.lowercase($routeParams.publisher) === angular.lowercase(publisher.publisher_navn)) {
-          $scope.current_publisher = publisher;
-          $scope.h1_prefix = publisher.publisher_navn + ' ';
-          return true;
-        } else {
-          return false;
+      if ($routeParams.publisher) {
+        var publisher_exists = $scope.publishers.some(function (publisher) {
+          if ($routeParams.publisher == publisher.publisher_id || angular.lowercase($routeParams.publisher) === angular.lowercase(publisher.publisher_navn)) {
+            $scope.current_publisher = publisher;
+            $scope.h1_prefix = publisher.publisher_navn + ' ';
+            return true;
+          } else {
+            return false;
+          }
+        });
+
+        if (!publisher_exists) {
+          $location.path('nyhedsbreve')
         }
-      });
 
-      if (!publisher_exists) {
-        $location.path('nyhedsbreve')
-      }
+      } else {
+        $scope.publishers.forEach(function (publisher) {
+          if (publisher.publisher_navn === 'Berlingske') {
+            $scope.current_publisher = publisher;
+          }
+        });
 
-    } else {
-      $scope.publishers.forEach(function (publisher) {
-        if (publisher.publisher_navn === 'Berlingske') {
-          $scope.current_publisher = publisher;
+        if ($scope.current_publisher === undefined) {
+          $scope.current_publisher = $scope.publishers[0];
         }
-      });
 
-      if ($scope.current_publisher === undefined) {
-        $scope.current_publisher = $scope.publishers[0];
+        $scope.show_publisher_selector = true;
       }
-
-      $scope.show_publisher_selector = true;
     }
   });
 
 
   $http.get("/backend/nyhedsbreve?orderBy=sort_id&orderDirection=asc").then(function (response) {
-    $scope.newsletters = response.data;
+    if (response.data) {
+      $scope.newsletters = response.data;
 
-    $scope.newsletters.forEach(function (newsletter) {
-      newsletter.logo_url = 'http://nlstatic.berlingskemedia.dk/newsletter_logos/' + newsletter.nyhedsbrev_id + '.png';
-      newsletter.indhold_safe = $sce.trustAsHtml(newsletter.indhold);
-    });
+      $scope.newsletters.forEach(function (newsletter) {
+        newsletter.logo_url = 'http://nlstatic.berlingskemedia.dk/newsletter_logos/' + newsletter.nyhedsbrev_id + '.png';
+        newsletter.indhold_safe = $sce.trustAsHtml(newsletter.indhold);
+      });
+    }
   });
 
 
@@ -227,7 +231,7 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
 
   $scope.toggleSubscription = function(checkbox, nyhedsbrev_id) {
     if (UserService.isLoggedIn()) {
-      var url = "/backend/users/" + UserService.getExternalId() + '/nyhedsbreve/' + nyhedsbrev_id;
+      var url = '/backend/users/' + UserService.getExternalId() + '/nyhedsbreve/' + nyhedsbrev_id;
 
       var request;
       if (checkbox.checked) {

@@ -2,7 +2,9 @@
 'use strict';
 
 var Hapi = require('hapi'),
-    backend = require('./backend');
+    backend = require('./backend'),
+    inert = require('inert');
+
 
 var client = {
   register: function (plugin, options, next) {
@@ -12,8 +14,7 @@ var client = {
       path: '/bower_components/{param*}',
       handler: {
         directory: {
-          path: 'bower_components',
-          index: true
+          path: 'bower_components'
         }
       }
     });
@@ -63,6 +64,7 @@ server.route({
   }
 });
 
+server.register(inert, cb);
 server.register(client, cb);
 server.register(backend, { routes: { prefix: '/backend' } }, cb);
 
