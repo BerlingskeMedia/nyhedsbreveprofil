@@ -2,31 +2,6 @@
 
 var http = require('http');
 
-// var api_url = 'http://' + process.env.MDBAPI_ADDRESS + ':' + process.env.MDBAPI_PORT;
-
-// function getProxy (request, reply) {
-//   console.log(request.url, request.method)
-//   http.get({
-//     method: 'get',
-//     hostname: process.env.MDBAPI_ADDRESS,
-//     port: process.env.MDBAPI_PORT,
-//     path: request.url.path.replace('/backend', '')
-//   }, reply).on('error', function(e) {
-//     console.log("Got error: " + e.message);
-//     reply().code(500);
-//   });
-// }
-
-
-// function requestProxy (request, reply) {
-//   var req = http.request({
-//     method: request.method,
-//     hostname: process.env.MDBAPI_ADDRESS,
-//     port: process.env.MDBAPI_PORT,
-//     path: request.url.path.replace('/backend', '')
-//   }); 
-// }
-
 function proxy (request, reply) {
   var options = {
     method: request.method,
@@ -61,27 +36,11 @@ function proxy (request, reply) {
 var backend = {
   register: function (plugin, options, next) {
 
+    /* These are the URL's we're allowing to proxy */
+
     plugin.route({
       method: 'GET',
       path: '/healthcheck',
-      handler: proxy
-    });
-
-    plugin.route({
-      method: 'POST',
-      path: '/users',
-      handler: proxy
-    });
-
-    plugin.route({
-      method: ['GET', 'PUT'],
-      path: '/users/{id}',
-      handler: proxy
-    });
-
-    plugin.route({
-      method: 'POST',
-      path: '/users/{id}/nyhedsbreve/{nyhedsbrev_id}',
       handler: proxy
     });
 
@@ -97,14 +56,59 @@ var backend = {
       handler: proxy
     });
 
-    // POST users
-    // GET users{id}
-    // POST users/{id}/nyhedsbreve/{id}
-    // DELETE users/{id}/nyhedsbreve/{id}
-    // POST mails/profile-page-link
-    // GET publishers?orderBy=publisher_navn&orderDirection=asc
-    // GET nyhedsbreve?orderBy=sort_id&orderDirection=asc
-    // GET nyhedsbreve?permission=1&orderBy=sort_id&orderDirection=as
+    plugin.route({
+      method: 'GET',
+      path: '/interesser',
+      handler: proxy
+    });
+
+    plugin.route({
+      method: ['GET', 'PUT'],
+      path: '/users/{user_id}',
+      handler: proxy
+    });
+
+    plugin.route({
+      method: 'POST',
+      path: '/users',
+      handler: proxy
+    });
+
+    plugin.route({
+      method: 'GET',
+      path: '/users/{user_id}/nyhedsbreve',
+      handler: proxy
+    });
+
+    plugin.route({
+      method: ['POST', 'DELETE'],
+      path: '/users/{user_id}/nyhedsbreve/{nyhedsbrev_id}',
+      handler: proxy
+    });
+
+    plugin.route({
+      method: ['GET', 'POST'],
+      path: '/users/{user_id}/interesser',
+      handler: proxy
+    });
+
+    plugin.route({
+      method: ['POST', 'DELETE'],
+      path: '/users/{user_id}/interesser/{interesse_id}',
+      handler: proxy
+    });
+
+    plugin.route({
+      method: 'POST',
+      path: '/users/{user_id}/nyhedsbreve/delete',
+      handler: proxy
+    });
+
+    plugin.route({
+      method: 'POST',
+      path: '/mails/profile-page-link',
+      handler: proxy
+    });
 
     next();
   }
