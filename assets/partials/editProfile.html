@@ -53,14 +53,14 @@
               </div>
 
               <div class="row">
-                <div class="col-xs-6 col-md-3">
+                <div class="col-xs-6">
                   <div class="form-group required">
                     <label for="">Postnr.</label>
                     <input min="999" max="9999" ng-model="user.postnummer_dk" ng-required="true" type="number" name="zip" class="form-control input-sm" id="zip">
                     <small ng-show="userForm.zip.$dirty && userForm.zip.$invalid" class="help-block">Indtast et gyldigt postnummer</small>
                   </div>
                 </div>
-                <div class="col-xs-6 col-md-3">
+                <div class="col-xs-6">
                   <div class="form-group required">
                     <label for="">Fødselsår</label>
                     <input class="form-control input-sm" name="birthyear" max="2015" min="1900" ng-model="user.foedselsaar" ng-required="true" type="number">
