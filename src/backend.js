@@ -11,18 +11,11 @@ function proxy (request, reply) {
   };
 
   var req = http.request(options, function( res ) {
-    var data = '';
-    res.setEncoding('utf8');
 
-    res.on('data', function ( chunk ) {
-      data += chunk;
-    });
+    reply(null, res);
 
-    res.on('end', function() {
-      reply(null, data);
-    });
   }).on('error', function(e) {
-    console.log('Got error while requesting (' + url + '): ' + e.message);
+    console.log('Got error while requesting (' + request.url + '): ' + e.message);
     reply(e, null);
   });
 
@@ -70,7 +63,19 @@ var backend = {
 
     plugin.route({
       method: 'POST',
-      path: '/users',
+      path: '/doubleopt',
+      handler: proxy
+    });
+
+    plugin.route({
+      method: 'POST',
+      path: '/doubleopt/{confirm_key}/confirm',
+      handler: proxy
+    });
+
+    plugin.route({
+      method: 'POST',
+      path: '/doubleopt/{double_opt_key}/interesser',
       handler: proxy
     });
 

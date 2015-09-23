@@ -45,11 +45,11 @@
                     <small ng-bind-html="newsletter.indhold_safe"></small>
                     <!-- <div><em><small>Udsendes {{ newsletter.tidspunkt }}</small></em></div> -->
                   </label>
-                  <div ng-show="deleted" class="newsletter-notification alert alert-danger">
-                    </small><i class="fa fa-check"></i> Du er nu frameldt nyhedsbrevet</small>
+                  <div ng-show="deleted" class="newsletter-notification">
+                    <small class="alert alert-danger">Du er nu frameldt nyhedsbrevet</small>
                   </div>
-                  <div ng-show="created" class="newsletter-notification alert alert-success">
-                    </small><i class="fa fa-check"></i> Du er nu tilmeldt nyhedsbrevet</small>
+                  <div ng-show="created" class="newsletter-notification">
+                    <small class="alert alert-success">Du er nu tilmeldt nyhedsbrevet</small>
                   </div>
                 </div>
               </div>

@@ -15,6 +15,14 @@ function ($http) {
     window.sessionStorage.setItem('ekstern_id', ekstern_id);
   }
 
+  function getDoubleOptKey (double_opt_key) {
+    return window.sessionStorage.getItem('double_opt_key');
+  }
+
+  function setDoubleOptKey (double_opt_key) {
+    window.sessionStorage.setItem('double_opt_key', double_opt_key);
+  }
+
   function removeExternalId (ekstern_id) {
     window.sessionStorage.removeItem('ekstern_id');
   }
@@ -49,6 +57,8 @@ function ($http) {
     },
     getExternalId: getExternalId,
     setExternalId: setExternalId,
+    getDoubleOptKey: getDoubleOptKey,
+    setDoubleOptKey: setDoubleOptKey,
     removeExternalId: removeExternalId,
     isLoggedIn: function () {
       return getExternalId() !== null;
@@ -64,14 +74,15 @@ function ($http, $location, UserService) {
 
     var search = $location.search();
     var ekstern_id =
-      UserService.isLoggedIn() ? UserService.getExternalId()
-      : search.eksternid ? search.eksternid
+      search.eksternid ? search.eksternid
       : search.userid ? search.userid
       : search.id ? search.id
+      : UserService.isLoggedIn() ? UserService.getExternalId()
       : null;
 
     if (ekstern_id !== null) {
       return $http.get("/backend/users/" + ekstern_id).then(function (response) {
+
         UserService.setExternalId(ekstern_id);
 
         $location.search('eksternid', null);
@@ -82,9 +93,8 @@ function ($http, $location, UserService) {
         UserService.removeExternalId();
         $location.path('login');
       });
-
     } else {
-      return false;
+      return false; // Provider must return a value from $get factory method.
     }
   }();
 }]).config(['$locationProvider', '$routeProvider',
@@ -155,6 +165,10 @@ function($locationProvider, $routeProvider) {
     }).
     when('/opret/tak', {
       templateUrl: 'assets/partials/createProfileDone.html'
+    }).
+    when('/bekraeft', {
+      templateUrl: 'assets/partials/createProfileConfirmed.html',
+      controller: 'confirmController'
     }).
     otherwise({
       redirectTo: '/nyhedsbreve'
@@ -271,8 +285,6 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
     };
   }
 
-  console.log($scope.user);
-
   $http.get("/backend/nyhedsbreve?permission=1&orderBy=sort_id&orderDirection=asc").then(function (response) {
     $scope.permissions = response.data;
     $scope.permissions.forEach(function (permission) {
@@ -300,8 +312,8 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
       $scope.user.foedselsaar = $scope.user.foedselsaar.toString();
     }
 
-    $http.post("/backend/users", $scope.user).then(function (response) {
-      UserService.setExternalId(response.data.ekstern_id);
+    $http.post("/backend/doubleopt", $scope.user).then(function (response) {
+      UserService.setDoubleOptKey(response.data.double_opt_key);
       UserService.clearBasket();
       $location.path('opret/interesser');
     }, function (error) {
@@ -316,6 +328,10 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
 }]).controller('addInterestsController', ['$scope', '$routeParams', '$http', '$q', '$location', 'UserService',
 function ($scope, $routeParams, $http, $q, $location, UserService) {
 
+  if(UserService.getDoubleOptKey() === null) {
+    $location.path('opret/profil');
+  }
+
   $http.get("/backend/interesser").then(function (response) {
     $scope.interests = response.data;
   });
@@ -324,7 +340,7 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
     var payload = {};
     payload.location_id = location_id;
     payload.interesser = $scope.user.interests_choices;
-    $http.post("backend/users/" + UserService.getExternalId() +  "/interesser", payload).then(function (response) {
+    $http.post("backend/doubleopt/" + UserService.getDoubleOptKey() +  "/interesser", payload).then(function (response) {
       $location.path('opret/tak')
     }, function (error) {
       console.error(error);
@@ -373,8 +389,14 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
 
   $q.all([user, newsletters, interests, permissions]).then(function(resolved) {
     $scope.user = resolved[0].data;
-    $scope.user.postnummer = parseInt($scope.user.postnummer);
+    $scope.user.postnummer_dk = parseInt($scope.user.postnummer_dk);
+    if ($scope.user.postnummer_dk === 0) {
+      $scope.user.postnummer_dk = NaN;
+    }
     $scope.user.foedselsaar = parseInt($scope.user.foedselsaar);
+    if ($scope.user.foedselsaar === 0) {
+      $scope.user.foedselsaar = NaN;
+    }
     $scope.newsletters = resolved[1].data;
     $scope.interests = resolved[2].data;
     $scope.permissions = resolved[3].data;
@@ -408,14 +430,12 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
     delete payload.nyhedsbreve;
     delete payload.email;
 
-    if (user.foedselsaar) {
+    if (user.foedselsaar !== null) {
       payload.foedselsaar = user.foedselsaar.toString();
-    } else {
-      delete payload.foedselsaar;
     }
     
-    if (user.postnummer !== null) {
-      payload.postnummer = user.postnummer.toString();
+    if (user.postnummer_dk !== null) {
+      payload.postnummer_dk = user.postnummer_dk.toString();
     }
 
     $http.put("/backend/users/" + ekstern_id, payload).then(function (response) {
@@ -497,7 +517,7 @@ function ($scope, $routeParams, $http, $q, $modal, $location, $sce, UserService)
     payload.location_id = location_id;
     payload.nyhedsbrev_id = $scope.to_unsubscribe.nyhedsbrev_id;
     payload.user_feedback = feedback;
-    $http.post("/backend/users/" + UserService.getExternalId() + "/nyhedsbreve/delete", payload ).success(function(data, status, headers, config) {
+    $http.post("/backend/users/" + UserService.getExternalId() + "/nyhedsbreve/delete", payload ).then(function (response) {
 
       // If the user has a direct link, he/she will be redirected to the publishers newsletter page
       if ($routeParams.nyhedsbrev_id) {
@@ -507,8 +527,8 @@ function ($scope, $routeParams, $http, $q, $modal, $location, $sce, UserService)
       }
 
       $scope.modalInstance.close();
-    }).
-    error(function(data, status, headers, config) {
+    }, function (error) {
+      console.error(error);
       $scope.modalInstance.close();
     });
 
@@ -533,7 +553,6 @@ function ($scope, $routeParams, $http, $q, $modal, $location, $sce, UserService)
     $scope.selected_reason = value;
   };
 
-
   if (UserService.isLoggedIn()) {
     update();
   } else {
@@ -553,4 +572,19 @@ function ($scope, $routeParams, $http, $q, $rootScope, $location, UserService) {
       });
     }
   });
+}]).controller('confirmController', ['$scope', '$location', '$http', 'UserService',
+function ($scope, $location, $http, UserService) {
+
+  if (!UserService.isLoggedIn()) {
+    var search = $location.search();
+    $http.post("/backend/doubleopt/" + search.confirm_key + "/confirm?location_id = " + location_id).then(function (response) {
+      var user = response.data;
+      UserService.setExternalId(user.ekstern_id);
+      $location.search('confirm_key', null);
+    }, function (error) {
+      console.error(error);
+      $location.search('confirm_key', null);
+      $location.path('login');
+    });
+  }
 }]);

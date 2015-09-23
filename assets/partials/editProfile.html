@@ -123,7 +123,7 @@
             <div class="row">
               <div class="col-sm-10">
                 <p class="newsletter-notification">
-                  <small class="alert alert-success" ng-show="profileSaveSuccess"><i class="fa fa-check"></i> Dine oplysninger blev opdateret</small>
+                  <small class="alert alert-success" ng-show="profileSaveSuccess">Dine oplysninger blev opdateret</small>
                   <small class="alert alert-danger" ng-show="profileSaveError"><i class="fa fa-ban"></i> <strong>Fejl</strong> Dine oplysninger er ikke blevet opdateret</small>
                 <p>
               </div>
@@ -161,7 +161,7 @@
               </li>
             </ul>
             <p class="newsletter-notification">
-              <small class="alert alert-success" ng-show="permissionSaveSuccess"><i class="fa fa-check"></i> Dine kontaktsamtykker er blevet opdateret</small>
+              <small class="alert alert-success" ng-show="permissionSaveSuccess">Dine kontaktsamtykker er blevet opdateret</small>
             </p>
 
           </div>
@@ -170,14 +170,14 @@
             <p>Fortæl os, hvad du interesserer dig for, så vi kan sende dig relevante tilbud og nyhedsbreve.</p>
             <div class="row">
               <div class="col-lg-4 col-sm-6 col-xs-12" ng-repeat="interest in interests">
-                <label>
+                <label data-interesse-id="{{ interest.interesse_id }}">
                   <input checklist-model="$parent.user.interesser" checklist-value="interest.interesse_id" ng-change="$parent.checkbox_change(this, interest.interesse_id, 'interesser')" type="checkbox"/>
                   {{interest.interesse_navn}}
                 </label>
               </div>
             </div>
             <p class="newsletter-notification">
-              <small class="alert alert-success" ng-show="interestsSaveSuccess"><i class="fa fa-check"></i> Dine interesser er blevet opdateret</small>
+              <small class="alert alert-success" ng-show="interestsSaveSuccess">Dine interesser er blevet opdateret</small>
             </p>
           </div>
         </div>
