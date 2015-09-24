@@ -1,8 +1,14 @@
 <div class="row">
   <div class="col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
-    <br>
-    <br>
-    <br>
-    <h2 class="text-center">Tak for din tilmelding!</h2>
+    <div ng-if="success">
+      <br>
+      <br>
+      <br>
+      <h2 class="text-center">Tak for din tilmelding!</h2>
+    </div>
+    <div ng-if="invalid_link">
+      <h3>Beklager</h3>
+      <p>Dit link ser ud til at være udløbet.</p>
+    </div>
   </div>
 </div>

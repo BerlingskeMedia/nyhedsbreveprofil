@@ -136,21 +136,11 @@
         </div>
         <div class="row">
           <div class="module-top ">
-            <a ng-href="nyhedsbreve" class="btn btn-link pull-left"><i class="fa fa-angle-left"></i> Flere nyhedsbreve</a>
+            <a ng-click="go_back()" class="btn btn-link pull-left"><i class="fa fa-angle-left"></i> Flere nyhedsbreve</a>
             <button type="submit" ng-click="submit()" ng-class="{'btn-invalid ': userForm.$invalid, 'btn-success': userForm.$valid}" class="btn pull-right ">TILMELD <i class="fa fa-angle-right"></i></button>
           </div>
         </div>
       </form>
-    </div>
-    <div ng-show="userExists">
-      <h1>Brugeren eksisterer allerede</h1>
-      <div ng-hide="emailSent">
-
-        <p>Den indtastede e-mail adresse eksisterer allerede i vores system. Klik <a href="" ng-click="send_login()">her</a> for at få tilsendt loginoplysninger på {{user.email}}</p>
-      </div>
-      <div ng-show="emailSent">
-        Tjek din mail for et login.
-      </div>
     </div>
   </div>
 </div>

@@ -15,6 +15,15 @@ function ($http) {
     window.sessionStorage.setItem('ekstern_id', ekstern_id);
   }
 
+  function userExists (trueFalse) {
+    if (trueFalse === undefined) {
+      var userExists = window.sessionStorage.getItem('userExists');
+      return userExists !== null ? userExists : false;
+    } else if (typeof trueFalse === 'boolean') {
+      window.sessionStorage.setItem('userExists', trueFalse);
+    }
+  }
+
   function getDoubleOptKey (double_opt_key) {
     return window.sessionStorage.getItem('double_opt_key');
   }
@@ -28,19 +37,28 @@ function ($http) {
   }
 
   function getBasket () {
-    var basket = JSON.parse(window.sessionStorage.getItem('nyhedsbreve'));
-    return basket !== null ? basket : [];
+    var basket = JSON.parse(window.sessionStorage.getItem('user'));
+    return basket !== null ? basket :
+    {
+      nyhedsbreve: [],
+      interesser: [],
+      location_id: location_id
+    };
   }
 
+  function saveBasket (user) {
+    window.sessionStorage.setItem('user', JSON.stringify(user));
+  }
+
+
   function addToBasket (nyhedsbrev_id) {
-    var basket = window.sessionStorage.getItem('nyhedsbreve');
-    basket = basket !== null ? JSON.parse(basket) : [];
-    basket.push(nyhedsbrev_id);
-    window.sessionStorage.setItem('nyhedsbreve', JSON.stringify(basket));
+    var basket = getBasket();
+    basket.nyhedsbreve.push(nyhedsbrev_id);
+    window.sessionStorage.setItem('user', JSON.stringify(basket));
   }
 
   function clearBasket () {
-    window.sessionStorage.removeItem('nyhedsbreve');
+    window.sessionStorage.removeItem('user');
   }
 
   function sendLoginEmail (email) {
@@ -64,9 +82,11 @@ function ($http) {
       return getExternalId() !== null;
     },
     getBasket: getBasket,
+    saveBasket: saveBasket,
     addToBasket: addToBasket,
     clearBasket: clearBasket,
-    sendLoginEmail: sendLoginEmail
+    sendLoginEmail: sendLoginEmail,
+    userExists: userExists
   };
 }]).factory('LoginService', ['$http', '$location', 'UserService',
 function ($http, $location, UserService) {
@@ -163,8 +183,13 @@ function($locationProvider, $routeProvider) {
         login: 'LoginService'
       }
     }).
+    when('/tak', {
+      templateUrl: 'assets/partials/createProfileDone.html',
+      controller: 'createProfileDoneController'
+    }).
     when('/opret/tak', {
-      templateUrl: 'assets/partials/createProfileDone.html'
+      templateUrl: 'assets/partials/createProfileDone.html',
+      controller: 'createProfileDoneController'
     }).
     when('/bekraeft', {
       templateUrl: 'assets/partials/createProfileConfirmed.html',
@@ -186,9 +211,7 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
       $location.path('login');
     });
   } else {
-    $scope.user = {
-      nyhedsbreve: UserService.getBasket()
-    };
+    $scope.user = UserService.getBasket();
   }
 
   $http.get("/backend/publishers?orderBy=publisher_navn&orderDirection=asc").then(function (response) {
@@ -277,12 +300,7 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
   if (UserService.isLoggedIn()) {
     $location.path('oplysninger');
   } else {
-    $scope.user = {
-      email: '',
-      nyhedsbreve: UserService.getBasket(),
-      interesser: [],
-      location_id: location_id
-    };
+    $scope.user = UserService.getBasket();
   }
 
   $http.get("/backend/nyhedsbreve?permission=1&orderBy=sort_id&orderDirection=asc").then(function (response) {
@@ -292,10 +310,9 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
     });
   });
 
-  $scope.send_login = function () {
-    UserService.sendLoginEmail($scope.user.email).then( function (response) {
-      $scope.emailSent = true;
-    });
+  $scope.go_back =  function () {
+    UserService.saveBasket($scope.user);
+    $location.path('nyhedsbreve');
   };
 
   $scope.submit = function () {
@@ -313,18 +330,23 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
     }
 
     $http.post("/backend/doubleopt", $scope.user).then(function (response) {
-      UserService.setDoubleOptKey(response.data.double_opt_key);
       UserService.clearBasket();
+      UserService.setDoubleOptKey(response.data.double_opt_key);
       $location.path('opret/interesser');
     }, function (error) {
       if (error.status === 409) {
-        $scope.userExists = true;
+        UserService.clearBasket();
+        UserService.userExists(true);
+        if (error.data.double_opt_key) {
+          UserService.setDoubleOptKey(error.data.double_opt_key);
+        }
+
+        $location.path('tak');
       } else {
         console.error('create_user error', error);
       }
     });
   };
-
 }]).controller('addInterestsController', ['$scope', '$routeParams', '$http', '$q', '$location', 'UserService',
 function ($scope, $routeParams, $http, $q, $location, UserService) {
 
@@ -341,11 +363,16 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
     payload.location_id = location_id;
     payload.interesser = $scope.user.interests_choices;
     $http.post("backend/doubleopt/" + UserService.getDoubleOptKey() +  "/interesser", payload).then(function (response) {
-      $location.path('opret/tak')
+      $location.path('tak')
     }, function (error) {
       console.error(error);
     });
   };
+
+}]).controller('createProfileDoneController', ['$scope', 'UserService',
+function ($scope, UserService) {
+
+  $scope.exists = UserService.userExists();
 
 }]).controller('loginController', ['$scope', '$routeParams', '$http', '$rootScope', '$location', 'UserService',
 function ($scope, $routeParams, $http, $rootScope, $location, UserService, login) {
@@ -558,7 +585,7 @@ function ($scope, $routeParams, $http, $q, $modal, $location, $sce, UserService)
   } else {
     $location.path('login');
   }
-}]).controller('MenuController', ['$scope', '$routeParams', '$http', '$q', '$rootScope', '$location', 'UserService',
+}]).controller('menuController', ['$scope', '$routeParams', '$http', '$q', '$rootScope', '$location', 'UserService',
 function ($scope, $routeParams, $http, $q, $rootScope, $location, UserService) {
 
   $scope.testenvironment = $location.host().indexOf('profil.berlingskemedia.dk') === -1;
@@ -575,16 +602,20 @@ function ($scope, $routeParams, $http, $q, $rootScope, $location, UserService) {
 }]).controller('confirmController', ['$scope', '$location', '$http', 'UserService',
 function ($scope, $location, $http, UserService) {
 
-  if (!UserService.isLoggedIn()) {
-    var search = $location.search();
+  var search = $location.search();
+
+  if (!UserService.isLoggedIn() && search.confirm_key !== undefined) {
     $http.post("/backend/doubleopt/" + search.confirm_key + "/confirm?location_id = " + location_id).then(function (response) {
       var user = response.data;
       UserService.setExternalId(user.ekstern_id);
-      $location.search('confirm_key', null);
+      $location.search('success', true);
     }, function (error) {
       console.error(error);
-      $location.search('confirm_key', null);
-      $location.path('login');
+      $scope.invalid_link = true;
     });
+  } else if (search.success) {
+    $scope.success = true;
+  } else {
+    $location.path('login');
   }
 }]);
