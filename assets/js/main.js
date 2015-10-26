@@ -214,7 +214,7 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
     $scope.user = UserService.getBasket();
   }
 
-  $http.get("/backend/publishers?orderBy=publisher_navn&orderDirection=asc").then(function (response) {
+  var getPublishers = $http.get("/backend/publishers?orderBy=publisher_navn&orderDirection=asc").then(function (response) {
     if (response.data) {
       $scope.publishers = response.data;
 
@@ -250,7 +250,7 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
   });
 
 
-  $http.get("/backend/nyhedsbreve?orderBy=sort_id&orderDirection=asc").then(function (response) {
+  var getNyhedsbreve = $http.get("/backend/nyhedsbreve?orderBy=sort_id&orderDirection=asc").then(function (response) {
     if (response.data) {
       $scope.newsletters = response.data;
 
@@ -261,6 +261,14 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
     }
   });
 
+  // Filtering the publishers that don't have any newsletters after both request above have completed.
+  $q.all([getPublishers,getNyhedsbreve]).then(function () {
+    $scope.publishers = $scope.publishers.filter(function (publisher) {
+      return $scope.newsletters.some(function (newsletter) {
+        return newsletter.publisher_id === publisher.publisher_id;
+      });
+    });
+  });
 
   $scope.setCurrentPublisher = function (publisher) {
     $scope.current_publisher = publisher;
