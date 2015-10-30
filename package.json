@@ -19,8 +19,9 @@
   },
   "homepage": "https://github.com/BerlingskeMedia/nyhedsbreveprofil#readme",
   "dependencies": {
-    "hapi": "^9.3.0",
-    "inert": "^3.0.1"
+    "hapi": "^11.0.3",
+    "inert": "^3.0.1",
+    "joi": "^6.10.0"
   },
   "devDependencies": {
     "gulp": "^3.9.0",

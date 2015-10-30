@@ -64,3 +64,6 @@ Interesser hentes fra `http://54.77.4.249:8000/interesser?displayTypeId=3`
 ## Permissions
 En liste over permissions hente ved `http://54.77.4.249:8000/nyhedsbreve?permission=1`.
 Man tilmelder sig en persmission på samme måde som man tilmelder sig et nyhedsbrev.
+
+# Smartlinks
+

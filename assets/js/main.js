@@ -196,6 +196,9 @@ function($locationProvider, $routeProvider) {
       controller: 'confirmController'
     }).
     otherwise({
+      resolve: {
+        login: 'LoginService'
+      },
       redirectTo: '/nyhedsbreve'
     });
 }]).controller('newsletterController', ['$scope', '$routeParams', '$http', '$q', '$location', '$sce', 'UserService',
