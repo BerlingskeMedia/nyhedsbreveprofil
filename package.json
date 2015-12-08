@@ -5,8 +5,8 @@
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
-    "build": "docker build -t berlingskemedia/nyhedsbreveprofil:$npm_package_version . && docker tag -f berlingskemedia/nyhedsbreveprofil:$npm_package_version berlingskemedia/nyhedsbreveprofil:latest",
-    "push": "docker push berlingskemedia/nyhedsbreveprofil:$npm_package_version && docker push berlingskemedia/nyhedsbreveprofil:latest"
+    "build": "docker build -t berlingskemedia/$npm_package_name:$npm_package_version . && docker tag -f berlingskemedia/$npm_package_name:$npm_package_version berlingskemedia/$npm_package_name:latest",
+    "push": "docker push berlingskemedia/$npm_package_name:$npm_package_version && docker push berlingskemedia/$npm_package_name:latest"
   },
   "repository": {
     "type": "git",
