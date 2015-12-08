@@ -67,3 +67,16 @@ Man tilmelder sig en persmission på samme måde som man tilmelder sig et nyheds
 
 # Smartlinks
 
+Nyhedsbreve (multiselect af /nyhedsbreve)
+Interesser (multiselect af /interesser)
+Permissions (multiselect af /permissions)
+Location (tekst indtastning, med knap til at oprette en location via POST /location - returnerer location_id som skal anvendes i smartlinket. Teksten kan ændres via PUT.)
+Flow (Drop down med simpel og doubleopt)
+Action (Drop down med tilmeld og afmeld)
+Startdato (datepicker)
+Slutdato (datepicker, ikke påkrævet)
+Kunde felt (Drop down med email og ekstern id)
+Landingpage (ikke påkrævet)
+
+eg
+http://localhost:8000/smartlinks/?action=70c4dd8af56f5dad9d5483513f049eb6&command=cmd_berlingske_quicksignup&customer_key=a40e4703a823d1d11977928620c6ead0&nlids=300&intids=&stack_key=dcc741e9544beb16005993da368b855c&lid=1799&mid=1&rtype=1&url=&email=<EMAIL>&action=1
