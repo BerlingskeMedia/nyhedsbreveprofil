@@ -330,17 +330,20 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
     if ($scope.userForm.$invalid) {
       return;
     }
-    if (!$scope.user.postnummer_dk) {
+
+    var payload = $scope.user;
+
+    if (!payload.postnummer_dk) {
       delete $scope.user.postnummer_dk;
     }
-    if (!$scope.user.foedselsaar) {
-      delete $scope.user.foedselsaar;
-    }
-    if ($scope.user.foedselsaar) {
-      $scope.user.foedselsaar = $scope.user.foedselsaar.toString();
+
+    if (payload.foedselsaar) {
+      payload.foedselsaar = $scope.user.foedselsaar.toString();
+    } else {
+      delete payload.foedselsaar;
     }
 
-    $http.post("/backend/doubleopt", $scope.user).then(function (response) {
+    $http.post("/backend/doubleopt", payload).then(function (response) {
       UserService.clearBasket();
       UserService.setDoubleOptKey(response.data.double_opt_key);
       $location.path('opret/interesser');
@@ -377,6 +380,9 @@ function ($scope, $routeParams, $http, $q, $location, UserService) {
       $location.path('tak')
     }, function (error) {
       console.error(error);
+      if (error.status === 404) {
+        $scope.doubleoptNotFound = true;
+      }
     });
   };
 
@@ -471,7 +477,7 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
     if (user.foedselsaar !== null) {
       payload.foedselsaar = user.foedselsaar.toString();
     }
-    
+
     if (user.postnummer_dk !== null) {
       payload.postnummer_dk = user.postnummer_dk.toString();
     }

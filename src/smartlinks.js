@@ -1,7 +1,9 @@
 /*jshint node: true */
 'use strict';
 
-var Joi = require('joi');
+var Joi = require('joi'),
+    Boom = require('boom'),
+    backend = require('./backend');
 
 module.exports.register = function (server, options, next) {
   server.route({
@@ -11,6 +13,7 @@ module.exports.register = function (server, options, next) {
       execute(request.query, reply);
     },
     config: {
+      pre: [appendReferrer],
       validate: {
         query: smartlink_scheme
       }
@@ -24,6 +27,7 @@ module.exports.register = function (server, options, next) {
       execute(request.payload, reply);
     },
     config: {
+      pre: [appendReferrer],
       validate: {
         payload: smartlink_scheme
       }
@@ -44,9 +48,9 @@ var smartlink_scheme = Joi.object().keys({
   flow: Joi.string().valid('simple', 'doubleopt').required(),
   action: Joi.string().valid('signup', 'signout').required(),
   lid: Joi.number().required(),
-  nid: Joi.number(),
-  iid: Joi.number(),
-  pid: Joi.number(),
+  nid: [Joi.number(), Joi.array().items(Joi.number())],
+  iid: [Joi.number(), Joi.array().items(Joi.number())],
+  pid: [Joi.number(), Joi.array().items(Joi.number())],
   start: Joi.string().isoDate(),
   end: Joi.string().isoDate(),
   url: Joi.string().uri({scheme: ['http','https']}),
@@ -67,6 +71,14 @@ var smartlink_scheme = Joi.object().keys({
   firma_adresse: Joi.string(),
   koen: Joi.string().valid('M', 'K')
 }).or('nid', 'iid', 'pid').or('email', 'ekstern_id');
+
+function appendReferrer (request, reply) {
+  if (request.query)
+    request.query.referrer = request.info.referrer;
+  if (request.payload)
+    request.payload.referrer = request.info.referrer;
+  return reply();
+}
 
 // <form action="http://apps.adlifter.com/plugin/" method="POST">
 //    <input name="stack_key" type="hidden" value="dcc741e9544beb16005993da368b855c"/>
@@ -101,7 +113,173 @@ var smartlink_scheme = Joi.object().keys({
 //    <input type="submit" value="Tilmeld" />
 //  </form>
 
-function execute (smartlink, callback) {
+// http://profil.berlingskemedia.dk/smartlink?
+  // ?nlids=6
+  // &intids=14
+  // &pids=54
+  // &flow=simple
+  // &action=subscribe
+  // &customerfield=email
+  // &startdate=1450083944
+  // &enddate=1450220400
+  // &lid=1728
 
-  callback();
+function execute (smartlink, callback) {
+  console.log('execute', smartlink);
+
+  //action=signup
+  //action=signout
+
+  // ==== simple, email
+
+  // ==== simple, ekstern_id
+
+  // ==== doubleopt, email/ekstern_id
+
+
+  // ==== doubleopt, ekstern_id
+
+  if (smartlink.flow === 'simple' && smartlink.email) {
+    // TODO
+    var message = 'Flow simple and email is not supported.';
+    console.log(message, smartlink);
+    callback(Boom.badRequest(message));
+
+  } else if (smartlink.flow === 'doubleopt' && smartlink.action === 'signout') {
+    // TODO
+    var message = 'Flow doubleopt and action signout is not supported.';
+    console.log(message, smartlink);
+    callback(Boom.badRequest(message));
+
+  } else if (smartlink.flow === 'simple' && smartlink.ekstern_id) {
+
+    var payload = copyUserData(smartlink);
+
+    backend.mdbapi('PATCH', '/users/'.concat(smartlink.ekstern_id), payload, function (err, result) {
+      if (err) {
+        console.log('PATCH users error', err);
+        return callback(err);
+      }
+
+      var http_method = smartlink.action === 'signout' ? 'DELETE' : 'POST';
+
+      // Newsletters
+      if (smartlink.nid) {
+        if (smartlink.nid instanceof Array) {
+          backend.mdbapi(http_method, ''.concat('/users/', smartlink.ekstern_id, '/nyhedsbreve'), {nyhedsbreve: smartlink.nid});
+        } else {
+          backend.mdbapi(http_method, ''.concat('/users/', smartlink.ekstern_id, '/nyhedsbreve/', smartlink.nid));
+        }
+      }
+
+      // Permissions
+      if (smartlink.pid) {
+        if (smartlink.iid instanceof Array) {
+          backend.mdbapi(http_method, ''.concat('/users/', smartlink.ekstern_id, '/nyhedsbreve'), {nyhedsbreve: smartlink.pid});
+        } else {
+          backend.mdbapi(http_method, ''.concat('/users/', smartlink.ekstern_id, '/nyhedsbreve/', smartlink.pid));
+        }
+      }
+
+      // Interests
+      if (smartlink.iid) {
+        if (smartlink.iid instanceof Array) {
+          backend.mdbapi(http_method, ''.concat('/users/', smartlink.ekstern_id, '/interesser'), {nyhedsbreve: smartlink.iid});
+        } else {
+          backend.mdbapi(http_method, ''.concat('/users/', smartlink.ekstern_id, '/interesser/', smartlink.iid));
+        }
+      }
+
+      callback();
+    });
+
+  } else if (smartlink.flow === 'doubleopt') {
+
+    var payload = copyUserData(smartlink);
+
+    if (smartlink.nid) {
+      if (smartlink.nid instanceof Array) {
+        payload.nyhedsbreve = smartlink.nid;
+      } else {
+        payload.nyhedsbreve = [smartlink.nid];
+      }
+    }
+
+    if (smartlink.pid) {
+      if (smartlink.pid instanceof Array) {
+        payload.nyhedsbreve = payload.nyhedsbreve.concat(smartlink.pid)
+      } else {
+        payload.nyhedsbreve.push(smartlink.pid);
+      }
+    }
+
+    if (smartlink.iid) {
+      if (smartlink.iid instanceof Array) {
+        payload.interesser = smartlink.iid;
+      } else {
+        payload.interesser = [smartlink.iid];
+      }
+    }
+
+    backend.mdbapi('POST', '/doubleopt', payload, function (err, result) {
+      console.log('POST doubleopt', err, result)
+      callback(err);
+    });
+
+  } else {
+    var message = 'Smartlink is not supported.';
+    console.log(message, smartlink)
+    callback(Boom.badRequest(message));
+  }
+}
+
+function copyUserData (obj) {
+  var temp = {};
+  append(obj, 'email');
+  append(obj, 'user_id', 'ekstern_id');
+  append(obj, 'id', 'ekstern_id');
+  append(obj, 'ekstern_id');
+  append(obj, 'lid', 'location_id');
+  append(obj, 'fornavn');
+  append(obj, 'efternavn');
+  append(obj, 'co_navn');
+  append(obj, 'vejnavn');
+  append(obj, 'husnummer');
+  append(obj, 'husbogstav');
+  append(obj, 'etage');
+  append(obj, 'sidedoer');
+  append(obj, 'stednavn');
+  append(obj, 'bynavn');
+  append(obj, 'postnummer');
+  append(obj, 'postnummer_dk');
+  append(obj, 'land');
+  append(obj, 'firma');
+  append(obj, 'firma_adresse');
+  append(obj, 'lande_kode');
+  append(obj, 'udland_flag');
+  append(obj, 'alder');
+  append(obj, 'foedselsaar');
+  append(obj, 'foedselsdato');
+  append(obj, 'koen');
+  append(obj, 'telefon');
+  append(obj, 'brugernavn');
+  append(obj, 'adgangskode');
+  append(obj, 'komvej_kode');
+  append(obj, 'vilkaar');
+  append(obj, 'status_kode');
+  append(obj, 'bbs_abo_nr');
+  append(obj, 'mol_bbs_nr');
+  append(obj, 'robinson_flag');
+  append(obj, 'active');
+  return temp;
+
+  function append(objA, field, alias) {
+    if (alias === '' || alias === undefined)
+      alias = null;
+
+    var y = objA[field];
+    if (y!== undefined && y !== null && y !== '') {
+      temp[alias !== null ? alias : field] = y;
+    }
+  }
 }

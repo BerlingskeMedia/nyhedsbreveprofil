@@ -1,12 +1,12 @@
 {
   "name": "nyhedsbreveprofil",
-  "version": "1.1.21",
+  "version": "1.1.22",
   "description": "Kunde admin af nyhedsbreve",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
-    "build": "docker build -t berlingskemedia/nyhedsbreveprofil:$npm_package_version . && docker tag -f berlingskemedia/nyhedsbreveprofil:$npm_package_version berlingskemedia/nyhedsbreveprofil:latest",
-    "push": "docker push berlingskemedia/nyhedsbreveprofil:$npm_package_version && docker push berlingskemedia/nyhedsbreveprofil:latest"
+    "build": "docker build -t berlingskemedia/$npm_package_name:$npm_package_version . && docker tag -f berlingskemedia/$npm_package_name:$npm_package_version berlingskemedia/$npm_package_name:latest",
+    "push": "docker push berlingskemedia/$npm_package_name:$npm_package_version && docker push berlingskemedia/$npm_package_name:latest"
   },
   "repository": {
     "type": "git",
@@ -19,9 +19,10 @@
   },
   "homepage": "https://github.com/BerlingskeMedia/nyhedsbreveprofil#readme",
   "dependencies": {
-    "hapi": "^11.0.3",
+    "boom": "^3.0.0",
+    "hapi": "^11.1.2",
     "inert": "^3.0.1",
-    "joi": "^6.10.0"
+    "joi": "^6.10.1"
   },
   "devDependencies": {
     "gulp": "^3.9.0",

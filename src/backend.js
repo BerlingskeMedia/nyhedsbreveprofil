@@ -1,4 +1,5 @@
 /*jshint node: true */
+'use strict';
 
 var http = require('http');
 
@@ -11,7 +12,6 @@ function proxy (request, reply) {
   };
 
   var req = http.request(options, function( res ) {
-
     reply(null, res);
 
   }).on('error', function(e) {
@@ -27,6 +27,30 @@ function proxy (request, reply) {
 }
 
 var backend = {
+  mdbapi: function(method, path, payload, callback) {
+    if (typeof payload === 'function' && callback === undefined) {
+      callback = payload;
+      payload = null;
+    }
+
+    proxy({method: method, url: {path: path}, payload: payload}, function (err, response) {
+      var data = '';
+
+      response.on('data', function (chunk) {
+        data += chunk;
+      });
+
+      response.on('end', function () {
+        if (callback)
+          callback(null, data);
+      });
+
+      response.on('error', function (e) {
+        if (callback)
+          callback(e);
+      })
+    });
+  },
   register: function (server, options, next) {
 
     /* These are the URL's we're allowing to proxy */
