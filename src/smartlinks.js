@@ -129,20 +129,6 @@ function execute (smartlink, callback) {
     smartlink.action = 'signup';
   }
 
-  console.log('execute', smartlink);
-
-  //action=signup
-  //action=signout
-
-  // ==== simple, email
-
-  // ==== simple, ekstern_id
-
-  // ==== doubleopt, email/ekstern_id
-
-
-  // ==== doubleopt, ekstern_id
-
   if (smartlink.flow === 'simple' && smartlink.email) {
     // TODO
     var message = 'Flow simple and email is not supported.';
