@@ -42,7 +42,7 @@ var backend = {
 
       response.on('end', function () {
         if (callback)
-          callback(null, data);
+          callback(null, JSON.parse(data));
       });
 
       response.on('error', function (e) {

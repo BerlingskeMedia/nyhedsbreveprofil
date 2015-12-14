@@ -46,7 +46,7 @@ var smartlink_scheme = Joi.object().keys({
   email: Joi.string().email(),
   ekstern_id: Joi.string().length(32), //4a5a6199fa07bf76054e93c3e53aeb9f
   flow: Joi.string().valid('simple', 'doubleopt').required(),
-  action: Joi.string().valid('signup', 'signout').required(),
+  action: Joi.string().valid('signup', 'signout'),
   lid: Joi.number().required(),
   nid: [Joi.number(), Joi.array().items(Joi.number())],
   iid: [Joi.number(), Joi.array().items(Joi.number())],
@@ -125,6 +125,10 @@ function appendReferrer (request, reply) {
   // &lid=1728
 
 function execute (smartlink, callback) {
+  if (smartlink.action === undefined) {
+    smartlink.action = 'signup';
+  }
+
   console.log('execute', smartlink);
 
   //action=signup
@@ -145,14 +149,25 @@ function execute (smartlink, callback) {
     console.log(message, smartlink);
     callback(Boom.badRequest(message));
 
+  } else if (smartlink.flow === 'doubleopt' && smartlink.ekstern_id) {
+    // TODO
+    var message = 'Flow doubleopt and ekstern_id is not supported.';
+    console.log(message, smartlink);
+    callback(Boom.badRequest(message));
+
   } else if (smartlink.flow === 'doubleopt' && smartlink.action === 'signout') {
     // TODO
     var message = 'Flow doubleopt and action signout is not supported.';
     console.log(message, smartlink);
     callback(Boom.badRequest(message));
 
-  } else if (smartlink.flow === 'simple' && smartlink.ekstern_id) {
+  } else if (smartlink.flow === 'simple') {
 
+    if (smartlink.ekstern_id === undefined) {
+      var message = 'Missing ekstern_id for flow simple.';
+      console.log(message, smartlink);
+      return callback(Boom.badRequest(message));
+    }
     var payload = copyUserData(smartlink);
 
     backend.mdbapi('PATCH', '/users/'.concat(smartlink.ekstern_id), payload, function (err, result) {
@@ -161,32 +176,39 @@ function execute (smartlink, callback) {
         return callback(err);
       }
 
+      if (result.statusCode === 404) {
+        var message = 'User not found.';
+        console.log(message, smartlink);
+        return callback(Boom.badRequest(message));
+      }
+
       var http_method = smartlink.action === 'signout' ? 'DELETE' : 'POST';
 
       // Newsletters
       if (smartlink.nid) {
+        console.log('sds');
         if (smartlink.nid instanceof Array) {
-          backend.mdbapi(http_method, ''.concat('/users/', smartlink.ekstern_id, '/nyhedsbreve'), {nyhedsbreve: smartlink.nid});
+          backend.mdbapi(http_method, ''.concat('/users/', smartlink.ekstern_id, '/nyhedsbreve'), {nyhedsbreve: smartlink.nid, location_id: smartlink.lid});
         } else {
-          backend.mdbapi(http_method, ''.concat('/users/', smartlink.ekstern_id, '/nyhedsbreve/', smartlink.nid));
+          backend.mdbapi(http_method, ''.concat('/users/', smartlink.ekstern_id, '/nyhedsbreve/', smartlink.nid, '?location_id=', smartlink.lid));
         }
       }
 
       // Permissions
       if (smartlink.pid) {
         if (smartlink.iid instanceof Array) {
-          backend.mdbapi(http_method, ''.concat('/users/', smartlink.ekstern_id, '/nyhedsbreve'), {nyhedsbreve: smartlink.pid});
+          backend.mdbapi(http_method, ''.concat('/users/', smartlink.ekstern_id, '/nyhedsbreve'), {nyhedsbreve: smartlink.pid, location_id: smartlink.lid});
         } else {
-          backend.mdbapi(http_method, ''.concat('/users/', smartlink.ekstern_id, '/nyhedsbreve/', smartlink.pid));
+          backend.mdbapi(http_method, ''.concat('/users/', smartlink.ekstern_id, '/nyhedsbreve/', smartlink.pid, '?location_id=', smartlink.lid));
         }
       }
 
       // Interests
       if (smartlink.iid) {
         if (smartlink.iid instanceof Array) {
-          backend.mdbapi(http_method, ''.concat('/users/', smartlink.ekstern_id, '/interesser'), {nyhedsbreve: smartlink.iid});
+          backend.mdbapi(http_method, ''.concat('/users/', smartlink.ekstern_id, '/interesser'), {nyhedsbreve: smartlink.iid, location_id: smartlink.lid});
         } else {
-          backend.mdbapi(http_method, ''.concat('/users/', smartlink.ekstern_id, '/interesser/', smartlink.iid));
+          backend.mdbapi(http_method, ''.concat('/users/', smartlink.ekstern_id, '/interesser/', smartlink.iid, '?location_id=', smartlink.lid));
         }
       }
 
@@ -222,8 +244,12 @@ function execute (smartlink, callback) {
     }
 
     backend.mdbapi('POST', '/doubleopt', payload, function (err, result) {
-      console.log('POST doubleopt', err, result)
-      callback(err);
+      if (err) {
+        console.log('PATCH users error', err);
+        callback(err);
+      } else {
+        callback();
+      }
     });
 
   } else {
