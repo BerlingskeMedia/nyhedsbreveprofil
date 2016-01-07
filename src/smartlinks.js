@@ -198,7 +198,11 @@ function execute (smartlink, callback) {
         }
       }
 
-      callback();
+      if (smartlink.url) {
+        callback.redirect(smartlink.url);
+      } else {
+        callback();
+      }
     });
 
   } else if (smartlink.flow === 'doubleopt') {
@@ -234,7 +238,11 @@ function execute (smartlink, callback) {
         console.log('PATCH users error', err);
         callback(err);
       } else {
-        callback();
+        if (smartlink.url) {
+          callback.redirect(smartlink.url);
+        } else {
+          callback();
+        }
       }
     });
 
