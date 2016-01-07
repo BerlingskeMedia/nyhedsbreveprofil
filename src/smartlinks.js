@@ -218,6 +218,10 @@ function execute (smartlink, callback) {
     }
 
     if (smartlink.pid) {
+      if (payload.nyhedsbreve === undefined) {
+        payload.nyhedsbreve = [];
+      }
+
       if (smartlink.pid instanceof Array) {
         payload.nyhedsbreve = payload.nyhedsbreve.concat(smartlink.pid)
       } else {
