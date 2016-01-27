@@ -27,30 +27,31 @@ function proxy (request, reply) {
 }
 
 var backend = {
-  mdbapi: function(method, path, payload, callback) {
-    if (typeof payload === 'function' && callback === undefined) {
-      callback = payload;
-      payload = null;
-    }
-
-    proxy({method: method, url: {path: path}, payload: payload}, function (err, response) {
-      var data = '';
-
-      response.on('data', function (chunk) {
-        data += chunk;
-      });
-
-      response.on('end', function () {
-        if (callback)
-          callback(null, JSON.parse(data));
-      });
-
-      response.on('error', function (e) {
-        if (callback)
-          callback(e);
-      })
-    });
-  },
+  proxy: proxy,
+  // mdbapi: function(method, path, payload, callback) {
+  //   if (typeof payload === 'function' && callback === undefined) {
+  //     callback = payload;
+  //     payload = null;
+  //   }
+  //
+  //   proxy({method: method, url: {path: path}, payload: payload}, function (err, response) {
+  //     var data = '';
+  //
+  //     response.on('data', function (chunk) {
+  //       data += chunk;
+  //     });
+  //
+  //     response.on('end', function () {
+  //       if (callback)
+  //         callback(null, JSON.parse(data));
+  //     });
+  //
+  //     response.on('error', function (e) {
+  //       if (callback)
+  //         callback(e);
+  //     })
+  //   });
+  // },
   register: function (server, options, next) {
 
     /* These are the URL's we're allowing to proxy */
@@ -76,6 +77,12 @@ var backend = {
     server.route({
       method: 'GET',
       path: '/interesser',
+      handler: proxy
+    });
+
+    server.route({
+      method: 'GET',
+      path: '/interesser/toplevels',
       handler: proxy
     });
 
