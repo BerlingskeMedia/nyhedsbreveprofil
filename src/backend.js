@@ -4,12 +4,26 @@
 var http = require('http');
 
 function proxy (request, reply) {
+
   var options = {
     method: request.method,
     hostname: process.env.MDBAPI_ADDRESS,
     port: process.env.MDBAPI_PORT,
-    path: request.url.path.replace('/backend', '')
+    path: request.url.path.replace('/backend', ''),
+    headers: {}
   };
+
+  if (request.headers.origin) {
+    options.headers.origin = request.headers.origin;
+  }
+
+  if (request.headers.referer) {
+    options.headers.referer = request.headers.referer;
+  }
+
+  if (request.headers['user-agent']) {
+    options.headers['user-agent'] = request.headers['user-agent'];
+  }
 
   var req = http.request(options, function( res ) {
     reply(null, res);
@@ -28,30 +42,6 @@ function proxy (request, reply) {
 
 var backend = {
   proxy: proxy,
-  // mdbapi: function(method, path, payload, callback) {
-  //   if (typeof payload === 'function' && callback === undefined) {
-  //     callback = payload;
-  //     payload = null;
-  //   }
-  //
-  //   proxy({method: method, url: {path: path}, payload: payload}, function (err, response) {
-  //     var data = '';
-  //
-  //     response.on('data', function (chunk) {
-  //       data += chunk;
-  //     });
-  //
-  //     response.on('end', function () {
-  //       if (callback)
-  //         callback(null, JSON.parse(data));
-  //     });
-  //
-  //     response.on('error', function (e) {
-  //       if (callback)
-  //         callback(e);
-  //     })
-  //   });
-  // },
   register: function (server, options, next) {
 
     /* These are the URL's we're allowing to proxy */

@@ -9,19 +9,13 @@ module.exports.register = function (server, options, next) {
   server.route({
     method: 'GET',
     path: '/',
-    handler: backend.proxy,
-    config: {
-      pre: [appendReferrer]
-    }
+    handler: backend.proxy
   });
 
   server.route({
     method: 'POST',
     path: '/',
-    handler: backend.proxy,
-    config: {
-      pre: [appendReferrer]
-    }
+    handler: backend.proxy
   });
 
   next();
@@ -31,11 +25,3 @@ module.exports.register.attributes = {
     name: 'smartlinks',
     version: '1.0.0'
 };
-
-function appendReferrer (request, reply) {
-  if (request.query)
-    request.query.referrer = request.info.referrer;
-  if (request.payload)
-    request.payload.referrer = request.info.referrer;
-  return reply();
-}
