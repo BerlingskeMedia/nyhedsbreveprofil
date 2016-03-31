@@ -474,7 +474,7 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
     payload.location_id = location_id;
     delete payload.interesser;
     delete payload.nyhedsbreve;
-    delete payload.email;
+    // delete payload.email;
 
     if (user.foedselsaar !== null) {
       payload.foedselsaar = user.foedselsaar.toString();
@@ -486,6 +486,8 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
 
     $http.put("/backend/users/" + ekstern_id, payload).then(function (response) {
       $scope.profileSaveSuccess = true;
+      ekstern_id = response.data.ekstern_id;
+      UserService.setExternalId(ekstern_id);
     }, function (error) {
       console.error(error);
       $scope.profileSaveError = true;

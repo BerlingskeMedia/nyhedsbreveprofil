@@ -40,6 +40,59 @@ function proxy (request, reply) {
   req.end();
 }
 
+function updateUser (request, reply) {
+  proxy(request, function (error, response) {
+    if (error) {
+      return reply(error);
+    }
+
+    proxy({
+      method: 'POST',
+      url: {
+        path: '/mails/send'
+      },
+      payload: {
+        to: request.payload.email,
+        template: '26a0a5b3-46ff-49a4-9201-afd4c6050aeb',
+        category: 'update-user',
+        substitutions: request.payload !== null ? request.payload : {}
+      },
+      headers: {}
+    }, function (error2, response2) {
+      if (error2) {
+        return reply(error2);
+      }
+
+      // We want to return the first response from POST /users/{id} - not the response from email
+      reply(response);
+    });
+  });
+}
+
+
+function createDoubleopt (request, reply) {
+  proxy(request, function (error, response) {
+    if (error) {
+      return reply(error);
+    }
+
+    proxy({
+      method: 'POST',
+      url: {
+        path: '/mails/send'
+      },
+      payload: {
+        to: request.payload.email,
+        template: 'bebc5061-2da1-4995-85ab-a0e9f3f66241',
+        category: 'doubleopt-confirm-link',
+        substitutions: request.payload !== null ? request.payload : {}
+      },
+      headers: {}
+    }, reply);
+  });
+}
+
+
 var backend = {
   proxy: proxy,
   register: function (server, options, next) {
@@ -77,15 +130,21 @@ var backend = {
     });
 
     server.route({
-      method: ['GET', 'PUT'],
+      method: 'GET',
       path: '/users/{user_id}',
       handler: proxy
     });
 
     server.route({
+      method: 'PUT',
+      path: '/users/{user_id}',
+      handler: updateUser
+    });
+
+    server.route({
       method: 'POST',
       path: '/doubleopt',
-      handler: proxy
+      handler: createDoubleopt
     });
 
     server.route({
