@@ -484,7 +484,7 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
       payload.postnummer_dk = user.postnummer_dk.toString();
     }
 
-    $http.put("/backend/users/" + ekstern_id, payload).then(function (response) {
+    $http.post("/backend/users/" + ekstern_id, payload).then(function (response) {
       $scope.profileSaveSuccess = true;
       ekstern_id = response.data.ekstern_id;
       UserService.setExternalId(ekstern_id);

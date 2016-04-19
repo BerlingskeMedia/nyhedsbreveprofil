@@ -136,7 +136,7 @@ var backend = {
     });
 
     server.route({
-      method: 'PUT',
+      method: 'POST',
       path: '/users/{user_id}',
       handler: updateUser
     });
