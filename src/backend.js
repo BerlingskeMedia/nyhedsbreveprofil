@@ -44,6 +44,8 @@ function updateUser (request, reply) {
   proxy(request, function (error, response) {
     if (error) {
       return reply(error);
+    } else if (response.statusCode !== 200) {
+      return reply(response);
     }
 
     proxy({
