@@ -472,8 +472,8 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
 
     var payload = angular.copy(user);
     payload.location_id = location_id;
-    delete payload.interesser;
-    delete payload.nyhedsbreve;
+    // delete payload.interesser;
+    // delete payload.nyhedsbreve;
     // delete payload.email;
 
     if (user.foedselsaar !== null) {
