@@ -27,7 +27,7 @@ module.exports = React.createClass({
   },
   render: function() {
     return (
-      <form className="step1Form" onSubmit={this.handleSubmit}>
+      <form className="stepStamdata" onSubmit={this.handleSubmit}>
         <input
           type="text"
           placeholder="Fornavn"

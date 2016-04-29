@@ -34,7 +34,7 @@ module.exports = React.createClass({
   },
   render: function() {
     return (
-      <form className="step2Form" onSubmit={this.handleSubmit}>
+      <form className="stepNyhedsbreve" onSubmit={this.handleSubmit}>
         <NewsletterList user={this.state.user} nyhedsbreve={this.state.nyhedsbreve} />
         <input type="submit" value="Videre" />
       </form>
