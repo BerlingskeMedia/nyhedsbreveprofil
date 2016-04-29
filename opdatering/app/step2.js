@@ -28,10 +28,9 @@ var Step2 = React.createClass({
   handleSubmit: function(e) {
     e.preventDefault();
     var self = this;
-    console.log('this.state.user', this.state.user.nyhedsbreve);
-    // this.props.saveUserData(this.state.user).success(function (data) {
-    //   self.props.stepComplete();
-    // });
+    this.props.saveUserData(this.state.user).success(function (data) {
+      self.props.stepComplete();
+    });
   },
   render: function() {
     return (
@@ -54,6 +53,17 @@ var NewsletterList = React.createClass({
     }
   },
   render: function() {
+    // Sorting the subscribed newsletters at the buttom
+    this.props.nyhedsbreve.sort(function(nyhedsbrev_a, nyhedsbrev_b) {
+      if (this.props.user.nyhedsbreve.indexOf(nyhedsbrev_a.nyhedsbrev_id) > -1) {
+        return 1;
+      } else if (this.props.user.nyhedsbreve.indexOf(nyhedsbrev_b.nyhedsbrev_id) > -1) {
+        return -1;
+      } else {
+        return 0;
+      }
+    }.bind(this));
+
     var newsletters = this.props.nyhedsbreve.map(function(nyhedsbrev) {
       var selected = false;
       if (this.props.user !== undefined) {
@@ -63,6 +73,7 @@ var NewsletterList = React.createClass({
         <NewsletterCheckbox key={nyhedsbrev.nyhedsbrev_id} nyhedsbrev={nyhedsbrev} selected={selected} changeNewsletterSubscription={this.changeNewsletterSubscription} />
       );
     }.bind(this));
+
     return (
       <div className="NewsletterList">
         {newsletters}
