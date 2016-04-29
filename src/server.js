@@ -4,6 +4,7 @@
 var Hapi = require('hapi'),
     backend = require('./backend'),
     smartlinks = require('./smartlinks'),
+    opdatering = require('./opdatering'),
     inert = require('inert');
 
 
@@ -67,6 +68,7 @@ server.route({
 
 server.register(inert, cb);
 server.register(client, cb);
+server.register(opdatering, { routes: { prefix: '/opdatering' } }, cb);
 server.register(backend, { routes: { prefix: '/backend' } }, cb);
 server.register(smartlinks, { routes: { prefix: '/smartlinks' } }, cb);
 
