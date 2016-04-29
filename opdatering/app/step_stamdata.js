@@ -1,6 +1,6 @@
 var React = require('react');
 
-var Step1 = React.createClass({
+module.exports = React.createClass({
   getInitialState: function() {
     return {user: {fornavn: '', efternavn: ''}};
   },
@@ -45,5 +45,3 @@ var Step1 = React.createClass({
     );
   }
 });
-
-module.exports = Step1;

@@ -1,6 +1,6 @@
 var React = require('react');
 
-var Step2 = React.createClass({
+module.exports = React.createClass({
   loadNewsletters: function() {
     return $.ajax({
       url: '/backend/nyhedsbreve',
@@ -104,5 +104,3 @@ var NewsletterCheckbox = React.createClass({
     )
   }
 });
-
-module.exports = Step2;
