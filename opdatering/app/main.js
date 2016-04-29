@@ -1,7 +1,8 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
-var Step1 = require('./step1');
-var Step2 = require('./step2');
+var StepStamdata = require('./step_stamdata');
+var StepNyhedsbreve = require('./step_nyhedsbreve');
+var StepInteresser = require('./step_interesser');
 
 var Opdateringskampagne = React.createClass({
   getSearchParameter: function(name, url) {
@@ -62,8 +63,9 @@ var Opdateringskampagne = React.createClass({
   render: function() {
     return (
       <div className="opdateringskampagne">
-        { this.state.step === 1 ? <Step1 stepComplete={this.stepComplete(1)} loadUserData={this.loadUserData} saveUserData={this.saveUserData} /> : null }
-        { this.state.step === 2 ? <Step2 stepComplete={this.stepComplete(2)} loadUserData={this.loadUserData} saveUserData={this.saveUserData} /> : null }
+        { this.state.step === 1 ? <StepStamdata stepComplete={this.stepComplete(1)} loadUserData={this.loadUserData} saveUserData={this.saveUserData} /> : null }
+        { this.state.step === 2 ? <StepInteresser stepComplete={this.stepComplete(2)} loadUserData={this.loadUserData} saveUserData={this.saveUserData} /> : null }
+        { this.state.step === 3 ? <StepNyhedsbreve stepComplete={this.stepComplete(2)} loadUserData={this.loadUserData} saveUserData={this.saveUserData} /> : null }
       </div>
     );
   }
