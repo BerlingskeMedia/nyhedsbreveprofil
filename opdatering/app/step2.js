@@ -45,6 +45,14 @@ var Step2 = React.createClass({
 
 
 var NewsletterList = React.createClass({
+  changeNewsletterSubscription: function(nyhedsbrev_id) {
+    var i = this.props.user.nyhedsbreve.indexOf(nyhedsbrev_id);
+    if (i > -1) {
+      this.props.user.nyhedsbreve.splice(i, 1);
+    } else {
+      this.props.user.nyhedsbreve.push(nyhedsbrev_id);
+    }
+  },
   render: function() {
     var newsletters = this.props.nyhedsbreve.map(function(nyhedsbrev) {
       var selected = false;
@@ -52,7 +60,7 @@ var NewsletterList = React.createClass({
         selected = this.props.user.nyhedsbreve.indexOf(nyhedsbrev.nyhedsbrev_id) > -1;
       }
       return (
-        <NewsletterCheckbox key={nyhedsbrev.nyhedsbrev_id} nyhedsbrev={nyhedsbrev} nyhedsbreve={this.props.user.nyhedsbreve} selected={selected} />
+        <NewsletterCheckbox key={nyhedsbrev.nyhedsbrev_id} nyhedsbrev={nyhedsbrev} selected={selected} changeNewsletterSubscription={this.changeNewsletterSubscription} />
       );
     }.bind(this));
     return (
@@ -68,19 +76,18 @@ var NewsletterCheckbox = React.createClass({
   getInitialState: function() {
     return {selected: this.props.selected};
   },
-  changeNewsletterSubscription: function(nyhedsbrev_id) {
+  onChange: function(nyhedsbrev_id) {
     this.setState({selected: !this.state.selected});
     if (this.state.selected) {
-      this.props.nyhedsbreve.splice(this.props.nyhedsbreve.indexOf(nyhedsbrev_id), 1);
+      this.props.changeNewsletterSubscription(nyhedsbrev_id);
     } else {
-      this.props.nyhedsbreve.push(nyhedsbrev_id);
+      this.props.changeNewsletterSubscription(nyhedsbrev_id);
     }
   },
   render: function() {
-    var selected = false;
     return (
       <div className="NewsletterCheckbox">
-        <input type="checkbox" id={this.props.nyhedsbrev.nyhedsbrev_id} checked={this.state.selected} onChange={this.changeNewsletterSubscription.bind(this,this.props.nyhedsbrev.nyhedsbrev_id)} />
+        <input type="checkbox" id={this.props.nyhedsbrev.nyhedsbrev_id} checked={this.state.selected} onChange={this.onChange.bind(this,this.props.nyhedsbrev.nyhedsbrev_id)} />
         {this.props.nyhedsbrev.nyhedsbrev_navn}
       </div>
     )
