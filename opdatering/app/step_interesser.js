@@ -5,25 +5,22 @@ module.exports = React.createClass({
     return {user: {}, interesser: []};
   },
   componentDidMount: function() {
-    this.loadInteresser().success(this.setInteresserState);
-    this.props.loadUserData().success(this.setUserState);
+    this.props.loadUserData().success(function (data) {
+      this.setState({user: data});
+      this.loadInteresser().success(function (data) {
+        this.setState({interesser: data});
+      }.bind(this));
+    }.bind(this));
   },
   loadInteresser: function() {
     return $.ajax({
       url: '/backend/interesser/full?displayTypeId=3',
       dataType: 'json',
       cache: true,
-      success: this.setInteresserState,
       error: function(xhr, status, err) {
         console.error(this.props.url, status, err.toString());
       }.bind(this)
     });
-  },
-  setInteresserState: function(data) {
-    this.setState({interesser: data});
-  },
-  setUserState: function(data) {
-    this.setState({user: data});
   },
   render: function() {
     return (
@@ -109,10 +106,15 @@ var InterestCheckbox = React.createClass({
     return {selected: this.props.selected};
   },
   onChange: function() {
+    this.setState({selected: !this.state.selected});
     this.props.changeInterestSubscription(this.props.interesse.interesse_id)
     .success(function (data) {
+      // Do nothing at the moment
+    }.bind(this))
+    .error(function (data) {
+      console.error('changeInterestSubscription', data);
       this.setState({selected: !this.state.selected});
-    }.bind(this));
+    });
   },
   render: function() {
     return (
