@@ -1,7 +1,7 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 var StepStamdata = require('./step_stamdata');
-var StepNyhedsbreve = require('./step_nyhedsbreve');
+var StepNyhedsbreve = require('./step_nyhedsbreve_redaktionelle');
 var StepInteresser = require('./step_interesser');
 
 var Opdateringskampagne = React.createClass({
