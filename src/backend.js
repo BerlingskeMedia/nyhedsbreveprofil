@@ -133,6 +133,12 @@ var backend = {
 
     server.route({
       method: 'GET',
+      path: '/interesser/full',
+      handler: proxy
+    });
+
+    server.route({
+      method: 'GET',
       path: '/users/{user_id}',
       handler: proxy
     });
