@@ -3,50 +3,10 @@
 
 var Hapi = require('hapi'),
     backend = require('./backend'),
+    profil = require('./profil'),
     smartlinks = require('./smartlinks'),
     opdatering = require('./opdatering'),
     inert = require('inert');
-
-
-var client = {
-  register: function (plugin, options, next) {
-
-    plugin.route({
-      method: 'get',
-      path: '/bower_components/{param*}',
-      handler: {
-        directory: {
-          path: 'bower_components'
-        }
-      }
-    });
-
-    plugin.route({
-      method: 'get',
-      path: '/assets/{param*}',
-      handler: {
-        directory: {
-          path: 'assets'
-        }
-      }
-    });
-
-    plugin.route({
-      method: 'get',
-      path: '/{param*}',
-      handler: {
-        file: 'client/index.html'
-      }
-    });
-
-    next();
-  }
-};
-
-client.register.attributes = {
-  name: 'client',
-  version: '1.0.0'
-};
 
 var server = new Hapi.Server({
   connections: {
@@ -67,7 +27,7 @@ server.route({
 });
 
 server.register(inert, cb);
-server.register(client, cb);
+server.register(profil, cb);
 server.register(opdatering, { routes: { prefix: '/opdatering' } }, cb);
 server.register(backend, { routes: { prefix: '/backend' } }, cb);
 server.register(smartlinks, { routes: { prefix: '/smartlinks' } }, cb);

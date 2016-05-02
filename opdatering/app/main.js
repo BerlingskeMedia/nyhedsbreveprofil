@@ -14,34 +14,11 @@ var Opdateringskampagne = React.createClass({
       if (!results[2]) return '';
       return decodeURIComponent(results[2].replace(/\+/g, " "));
   },
-  getUserUrl: function() {
-    var ekstern_id = this.getSearchParameter('ekstern_id');
-    // return '/backend/users/'.concat(ekstern_id);
-    return '/backend/users/e99e523d80016cc2b5444a9c5915ac07';
-  },
-  userData: function() {
-    return this.state.data;
-  },
   loadUserData: function() {
     return $.ajax({
-      url: this.getUserUrl(),
+      url: '/backend/users/'.concat(this.state.ekstern_id),
       dataType: 'json',
       cache: true,
-      success: function (data) {
-      }.bind(this),
-      error: function(xhr, status, err) {
-        console.error(this.props.url, status, err.toString());
-      }.bind(this)
-    });
-  },
-  saveUserData: function(userData) {
-    userData.location_id = 1;
-    return $.ajax({
-      type: 'POST',
-      url: this.getUserUrl(),
-      data: JSON.stringify(userData),
-      contentType: "application/json; charset=utf-8",
-      dataType: 'json',
       success: function (data) {
       }.bind(this),
       error: function(xhr, status, err) {
@@ -52,20 +29,24 @@ var Opdateringskampagne = React.createClass({
   componentDidMount: function() {
   },
   getInitialState: function() {
-    return {data: {}, step: 2, showStep1: true};
+    var ekstern_id = this.getSearchParameter('ekstern_id');
+    ekstern_id = 'e99e523d80016cc2b5444a9c5915ac07'; // TEST TODO REMOVE
+    return {data: {}, step: 1, showStep1: true, ekstern_id: ekstern_id};
   },
-  stepComplete: function (stepNo) {
-    var self = this;
-    return function () {
-      self.setState({step: ++stepNo});
-    };
+  stepComplete: function () {
+    var step = this.state.step;
+    this.setState({step: ++step});
+  },
+  stepBackwards: function () {
+    var step = this.state.step;
+    this.setState({step: --step});
   },
   render: function() {
     return (
       <div className="opdateringskampagne">
-        { this.state.step === 1 ? <StepStamdata stepComplete={this.stepComplete(1)} loadUserData={this.loadUserData} saveUserData={this.saveUserData} /> : null }
-        { this.state.step === 2 ? <StepInteresser stepComplete={this.stepComplete(2)} loadUserData={this.loadUserData} saveUserData={this.saveUserData} /> : null }
-        { this.state.step === 3 ? <StepNyhedsbreve stepComplete={this.stepComplete(2)} loadUserData={this.loadUserData} saveUserData={this.saveUserData} /> : null }
+        { this.state.step === 1 ? <StepStamdata stepComplete={this.stepComplete} loadUserData={this.loadUserData} /> : null }
+        { this.state.step === 2 ? <StepInteresser stepComplete={this.stepComplete} stepBackwards={this.stepBackwards} loadUserData={this.loadUserData} /> : null }
+        { this.state.step === 3 ? <StepNyhedsbreve stepComplete={this.stepComplete} stepBackwards={this.stepBackwards} loadUserData={this.loadUserData} /> : null }
       </div>
     );
   }

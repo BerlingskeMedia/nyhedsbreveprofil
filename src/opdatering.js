@@ -1,16 +1,23 @@
 /*jshint node: true */
 'use strict';
 
-
 module.exports.register = function (server, options, next) {
 
   // server.route({
   //   method: 'get',
-  //   path: '/bower_components/{param*}',
+  //   path: '/build/{param*}',
   //   handler: {
   //     directory: {
-  //       path: 'bower_components'
+  //       path: 'opdatering/build'
   //     }
+  //   }
+  // });
+  //
+  // server.route({
+  //   method: 'get',
+  //   path: '/{param*}',
+  //   handler: {
+  //     file: 'opdatering/index.html'
   //   }
   // });
 
