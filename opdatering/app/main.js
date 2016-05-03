@@ -1,12 +1,19 @@
-var $ = require("jquery");
+var $ = require('jquery');
 var React = require('react');
 var ReactDOM = require('react-dom');
 var StepStamdata = require('./step_stamdata');
 var StepInteresser = require('./step_interesser');
-var StepNyhedsbreveKom = require('./step_nyhedsbreve_redaktionelle');
-var StepNyhedsbreve = require('./step_nyhedsbreve_kommercielle');
+var StepNyhedsbreveRed = require('./step_nyhedsbreve_redaktionelle');
+var StepNyhedsbreveKom = require('./step_nyhedsbreve_kommercielle');
 
 var Opdateringskampagne = React.createClass({
+  getInitialState: function() {
+    var ekstern_id = this.getSearchParameter('ekstern_id');
+    ekstern_id = '0cbf425b93500407ccc4481ede7b87da'; // TEST TODO REMOVE
+    return {data: {}, step: 4, showStep1: true, ekstern_id: ekstern_id};
+  },
+  componentDidMount: function() {
+  },
   getSearchParameter: function(name, url) {
       if (!url) url = window.location.href;
       name = name.replace(/[\[\]]/g, "\\$&");
@@ -22,22 +29,19 @@ var Opdateringskampagne = React.createClass({
       dataType: 'json',
       cache: true,
       success: function (data) {
+        this.setState({user: data});
       }.bind(this),
       error: function(xhr, status, err) {
         console.error(this.props.url, status, err.toString());
       }.bind(this)
     });
   },
-  componentDidMount: function() {
-  },
-  getInitialState: function() {
-    var ekstern_id = this.getSearchParameter('ekstern_id');
-    ekstern_id = '0cbf425b93500407ccc4481ede7b87da'; // TEST TODO REMOVE
-    return {data: {}, step: 1, showStep1: true, ekstern_id: ekstern_id};
-  },
-  stepComplete: function () {
+  stepComplete: function (user) {
     var step = this.state.step;
     this.setState({step: ++step});
+    if (user !== undefined) {
+      this.setState({user: user});
+    }
   },
   stepBackwards: function () {
     var step = this.state.step;
@@ -46,9 +50,14 @@ var Opdateringskampagne = React.createClass({
   render: function() {
     return (
       <div className="opdateringskampagne">
-        { this.state.step === 1 ? <StepStamdata stepComplete={this.stepComplete} loadUserData={this.loadUserData} /> : null }
-        { this.state.step === 2 ? <StepInteresser stepComplete={this.stepComplete} stepBackwards={this.stepBackwards} loadUserData={this.loadUserData} /> : null }
-        { this.state.step === 3 ? <StepNyhedsbreve stepComplete={this.stepComplete} stepBackwards={this.stepBackwards} loadUserData={this.loadUserData} /> : null }
+        { this.state.step === 1 ?
+          <StepStamdata stepComplete={this.stepComplete} loadUserData={this.loadUserData} /> : null }
+        { this.state.step === 2 ?
+          <StepInteresser stepComplete={this.stepComplete} stepBackwards={this.stepBackwards} loadUserData={this.loadUserData} /> : null }
+        { this.state.step === 3 ?
+          <StepNyhedsbreveRed stepComplete={this.stepComplete} stepBackwards={this.stepBackwards} loadUserData={this.loadUserData} /> : null }
+        { this.state.step === 4 ?
+          <StepNyhedsbreveKom stepComplete={this.stepComplete} stepBackwards={this.stepBackwards} loadUserData={this.loadUserData} /> : null }
       </div>
     );
   }

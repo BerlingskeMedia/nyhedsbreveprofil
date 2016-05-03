@@ -1,3 +1,4 @@
+var $ = require('jquery');
 var React = require('react');
 
 module.exports = React.createClass({
@@ -76,7 +77,7 @@ module.exports = React.createClass({
             />
             <label>Tilbud fra Berlingske Media og vores partnere (E-post)</label>
           </div>
-        : ''}
+        : null }
         <input type="submit" value="Videre" />
       </form>
     );
