@@ -2,13 +2,14 @@ var React = require('react');
 
 module.exports = React.createClass({
   getInitialState: function() {
-    return {user: {fornavn: '', efternavn: '', data_dirty: false}};
+    return {user: {fornavn: '', efternavn: '', data_dirty: false}, show300Perm: true};
   },
   componentDidMount: function() {
     this.props.loadUserData().success(this.setUserState);
   },
   setUserState: function(data) {
     this.setState({user: data});
+    this.setState({show300Perm: data.nyhedsbreve.indexOf(43) > -1});
   },
   handleFornavnChange: function (e, a) {
     this.state.user.fornavn = e.target.value;
@@ -20,15 +21,20 @@ module.exports = React.createClass({
     this.setUserState(this.state.user);
     this.setState({data_dirty: true});
   },
+  handle300PermChange: function (e) {
+    var user = this.state.user;
+    user.nyhedsbreve.push(300);
+    this.setState({user: user});
+    this.setState({data_dirty: true});
+  },
   handleSubmit: function(e) {
     e.preventDefault();
-    var self = this;
     if (this.state.data_dirty) {
       this.saveUserData(this.state.user).success(function (data) {
-        self.props.stepComplete();
-      });
+        this.props.stepComplete();
+      }.bind(this));
     } else {
-      self.props.stepComplete();
+      this.props.stepComplete();
     }
   },
   saveUserData: function(userData) {
@@ -61,6 +67,16 @@ module.exports = React.createClass({
           onChange={this.handleEfternavnChange}
           value={this.state.user.efternavn}
         />
+        {!this.state.show300Perm ?
+          <div>
+            <input
+              type="checkbox"
+              placeholder="300"
+              onChange={this.handle300PermChange}
+            />
+            <label>Tilbud fra Berlingske Media og vores partnere (E-post)</label>
+          </div>
+        : ''}
         <input type="submit" value="Videre" />
       </form>
     );

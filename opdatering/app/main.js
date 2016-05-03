@@ -31,7 +31,7 @@ var Opdateringskampagne = React.createClass({
   getInitialState: function() {
     var ekstern_id = this.getSearchParameter('ekstern_id');
     ekstern_id = '0cbf425b93500407ccc4481ede7b87da'; // TEST TODO REMOVE
-    return {data: {}, step: 3, showStep1: true, ekstern_id: ekstern_id};
+    return {data: {}, step: 1, showStep1: true, ekstern_id: ekstern_id};
   },
   stepComplete: function () {
     var step = this.state.step;
