@@ -1,8 +1,9 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 var StepStamdata = require('./step_stamdata');
-var StepNyhedsbreve = require('./step_nyhedsbreve_redaktionelle');
 var StepInteresser = require('./step_interesser');
+var StepNyhedsbreveKom = require('./step_nyhedsbreve_redaktionelle');
+var StepNyhedsbreve = require('./step_nyhedsbreve_kommercielle');
 
 var Opdateringskampagne = React.createClass({
   getSearchParameter: function(name, url) {
