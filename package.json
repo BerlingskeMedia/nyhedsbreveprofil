@@ -19,9 +19,6 @@
   },
   "homepage": "https://github.com/BerlingskeMedia/nyhedsbreveprofil#readme",
   "dependencies": {
-    "babel-core": "^6.7.6",
-    "babel-loader": "^6.2.4",
-    "babel-preset-react": "^6.5.0",
     "boom": "^3.1.2",
     "hapi": "^13.2.2",
     "inert": "^3.0.1",
@@ -29,10 +26,12 @@
     "jquery": "^2.2.3",
     "react": "^15.0.1",
     "react-dom": "^15.0.1",
-    "reflect-metadata": "^0.1.2",
     "webpack": "^1.13.0"
   },
   "devDependencies": {
+    "babel-core": "^6.7.6",
+    "babel-loader": "^6.2.4",
+    "babel-preset-react": "^6.5.0",
     "gulp": "^3.9.1",
     "gulp-less": "^3.0.5"
   }
