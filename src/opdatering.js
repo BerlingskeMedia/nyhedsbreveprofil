@@ -15,6 +15,16 @@ module.exports.register = function (server, options, next) {
 
   server.route({
     method: 'get',
+    path: '/assets/{param*}',
+    handler: {
+      directory: {
+        path: 'opdatering/assets'
+      }
+    }
+  });
+
+  server.route({
+    method: 'get',
     path: '/{param*}',
     handler: {
       file: 'opdatering/index.html'
