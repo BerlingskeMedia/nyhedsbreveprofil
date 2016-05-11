@@ -7,7 +7,7 @@ module.exports = React.createClass({
     return {
       nyhedsbreve: [],
       godttip_nyhedsbreve: [
-        {id: 246, navn: 'Tilbud fra Godttip.dk'}],
+        {id: 246, navn: 'Tilbud fra Godttip.dk', description: 'TEST'}],
       tbt_nyhedsbreve: [
         {id: 844, navn: 'The Business Target'}],
       shop_nyhedsbreve: [

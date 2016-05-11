@@ -6,14 +6,16 @@ module.exports = React.createClass({
   },
   onChange: function() {
     this.setState({checked: !this.state.checked}, function (previousState, currentProps) {
+      // Sending info to parent that the user has toggled the subscription
       this.props.toggle(this.state.checked, this.props.data);
     }.bind(this));
   },
   render: function() {
     return (
       <div className="MdbCheckbox">
-        <input type="checkbox" id={this.props.id} checked={this.state.checked} onChange={this.onChange} />
-        {this.props.label}
+        <input type="checkbox" id={this.props.data.id} checked={this.state.checked} onChange={this.onChange} />
+        {this.props.data.navn}
+        {this.state.checked && this.props.data.description ? <div>{this.props.data.description}</div> : null }
       </div>
     );
   }

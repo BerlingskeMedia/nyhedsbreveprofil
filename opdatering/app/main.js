@@ -13,17 +13,17 @@ var Opdateringskampagne = React.createClass({
     var ekstern_id = this.getSearchParameter('ekstern_id');
 
     return {
-      step: 0,
+      step: 3,
       ekstern_id: ekstern_id !== null ? ekstern_id : '0cbf425b93500407ccc4481ede7b87da', // TEST TODO REMOVE
       showCheckbox300Perm: false
     };
   },
-  componentDidMount: function() {
-    this.loadingUserData = this.loadUserData();
-  },
-  componentWillUnmount: function() {
-    this.loadingUserData.abort();
-  },
+  // componentDidMount: function() {
+  //   this.loadingUserData = this.loadUserData();
+  // },
+  // componentWillUnmount: function() {
+  //   this.loadingUserData.abort();
+  // },
   getSearchParameter: function(name, url) {
       if (!url) url = window.location.href;
       name = name.replace(/[\[\]]/g, "\\$&");
