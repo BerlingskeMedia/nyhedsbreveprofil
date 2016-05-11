@@ -31,6 +31,10 @@ module.exports = React.createClass({
     };
   },
   componentDidMount: function() {
+
+    ga('set', 'page', '/step_interesser');
+    ga('send', 'pageview');
+
     this.loadingUserData = this.props.loadUserData()
     .success(function (data) {
       this.setState({ekstern_id: data.ekstern_id});

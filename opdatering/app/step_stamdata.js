@@ -3,12 +3,21 @@ var React = require('react');
 
 module.exports = React.createClass({
   getInitialState: function() {
-    return {ekstern_id: '', email: '', fornavn: '', efternavn: '', data_dirty: false, has300: false, has300_dirty: false};
-    // return {fornavn: '', efternavn: '', has300: false};
-    // return {has300: false, show300Perm: false};
-    // return {has300: false};
+    return {
+      ekstern_id: '',
+      email: '',
+      fornavn: '',
+      efternavn: '',
+      data_dirty: false,
+      has300: false,
+      has300_dirty: false
+    };
   },
   componentDidMount: function() {
+
+    ga('set', 'page', '/step-stamdata');
+    ga('send', 'pageview');
+
     this.loadingUserData = this.props.loadUserData().success(function (data) {
       this.setState({ekstern_id: data.ekstern_id});
       this.setState({email: data.email});
@@ -16,39 +25,15 @@ module.exports = React.createClass({
       this.setState({efternavn: data.efternavn});
       this.setState({has300: data.nyhedsbreve.indexOf(300) > -1});
     }.bind(this));
-    // this.props.loadUserData().success(this.setUserState);
-    // this.setState({fornavn: this.props.user.fornavn});
-    // this.setState({efternavn: this.props.user.efternavn});
   },
   componentWillUnmount: function() {
     this.loadingUserData.abort();
   },
-  // setUserState: function(data) {
-  //   this.setState({user: data});
-  //   this.setState({show300Perm: data.nyhedsbreve.indexOf(300) > -1});
-  // },
-  componentWillReceiveProps: function() {
-    // console.log('componentWillReceiveProps');
-    // if (this.props.user.fornavn) {
-    //   this.setState({fornavn: this.props.user.fornavn});
-    // }
-    // if (this.props.user.efternavn) {
-    //   this.setState({efternavn: this.props.user.efternavn});
-    // }
-  },
   handleFornavnChange: function (e, a) {
-    // var user = this.state.user;
-    // this.props.user.fornavn = e.target.value;
-    // this.setState({user: user});
-    // this.props.setUserData({fornavn: e.target.value});
     this.setState({fornavn: e.target.value})
     this.setState({data_dirty: true});
   },
   handleEfternavnChange: function (e, a) {
-    // var user = this.state.user;
-    // user.efternavn = e.target.value;
-    // this.setState({user: user});
-    // this.props.setUserData({efternavn: e.target.value});
     this.setState({efternavn: e.target.value});
     this.setState({data_dirty: true});
   },
@@ -57,11 +42,7 @@ module.exports = React.createClass({
     this.setState({data_dirty: true});
   },
   handle300PermChange: function (e) {
-    // var user = this.state.user;
-    // this.props.user.nyhedsbreve.push(300);
-    // this.props.toggleNyhedsbrev(300);
     this.setState({has300: !this.state.has300});
-    // this.setState({user: user});
     this.setState({has300_dirty: true});
   },
   handleSubmit: function(e) {

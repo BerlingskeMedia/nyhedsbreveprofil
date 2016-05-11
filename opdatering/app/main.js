@@ -9,14 +9,14 @@ var StepFinished = require('./step_finished');
 
 var Opdateringskampagne = React.createClass({
   getInitialState: function() {
+
     var ekstern_id = this.getSearchParameter('ekstern_id');
 
-    if (ekstern_id === null) {
-      ekstern_id = '0cbf425b93500407ccc4481ede7b87da'; // TEST TODO REMOVE
-    }
-
-    // return {user: {}, step: 1, ekstern_id: ekstern_id, showCheckbox300Perm: false};
-    return {step: 5, ekstern_id: ekstern_id, showCheckbox300Perm: false};
+    return {
+      step: 5,
+      ekstern_id: ekstern_id !== null ? ekstern_id : '0cbf425b93500407ccc4481ede7b87da', // TEST TODO REMOVE
+      showCheckbox300Perm: false
+    };
   },
   componentDidMount: function() {
     this.loadingUserData = this.loadUserData();
@@ -41,7 +41,7 @@ var Opdateringskampagne = React.createClass({
       success: function (data) {
         // this.setState({user: data});
 
-        // We should still show the 300-perm checkbox is the user didn't have the perm to begin with
+        // We should still show the 300-perm checkbox is the user didn't have the perm to begin with, accepted the perm and come back to step 1 later.
         if (this.state.showCheckbox300Perm === false) {
           this.setState({showCheckbox300Perm: data.nyhedsbreve.indexOf(300) === -1});
         }

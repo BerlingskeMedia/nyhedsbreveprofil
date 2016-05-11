@@ -8,6 +8,10 @@ module.exports = React.createClass({
     return {showOffers: false};
   },
   componentDidMount: function() {
+
+    ga('set', 'page', '/step_finished');
+    ga('send', 'pageview');
+
     this.loadingUserData = this.props.loadUserData().success(function (data) {
 
       var temp = data.nyhedsbreve.some(function(nyhedsbrev_id) {
