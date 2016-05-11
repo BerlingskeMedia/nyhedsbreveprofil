@@ -7,12 +7,18 @@ module.exports = React.createClass({
     return {
       nyhedsbreve: [],
       godttip_nyhedsbreve: [
-        {id: 246, navn: 'Tilbud fra Godttip.dk', description: 'TEST'}],
+        { id: 246,
+          navn: 'Tilbud fra Godttip.dk',
+          description: 'GodtTip.dk sender dig alle de gode tilbud først og giver ofte specielle rabatter kun til GodtTip.dk modtagere.',
+          permissiontext: <GodtTipPermText />}],
       tbt_nyhedsbreve: [
-        {id: 844, navn: 'The Business Target'}],
+        { id: 844,
+          navn: 'The Business Target',
+          description: 'Med Berlingske Medias B2B e-mail service er du sikker på at modtage relevante tilbud samt invitationer til spændende business events.',
+          permissiontext: <TheBusinessTargetPermText />}],
       shop_nyhedsbreve: [
-        {id: 233, navn: 'BTSHOP.dk'},
-        {id: 241, navn: 'Berlingske SHOP'}],
+        {id: 233, navn: 'BT Shop', description: 'I BT SHOP får du særtilbud på rejser, teater, events- og musikoplevelser, vin og mange andre lækre produkter.'},
+        {id: 241, navn: 'Berlingske Shop', description: 'I Berlingske Shop får du gode tilbud på alt det, der gør livet lidt bedre.'}],
       sweetdeal_generel_nyhedsbreve: [
         {id: 845, navn: 'Sweetdeal Rejser'},
         {id: 855, navn: 'Sweetdeal Shopping'}]
@@ -116,6 +122,22 @@ module.exports = React.createClass({
   render: function() {
     return (
       <Newsletters className="stepNyhedsbreveKom" nyhedsbreve={this.state.nyhedsbreve} loadUserDataSuccess={this.addAdditionalNewsletters} loadUserData={this.props.loadUserData} stepBackwards={this.props.stepBackwards} stepForward={this.props.stepForward} />
+    );
+  }
+});
+
+var GodtTipPermText = React.createClass({
+  render: function() {
+    return(
+      <div>GodtTip.dk og Berlingske Media-koncernen (<a href="http://www.berlingskemedia.dk/berlingske-medias-selskaber-og-forretningsenheder">se udgivelser og forretningsenheder her</a>) må gerne gøre mig opmærksom på nyheder, tilbud og konkurrencer via brev og elektroniske medier (herunder e-mail, sms, mms, videobeskeder og pop-ups), når Berlingske Media-koncernen og vores samarbejdspartnere (<a href="http://www.berlingskemedia.dk/berlingske-medias-samarbejdspartnere/">se samarbejdspartnere her</a>) har nyheder, tilbud og konkurrencer inden for forskellige interesseområder (<a href="http://www.berlingskemedia.dk/liste-over-interesseomraader/">se hvilke her</a>).</div>
+    );
+  }
+});
+
+var TheBusinessTargetPermText = React.createClass({
+  render: function() {
+    return(
+      <div>The Business Target og Berlingske Media-koncernen (<a href="http://www.berlingskemedia.dk/berlingske-medias-selskaber-og-forretningsenheder/">se udgivelser og forretningsenheder her</a>) må gerne gøre mig opmærksom på nyheder, tilbud og konkurrencer via brev og elektroniske medier (herunder e-mail, sms, mms, videobeskeder og pop-ups), når Berlingske Media-koncernen og vores samarbejdspartnere (<a href="http://www.berlingskemedia.dk/berlingske-medias-samarbejdspartnere/">se samarbejdspartnere her</a>) har nyheder, tilbud og konkurrencer inden for forskellige interesseområder (<a href="http://www.berlingskemedia.dk/liste-over-interesseomraader/">se hvilke her</a>).</div>
     );
   }
 });

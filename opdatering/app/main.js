@@ -18,12 +18,6 @@ var Opdateringskampagne = React.createClass({
       showCheckbox300Perm: false
     };
   },
-  // componentDidMount: function() {
-  //   this.loadingUserData = this.loadUserData();
-  // },
-  // componentWillUnmount: function() {
-  //   this.loadingUserData.abort();
-  // },
   getSearchParameter: function(name, url) {
       if (!url) url = window.location.href;
       name = name.replace(/[\[\]]/g, "\\$&");

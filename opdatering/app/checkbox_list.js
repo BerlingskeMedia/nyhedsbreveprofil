@@ -1,6 +1,6 @@
 var React = require('react');
-
 var Checkbox = require('./checkbox');
+
 module.exports = React.createClass({
   render: function() {
 
