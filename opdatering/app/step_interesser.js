@@ -12,21 +12,21 @@ module.exports = React.createClass({
       interesser_already: [],
       interesser_not_yet: [],
       interesser: [
-        {interesse_id: 2, interesse_navn: 'Rejser'},
-        {interesse_id: 25, interesse_navn: 'Bil & Motor'},
-        {interesse_id: 28, interesse_navn: 'Shopping'},
-        {interesse_id: 37, interesse_navn: 'Teknik & Gadgets'},
-        {interesse_id: 20, interesse_navn: 'Sport & Fritid'},
-        {interesse_id: 24, interesse_navn: 'Mad & Drikke'},
-        {interesse_id: 309, interesse_navn: 'Politik'},
-        {interesse_id: 22, interesse_navn: 'Business'},
-        {interesse_id: 21, interesse_navn: 'Penge & Karriere'},
-        {interesse_id: 14, interesse_navn: 'Kultur & Underholdning'},
-        {interesse_id: 26, interesse_navn: 'Selvudvikling og Uddannelse'},
-        {interesse_id: 23, interesse_navn: 'Bolig & Design'},
-        {interesse_id: 19, interesse_navn: 'Viden & Samfund'},
-        {interesse_id: 27, interesse_navn: 'Sundhed & Familieliv'},
-        {interesse_id: 39, interesse_navn: 'Børn'}
+        {id: 2, navn: 'Rejser'},
+        {id: 25, navn: 'Bil & Motor'},
+        {id: 28, navn: 'Shopping'},
+        {id: 37, navn: 'Teknik & Gadgets'},
+        {id: 20, navn: 'Sport & Fritid'},
+        {id: 24, navn: 'Mad & Drikke'},
+        {id: 309, navn: 'Politik'},
+        {id: 22, navn: 'Business'},
+        {id: 21, navn: 'Penge & Karriere'},
+        {id: 14, navn: 'Kultur & Underholdning'},
+        {id: 26, navn: 'Selvudvikling og Uddannelse'},
+        {id: 23, navn: 'Bolig & Design'},
+        {id: 19, navn: 'Viden & Samfund'},
+        {id: 27, navn: 'Sundhed & Familieliv'},
+        {id: 39, navn: 'Børn'}
       ]
     };
   },
@@ -37,14 +37,14 @@ module.exports = React.createClass({
       var user_interesser = data.interesser;
 
       var interesser_not_yet = this.state.interesser.filter(function(interesse) {
-        return user_interesser.indexOf(interesse.interesse_id) === -1;
+        return user_interesser.indexOf(interesse.id) === -1;
       }.bind(this));
 
       interesser_not_yet.sort(this.sort_interesser);
       this.setState({interesser_not_yet: interesser_not_yet});
 
       var interesser_already = this.state.interesser.filter(function(interesse) {
-        return user_interesser.indexOf(interesse.interesse_id) > -1;
+        return user_interesser.indexOf(interesse.id) > -1;
       }.bind(this));
 
       interesser_already.forEach(function (i) {
@@ -64,18 +64,18 @@ module.exports = React.createClass({
     var new_signouts = this.state.new_signouts;
 
     if (subscribe) {
-      var i = new_signouts.indexOf(interesse.interesse_id);
+      var i = new_signouts.indexOf(interesse.id);
       if (i > -1) {
         new_signouts.splice(i, 1);
       } else {
-        new_signups.push(interesse.interesse_id);
+        new_signups.push(interesse.id);
       }
     } else {
-      var i = new_signups.indexOf(interesse.interesse_id);
+      var i = new_signups.indexOf(interesse.id);
       if (i > -1) {
         new_signups.splice(i, 1);
       } else {
-        new_signouts.push(interesse.interesse_id);
+        new_signouts.push(interesse.id);
       }
     }
 
@@ -83,8 +83,8 @@ module.exports = React.createClass({
     this.setState({new_signouts: new_signouts});
   },
   sort_interesser: function(interesse_a, interesse_b) {
-    var navnA = interesse_a.interesse_navn.toUpperCase();
-    var navnB = interesse_b.interesse_navn.toUpperCase();
+    var navnA = interesse_a.navn.toUpperCase();
+    var navnB = interesse_b.navn.toUpperCase();
     if (navnA < navnB) {
       return -1;
     }

@@ -23,14 +23,14 @@ module.exports = React.createClass({
       var user_nyhedsbreve = data.nyhedsbreve;
 
       var nyhedsbreve_not_yet = this.props.nyhedsbreve.filter(function(nyhedsbrev) {
-        return user_nyhedsbreve.indexOf(nyhedsbrev.nyhedsbrev_id) === -1;
+        return user_nyhedsbreve.indexOf(nyhedsbrev.id) === -1;
       }.bind(this));
 
       nyhedsbreve_not_yet.sort(this.sort_nyhedsbreve);
       this.setState({nyhedsbreve_not_yet: nyhedsbreve_not_yet});
 
       var nyhedsbreve_already = this.props.nyhedsbreve.filter(function(nyhedsbrev) {
-        return user_nyhedsbreve.indexOf(nyhedsbrev.nyhedsbrev_id) > -1;
+        return user_nyhedsbreve.indexOf(nyhedsbrev.id) > -1;
       }.bind(this));
 
       nyhedsbreve_already.forEach(function (n) {
@@ -50,26 +50,26 @@ module.exports = React.createClass({
     var new_signouts = this.state.new_signouts;
 
     if (subscribe) {
-      var i = new_signouts.indexOf(nyhedsbrev.nyhedsbrev_id);
+      var i = new_signouts.indexOf(nyhedsbrev.id);
       if (i > -1) {
         new_signouts.splice(i, 1);
       } else {
-        new_signups.push(nyhedsbrev.nyhedsbrev_id);
+        new_signups.push(nyhedsbrev.id);
       }
     } else {
-      var i = new_signups.indexOf(nyhedsbrev.nyhedsbrev_id);
+      var i = new_signups.indexOf(nyhedsbrev.id);
       if (i > -1) {
         new_signups.splice(i, 1);
       } else {
-        new_signouts.push(nyhedsbrev.nyhedsbrev_id);
+        new_signouts.push(nyhedsbrev.id);
       }
     }
     this.setState({new_signups: new_signups});
     this.setState({new_signouts: new_signouts});
   },
   sort_nyhedsbreve: function(nyhedsbrev_a, nyhedsbrev_b) {
-    var navnA = nyhedsbrev_a.nyhedsbrev_navn.toUpperCase();
-    var navnB = nyhedsbrev_b.nyhedsbrev_navn.toUpperCase();
+    var navnA = nyhedsbrev_a.navn.toUpperCase();
+    var navnB = nyhedsbrev_b.navn.toUpperCase();
     if (navnA < navnB) {
       return -1;
     }

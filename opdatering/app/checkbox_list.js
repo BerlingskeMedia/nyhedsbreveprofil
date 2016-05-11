@@ -6,7 +6,7 @@ module.exports = React.createClass({
 
     var items = this.props.data.map(function(item) {
       return (
-        <Checkbox key={item.interesse_id} id={item.interesse_id} label={item.interesse_navn} data={item} toggle={this.props.toggle} />
+        <Checkbox key={item.id} id={item.id} label={item.navn} data={item} toggle={this.props.toggle} />
       );
     }.bind(this));
 
