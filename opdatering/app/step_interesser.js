@@ -146,21 +146,3 @@ module.exports = React.createClass({
     );
   }
 });
-
-
-// var InteresseList = React.createClass({
-//   render: function() {
-//
-//     var items = this.props.data.map(function(item) {
-//       return (
-//         <InterestCheckbox key={item.interesse_id} id={item.interesse_id} label={item.interesse_navn} data={item} toggle={this.props.toggle} />
-//       );
-//     }.bind(this));
-//
-//     return (
-//       <div className="CheckboxList">
-//         {items}
-//       </div>
-//     );
-//   }
-// });

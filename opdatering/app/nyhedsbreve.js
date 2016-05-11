@@ -14,29 +14,6 @@ module.exports = React.createClass({
       nyhedsbreve: this.props.nyhedsbreve
     };
   },
-  // componentWillReceiveProps: function(props, d) {
-  //   console.log('componentWillReceiveProps', props, d);
-
-    // this.setState({nyhedsbreve: nyhedsbreve_to_be_shown});
-
-    // var nyhedsbreve_not_yet = this.state.nyhedsbreve.filter(function(nyhedsbrev) {
-    //   return user_nyhedsbreve.indexOf(nyhedsbrev.nyhedsbrev_id) === -1;
-    // }.bind(this));
-    //
-    // nyhedsbreve_not_yet.sort(this.sort_nyhedsbreve);
-    //
-    // var nyhedsbreve_already = this.state.nyhedsbreve.filter(function(nyhedsbrev) {
-    //   return user_nyhedsbreve.indexOf(nyhedsbrev.nyhedsbrev_id) > -1;
-    // }.bind(this));
-    //
-    // nyhedsbreve_already.forEach(function (n) {
-    //   n.preselect = true;
-    // });
-    // nyhedsbreve_already.sort(this.sort_nyhedsbreve);
-    //
-    // this.setState({nyhedsbreve_not_yet: nyhedsbreve_not_yet});
-    // this.setState({nyhedsbreve_already: nyhedsbreve_already});
-  // },
   componentDidMount: function() {
     this.loadingUserData = this.props.loadUserData()
     .success(this.props.loadUserDataSuccess)
@@ -155,21 +132,3 @@ module.exports = React.createClass({
     );
   }
 });
-
-// var NewsletterCheckbox = require('./checkbox');
-// var NewsletterList = React.createClass({
-//
-//   render: function() {
-//     var newsletters = this.props.nyhedsbreve.map(function(nyhedsbrev) {
-//       return (
-//         <NewsletterCheckbox key={nyhedsbrev.nyhedsbrev_id} id={nyhedsbrev.nyhedsbrev_id} label={nyhedsbrev.nyhedsbrev_navn} data={nyhedsbrev} toggle={this.props.toggle} />
-//       );
-//     }.bind(this));
-//
-//     return (
-//       <div className="NewsletterList">
-//         {newsletters}
-//       </div>
-//     )
-//   }
-// });
