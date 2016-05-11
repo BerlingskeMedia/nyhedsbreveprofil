@@ -119,7 +119,7 @@ module.exports = React.createClass({
       function call_backend (type, interesse_id) {
         $.ajax({
           type: type,
-          url: '/backend/users/'.concat(ekstern_id, '/interesser/', interesse_id, '?location_id=1'),
+          url: '/backend/users/'.concat(ekstern_id, '/interesser/', interesse_id, '?location_id=2059'),
           dataType: 'json',
           success: function (data) {
             if (++done === count) {
@@ -136,12 +136,12 @@ module.exports = React.createClass({
   render: function() {
     return (
       <div className="stepInteresser">
-        <div>Vælg</div>
+        <div>Tilmeld dig</div>
         <InteresseList data={this.state.interesser_not_yet} toggle={this.toggleInteresse} />
-        <div>Allerede tilmeldte</div>
+        <div>Dine interesser</div>
         <InteresseList data={this.state.interesser_already} toggle={this.toggleInteresse} />
         <input type="button" value="Tilbage" onClick={this.complete(this.props.stepBackwards)} />
-        <input type="button" value="Videre" onClick={this.complete(this.props.stepComplete)} />
+        <input type="button" value="Videre" onClick={this.complete(this.props.stepForward)} />
       </div>
     );
   }

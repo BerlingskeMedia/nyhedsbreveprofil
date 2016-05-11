@@ -5,6 +5,7 @@ var StepStamdata = require('./step_stamdata');
 var StepInteresser = require('./step_interesser');
 var StepNyhedsbreveRed = require('./step_nyhedsbreve_redaktionelle');
 var StepNyhedsbreveKom = require('./step_nyhedsbreve_kommercielle');
+var StepFinished = require('./step_finished');
 
 var Opdateringskampagne = React.createClass({
   getInitialState: function() {
@@ -15,7 +16,7 @@ var Opdateringskampagne = React.createClass({
     }
 
     // return {user: {}, step: 1, ekstern_id: ekstern_id, showCheckbox300Perm: false};
-    return {step: 3, ekstern_id: ekstern_id, showCheckbox300Perm: false};
+    return {step: 5, ekstern_id: ekstern_id, showCheckbox300Perm: false};
   },
   componentDidMount: function() {
     this.loadingUserData = this.loadUserData();
@@ -51,7 +52,7 @@ var Opdateringskampagne = React.createClass({
       }.bind(this)
     });
   },
-  stepComplete: function () {
+  stepForward: function () {
     var step = this.state.step;
     this.setState({step: ++step});
   },
@@ -63,13 +64,15 @@ var Opdateringskampagne = React.createClass({
     return (
       <div className="opdateringskampagne">
         { this.state.step === 1 ?
-          <StepStamdata stepComplete={this.stepComplete} showCheckbox300Perm={this.state.showCheckbox300Perm} loadUserData={this.loadUserData} /> : null }
+          <StepStamdata stepForward={this.stepForward} showCheckbox300Perm={this.state.showCheckbox300Perm} loadUserData={this.loadUserData} /> : null }
         { this.state.step === 2 ?
-          <StepInteresser stepComplete={this.stepComplete} stepBackwards={this.stepBackwards} loadUserData={this.loadUserData} /> : null }
+          <StepInteresser stepForward={this.stepForward} stepBackwards={this.stepBackwards} loadUserData={this.loadUserData} /> : null }
         { this.state.step === 3 ?
-          <StepNyhedsbreveRed stepComplete={this.stepComplete} stepBackwards={this.stepBackwards} loadUserData={this.loadUserData} /> : null }
+          <StepNyhedsbreveRed stepForward={this.stepForward} stepBackwards={this.stepBackwards} loadUserData={this.loadUserData} /> : null }
         { this.state.step === 4 ?
-          <StepNyhedsbreveKom stepComplete={this.stepComplete} stepBackwards={this.stepBackwards} loadUserData={this.loadUserData} /> : null }
+          <StepNyhedsbreveKom stepForward={this.stepForward} stepBackwards={this.stepBackwards} loadUserData={this.loadUserData} /> : null }
+        { this.state.step === 5 ?
+          <StepFinished stepBackwards={this.stepBackwards} loadUserData={this.loadUserData} /> : null }
       </div>
     );
   }

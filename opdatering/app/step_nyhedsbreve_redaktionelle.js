@@ -40,7 +40,7 @@ module.exports = React.createClass({
   },
   render: function() {
     return (
-      <Newsletters className="stepNyhedsbreveRed" nyhedsbreve={this.state.nyhedsbreve} loadUserDataSuccess={this.addAdditionalNewsletters} loadUserData={this.props.loadUserData} stepBackwards={this.props.stepBackwards} stepComplete={this.props.stepComplete} />
+      <Newsletters className="stepNyhedsbreveRed" nyhedsbreve={this.state.nyhedsbreve} loadUserDataSuccess={this.addAdditionalNewsletters} loadUserData={this.props.loadUserData} stepBackwards={this.props.stepBackwards} stepForward={this.props.stepForward} />
     );
   }
 });

@@ -87,7 +87,7 @@ module.exports = React.createClass({
         email: this.state.email,
         fornavn: this.state.fornavn,
         efternavn: this.state.efternavn,
-        location_id: 1
+        location_id: 2059
       };
       return $.ajax({
         type: 'POST',
@@ -96,20 +96,20 @@ module.exports = React.createClass({
         contentType: "application/json; charset=utf-8",
         dataType: 'json',
         success: function (data) {
-          this.props.stepComplete();
+          this.props.stepForward();
         }.bind(this),
         error: function(xhr, status, err) {
           console.error(this.props.url, status, err.toString());
         }.bind(this)
       });
     } else {
-      this.props.stepComplete();
+      this.props.stepForward();
     }
   },
   add300: function() {
     return $.ajax({
       type: 'POST',
-      url: '/backend/users/'.concat(this.state.ekstern_id, '/nyhedsbreve/300?location_id=1'),
+      url: '/backend/users/'.concat(this.state.ekstern_id, '/nyhedsbreve/300?location_id=2059'),
       contentType: "application/json; charset=utf-8",
       dataType: 'json',
       success: function (data) {
@@ -122,7 +122,7 @@ module.exports = React.createClass({
   delete300: function() {
     return $.ajax({
       type: 'DELETE',
-      url: '/backend/users/'.concat(this.state.ekstern_id, '/nyhedsbreve/300?location_id=1'),
+      url: '/backend/users/'.concat(this.state.ekstern_id, '/nyhedsbreve/300?location_id=2059'),
       contentType: "application/json; charset=utf-8",
       dataType: 'json',
       success: function (data) {
