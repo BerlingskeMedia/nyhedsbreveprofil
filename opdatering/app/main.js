@@ -15,7 +15,7 @@ var Opdateringskampagne = React.createClass({
     }
 
     // return {user: {}, step: 1, ekstern_id: ekstern_id, showCheckbox300Perm: false};
-    return {step: 2, ekstern_id: ekstern_id, showCheckbox300Perm: false};
+    return {step: 3, ekstern_id: ekstern_id, showCheckbox300Perm: false};
   },
   componentDidMount: function() {
     this.loadingUserData = this.loadUserData();
@@ -51,74 +51,6 @@ var Opdateringskampagne = React.createClass({
       }.bind(this)
     });
   },
-  // setUserData: function (input) {
-  //   console.log('setUserData', input);
-  //   Object.keys(input).forEach(function(key) {
-  //     var user = this.state.user;
-  //     user[key] = input[key];
-  //     this.setState({user: user});
-  //   }.bind(this));
-  // },
-  // changeInteresser: function (input) {
-  //   this.setState({changed_interesser: input});
-  // },
-  // addNyhedsbrev: function(nyhedsbrev_id) {
-  //   var user = this.state.user;
-  //   var i = user.nyhedsbreve.indexOf(nyhedsbrev_id);
-  //   if (i === -1) {
-  //     user.nyhedsbreve.push(nyhedsbrev_id);
-  //     this.setState({user: user});
-  //   }
-  //
-  //   if (nyhedsbrev_id === 300) {
-  //     this.setState({showStepNyhKom: true});
-  //   }
-  // },
-  // removeNyhedsbrev: function(nyhedsbrev_id) {
-  //   var user = this.state.user;
-  //   var i = user.nyhedsbreve.indexOf(nyhedsbrev_id);
-  //   if (i > -1) {
-  //     user.nyhedsbreve.splice(i, 1);
-  //     this.setState({user: user});
-  //   }
-  //
-  //   if (nyhedsbrev_id === 300) {
-  //     this.setState({showStepNyhKom: false});
-  //   }
-  // },
-  // toggleNyhedsbrev: function(nyhedsbrev_id) {
-  //   var user = this.state.user;
-  //   var i = user.nyhedsbreve.indexOf(nyhedsbrev_id);
-  //   if (i === -1) {
-  //     user.nyhedsbreve.push(nyhedsbrev_id);
-  //   } else {
-  //     user.nyhedsbreve.splice(i, 1);
-  //   }
-  //   this.setState({user: user});
-  // },
-  // addInteresse: function (interesse_id) {
-  //   var user = this.state.user;
-  //   user.interesser.push(interesse_id);
-  //   this.setState({user: user});
-  // },
-  // removeInteresse: function(interesse_id) {
-  //   var user = this.state.user;
-  //   var i = user.interesser.indexOf(interesse_id);
-  //   if (i > -1) {
-  //     user.interesser.splice(i, 1);
-  //     this.setState({user: user});
-  //   }
-  // },
-  // toggleInteresse: function(interesse_id) {
-  //   var user = this.state.user;
-  //   var i = user.interesser.indexOf(interesse_id);
-  //   if (i === -1) {
-  //     user.interesser.push(interesse_id);
-  //   } else {
-  //     user.interesser.splice(i, 1);
-  //   }
-  //   this.setState({user: user});
-  // },
   stepComplete: function () {
     var step = this.state.step;
     this.setState({step: ++step});

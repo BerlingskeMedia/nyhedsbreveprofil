@@ -1,14 +1,72 @@
 var $ = require('jquery');
 var React = require('react');
-var NewsletterCheckbox = require('./checkbox');
+
+var NewsletterList = require('./checkbox_list');
 
 module.exports = React.createClass({
   getInitialState: function() {
     return {
       ekstern_id: '',
       new_signups: [],
-      new_signouts: []
+      new_signouts: [],
+      nyhedsbreve_already: [],
+      nyhedsbreve_not_yet: [],
+      nyhedsbreve: this.props.nyhedsbreve
     };
+  },
+  // componentWillReceiveProps: function(props, d) {
+  //   console.log('componentWillReceiveProps', props, d);
+
+    // this.setState({nyhedsbreve: nyhedsbreve_to_be_shown});
+
+    // var nyhedsbreve_not_yet = this.state.nyhedsbreve.filter(function(nyhedsbrev) {
+    //   return user_nyhedsbreve.indexOf(nyhedsbrev.nyhedsbrev_id) === -1;
+    // }.bind(this));
+    //
+    // nyhedsbreve_not_yet.sort(this.sort_nyhedsbreve);
+    //
+    // var nyhedsbreve_already = this.state.nyhedsbreve.filter(function(nyhedsbrev) {
+    //   return user_nyhedsbreve.indexOf(nyhedsbrev.nyhedsbrev_id) > -1;
+    // }.bind(this));
+    //
+    // nyhedsbreve_already.forEach(function (n) {
+    //   n.preselect = true;
+    // });
+    // nyhedsbreve_already.sort(this.sort_nyhedsbreve);
+    //
+    // this.setState({nyhedsbreve_not_yet: nyhedsbreve_not_yet});
+    // this.setState({nyhedsbreve_already: nyhedsbreve_already});
+  // },
+  componentDidMount: function() {
+    this.loadingUserData = this.props.loadUserData()
+    .success(this.props.loadUserDataSuccess)
+    .success(function (data) {
+
+      this.setState({ekstern_id: data.ekstern_id});
+      var user_nyhedsbreve = data.nyhedsbreve;
+
+      var nyhedsbreve_not_yet = this.props.nyhedsbreve.filter(function(nyhedsbrev) {
+        return user_nyhedsbreve.indexOf(nyhedsbrev.nyhedsbrev_id) === -1;
+      }.bind(this));
+
+      nyhedsbreve_not_yet.sort(this.sort_nyhedsbreve);
+      this.setState({nyhedsbreve_not_yet: nyhedsbreve_not_yet});
+
+      var nyhedsbreve_already = this.props.nyhedsbreve.filter(function(nyhedsbrev) {
+        return user_nyhedsbreve.indexOf(nyhedsbrev.nyhedsbrev_id) > -1;
+      }.bind(this));
+
+      nyhedsbreve_already.forEach(function (n) {
+        n.preselect = true;
+      });
+
+      nyhedsbreve_already.sort(this.sort_nyhedsbreve);
+      this.setState({nyhedsbreve_already: nyhedsbreve_already});
+
+    }.bind(this));
+  },
+  componentWillUnmount: function() {
+    this.loadingUserData.abort();
   },
   toggleNyhedsbrev: function (subscribe, nyhedsbrev) {
     var new_signups = this.state.new_signups;
@@ -32,96 +90,85 @@ module.exports = React.createClass({
     this.setState({new_signups: new_signups});
     this.setState({new_signouts: new_signouts});
   },
-  // changeNewsletterSubscription: function(nyhedsbrev_id) {
-  //   var i = this.props.user.nyhedsbreve.indexOf(nyhedsbrev_id);
-  //   if (i > -1) {
-  //     this.props.user.nyhedsbreve.splice(i, 1);
-  //     return this.deleteNewsletter(nyhedsbrev_id);
-  //   } else {
-  //     this.props.user.nyhedsbreve.push(nyhedsbrev_id);
-  //     return this.addNewsletter(nyhedsbrev_id);
-  //   }
-  // },
-  // addNewsletter: function(nyhedsbrev_id) {
-  //   return $.ajax({
-  //     type: 'POST',
-  //     url: '/backend/users/'.concat(this.props.user.ekstern_id, '/nyhedsbreve/', nyhedsbrev_id, '?location_id=1'),
-  //     contentType: "application/json; charset=utf-8",
-  //     dataType: 'json',
-  //     success: function (data) {
-  //     }.bind(this),
-  //     error: function(xhr, status, err) {
-  //       console.error(this.props.url, status, err.toString());
-  //     }.bind(this)
-  //   });
-  // },
-  // deleteNewsletter: function(nyhedsbrev_id) {
-  //   return $.ajax({
-  //     type: 'DELETE',
-  //     url: '/backend/users/'.concat(this.props.user.ekstern_id, '/nyhedsbreve/', nyhedsbrev_id, '?location_id=1'),
-  //     contentType: "application/json; charset=utf-8",
-  //     dataType: 'json',
-  //     success: function (data) {
-  //     }.bind(this),
-  //     error: function(xhr, status, err) {
-  //       console.error(this.props.url, status, err.toString());
-  //     }.bind(this)
-  //   });
-  // },
+  sort_nyhedsbreve: function(nyhedsbrev_a, nyhedsbrev_b) {
+    var navnA = nyhedsbrev_a.nyhedsbrev_navn.toUpperCase();
+    var navnB = nyhedsbrev_b.nyhedsbrev_navn.toUpperCase();
+    if (navnA < navnB) {
+      return -1;
+    }
+    if (navnA > navnB) {
+      return 1;
+    }
+    // names must be equal
+    return 0;
+  },
+  complete: function(callback) {
+    return function() {
+      var ekstern_id = this.state.ekstern_id;
+
+      var count = this.state.new_signups.length + this.state.new_signouts.length,
+          done = 0;
+
+      if (count === 0) {
+        return callback();
+      }
+
+      this.state.new_signups.forEach(add_nyhedsbrev);
+      this.state.new_signouts.forEach(delete_nyhedsbrev);
+
+      function add_nyhedsbrev (nyhedsbrev_id) {
+        call_backend('POST', nyhedsbrev_id);
+      }
+
+      function delete_nyhedsbrev (nyhedsbrev_id) {
+        call_backend('DELETE', nyhedsbrev_id);
+      }
+
+      function call_backend (type, nyhedsbrev_id) {
+        $.ajax({
+          type: type,
+          url: '/backend/users/'.concat(ekstern_id, '/nyhedsbreve/', nyhedsbrev_id, '?location_id=1'),
+          dataType: 'json',
+          success: function (data) {
+            if (++done === count) {
+              callback();
+            }
+          }.bind(this),
+          error: function(xhr, status, err) {
+            console.error(status, err.toString());
+          }.bind(this)
+        });
+      }
+
+    }.bind(this);
+  },
   render: function() {
-    // Sorting the subscribed newsletters at the bottom
-    // this.props.nyhedsbreve.sort(function(nyhedsbrev_a, nyhedsbrev_b) {
-    //   if (this.props.user.nyhedsbreve.indexOf(nyhedsbrev_a.nyhedsbrev_id) > -1) {
-    //     return 1;
-    //   } else if (this.props.user.nyhedsbreve.indexOf(nyhedsbrev_b.nyhedsbrev_id) > -1) {
-    //     return -1;
-    //   } else {
-    //     return 0;
-    //   }
-    // }.bind(this));
-
-    var newsletters = this.props.nyhedsbreve.map(function(nyhedsbrev) {
-      // var selected = false;
-      // if (this.props.user !== undefined) {
-      //   selected = this.props.user.nyhedsbreve.indexOf(nyhedsbrev.nyhedsbrev_id) > -1;
-      // }
-      return (
-        <NewsletterCheckbox key={nyhedsbrev.nyhedsbrev_id} id={nyhedsbrev.nyhedsbrev_id} label={nyhedsbrev.nyhedsbrev_navn} data={nyhedsbrev} toggle={this.toggleNyhedsbrev} />
-      );
-    }.bind(this));
-
     return (
-      <div className="NewsletterList">
-        {newsletters}
+      <div className="Newsletters">
+        <div>Vælg</div>
+        <NewsletterList data={this.state.nyhedsbreve_not_yet} toggle={this.toggleNyhedsbrev} />
+        <div>Allerede tilmeldte</div>
+        <NewsletterList data={this.state.nyhedsbreve_already} toggle={this.toggleNyhedsbrev} />
+        <input type="button" value="Tilbage" onClick={this.complete(this.props.stepBackwards)} />
+        <input type="button" value="Videre" onClick={this.complete(this.props.stepComplete)} />
       </div>
-    )
+    );
   }
 });
 
-
-// var NewsletterCheckbox = React.createClass({
-//   getInitialState: function() {
-//     return {selected: this.props.selected};
-//   },
-//   onChange: function() {
-//     this.setState({selected: !this.state.selected}, function (previousState, currentProps) {
-//       this.props.toggleNyhedsbrev(this.state.selected, this.props.nyhedsbrev.nyhedsbrev_id)
-//     });
-//     // this.setState({selected: !this.state.selected});
-//     // this.props.changeNewsletterSubscription(this.props.nyhedsbrev.nyhedsbrev_id)
-//     // .success(function (data) {
-//     //   // Do nothing at the moment
-//     // }.bind(this))
-//     // .error(function (data) {
-//     //   console.error('changeNewsletterSubscription', data);
-//     //   this.setState({selected: !this.state.selected});
-//     // });
-//   },
+// var NewsletterCheckbox = require('./checkbox');
+// var NewsletterList = React.createClass({
+//
 //   render: function() {
+//     var newsletters = this.props.nyhedsbreve.map(function(nyhedsbrev) {
+//       return (
+//         <NewsletterCheckbox key={nyhedsbrev.nyhedsbrev_id} id={nyhedsbrev.nyhedsbrev_id} label={nyhedsbrev.nyhedsbrev_navn} data={nyhedsbrev} toggle={this.props.toggle} />
+//       );
+//     }.bind(this));
+//
 //     return (
-//       <div className="NewsletterCheckbox">
-//         <input type="checkbox" id={this.props.nyhedsbrev.nyhedsbrev_id} checked={this.state.selected} onChange={this.onChange} />
-//         {this.props.nyhedsbrev.nyhedsbrev_navn}
+//       <div className="NewsletterList">
+//         {newsletters}
 //       </div>
 //     )
 //   }

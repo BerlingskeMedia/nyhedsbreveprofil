@@ -1,6 +1,8 @@
 var $ = require('jquery');
 var React = require('react');
 
+var InteresseList = require('./checkbox_list');
+
 module.exports = React.createClass({
   getInitialState: function() {
     return {
@@ -29,7 +31,8 @@ module.exports = React.createClass({
     };
   },
   componentDidMount: function() {
-    this.loadingUserData = this.props.loadUserData().success(function (data) {
+    this.loadingUserData = this.props.loadUserData()
+    .success(function (data) {
       this.setState({ekstern_id: data.ekstern_id});
       var user_interesser = data.interesser;
 
@@ -38,6 +41,7 @@ module.exports = React.createClass({
       }.bind(this));
 
       interesser_not_yet.sort(this.sort_interesser);
+      this.setState({interesser_not_yet: interesser_not_yet});
 
       var interesser_already = this.state.interesser.filter(function(interesse) {
         return user_interesser.indexOf(interesse.interesse_id) > -1;
@@ -46,9 +50,8 @@ module.exports = React.createClass({
       interesser_already.forEach(function (i) {
         i.preselect = true;
       });
-      interesser_already.sort(this.sort_interesser);
 
-      this.setState({interesser_not_yet: interesser_not_yet});
+      interesser_already.sort(this.sort_interesser);
       this.setState({interesser_already: interesser_already});
 
     }.bind(this));
@@ -144,45 +147,19 @@ module.exports = React.createClass({
   }
 });
 
-var InterestCheckbox = require('./checkbox');
-var InteresseList = React.createClass({
-  render: function() {
 
-    var items = this.props.data.map(function(item) {
-      return (
-        <InterestCheckbox key={item.interesse_id} id={item.interesse_id} label={item.interesse_navn} data={item} toggle={this.props.toggle} />
-      );
-    }.bind(this));
-
-    return (
-      <div className="CheckboxList">
-        {items}
-      </div>
-    );
-  }
-});
-
-// var InterestCheckbox = React.createClass({
-//   getInitialState: function() {
-//     return {checked: false};
-//   },
-//   componentWillReceiveProps: function(p) {
-//     if (this.props.interesse) {
-//       if (this.props.interesse.preselect) {
-//         this.setState({checked: true});
-//       }
-//     }
-//   },
-//   onChange: function() {
-//     this.setState({checked: !this.state.checked}, function (previousState, currentProps) {
-//       this.props.toggleInteresse(this.state.checked, this.props.interesse.interesse_id)
-//     });
-//   },
+// var InteresseList = React.createClass({
 //   render: function() {
+//
+//     var items = this.props.data.map(function(item) {
+//       return (
+//         <InterestCheckbox key={item.interesse_id} id={item.interesse_id} label={item.interesse_navn} data={item} toggle={this.props.toggle} />
+//       );
+//     }.bind(this));
+//
 //     return (
-//       <div className="InterestCheckbox">
-//         <input type="checkbox" id={this.props.interesse.interesse_id} checked={this.state.checked} onChange={this.onChange} />
-//         {this.props.interesse.interesse_navn}
+//       <div className="CheckboxList">
+//         {items}
 //       </div>
 //     );
 //   }
