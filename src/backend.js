@@ -5,6 +5,10 @@ var http = require('http');
 
 function proxy (request, reply) {
 
+  if (reply === undefined) {
+    reply = function(){};
+  }
+
   var options = {
     method: request.method,
     hostname: process.env.MDBAPI_ADDRESS,
@@ -90,7 +94,9 @@ function createDoubleopt (request, reply) {
         substitutions: request.payload !== null ? request.payload : {}
       },
       headers: {}
-    }, reply);
+    });
+
+    reply(response);
   });
 }
 
