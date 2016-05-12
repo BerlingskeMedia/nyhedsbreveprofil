@@ -26,7 +26,7 @@ module.exports = React.createClass({
   },
   componentDidMount: function() {
 
-    ga('set', 'page', '/step_nyhedsbreve_redaktionelle');
+    ga('set', 'page', 'opdateringskampagne/step_nyhedsbreve_redaktionelle');
     ga('send', 'pageview');
 
     var nyhedsbreve_id_to_be_shown = [].concat(this.state.godttip_nyhedsbreve, this.state.tbt_nyhedsbreve, this.state.shop_nyhedsbreve, this.state.sweetdeal_generel_nyhedsbreve);

@@ -15,7 +15,7 @@ module.exports = React.createClass({
   },
   componentDidMount: function() {
 
-    ga('set', 'page', '/step-stamdata');
+    ga('set', 'page', 'opdateringskampagne/step-stamdata');
     ga('send', 'pageview');
 
     this.loadingUserData = this.props.loadUserData().success(function (data) {

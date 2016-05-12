@@ -32,7 +32,7 @@ module.exports = React.createClass({
   },
   componentDidMount: function() {
 
-    ga('set', 'page', '/step_interesser');
+    ga('set', 'page', 'opdateringskampagne/step_interesser');
     ga('send', 'pageview');
 
     this.loadingUserData = this.props.loadUserData()

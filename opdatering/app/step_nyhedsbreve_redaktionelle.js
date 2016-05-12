@@ -27,7 +27,7 @@ module.exports = React.createClass({
   },
   componentDidMount: function() {
 
-    ga('set', 'page', '/step_nyhedsbreve_kommercielle');
+    ga('set', 'page', 'opdateringskampagne/step_nyhedsbreve_kommercielle');
     ga('send', 'pageview');
 
     var nyhedsbreve_to_be_shown = [].concat(this.state.berlingske_nyhedsbreve, this.state.bt_nyhedsbreve, this.state.business_nyhedsbreve);

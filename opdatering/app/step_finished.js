@@ -9,7 +9,7 @@ module.exports = React.createClass({
   },
   componentDidMount: function() {
 
-    ga('set', 'page', '/step_finished');
+    ga('set', 'page', 'opdateringskampagne/step_finished');
     ga('send', 'pageview');
 
     this.loadingUserData = this.props.loadUserData().success(function (data) {
