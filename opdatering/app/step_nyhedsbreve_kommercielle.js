@@ -7,21 +7,33 @@ module.exports = React.createClass({
     return {
       nyhedsbreve: [],
       godttip_nyhedsbreve: [
-        { id: 246,
+        {
+          id: 246,
           navn: 'Tilbud fra Godttip.dk',
           description: 'GodtTip.dk sender dig alle de gode tilbud først og giver ofte specielle rabatter kun til GodtTip.dk modtagere.',
-          permissiontext: <GodtTipPermText />}],
+          permissiontext: <GodtTipPermText />,
+          publisher: 34}],
       tbt_nyhedsbreve: [
-        { id: 844,
+        {
+          id: 844,
           navn: 'The Business Target',
           description: 'Med Berlingske Medias B2B e-mail service er du sikker på at modtage relevante tilbud samt invitationer til spændende business events.',
-          permissiontext: <TheBusinessTargetPermText />}],
+          permissiontext: <TheBusinessTargetPermText />,
+          publisher: 51}],
       shop_nyhedsbreve: [
-        {id: 233, navn: 'BT Shop', description: 'I BT SHOP får du særtilbud på rejser, teater, events- og musikoplevelser, vin og mange andre lækre produkter.'},
-        {id: 241, navn: 'Berlingske Shop', description: 'I Berlingske Shop får du gode tilbud på alt det, der gør livet lidt bedre.'}],
+        {
+          id: 233,
+          navn: 'BT Shop',
+          description: 'I BT SHOP får du særtilbud på rejser, teater, events- og musikoplevelser, vin og mange andre lækre produkter.',
+          publisher: 4},
+        {
+          id: 241,
+          navn: 'Berlingske Shop',
+          description: 'I Berlingske Shop får du gode tilbud på alt det, der gør livet lidt bedre.',
+          publisher: 1}],
       sweetdeal_generel_nyhedsbreve: [
-        {id: 845, navn: 'Sweetdeal Rejser'},
-        {id: 855, navn: 'Sweetdeal Shopping'}]
+        {id: 845, navn: 'Sweetdeal Rejser', publisher: 32},
+        {id: 855, navn: 'Sweetdeal Shopping', publisher: 32}]
     };
   },
   componentDidMount: function() {
@@ -29,8 +41,9 @@ module.exports = React.createClass({
     ga('set', 'page', 'opdateringskampagne/step_nyhedsbreve_redaktionelle');
     ga('send', 'pageview');
 
-    var nyhedsbreve_id_to_be_shown = [].concat(this.state.godttip_nyhedsbreve, this.state.tbt_nyhedsbreve, this.state.shop_nyhedsbreve, this.state.sweetdeal_generel_nyhedsbreve);
-    this.setState({nyhedsbreve: nyhedsbreve_id_to_be_shown});
+    var nyhedsbreve_to_be_shown = [].concat(this.state.godttip_nyhedsbreve, this.state.tbt_nyhedsbreve, this.state.shop_nyhedsbreve, this.state.sweetdeal_generel_nyhedsbreve);
+    nyhedsbreve_to_be_shown.sort(this.sortByAbonnement);
+    this.setState({nyhedsbreve: nyhedsbreve_to_be_shown});
   },
   addAdditionalNewsletters: function(user) {
     var postnummer_dk = user.postnummer_dk,
@@ -116,7 +129,35 @@ module.exports = React.createClass({
 
     if (additional_nyhedsbreve_to_be_shown.length > 0) {
       var temp = this.state.nyhedsbreve.concat(additional_nyhedsbreve_to_be_shown);
+      temp.sort(this.sortByAbonnement);
       this.setState({nyhedsbreve: temp});
+    }
+  },
+  sortByAbonnement: function (nyhedsbrev_a, nyhedsbrev_b) {
+    if (nyhedsbrev_a.publisher === nyhedsbrev_b.publisher) {
+        return 0;
+    }
+
+    function publisherOrder(sort_order) {
+      var r = 0;
+      for (var i = 0; i < sort_order.length && r === 0; i++) {
+        var publisher_id = sort_order[i];
+        if (nyhedsbrev_a.publisher === publisher_id) {
+          r = -1;
+        } else if (nyhedsbrev_b.publisher === publisher_id) {
+          r = 1;
+        }
+      }
+      return r;
+    }
+
+    switch (this.props.abo) {
+      case 'BT':
+        return publisherOrder([4,1,32,34,51]);
+        break;
+      default:
+        return publisherOrder([1,4,32,34,51]);
+        break;
     }
   },
   render: function() {

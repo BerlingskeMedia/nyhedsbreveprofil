@@ -16,9 +16,7 @@ module.exports = React.createClass({
   },
   componentDidMount: function() {
     this.loadingUserData = this.props.loadUserData()
-    .success(this.props.loadUserDataSuccess)
-    .success(function (data) {
-
+    .success([this.props.loadUserDataSuccess, function (data) {
       this.setState({ekstern_id: data.ekstern_id});
       var user_nyhedsbreve = data.nyhedsbreve;
 
@@ -26,7 +24,6 @@ module.exports = React.createClass({
         return user_nyhedsbreve.indexOf(nyhedsbrev.id) === -1;
       }.bind(this));
 
-      nyhedsbreve_not_yet.sort(this.sort_nyhedsbreve);
       this.setState({nyhedsbreve_not_yet: nyhedsbreve_not_yet});
 
       var nyhedsbreve_already = this.props.nyhedsbreve.filter(function(nyhedsbrev) {
@@ -37,10 +34,9 @@ module.exports = React.createClass({
         n.preselect = true;
       });
 
-      nyhedsbreve_already.sort(this.sort_nyhedsbreve);
       this.setState({nyhedsbreve_already: nyhedsbreve_already});
 
-    }.bind(this));
+    }.bind(this)]);
   },
   componentWillUnmount: function() {
     this.loadingUserData.abort();
@@ -67,19 +63,19 @@ module.exports = React.createClass({
     this.setState({new_signups: new_signups});
     this.setState({new_signouts: new_signouts});
   },
-  sort_nyhedsbreve: function(nyhedsbrev_a, nyhedsbrev_b) {
-    var navnA = nyhedsbrev_a.navn.toUpperCase();
-    var navnB = nyhedsbrev_b.navn.toUpperCase();
-    if (navnA < navnB) {
-      return -1;
-    }
-    if (navnA > navnB) {
-      return 1;
-    }
-    // names must be equal
-    return 0;
-  },
-  complete: function(callback) {
+  // sort_nyhedsbreve: function(nyhedsbrev_a, nyhedsbrev_b) {
+  //   var navnA = nyhedsbrev_a.navn.toUpperCase();
+  //   var navnB = nyhedsbrev_b.navn.toUpperCase();
+  //   if (navnA < navnB) {
+  //     return -1;
+  //   }
+  //   if (navnA > navnB) {
+  //     return 1;
+  //   }
+  //   // names must be equal
+  //   return 0;
+  // },
+  completeStep: function(callback) {
     return function() {
       var ekstern_id = this.state.ekstern_id;
 
@@ -122,12 +118,12 @@ module.exports = React.createClass({
   render: function() {
     return (
       <div className="Newsletters">
-        <div>Tilmeld dig</div>
+        <h2>Tilmeld dig</h2>
         <NewsletterList data={this.state.nyhedsbreve_not_yet} toggle={this.toggleNyhedsbrev} />
-        <div>Dine tilmeldinger</div>
+        <h2>Dine tilmeldinger</h2>
         <NewsletterList data={this.state.nyhedsbreve_already} toggle={this.toggleNyhedsbrev} />
-        <input type="button" value="Tilbage" onClick={this.complete(this.props.stepBackwards)} />
-        <input type="button" value="Videre" onClick={this.complete(this.props.stepForward)} />
+        <input type="button" value="Tilbage" onClick={this.completeStep(this.props.stepBackwards)} />
+        <input type="button" value="Videre" onClick={this.completeStep(this.props.stepForward)} />
       </div>
     );
   }

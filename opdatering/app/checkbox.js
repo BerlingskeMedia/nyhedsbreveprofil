@@ -15,7 +15,7 @@ module.exports = React.createClass({
       <div className="MdbCheckbox">
         <input type="checkbox" id={this.props.data.id} checked={this.state.checked} onChange={this.onChange} />
         {this.props.data.navn}
-        {this.props.data.description ? <div>{this.props.data.description}</div> : null }
+        {this.props.data.description ? <span style={{fontStyle: 'italic', marginLeft: '2px'}}>{this.props.data.description}</span> : null }
         {this.state.checked && this.props.data.permissiontext ? <div>{this.props.data.permissiontext}</div> : null }
       </div>
     );

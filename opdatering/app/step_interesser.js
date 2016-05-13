@@ -12,21 +12,21 @@ module.exports = React.createClass({
       interesser_already: [],
       interesser_not_yet: [],
       interesser: [
-        {id: 2, navn: 'Rejser'},
         {id: 25, navn: 'Bil & Motor'},
-        {id: 28, navn: 'Shopping'},
-        {id: 37, navn: 'Teknik & Gadgets'},
-        {id: 20, navn: 'Sport & Fritid'},
-        {id: 24, navn: 'Mad & Drikke'},
-        {id: 309, navn: 'Politik'},
-        {id: 22, navn: 'Business'},
-        {id: 21, navn: 'Penge & Karriere'},
-        {id: 14, navn: 'Kultur & Underholdning'},
-        {id: 26, navn: 'Selvudvikling og Uddannelse'},
         {id: 23, navn: 'Bolig & Design'},
-        {id: 19, navn: 'Viden & Samfund'},
+        {id: 22, navn: 'Business'},
+        {id: 39, navn: 'Børn'},
+        {id: 14, navn: 'Kultur & Underholdning'},
+        {id: 24, navn: 'Mad & Drikke'},
+        {id: 21, navn: 'Penge & Karriere'},
+        {id: 309, navn: 'Politik'},
+        {id: 2, navn: 'Rejser'},
+        {id: 26, navn: 'Selvudvikling og Uddannelse'},
+        {id: 28, navn: 'Shopping'},
+        {id: 20, navn: 'Sport & Fritid'},
         {id: 27, navn: 'Sundhed & Familieliv'},
-        {id: 39, navn: 'Børn'}
+        {id: 37, navn: 'Teknik & Gadgets'},
+        {id: 19, navn: 'Viden & Samfund'}
       ]
     };
   },
@@ -44,7 +44,7 @@ module.exports = React.createClass({
         return user_interesser.indexOf(interesse.id) === -1;
       }.bind(this));
 
-      interesser_not_yet.sort(this.sort_interesser);
+      // interesser_not_yet.sort(this.sort_interesser);
       this.setState({interesser_not_yet: interesser_not_yet});
 
       var interesser_already = this.state.interesser.filter(function(interesse) {
@@ -55,7 +55,7 @@ module.exports = React.createClass({
         i.preselect = true;
       });
 
-      interesser_already.sort(this.sort_interesser);
+      // interesser_already.sort(this.sort_interesser);
       this.setState({interesser_already: interesser_already});
 
     }.bind(this));
@@ -86,19 +86,19 @@ module.exports = React.createClass({
     this.setState({new_signups: new_signups});
     this.setState({new_signouts: new_signouts});
   },
-  sort_interesser: function(interesse_a, interesse_b) {
-    var navnA = interesse_a.navn.toUpperCase();
-    var navnB = interesse_b.navn.toUpperCase();
-    if (navnA < navnB) {
-      return -1;
-    }
-    if (navnA > navnB) {
-      return 1;
-    }
-    // names must be equal
-    return 0;
-  },
-  complete: function(callback) {
+  // sort_interesser: function(interesse_a, interesse_b) {
+  //   var navnA = interesse_a.navn.toUpperCase();
+  //   var navnB = interesse_b.navn.toUpperCase();
+  //   if (navnA < navnB) {
+  //     return -1;
+  //   }
+  //   if (navnA > navnB) {
+  //     return 1;
+  //   }
+  //   // names must be equal
+  //   return 0;
+  // },
+  completeStep: function(callback) {
     return function() {
       var ekstern_id = this.state.ekstern_id;
 
@@ -140,12 +140,12 @@ module.exports = React.createClass({
   render: function() {
     return (
       <div className="stepInteresser">
-        <div>Tilmeld dig</div>
+        <h2>Tilmeld dig</h2>
         <InteresseList data={this.state.interesser_not_yet} toggle={this.toggleInteresse} />
-        <div>Dine interesser</div>
+        <h2>Dine interesser</h2>
         <InteresseList data={this.state.interesser_already} toggle={this.toggleInteresse} />
-        <input type="button" value="Tilbage" onClick={this.complete(this.props.stepBackwards)} />
-        <input type="button" value="Videre" onClick={this.complete(this.props.stepForward)} />
+        <input type="button" value="Tilbage" onClick={this.completeStep(this.props.stepBackwards)} />
+        <input type="button" value="Videre" onClick={this.completeStep(this.props.stepForward)} />
       </div>
     );
   }

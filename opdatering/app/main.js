@@ -11,11 +11,14 @@ var Opdateringskampagne = React.createClass({
   getInitialState: function() {
 
     var ekstern_id = this.getSearchParameter('ekstern_id');
+    var abo = this.getSearchParameter('a');
 
     return {
-      step: 3,
+      step: 0,
       ekstern_id: ekstern_id !== null ? ekstern_id : '0cbf425b93500407ccc4481ede7b87da', // TEST TODO REMOVE
-      showCheckbox300Perm: false
+      showCheckbox300Perm: false,
+      showStepNyhKom: true,
+      abo: abo !== null ? abo.toUpperCase() : null
     };
   },
   getSearchParameter: function(name, url) {
@@ -62,8 +65,8 @@ var Opdateringskampagne = React.createClass({
     var steps = [
         <StepStamdata stepForward={this.stepForward} showCheckbox300Perm={this.state.showCheckbox300Perm} loadUserData={this.loadUserData} />,
         <StepInteresser stepForward={this.stepForward} stepBackwards={this.stepBackwards} loadUserData={this.loadUserData} />,
-        <StepNyhedsbreveRed stepForward={this.stepForward} stepBackwards={this.stepBackwards} loadUserData={this.loadUserData} />,
-        <StepNyhedsbreveKom stepForward={this.stepForward} stepBackwards={this.stepBackwards} loadUserData={this.loadUserData} />,
+        <StepNyhedsbreveRed stepForward={this.stepForward} stepBackwards={this.stepBackwards} loadUserData={this.loadUserData} abo={this.state.abo} />,
+        <StepNyhedsbreveKom stepForward={this.stepForward} stepBackwards={this.stepBackwards} loadUserData={this.loadUserData} abo={this.state.abo} />,
         <StepFinished stepBackwards={this.stepBackwards} loadUserData={this.loadUserData} />
     ];
 
