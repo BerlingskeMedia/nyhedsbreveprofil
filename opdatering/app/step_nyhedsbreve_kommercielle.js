@@ -212,7 +212,7 @@ var TheBusinessTargetInterests = React.createClass({
             })
           };
         });
-console.log('thebusinesstargetInterests', temp);
+
         this.setState({thebusinesstargetInterests: temp});
 
         function lsls(a,b) {
