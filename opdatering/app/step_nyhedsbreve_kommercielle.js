@@ -163,7 +163,9 @@ module.exports = React.createClass({
   },
   render: function() {
     return (
-      <Newsletters className="stepNyhedsbreveKom" nyhedsbreve={this.state.nyhedsbreve} loadUserDataSuccess={this.addAdditionalNewsletters} loadUserData={this.props.loadUserData} stepBackwards={this.props.stepBackwards} stepForward={this.props.stepForward} />
+      <div className="stepNyhedsbreveKom">
+        <Newsletters nyhedsbreve={this.state.nyhedsbreve} loadUserDataSuccess={this.addAdditionalNewsletters} loadUserData={this.props.loadUserData} stepBackwards={this.props.stepBackwards} stepForward={this.props.stepForward} />
+      </div>
     );
   }
 });
@@ -203,7 +205,7 @@ var TheBusinessTargetInterests = React.createClass({
           return {
             id: interesse.interesse_id,
             navn: interesse.interesse_navn,
-            options: interesse.subinterests.sort(lsls).map(function(subinterest) {
+            options: interesse.subinterests.sort(sortByRelationInfo).map(function(subinterest) {
               return {
                 sort: subinterest.sort,
                 value: subinterest.interesse_id,
@@ -215,9 +217,10 @@ var TheBusinessTargetInterests = React.createClass({
 
         this.setState({thebusinesstargetInterests: temp});
 
-        function lsls(a,b) {
+        function sortByRelationInfo(a,b) {
           return b.parent_relation_info.sort - a.parent_relation_info.sort;
         }
+
       }.bind(this),
       error: function(xhr, status, err) {
         console.error(this.props.url, status, err.toString());
