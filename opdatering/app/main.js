@@ -37,7 +37,7 @@ var Opdateringskampagne = React.createClass({
       cache: true,
       success: function (data) {
 
-        // We should still show the 300-perm checkbox is the user didn't have the perm to begin with, accepted the perm and come back to step 1 later.
+        // We should still show the 300-perm checkbox is the user didn't have the perm to begin with, accepted the perm and comes back to step 1 later.
         if (this.state.showCheckbox300Perm === false) {
           this.setState({showCheckbox300Perm: data.nyhedsbreve.indexOf(300) === -1});
         }
@@ -47,6 +47,7 @@ var Opdateringskampagne = React.createClass({
         });
 
         this.setState({showStepNyhKom: temp});
+
       }.bind(this),
       error: function(xhr, status, err) {
         console.error(this.props.url, status, err.toString());
