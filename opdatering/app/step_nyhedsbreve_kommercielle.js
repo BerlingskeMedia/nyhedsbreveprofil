@@ -1,10 +1,16 @@
 var $ = require('jquery');
 var React = require('react');
-var Newsletters = require('./step_nyhedsbreve');
+// var Newsletters = require('./step_nyhedsbreve');
+var NewsletterList = require('./checkbox_list');
 
 module.exports = React.createClass({
   getInitialState: function() {
     return {
+      ekstern_id: '',
+      new_signups: [],
+      new_signouts: [],
+      nyhedsbreve_already: [],
+      nyhedsbreve_not_yet: [],
       nyhedsbreve: [],
       godttip_nyhedsbreve: [
         {
@@ -45,6 +51,32 @@ module.exports = React.createClass({
     var nyhedsbreve_to_be_shown = [].concat(this.state.godttip_nyhedsbreve, this.state.tbt_nyhedsbreve, this.state.shop_nyhedsbreve, this.state.sweetdeal_generel_nyhedsbreve);
     nyhedsbreve_to_be_shown.sort(this.sortByAbonnement);
     this.setState({nyhedsbreve: nyhedsbreve_to_be_shown});
+
+    this.loadingUserData = this.props.loadUserData()
+    .success([this.addAdditionalNewsletters, function (data) {
+      this.setState({ekstern_id: data.ekstern_id});
+      var user_nyhedsbreve = data.nyhedsbreve;
+
+      var nyhedsbreve_not_yet = this.state.nyhedsbreve.filter(function(nyhedsbrev) {
+        return user_nyhedsbreve.indexOf(nyhedsbrev.id) === -1;
+      }.bind(this));
+
+      this.setState({nyhedsbreve_not_yet: nyhedsbreve_not_yet});
+
+      var nyhedsbreve_already = this.state.nyhedsbreve.filter(function(nyhedsbrev) {
+        return user_nyhedsbreve.indexOf(nyhedsbrev.id) > -1;
+      }.bind(this));
+
+      nyhedsbreve_already.forEach(function (n) {
+        n.preselect = true;
+      });
+
+      this.setState({nyhedsbreve_already: nyhedsbreve_already});
+
+    }.bind(this)]);
+  },
+  componentWillUnmount: function() {
+    this.loadingUserData.abort();
   },
   addAdditionalNewsletters: function(user) {
     var postnummer_dk = user.postnummer_dk,
@@ -161,10 +193,79 @@ module.exports = React.createClass({
         break;
     }
   },
+  toggleNyhedsbrev: function (subscribe, nyhedsbrev) {
+    var new_signups = this.state.new_signups;
+    var new_signouts = this.state.new_signouts;
+
+    if (subscribe) {
+      var i = new_signouts.indexOf(nyhedsbrev.id);
+      if (i > -1) {
+        new_signouts.splice(i, 1);
+      } else {
+        new_signups.push(nyhedsbrev.id);
+      }
+    } else {
+      var i = new_signups.indexOf(nyhedsbrev.id);
+      if (i > -1) {
+        new_signups.splice(i, 1);
+      } else {
+        new_signouts.push(nyhedsbrev.id);
+      }
+    }
+
+    this.setState({new_signups: new_signups});
+    this.setState({new_signouts: new_signouts});
+
+  },
+  completeStep: function(callback) {
+    return function() {
+      var ekstern_id = this.state.ekstern_id;
+
+      var count = this.state.new_signups.length + this.state.new_signouts.length,
+          done = 0;
+
+      if (count === 0) {
+        return callback();
+      }
+
+      this.state.new_signups.forEach(add_nyhedsbrev);
+      this.state.new_signouts.forEach(delete_nyhedsbrev);
+
+      function add_nyhedsbrev (nyhedsbrev_id) {
+        call_backend('POST', nyhedsbrev_id);
+      }
+
+      function delete_nyhedsbrev (nyhedsbrev_id) {
+        call_backend('DELETE', nyhedsbrev_id);
+      }
+
+      function call_backend (type, nyhedsbrev_id) {
+        $.ajax({
+          type: type,
+          url: '/backend/users/'.concat(ekstern_id, '/nyhedsbreve/', nyhedsbrev_id, '?location_id=2059'),
+          dataType: 'json',
+          success: function (data) {
+            if (++done === count) {
+              callback();
+            }
+          }.bind(this),
+          error: function(xhr, status, err) {
+            console.error(status, err.toString());
+          }.bind(this)
+        });
+      }
+
+    }.bind(this);
+  },
   render: function() {
     return (
       <div className="stepNyhedsbreveKom">
-        <Newsletters nyhedsbreve={this.state.nyhedsbreve} loadUserDataSuccess={this.addAdditionalNewsletters} loadUserData={this.props.loadUserData} stepBackwards={this.props.stepBackwards} stepForward={this.props.stepForward} />
+        <h2>Tilmeld dig</h2>
+        <NewsletterList data={this.state.nyhedsbreve_not_yet} toggle={this.toggleNyhedsbrev} />
+        <h2>Dine tilmeldinger</h2>
+        <NewsletterList data={this.state.nyhedsbreve_already} toggle={this.toggleNyhedsbrev} />
+        <input type="button" value="Tilbage" onClick={this.completeStep(this.props.stepBackwards)} />
+        <input type="button" value="Videre" onClick={this.completeStep(this.props.stepForward)} />
       </div>
     );
   }
@@ -201,7 +302,7 @@ var TheBusinessTargetInterests = React.createClass({
       cache: true,
       success: function (data) {
 
-        var temp = data.map(function(interesse) {
+        var temp = data.filter(allowedInterest).map(function(interesse) {
           return {
             id: interesse.interesse_id,
             navn: interesse.interesse_navn,
@@ -217,6 +318,10 @@ var TheBusinessTargetInterests = React.createClass({
 
         this.setState({thebusinesstargetInterests: temp});
 
+        function allowedInterest(interesse) {
+          return [310, 343].indexOf(interesse.interesse_id) > -1;
+        }
+
         function sortByRelationInfo(a,b) {
           return b.parent_relation_info.sort - a.parent_relation_info.sort;
         }
@@ -230,8 +335,8 @@ var TheBusinessTargetInterests = React.createClass({
   componentWillUnmount: function() {
     this.loadingThebusinesstargetInterests.abort();
   },
-  toggleInteresseBusiness: function(a,b) {
-    console.log('toggleInteresseBusiness', a,b);
+  toggleInteresseBusiness: function(subscribe, interesse_id, parent_id) {
+    console.log('toggleInteresseBusiness', subscribe, interesse_id, parent_id);
   },
   render: function() {
     return(
