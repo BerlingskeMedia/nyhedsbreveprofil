@@ -1,6 +1,6 @@
 var $ = require('jquery');
 var React = require('react');
-var Newsletters = require('./nyhedsbreve');
+var Newsletters = require('./step_nyhedsbreve');
 
 module.exports = React.createClass({
   getInitialState: function() {
