@@ -71,9 +71,14 @@ module.exports = React.createClass({
         break;
     }
   },
+  completeStep: function () {
+    console.log('this.props.children', this.props.children);
+  },
   render: function() {
     return (
-      <Newsletters className="stepNyhedsbreveRed" nyhedsbreve={this.state.nyhedsbreve} loadUserDataSuccess={this.addAdditionalNewsletters} loadUserData={this.props.loadUserData} stepBackwards={this.props.stepBackwards} stepForward={this.props.stepForward} />
+      <div className="stepNyhedsbreveRed">
+        <Newsletters nyhedsbreve={this.state.nyhedsbreve} loadUserDataSuccess={this.addAdditionalNewsletters} loadUserData={this.props.loadUserData} stepBackwards={this.props.stepBackwards} stepForward={this.props.stepForward} />
+      </div>
     );
   }
 });

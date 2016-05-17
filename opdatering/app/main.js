@@ -14,7 +14,7 @@ var Opdateringskampagne = React.createClass({
     var abo = this.getSearchParameter('a');
 
     return {
-      step: 0,
+      step: 3,
       ekstern_id: ekstern_id !== null ? ekstern_id : '0cbf425b93500407ccc4481ede7b87da', // TEST TODO REMOVE
       showCheckbox300Perm: false,
       showStepNyhKom: true,

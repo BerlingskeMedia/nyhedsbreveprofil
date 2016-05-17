@@ -116,33 +116,46 @@ module.exports = React.createClass({
   render: function() {
     return (
       <form className="stepStamdata" onSubmit={this.handleSubmit}>
-        <input
-          type="text"
-          placeholder="Fornavn"
-          onChange={this.handleFornavnChange}
-          value={this.state.fornavn}
-        />
-        <input
-          type="text"
-          placeholder="Efternavn"
-          onChange={this.handleEfternavnChange}
-          value={this.state.efternavn}
-        />
-        <input
-          type="text"
-          placeholder="Email"
-          onChange={this.handleEmailChange}
-          value={this.state.email}
-        />
+        <div>
+          <label htmlFor="fornavn">Fornavn</label>
+          <input
+            id="fornavn"
+            type="text"
+            placeholder="Fornavn"
+            onChange={this.handleFornavnChange}
+            value={this.state.fornavn}
+          />
+        </div>
+        <div>
+          <label htmlFor="efternavn">Efternavn</label>
+          <input
+            id="efternavn"
+            type="text"
+            placeholder="Efternavn"
+            onChange={this.handleEfternavnChange}
+            value={this.state.efternavn}
+          />
+        </div>
+        <div>
+        <label htmlFor="email">Email</label>
+          <input
+            id="email"
+            type="text"
+            placeholder="Email"
+            onChange={this.handleEmailChange}
+            value={this.state.email}
+          />
+        </div>
         {this.props.showCheckbox300Perm ?
           <div>
             <input
+              id="300"
               type="checkbox"
               placeholder="300"
               onChange={this.handle300PermChange}
               checked={this.state.has300}
             />
-            <label>Tilbud fra Berlingske Media og vores partnere (E-post)</label>
+            <label htmlFor="300">Tilbud fra Berlingske Media og vores partnere (E-post)</label>
           </div>
         : null }
         <input type="submit" value="Videre" />

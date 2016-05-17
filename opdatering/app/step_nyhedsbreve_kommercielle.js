@@ -19,6 +19,7 @@ module.exports = React.createClass({
           navn: 'The Business Target',
           description: 'Med Berlingske Medias B2B e-mail service er du sikker på at modtage relevante tilbud samt invitationer til spændende business events.',
           permissiontext: <TheBusinessTargetPermText />,
+          interestsSelection: <TheBusinessTargetInterests />,
           publisher: 51}],
       shop_nyhedsbreve: [
         {
@@ -179,6 +180,59 @@ var TheBusinessTargetPermText = React.createClass({
   render: function() {
     return(
       <div>The Business Target og Berlingske Media-koncernen (<a href="http://www.berlingskemedia.dk/berlingske-medias-selskaber-og-forretningsenheder/">se udgivelser og forretningsenheder her</a>) må gerne gøre mig opmærksom på nyheder, tilbud og konkurrencer via brev og elektroniske medier (herunder e-mail, sms, mms, videobeskeder og pop-ups), når Berlingske Media-koncernen og vores samarbejdspartnere (<a href="http://www.berlingskemedia.dk/berlingske-medias-samarbejdspartnere/">se samarbejdspartnere her</a>) har nyheder, tilbud og konkurrencer inden for forskellige interesseområder (<a href="http://www.berlingskemedia.dk/liste-over-interesseomraader/">se hvilke her</a>).</div>
+    );
+  }
+});
+
+var BusinessInterestList = require('./select_list');
+
+var TheBusinessTargetInterests = React.createClass({
+  getInitialState: function() {
+    return {
+      thebusinesstargetInterests: []
+    }
+  },
+  componentDidMount: function() {
+    this.loadingThebusinesstargetInterests = $.ajax({
+      url: '/backend/interesser/full?displayTypeId=6',
+      dataType: 'json',
+      cache: true,
+      success: function (data) {
+
+        var temp = data.map(function(interesse) {
+          return {
+            id: interesse.interesse_id,
+            navn: interesse.interesse_navn,
+            options: interesse.subinterests.sort(lsls).map(function(subinterest) {
+              return {
+                sort: subinterest.sort,
+                value: subinterest.interesse_id,
+                label: subinterest.interesse_navn
+              };
+            })
+          };
+        });
+console.log('thebusinesstargetInterests', temp);
+        this.setState({thebusinesstargetInterests: temp});
+
+        function lsls(a,b) {
+          return b.parent_relation_info.sort - a.parent_relation_info.sort;
+        }
+      }.bind(this),
+      error: function(xhr, status, err) {
+        console.error(this.props.url, status, err.toString());
+      }.bind(this)
+    });
+  },
+  componentWillUnmount: function() {
+    this.loadingThebusinesstargetInterests.abort();
+  },
+  toggleInteresseBusiness: function(a,b) {
+    console.log('toggleInteresseBusiness', a,b);
+  },
+  render: function() {
+    return(
+      <BusinessInterestList data={this.state.thebusinesstargetInterests} toggle={this.toggleInteresseBusiness} />
     );
   }
 });
