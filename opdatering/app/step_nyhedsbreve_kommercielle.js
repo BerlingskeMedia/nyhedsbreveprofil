@@ -307,7 +307,10 @@ var TheBusinessTargetInterests = React.createClass({
       new_signups: {},
       new_signouts: {},
       existing_signups: {},
-      thebusinesstargetInterests: []
+      thebusinesstargetInterests: [
+        {id: 310, navn: 'Branche', initialValue: '', options: []},
+        {id: 343, navn: 'Stillingsbetegnelse', initialValue: '', options: []},
+      ]
     }
   },
   componentDidMount: function() {
@@ -327,34 +330,29 @@ var TheBusinessTargetInterests = React.createClass({
   componentWillUnmount: function() {
     this.loadingThebusinesstargetInterests.abort();
   },
-  createSelectOptions: function(thebusinesstargetInterests) {
+  createSelectOptions: function(data) {
 
     var user = this.props.data;
+    var temp = this.state.thebusinesstargetInterests;
 
-    var temp = thebusinesstargetInterests.filter(allowedInterest).map(function(interesse) {
-      return {
-        id: interesse.interesse_id,
-        navn: interesse.interesse_navn,
-        initialValue: findInitialValue(interesse),
-        options: interesse.subinterests.sort(sortByRelationInfo).map(function(subinterest) {
+    temp.forEach(function (thebusinesstargetInterest) {
+
+      var parent_interesse = data.find(function (y) {
+        return y.interesse_id === thebusinesstargetInterest.id;
+      });
+
+      if (parent_interesse) {
+        thebusinesstargetInterest.initialValue = findInitialValue(parent_interesse);
+        thebusinesstargetInterest.options = parent_interesse.subinterests.map(function(subinterest) {
           return {
-            sort: subinterest.sort,
             value: subinterest.interesse_id,
             label: subinterest.interesse_navn
           };
-        })
-      };
-    }.bind(this));
+        });
+      }
+    });
 
     this.setState({thebusinesstargetInterests: temp});
-
-    function allowedInterest(interesse) {
-      return [310, 343].indexOf(interesse.interesse_id) > -1;
-    }
-
-    function sortByRelationInfo(a,b) {
-      return b.parent_relation_info.sort - a.parent_relation_info.sort;
-    }
 
     function findInitialValue (parent_interesse) {
       var selected = parent_interesse.subinterests.find(function (subinterest) {
@@ -364,13 +362,13 @@ var TheBusinessTargetInterests = React.createClass({
       return selected.interesse_id;
     }
   },
-  mapExistingUserSignups: function(thebusinesstargetInterests) {
+  mapExistingUserSignups: function(data) {
     var existing_signups = {};
 
     var user_interesser = this.props.data.interesser;
 
     user_interesser.forEach(function(user_interesse_id) {
-      thebusinesstargetInterests.forEach(function(thebusinesstargetInterest) {
+      data.forEach(function(thebusinesstargetInterest) {
           if (user_interesse_id === thebusinesstargetInterest.interesse_id) {
 
             existing_signups[thebusinesstargetInterest.interesse_id] = user_interesse_id;
