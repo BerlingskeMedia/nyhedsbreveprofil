@@ -19,14 +19,10 @@ module.exports = React.createClass({
 
 var Select = React.createClass({
   getInitialState: function() {
-    return {defaultValue: this.props.initialValue ? this.props.initialValue : ''};
+    return {defaultValue: this.props.data.initialValue ? this.props.data.initialValue : ''};
   },
   onChange: function(e) {
-    console.log('onChange', e.target, e.target.value, this.props.data.id);
-    this.props.toggle(true, e.target.value, this.props.data.id);
-    // this.setState({checked: !this.state.checked}, function (previousState, currentProps) {
-    //   // Sending info to parent that the user has toggled the subscription
-    // }.bind(this));
+    this.props.toggle(e.target.value, this.props.data.id);
   },
   render: function() {
 

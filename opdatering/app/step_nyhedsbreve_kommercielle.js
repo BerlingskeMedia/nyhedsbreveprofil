@@ -7,6 +7,8 @@ module.exports = React.createClass({
   getInitialState: function() {
     return {
       ekstern_id: '',
+      new_signups_businesstarget_interesser: {},
+      new_signouts_businesstarget_interesser: {},
       new_signups: [],
       new_signouts: [],
       nyhedsbreve_already: [],
@@ -25,7 +27,7 @@ module.exports = React.createClass({
           navn: 'The Business Target',
           description: 'Med Berlingske Medias B2B e-mail service er du sikker på at modtage relevante tilbud samt invitationer til spændende business events.',
           permissiontext: <TheBusinessTargetPermText />,
-          interestsSelection: <TheBusinessTargetInterests />,
+          interestsSelection: <TheBusinessTargetInterests toggle={this.setBusinessTargetInteresserSignUps} data={this.props.data} />,
           publisher: 51}],
       shop_nyhedsbreve: [
         {
@@ -52,18 +54,18 @@ module.exports = React.createClass({
     nyhedsbreve_to_be_shown.sort(this.sortByAbonnement);
     this.setState({nyhedsbreve: nyhedsbreve_to_be_shown});
 
-    this.loadingUserData = this.props.loadUserData()
-    .success([this.addAdditionalNewsletters, function (data) {
-      this.setState({ekstern_id: data.ekstern_id});
-      var user_nyhedsbreve = data.nyhedsbreve;
+    // this.loadingUserData = this.props.loadUserData()
+    // .success([this.addAdditionalNewsletters, function (data) {
+      this.setState({ekstern_id: this.props.data.ekstern_id});
+      var user_nyhedsbreve = this.props.data.nyhedsbreve;
 
-      var nyhedsbreve_not_yet = this.state.nyhedsbreve.filter(function(nyhedsbrev) {
+      var nyhedsbreve_not_yet = nyhedsbreve_to_be_shown.filter(function(nyhedsbrev) {
         return user_nyhedsbreve.indexOf(nyhedsbrev.id) === -1;
       }.bind(this));
 
       this.setState({nyhedsbreve_not_yet: nyhedsbreve_not_yet});
 
-      var nyhedsbreve_already = this.state.nyhedsbreve.filter(function(nyhedsbrev) {
+      var nyhedsbreve_already = nyhedsbreve_to_be_shown.filter(function(nyhedsbrev) {
         return user_nyhedsbreve.indexOf(nyhedsbrev.id) > -1;
       }.bind(this));
 
@@ -72,18 +74,16 @@ module.exports = React.createClass({
       });
 
       this.setState({nyhedsbreve_already: nyhedsbreve_already});
-
-    }.bind(this)]);
+    //
+    // }.bind(this)]);
+    this.addAdditionalNewsletters(this.props.data);
   },
   componentWillUnmount: function() {
-    this.loadingUserData.abort();
+    // this.loadingUserData.abort();
   },
   addAdditionalNewsletters: function(user) {
     var postnummer_dk = user.postnummer_dk,
         additional_nyhedsbreve_to_be_shown = [];
-
-    // Bemærk at Sweetdeal Travel skal hedde Sweetdeal Rejser og Sweetdeal Product skal hedde Sweetdeal Shopping.
-    // Sweetdeal Rejser (id 845) og Sweetdeal Shopping (id 855) skal vises for alle.
 
     // København (id 846) - postnummer 0900-3699
     if (postnummer_dk >= 900 && postnummer_dk <= 3699) {
@@ -215,13 +215,26 @@ module.exports = React.createClass({
 
     this.setState({new_signups: new_signups});
     this.setState({new_signouts: new_signouts});
-
+  },
+  setBusinessTargetInteresserSignUps: function(new_signups_businesstarget_interesser, new_signouts_businesstarget_interesser) {
+    this.setState({
+      new_signups_businesstarget_interesser: new_signups_businesstarget_interesser,
+      new_signouts_businesstarget_interesser: new_signouts_businesstarget_interesser
+    });
   },
   completeStep: function(callback) {
     return function() {
       var ekstern_id = this.state.ekstern_id;
 
-      var count = this.state.new_signups.length + this.state.new_signouts.length,
+      var new_business_signups = Object.keys(this.state.new_signups_businesstarget_interesser).map(function(key) {
+        return this.state.new_signups_businesstarget_interesser[key];
+      }.bind(this));
+
+      var new_business_signouts = Object.keys(this.state.new_signouts_businesstarget_interesser).map(function(key) {
+        return this.state.new_signouts_businesstarget_interesser[key];
+      }.bind(this));
+
+      var count = this.state.new_signups.length + this.state.new_signouts.length + new_business_signups.length + new_business_signouts.length,
           done = 0;
 
       if (count === 0) {
@@ -230,19 +243,30 @@ module.exports = React.createClass({
 
       this.state.new_signups.forEach(add_nyhedsbrev);
       this.state.new_signouts.forEach(delete_nyhedsbrev);
+      new_business_signups.forEach(add_interesse);
+      new_business_signouts.forEach(delete_interesse);
 
-      function add_nyhedsbrev (nyhedsbrev_id) {
-        call_backend('POST', nyhedsbrev_id);
+
+      function add_nyhedsbrev (id) {
+        call_backend('POST', 'nyhedsbreve', id);
       }
 
-      function delete_nyhedsbrev (nyhedsbrev_id) {
-        call_backend('DELETE', nyhedsbrev_id);
+      function delete_nyhedsbrev (id) {
+        call_backend('DELETE', 'nyhedsbreve', id);
       }
 
-      function call_backend (type, nyhedsbrev_id) {
+      function add_interesse (id) {
+        call_backend('POST', 'interesser', id);
+      }
+
+      function delete_interesse (id) {
+        call_backend('DELETE', 'interesser', id);
+      }
+
+      function call_backend (type, domain, id) {
         $.ajax({
           type: type,
-          url: '/backend/users/'.concat(ekstern_id, '/nyhedsbreve/', nyhedsbrev_id, '?location_id=2059'),
+          url: '/backend/users/'.concat(ekstern_id, '/', domain, '/', id, '?location_id=2059'),
           dataType: 'json',
           success: function (data) {
             if (++done === count) {
@@ -292,6 +316,9 @@ var BusinessInterestList = require('./select_list');
 var TheBusinessTargetInterests = React.createClass({
   getInitialState: function() {
     return {
+      new_signups: {},
+      new_signouts: {},
+      existing_signups: {},
       thebusinesstargetInterests: []
     }
   },
@@ -300,33 +327,10 @@ var TheBusinessTargetInterests = React.createClass({
       url: '/backend/interesser/full?displayTypeId=6',
       dataType: 'json',
       cache: true,
-      success: function (data) {
-
-        var temp = data.filter(allowedInterest).map(function(interesse) {
-          return {
-            id: interesse.interesse_id,
-            navn: interesse.interesse_navn,
-            options: interesse.subinterests.sort(sortByRelationInfo).map(function(subinterest) {
-              return {
-                sort: subinterest.sort,
-                value: subinterest.interesse_id,
-                label: subinterest.interesse_navn
-              };
-            })
-          };
-        });
-
-        this.setState({thebusinesstargetInterests: temp});
-
-        function allowedInterest(interesse) {
-          return [310, 343].indexOf(interesse.interesse_id) > -1;
-        }
-
-        function sortByRelationInfo(a,b) {
-          return b.parent_relation_info.sort - a.parent_relation_info.sort;
-        }
-
-      }.bind(this),
+      success: [
+        this.createSelectOptions,
+        this.mapExistingUserSignups
+      ],
       error: function(xhr, status, err) {
         console.error(this.props.url, status, err.toString());
       }.bind(this)
@@ -335,12 +339,94 @@ var TheBusinessTargetInterests = React.createClass({
   componentWillUnmount: function() {
     this.loadingThebusinesstargetInterests.abort();
   },
-  toggleInteresseBusiness: function(subscribe, interesse_id, parent_id) {
-    console.log('toggleInteresseBusiness', subscribe, interesse_id, parent_id);
+  createSelectOptions: function(thebusinesstargetInterests) {
+
+    var user = this.props.data;
+
+    var temp = thebusinesstargetInterests.filter(allowedInterest).map(function(interesse) {
+      return {
+        id: interesse.interesse_id,
+        navn: interesse.interesse_navn,
+        initialValue: findInitialValue(interesse),
+        options: interesse.subinterests.sort(sortByRelationInfo).map(function(subinterest) {
+          return {
+            sort: subinterest.sort,
+            value: subinterest.interesse_id,
+            label: subinterest.interesse_navn
+          };
+        })
+      };
+    }.bind(this));
+
+    this.setState({thebusinesstargetInterests: temp});
+
+    function allowedInterest(interesse) {
+      return [310, 343].indexOf(interesse.interesse_id) > -1;
+    }
+
+    function sortByRelationInfo(a,b) {
+      return b.parent_relation_info.sort - a.parent_relation_info.sort;
+    }
+
+    function findInitialValue (parent_interesse) {
+      var selected = parent_interesse.subinterests.find(function (subinterest) {
+        return user.interesser.indexOf(subinterest.interesse_id) > -1;
+      }.bind(this));
+
+      return selected.interesse_id;
+    }
+  },
+  mapExistingUserSignups: function(thebusinesstargetInterests) {
+    var existing_signups = {};
+
+    var user_interesser = this.props.data.interesser;
+
+    user_interesser.forEach(function(user_interesse_id) {
+      thebusinesstargetInterests.forEach(function(thebusinesstargetInterest) {
+          if (user_interesse_id === thebusinesstargetInterest.interesse_id) {
+
+            existing_signups[thebusinesstargetInterest.interesse_id] = user_interesse_id;
+
+          } else {
+
+            var a = thebusinesstargetInterest.subinterests.find(function(subinterest) {
+              return subinterest.interesse_id === user_interesse_id;
+            });
+
+            if (a) {
+              existing_signups[thebusinesstargetInterest.interesse_id] = a.interesse_id;
+            }
+          }
+      });
+    });
+
+    this.setState({existing_signups: existing_signups});
+  },
+  toggleInteresseBusinessTarget: function(interesse_id_str, parent_id) {
+    var interesse_id = parseInt(interesse_id_str);
+    var new_signups = this.state.new_signups,
+        new_signouts = this.state.new_signouts,
+        existing_signups = this.state.existing_signups;
+
+    if (existing_signups[parent_id] !== interesse_id) {
+      new_signouts[parent_id] = existing_signups[parent_id];
+    }
+
+    // In case the user switches back to the existing interest
+    if (existing_signups[parent_id] === interesse_id) {
+      delete new_signups[parent_id];
+      delete new_signouts[parent_id];
+    } else {
+      new_signups[parent_id] = interesse_id;
+    }
+
+    this.setState({new_signups: new_signups, new_signouts: new_signouts}, function() {
+      this.props.toggle(new_signups, new_signouts);
+    }.bind(this));
   },
   render: function() {
     return(
-      <BusinessInterestList data={this.state.thebusinesstargetInterests} toggle={this.toggleInteresseBusiness} />
+      <BusinessInterestList data={this.state.thebusinesstargetInterests} toggle={this.toggleInteresseBusinessTarget} />
     );
   }
 });
