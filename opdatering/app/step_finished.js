@@ -12,17 +12,13 @@ module.exports = React.createClass({
     ga('set', 'page', 'opdateringskampagne/step_finished');
     ga('send', 'pageview');
 
-    this.loadingUserData = this.props.loadUserData().success(function (data) {
+    var temp = this.props.data.nyhedsbreve.some(function(nyhedsbrev_id) {
+      return [66,108,283,300].indexOf(nyhedsbrev_id) > -1;
+    });
 
-      var temp = data.nyhedsbreve.some(function(nyhedsbrev_id) {
-        return [66,108,283,300].indexOf(nyhedsbrev_id) > -1;
-      });
-
-      this.setState({showOffers: temp});
-    }.bind(this));
+    this.setState({showOffers: temp});
   },
   componentWillUnmount: function() {
-    this.loadingUserData.abort();
   },
   render: function() {
     return(

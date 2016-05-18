@@ -1,6 +1,5 @@
 var $ = require('jquery');
 var React = require('react');
-// var Newsletters = require('./step_nyhedsbreve');
 var NewsletterList = require('./checkbox_list');
 
 module.exports = React.createClass({
@@ -54,32 +53,28 @@ module.exports = React.createClass({
     nyhedsbreve_to_be_shown.sort(this.sortByAbonnement);
     this.setState({nyhedsbreve: nyhedsbreve_to_be_shown});
 
-    // this.loadingUserData = this.props.loadUserData()
-    // .success([this.addAdditionalNewsletters, function (data) {
-      this.setState({ekstern_id: this.props.data.ekstern_id});
-      var user_nyhedsbreve = this.props.data.nyhedsbreve;
+    this.setState({ekstern_id: this.props.data.ekstern_id});
+    var user_nyhedsbreve = this.props.data.nyhedsbreve;
 
-      var nyhedsbreve_not_yet = nyhedsbreve_to_be_shown.filter(function(nyhedsbrev) {
-        return user_nyhedsbreve.indexOf(nyhedsbrev.id) === -1;
-      }.bind(this));
+    var nyhedsbreve_not_yet = nyhedsbreve_to_be_shown.filter(function(nyhedsbrev) {
+      return user_nyhedsbreve.indexOf(nyhedsbrev.id) === -1;
+    }.bind(this));
 
-      this.setState({nyhedsbreve_not_yet: nyhedsbreve_not_yet});
+    this.setState({nyhedsbreve_not_yet: nyhedsbreve_not_yet});
 
-      var nyhedsbreve_already = nyhedsbreve_to_be_shown.filter(function(nyhedsbrev) {
-        return user_nyhedsbreve.indexOf(nyhedsbrev.id) > -1;
-      }.bind(this));
+    var nyhedsbreve_already = nyhedsbreve_to_be_shown.filter(function(nyhedsbrev) {
+      return user_nyhedsbreve.indexOf(nyhedsbrev.id) > -1;
+    }.bind(this));
 
-      nyhedsbreve_already.forEach(function (n) {
-        n.preselect = true;
-      });
+    nyhedsbreve_already.forEach(function (n) {
+      n.preselect = true;
+    });
 
-      this.setState({nyhedsbreve_already: nyhedsbreve_already});
-    //
-    // }.bind(this)]);
+    this.setState({nyhedsbreve_already: nyhedsbreve_already});
+
     this.addAdditionalNewsletters(this.props.data);
   },
   componentWillUnmount: function() {
-    // this.loadingUserData.abort();
   },
   addAdditionalNewsletters: function(user) {
     var postnummer_dk = user.postnummer_dk,
@@ -284,10 +279,10 @@ module.exports = React.createClass({
   render: function() {
     return (
       <div className="stepNyhedsbreveKom">
-        <h2>Tilmeld dig</h2>
-        <NewsletterList data={this.state.nyhedsbreve_not_yet} toggle={this.toggleNyhedsbrev} />
         <h2>Dine tilmeldinger</h2>
         <NewsletterList data={this.state.nyhedsbreve_already} toggle={this.toggleNyhedsbrev} />
+        <h2>Tilmeld dig</h2>
+        <NewsletterList data={this.state.nyhedsbreve_not_yet} toggle={this.toggleNyhedsbrev} />
         <input type="button" value="Tilbage" onClick={this.completeStep(this.props.stepBackwards)} />
         <input type="button" value="Videre" onClick={this.completeStep(this.props.stepForward)} />
       </div>

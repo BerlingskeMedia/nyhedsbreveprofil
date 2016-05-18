@@ -18,16 +18,14 @@ module.exports = React.createClass({
     ga('set', 'page', 'opdateringskampagne/step-stamdata');
     ga('send', 'pageview');
 
-    this.loadingUserData = this.props.loadUserData().success(function (data) {
-      this.setState({ekstern_id: data.ekstern_id});
-      this.setState({email: data.email});
-      this.setState({fornavn: data.fornavn});
-      this.setState({efternavn: data.efternavn});
-      this.setState({has300: data.nyhedsbreve.indexOf(300) > -1});
-    }.bind(this));
+    this.setState({ekstern_id: this.props.data.ekstern_id});
+    this.setState({email: this.props.data.email});
+    this.setState({fornavn: this.props.data.fornavn});
+    this.setState({efternavn: this.props.data.efternavn});
+    this.setState({has300: this.props.data.nyhedsbreve.indexOf(300) > -1});
   },
   componentWillUnmount: function() {
-    this.loadingUserData.abort();
+    // this.loadingUserData.abort();
   },
   handleFornavnChange: function (e, a) {
     this.setState({fornavn: e.target.value})

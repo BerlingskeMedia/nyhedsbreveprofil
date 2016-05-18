@@ -35,33 +35,28 @@ module.exports = React.createClass({
     ga('set', 'page', 'opdateringskampagne/step_interesser');
     ga('send', 'pageview');
 
-    this.loadingUserData = this.props.loadUserData()
-    .success(function (data) {
-      this.setState({ekstern_id: data.ekstern_id});
-      var user_interesser = data.interesser;
+    this.setState({ekstern_id: this.props.data.ekstern_id});
+    var user_interesser = this.props.data.interesser;
 
-      var interesser_not_yet = this.state.interesser.filter(function(interesse) {
-        return user_interesser.indexOf(interesse.id) === -1;
-      }.bind(this));
-
-      // interesser_not_yet.sort(this.sort_interesser);
-      this.setState({interesser_not_yet: interesser_not_yet});
-
-      var interesser_already = this.state.interesser.filter(function(interesse) {
-        return user_interesser.indexOf(interesse.id) > -1;
-      }.bind(this));
-
-      interesser_already.forEach(function (i) {
-        i.preselect = true;
-      });
-
-      // interesser_already.sort(this.sort_interesser);
-      this.setState({interesser_already: interesser_already});
-
+    var interesser_not_yet = this.state.interesser.filter(function(interesse) {
+      return user_interesser.indexOf(interesse.id) === -1;
     }.bind(this));
+
+    // interesser_not_yet.sort(this.sort_interesser);
+    this.setState({interesser_not_yet: interesser_not_yet});
+
+    var interesser_already = this.state.interesser.filter(function(interesse) {
+      return user_interesser.indexOf(interesse.id) > -1;
+    }.bind(this));
+
+    interesser_already.forEach(function (i) {
+      i.preselect = true;
+    });
+
+    // interesser_already.sort(this.sort_interesser);
+    this.setState({interesser_already: interesser_already});
   },
   componentWillUnmount: function() {
-    this.loadingUserData.abort();
   },
   toggleInteresse: function (subscribe, interesse) {
     var new_signups = this.state.new_signups;
@@ -86,18 +81,6 @@ module.exports = React.createClass({
     this.setState({new_signups: new_signups});
     this.setState({new_signouts: new_signouts});
   },
-  // sort_interesser: function(interesse_a, interesse_b) {
-  //   var navnA = interesse_a.navn.toUpperCase();
-  //   var navnB = interesse_b.navn.toUpperCase();
-  //   if (navnA < navnB) {
-  //     return -1;
-  //   }
-  //   if (navnA > navnB) {
-  //     return 1;
-  //   }
-  //   // names must be equal
-  //   return 0;
-  // },
   completeStep: function(callback) {
     return function() {
       var ekstern_id = this.state.ekstern_id;
@@ -140,10 +123,10 @@ module.exports = React.createClass({
   render: function() {
     return (
       <div className="stepInteresser">
-        <h2>Tilmeld dig</h2>
-        <InteresseList data={this.state.interesser_not_yet} toggle={this.toggleInteresse} />
         <h2>Dine interesser</h2>
         <InteresseList data={this.state.interesser_already} toggle={this.toggleInteresse} />
+        <h2>Tilmeld dig</h2>
+        <InteresseList data={this.state.interesser_not_yet} toggle={this.toggleInteresse} />
         <input type="button" value="Tilbage" onClick={this.completeStep(this.props.stepBackwards)} />
         <input type="button" value="Videre" onClick={this.completeStep(this.props.stepForward)} />
       </div>

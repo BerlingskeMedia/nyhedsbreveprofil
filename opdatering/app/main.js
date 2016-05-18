@@ -14,8 +14,9 @@ var Opdateringskampagne = React.createClass({
     var abo = this.getSearchParameter('a');
 
     return {
+      userData: {},
       steps: [],
-      step: 3,
+      step: 0,
       ekstern_id: ekstern_id !== null ? ekstern_id : '0cbf425b93500407ccc4481ede7b87da', // TEST TODO REMOVE
       showCheckbox300Perm: false,
       showStepNyhKom: true,
@@ -32,36 +33,44 @@ var Opdateringskampagne = React.createClass({
       return decodeURIComponent(results[2].replace(/\+/g, " "));
   },
   componentDidMount: function () {
-    this.loadingUserData = this.loadUserData().
-    success(this.determinSteps);
+    this.loadUserData();
   },
   componentWillUnmount: function() {
     this.loadingUserData.abort();
   },
   loadUserData: function() {
-    return $.ajax({
+    this.loadingUserData = $.ajax({
       url: '/backend/users/'.concat(this.state.ekstern_id),
       dataType: 'json',
       cache: true,
-      success: function (data) {
-        // We should still show the 300-perm checkbox is the user didn't have the perm to begin with, accepted the perm and comes back to step 1 later.
-        if (this.state.showCheckbox300Perm === false) {
-          this.setState({showCheckbox300Perm: data.nyhedsbreve.indexOf(300) === -1});
-        }
-      }.bind(this),
+      success: [
+        this.setUserState,
+        this.determinShowCheckbox300Perm,
+        this.determinSteps],
       error: function(xhr, status, err) {
         console.error(this.props.url, status, err.toString());
       }.bind(this)
     });
+
+    return this.loadingUserData;
+  },
+  setUserState: function (data) {
+    this.setState({userData: data});
+  },
+  determinShowCheckbox300Perm: function (data) {
+    // We should still show the 300-perm checkbox is the user didn't have the perm to begin with, accepted the perm and comes back to step 1 later.
+    if (this.state.showCheckbox300Perm === false) {
+      this.setState({showCheckbox300Perm: data.nyhedsbreve.indexOf(300) === -1});
+    }
   },
   determinSteps: function (data) {
 
     var steps = [
-      <StepStamdata stepForward={this.stepForward} showCheckbox300Perm={this.state.showCheckbox300Perm} loadUserData={this.loadUserData} />,
-      <StepInteresser stepForward={this.stepForward} stepBackwards={this.stepBackwards} loadUserData={this.loadUserData} />,
-      <StepNyhedsbreveRed stepForward={this.stepForward} stepBackwards={this.stepBackwards} loadUserData={this.loadUserData} abo={this.state.abo} />,
-      <StepNyhedsbreveKom stepForward={this.stepForward} stepBackwards={this.stepBackwards} data={data} loadUserData={this.loadUserData} abo={this.state.abo} />,
-      <StepFinished stepBackwards={this.stepBackwards} loadUserData={this.loadUserData} />
+      <StepStamdata stepForward={this.stepForward} showCheckbox300Perm={this.state.showCheckbox300Perm} data={this.state.userData} />,
+      <StepInteresser stepForward={this.stepForward} stepBackwards={this.stepBackwards} data={this.state.userData} />,
+      <StepNyhedsbreveRed stepForward={this.stepForward} stepBackwards={this.stepBackwards} data={this.state.userData} abo={this.state.abo} />,
+      <StepNyhedsbreveKom stepForward={this.stepForward} stepBackwards={this.stepBackwards} data={this.state.userData} abo={this.state.abo} />,
+      <StepFinished stepBackwards={this.stepBackwards} data={this.state.userData} />
     ];
 
     var showStepNyhKom = data.nyhedsbreve.some(function(nyhedsbrev_id) {
@@ -75,10 +84,12 @@ var Opdateringskampagne = React.createClass({
     this.setState({steps: steps});
   },
   stepForward: function () {
+    this.loadUserData();
     var step = this.state.step;
     this.setState({step: ++step});
   },
   stepBackwards: function () {
+    this.loadUserData();
     var step = this.state.step;
     this.setState({step: --step});
   },
