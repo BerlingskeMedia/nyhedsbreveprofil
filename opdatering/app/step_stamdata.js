@@ -24,9 +24,6 @@ module.exports = React.createClass({
     this.setState({efternavn: this.props.data.efternavn});
     this.setState({has300: this.props.data.nyhedsbreve.indexOf(300) > -1});
   },
-  componentWillUnmount: function() {
-    // this.loadingUserData.abort();
-  },
   handleFornavnChange: function (e, a) {
     this.setState({fornavn: e.target.value})
     this.setState({data_dirty: true});

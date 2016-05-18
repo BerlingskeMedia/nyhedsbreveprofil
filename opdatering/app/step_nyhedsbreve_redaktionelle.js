@@ -36,6 +36,12 @@ module.exports = React.createClass({
     ga('send', 'pageview');
 
     var nyhedsbreve_to_be_shown = [].concat(this.state.berlingske_nyhedsbreve, this.state.bt_nyhedsbreve, this.state.business_nyhedsbreve);
+
+    var postnummer_dk = this.props.data.postnummer_dk;
+    if ((postnummer_dk >= 900 && postnummer_dk <= 3699) || (postnummer_dk >= 4000 && postnummer_dk <= 4999)) {
+      nyhedsbreve_to_be_shown = nyhedsbreve_to_be_shown.concat(this.state.aok_nyhedsbreve);
+    }
+
     nyhedsbreve_to_be_shown.sort(this.sortByAbonnement);
     this.setState({nyhedsbreve: nyhedsbreve_to_be_shown});
 
@@ -57,18 +63,6 @@ module.exports = React.createClass({
     });
 
     this.setState({nyhedsbreve_already: nyhedsbreve_already});
-
-    this.addAdditionalNewsletters(this.props.data);
-  },
-  addAdditionalNewsletters: function (user) {
-    var postnummer_dk = user.postnummer_dk,
-        additional_nyhedsbreve_to_be_shown = [];
-
-    if ((postnummer_dk >= 900 && postnummer_dk <= 3699) || (postnummer_dk >= 4000 && postnummer_dk <= 4999)) {
-      additional_nyhedsbreve_to_be_shown = this.state.nyhedsbreve.concat(this.state.aok_nyhedsbreve);
-      additional_nyhedsbreve_to_be_shown.sort(this.sortByAbonnement);
-      this.setState({nyhedsbreve: additional_nyhedsbreve_to_be_shown});
-    }
   },
   sortByAbonnement: function (nyhedsbrev_a, nyhedsbrev_b) {
     if (nyhedsbrev_a.publisher === nyhedsbrev_b.publisher) {

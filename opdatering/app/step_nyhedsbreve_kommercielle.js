@@ -50,6 +50,84 @@ module.exports = React.createClass({
     ga('send', 'pageview');
 
     var nyhedsbreve_to_be_shown = [].concat(this.state.godttip_nyhedsbreve, this.state.tbt_nyhedsbreve, this.state.shop_nyhedsbreve, this.state.sweetdeal_generel_nyhedsbreve);
+
+    var postnummer_dk = this.props.data.postnummer_dk
+
+    // København (id 846) - postnummer 0900-3699
+    if (postnummer_dk >= 900 && postnummer_dk <= 3699) {
+      nyhedsbreve_to_be_shown.push({id: 846, navn: 'Sweetdeal København', publisher: 32});
+    }
+
+    // Aabenraa (id 853) - postnummer 6200
+    if (postnummer_dk === 6200) {
+      nyhedsbreve_to_be_shown.push({id: 853, navn: 'Sweetdeal Aabenraa', publisher: 32});
+    }
+
+    // Aarhus (id 847) - postnummer 8000-8300
+    if (postnummer_dk >= 8000 && postnummer_dk <= 8300) {
+      nyhedsbreve_to_be_shown.push({id: 847, navn: 'Sweetdeal Aarhus', publisher: 32});
+    }
+
+    // Esbjerg (id 864) - postnummer 6700,6701,6705,6710,6715
+    if ([6700,6701,6705,6710,6715].indexOf(postnummer_dk) > -1) {
+      nyhedsbreve_to_be_shown.push({id: 864, navn: 'Sweetdeal Esbjerg', publisher: 32});
+    }
+
+    // Haderslev (id 861) - postnummer 6100
+    if (postnummer_dk === 6100) {
+      nyhedsbreve_to_be_shown.push({id: 861, navn: 'Sweetdeal Haderslev', publisher: 32});
+    }
+
+    // Holstebro-Struer-Lemvig (id 854) - postnummer 7500,7600,7620
+    if ([7500,7600,7620].indexOf(postnummer_dk) > -1 ) {
+      nyhedsbreve_to_be_shown.push({id: 854, navn: 'Sweetdeal Holstebro-Struer-Lemvig', publisher: 32});
+    }
+
+    // Kolding (id 859) - postnummer 6000
+    if (postnummer_dk === 6000) {
+      nyhedsbreve_to_be_shown.push({id: 859, navn: 'Sweetdeal Kolding', publisher: 32});
+    }
+
+    // Randers (id 856) - postnummer 8900,8920,8930,8940,8960
+    if ([8900,8920,8930,8940,8960].indexOf(postnummer_dk) > -1 ) {
+      nyhedsbreve_to_be_shown.push({id: 856, navn: 'Sweetdeal Randers', publisher: 32});
+    }
+
+    // Ringkøbing-Skjern (id 875)  - postnummer 6900,6950
+    if (postnummer_dk === 6900 || postnummer_dk === 6950) {
+      nyhedsbreve_to_be_shown.push({id: 875, navn: 'Sweetdeal Ringkøbing-Skjern', publisher: 32});
+    }
+
+    // Skanderborg (id 849) - postnummer 8660
+    if (postnummer_dk === 8660) {
+      nyhedsbreve_to_be_shown.push({id: 849, navn: 'Sweetdeal Skanderborg', publisher: 32});
+    }
+
+    // Sønderborg (id 863) - postnummer 6400
+    if (postnummer_dk === 6400) {
+      nyhedsbreve_to_be_shown.push({id: 863, navn: 'Sweetdeal Sønderborg', publisher: 32});
+    }
+
+    // Tønder (id 869) - postnummer 6270
+    if (postnummer_dk === 6270) {
+      nyhedsbreve_to_be_shown.push({id: 869, navn: 'Sweetdeal Tønder', publisher: 32});
+    }
+
+    // Varde (id 862) - postnummer 6800
+    if (postnummer_dk === 6800) {
+      nyhedsbreve_to_be_shown.push({id: 862, navn: 'Sweetdeal Varde', publisher: 32});
+    }
+
+    // Viborg (id 851) - postnummer 8800
+    if (postnummer_dk === 8800) {
+      nyhedsbreve_to_be_shown.push({id: 851, navn: 'Sweetdeal Viborg', publisher: 32});
+    }
+
+    // Vejle (id 858) - postnummer 7100,7120
+    if (postnummer_dk === 7100 || postnummer_dk === 7120) {
+      nyhedsbreve_to_be_shown.push({id: 858, navn: 'Sweetdeal Vejle', publisher: 32});
+    }
+
     nyhedsbreve_to_be_shown.sort(this.sortByAbonnement);
     this.setState({nyhedsbreve: nyhedsbreve_to_be_shown});
 
@@ -60,106 +138,21 @@ module.exports = React.createClass({
       return user_nyhedsbreve.indexOf(nyhedsbrev.id) === -1;
     }.bind(this));
 
+    nyhedsbreve_not_yet.sort(this.sortByAbonnement);
+
     this.setState({nyhedsbreve_not_yet: nyhedsbreve_not_yet});
 
     var nyhedsbreve_already = nyhedsbreve_to_be_shown.filter(function(nyhedsbrev) {
       return user_nyhedsbreve.indexOf(nyhedsbrev.id) > -1;
     }.bind(this));
 
+    nyhedsbreve_already.sort(this.sortByAbonnement);
+
     nyhedsbreve_already.forEach(function (n) {
       n.preselect = true;
     });
 
     this.setState({nyhedsbreve_already: nyhedsbreve_already});
-
-    this.addAdditionalNewsletters(this.props.data);
-  },
-  componentWillUnmount: function() {
-  },
-  addAdditionalNewsletters: function(user) {
-    var postnummer_dk = user.postnummer_dk,
-        additional_nyhedsbreve_to_be_shown = [];
-
-    // København (id 846) - postnummer 0900-3699
-    if (postnummer_dk >= 900 && postnummer_dk <= 3699) {
-      additional_nyhedsbreve_to_be_shown.push({id: 846, navn: 'Sweetdeal København'});
-    }
-
-    // Aabenraa (id 853) - postnummer 6200
-    if (postnummer_dk === 6200) {
-      additional_nyhedsbreve_to_be_shown.push({id: 853, navn: 'Sweetdeal Aabenraa'});
-    }
-
-    // Aarhus (id 847) - postnummer 8000-8300
-    if (postnummer_dk >= 8000 && postnummer_dk <= 8300) {
-      additional_nyhedsbreve_to_be_shown.push({id: 847, navn: 'Sweetdeal Aarhus'});
-    }
-
-    // Esbjerg (id 864) - postnummer 6700,6701,6705,6710,6715
-    if ([6700,6701,6705,6710,6715].indexOf(postnummer_dk) > -1) {
-      additional_nyhedsbreve_to_be_shown.push({id: 864, navn: 'Sweetdeal Esbjerg'});
-    }
-
-    // Haderslev (id 861) - postnummer 6100
-    if (postnummer_dk === 6100) {
-      additional_nyhedsbreve_to_be_shown.push({id: 861, navn: 'Sweetdeal Haderslev'});
-    }
-
-    // Holstebro-Struer-Lemvig (id 854) - postnummer 7500,7600,7620
-    if ([7500,7600,7620].indexOf(postnummer_dk) > -1 ) {
-      additional_nyhedsbreve_to_be_shown.push({id: 854, navn: 'Sweetdeal Holstebro-Struer-Lemvig'});
-    }
-
-    // Kolding (id 859) - postnummer 6000
-    if (postnummer_dk === 6000) {
-      additional_nyhedsbreve_to_be_shown.push({id: 859, navn: 'Sweetdeal Kolding'});
-    }
-
-    // Randers (id 856) - postnummer 8900,8920,8930,8940,8960
-    if ([8900,8920,8930,8940,8960].indexOf(postnummer_dk) > -1 ) {
-      additional_nyhedsbreve_to_be_shown.push({id: 856, navn: 'Sweetdeal Randers'});
-    }
-
-    // Ringkøbing-Skjern (id 875)  - postnummer 6900,6950
-    if (postnummer_dk === 6900 || postnummer_dk === 6950) {
-      additional_nyhedsbreve_to_be_shown.push({id: 875, navn: 'Sweetdeal Ringkøbing-Skjern'});
-    }
-
-    // Skanderborg (id 849) - postnummer 8660
-    if (postnummer_dk === 8660) {
-      additional_nyhedsbreve_to_be_shown.push({id: 849, navn: 'Sweetdeal Skanderborg'});
-    }
-
-    // Sønderborg (id 863) - postnummer 6400
-    if (postnummer_dk === 6400) {
-      additional_nyhedsbreve_to_be_shown.push({id: 863, navn: 'Sweetdeal Sønderborg'});
-    }
-
-    // Tønder (id 869) - postnummer 6270
-    if (postnummer_dk === 6270) {
-      additional_nyhedsbreve_to_be_shown.push({id: 869, navn: 'Sweetdeal Tønder'});
-    }
-
-    // Varde (id 862) - postnummer 6800
-    if (postnummer_dk === 6800) {
-      additional_nyhedsbreve_to_be_shown.push({id: 862, navn: 'Sweetdeal Varde'});
-    }
-
-    // Viborg (id 851) - postnummer 8800
-    if (postnummer_dk === 8800) {
-      additional_nyhedsbreve_to_be_shown.push({id: 851, navn: 'Sweetdeal Viborg'});
-    }
-
-    // Vejle (id 858) - postnummer 7100,7120
-    if (postnummer_dk === 7100 || postnummer_dk === 7120) {
-      additional_nyhedsbreve_to_be_shown.push({id: 858, navn: 'Sweetdeal Vejle'});
-    }
-
-    if (additional_nyhedsbreve_to_be_shown.length > 0) {
-      var temp = this.state.nyhedsbreve.concat(additional_nyhedsbreve_to_be_shown);
-      temp.sort(this.sortByAbonnement);
-      this.setState({nyhedsbreve: temp});
-    }
   },
   sortByAbonnement: function (nyhedsbrev_a, nyhedsbrev_b) {
     if (nyhedsbrev_a.publisher === nyhedsbrev_b.publisher) {

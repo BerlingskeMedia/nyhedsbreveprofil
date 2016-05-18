@@ -18,8 +18,6 @@ module.exports = React.createClass({
 
     this.setState({showOffers: temp});
   },
-  componentWillUnmount: function() {
-  },
   render: function() {
     return(
       <div>

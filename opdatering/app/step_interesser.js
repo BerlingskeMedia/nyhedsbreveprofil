@@ -53,10 +53,7 @@ module.exports = React.createClass({
       i.preselect = true;
     });
 
-    // interesser_already.sort(this.sort_interesser);
     this.setState({interesser_already: interesser_already});
-  },
-  componentWillUnmount: function() {
   },
   toggleInteresse: function (subscribe, interesse) {
     var new_signups = this.state.new_signups;
