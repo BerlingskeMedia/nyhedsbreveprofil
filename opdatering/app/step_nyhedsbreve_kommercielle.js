@@ -343,7 +343,7 @@ var TheBusinessTargetInterests = React.createClass({
 
       if (parent_interesse) {
         thebusinesstargetInterest.initialValue = findInitialValue(parent_interesse);
-        thebusinesstargetInterest.options = parent_interesse.subinterests.map(function(subinterest) {
+        thebusinesstargetInterest.options = parent_interesse.subinterests.sort(sortByName).map(function(subinterest) {
           return {
             value: subinterest.interesse_id,
             label: subinterest.interesse_navn
@@ -359,7 +359,23 @@ var TheBusinessTargetInterests = React.createClass({
         return user.interesser.indexOf(subinterest.interesse_id) > -1;
       }.bind(this));
 
-      return selected.interesse_id;
+      if (selected) {
+        return selected.interesse_id;
+      } else {
+        return null;
+      }
+    }
+
+    function sortByName(subinterest_a, subinterest_b) {
+      var a = subinterest_a.interesse_navn.toUpperCase(),
+          b = subinterest_b.interesse_navn.toUpperCase();
+
+      var c =
+        a < b ? -1 :
+        a > b ? 1 :
+        0;
+
+      return c;
     }
   },
   mapExistingUserSignups: function(data) {
@@ -394,7 +410,7 @@ var TheBusinessTargetInterests = React.createClass({
         new_signouts = this.state.new_signouts,
         existing_signups = this.state.existing_signups;
 
-    if (existing_signups[parent_id] !== interesse_id) {
+    if (existing_signups[parent_id] !== undefined && existing_signups[parent_id] !== interesse_id) {
       new_signouts[parent_id] = existing_signups[parent_id];
     }
 

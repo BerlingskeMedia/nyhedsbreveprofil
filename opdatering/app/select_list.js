@@ -19,10 +19,18 @@ module.exports = React.createClass({
 
 var Select = React.createClass({
   getInitialState: function() {
-    return {defaultValue: this.props.data.initialValue ? this.props.data.initialValue : ''};
+    return {value: ''};
+  },
+  componentWillReceiveProps: function() {
+    if (this.props.data.initialValue && this.state.value === '') {
+      this.setState({value: this.props.data.initialValue});
+    }
   },
   onChange: function(e) {
-    this.props.toggle(e.target.value, this.props.data.id);
+    var v = e.target.value;
+    this.setState({value: v}, function() {
+      this.props.toggle(v, this.props.data.id);
+    }.bind(this));
   },
   render: function() {
 
@@ -35,7 +43,7 @@ var Select = React.createClass({
         <label htmlFor={this.props.data.id}>{this.props.data.navn}</label>
         <select
           id={this.props.data.id}
-          defaultValue={this.state.defaultValue}
+          value={this.state.value}
           onChange={this.onChange}>
           <option key="-1" value="" disabled="disabled"></option>
           {options}
