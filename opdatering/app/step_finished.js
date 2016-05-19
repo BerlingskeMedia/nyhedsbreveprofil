@@ -17,6 +17,25 @@ module.exports = React.createClass({
     });
 
     this.setState({showOffers: temp});
+    this.sendCampaignSignup();
+  },
+  sendCampaignSignup: function() {
+
+    var payload = {
+      kampagne_id: 3703,
+      ekstern_id: this.props.data.ekstern_id
+    };
+
+    return $.ajax({
+      type: 'POST',
+      url: '/backend/kampagner/kampagnelinie',
+      data: JSON.stringify(payload),
+      contentType: "application/json; charset=utf-8",
+      dataType: 'json',
+      error: function(xhr, status, err) {
+        console.error(this.props.url, status, err.toString());
+      }.bind(this)
+    });
   },
   render: function() {
     return(

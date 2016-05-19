@@ -209,6 +209,12 @@ var backend = {
       handler: proxy
     });
 
+    server.route({
+      method: 'POST',
+      path: '/kampagner/kampagnelinie',
+      handler: proxy
+    });
+
     next();
   }
 };
