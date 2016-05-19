@@ -22,6 +22,7 @@ COPY ./bower_components /nyhedsbreve/bower_components
 COPY ./client /nyhedsbreve/client
 COPY ./node_modules /nyhedsbreve/node_modules
 COPY ./src /nyhedsbreve/src
+COPY ./opdatering /nyhedsbreve/opdatering
 
 # Exposing our endpoint to Docker.
 EXPOSE  8000
