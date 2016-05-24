@@ -6,6 +6,7 @@ var StepInteresser = require('./step_interesser');
 var StepNyhedsbreveRed = require('./step_nyhedsbreve_redaktionelle');
 var StepNyhedsbreveKom = require('./step_nyhedsbreve_kommercielle');
 var StepFinished = require('./step_finished');
+var Sidebar = require('./sidebar');
 
 var Opdateringskampagne = React.createClass({
   getInitialState: function() {
@@ -14,13 +15,16 @@ var Opdateringskampagne = React.createClass({
     var abo = this.getSearchParameter('a');
 
     return {
-      userData: {},
+      userData: {
+        nyhedsbreve: [],
+        interesser: []
+      },
+      ekstern_id: ekstern_id !== null ? ekstern_id : '0cbf425b93500407ccc4481ede7b87da', // TEST TODO REMOVE
+      abo: abo !== null ? abo.toUpperCase() : null,
       steps: [],
       step: 0,
-      ekstern_id: ekstern_id !== null ? ekstern_id : '0cbf425b93500407ccc4481ede7b87da', // TEST TODO REMOVE
       showCheckbox300Perm: false,
-      showStepNyhKom: true,
-      abo: abo !== null ? abo.toUpperCase() : null
+      hideStepNyhKom: false
     };
   },
   getSearchParameter: function(name, url) {
@@ -63,41 +67,60 @@ var Opdateringskampagne = React.createClass({
       this.setState({showCheckbox300Perm: data.nyhedsbreve.indexOf(300) === -1});
     }
   },
-  determinSteps: function (data) {
-
+  determinSteps: function () {
     var steps = [
-      <StepStamdata stepForward={this.stepForward} showCheckbox300Perm={this.state.showCheckbox300Perm} data={this.state.userData} />,
-      <StepInteresser stepForward={this.stepForward} stepBackwards={this.stepBackwards} data={this.state.userData} />,
-      <StepNyhedsbreveRed stepForward={this.stepForward} stepBackwards={this.stepBackwards} data={this.state.userData} abo={this.state.abo} />,
-      <StepNyhedsbreveKom stepForward={this.stepForward} stepBackwards={this.stepBackwards} data={this.state.userData} abo={this.state.abo} />,
-      <StepFinished stepBackwards={this.stepBackwards} data={this.state.userData} />
+      <StepStamdata sidebar_label="Stamoplysninger" stepForward={this.stepForward} showCheckbox300Perm={this.state.showCheckbox300Perm} data={this.state.userData} />,
+      <StepInteresser sidebar_label="Interesser" stepForward={this.stepForward} stepBackwards={this.stepBackwards} data={this.state.userData} />,
+      <StepNyhedsbreveRed sidebar_label="Redaktionelle nyhedsbreve" stepForward={this.stepForward} stepBackwards={this.stepBackwards} data={this.state.userData} abo={this.state.abo} />,
+      <StepNyhedsbreveKom sidebar_label="Kommercielle nyhedsbreve" stepForward={this.stepForward} stepBackwards={this.stepBackwards} data={this.state.userData} abo={this.state.abo} />,
+      <StepFinished sidebar_label="Tak for hjælpen" stepBackwards={this.stepBackwards} data={this.state.userData} />
     ];
 
-    var showStepNyhKom = data.nyhedsbreve.some(function(nyhedsbrev_id) {
+    var hideStepNyhKom = !this.state.userData.nyhedsbreve.some(function(nyhedsbrev_id) {
       return [66,108,300].indexOf(nyhedsbrev_id) > -1;
     });
+console.log('hideStepNyhKom', hideStepNyhKom);
+    // this.setState({hideStepNyhKom: hideStepNyhKom});
 
-    if (!showStepNyhKom) {
+    if (hideStepNyhKom) {
       steps.splice(3,1);
     }
 
     this.setState({steps: steps});
   },
   stepForward: function () {
-    this.loadUserData();
-    var step = this.state.step;
-    this.setState({step: ++step});
+    this.loadUserData().success(function() {
+      var step = this.state.step;
+      this.setState({step: ++step});
+    }.bind(this));
   },
   stepBackwards: function () {
-    this.loadUserData();
-    var step = this.state.step;
-    this.setState({step: --step});
+    this.loadUserData().success(function() {
+      var step = this.state.step;
+      this.setState({step: --step});
+    }.bind(this));
   },
   render: function() {
+    // var steps = [
+    //   <StepStamdata sidebar_label="Stamoplysninger" stepForward={this.stepForward} showCheckbox300Perm={this.state.showCheckbox300Perm} data={this.state.userData} />,
+    //   <StepInteresser sidebar_label="Interesser" stepForward={this.stepForward} stepBackwards={this.stepBackwards} data={this.state.userData} />,
+    //   <StepNyhedsbreveRed sidebar_label="Redaktionelle nyhedsbreve" stepForward={this.stepForward} stepBackwards={this.stepBackwards} data={this.state.userData} abo={this.state.abo} />,
+    //   <StepNyhedsbreveKom sidebar_label="Kommercielle nyhedsbreve" stepForward={this.stepForward} stepBackwards={this.stepBackwards} data={this.state.userData} abo={this.state.abo} />,
+    //   <StepFinished sidebar_label="Tak for hjælpen" stepBackwards={this.stepBackwards} data={this.state.userData} />
+    // ];
+    //
+    // if (this.state.hideStepNyhKom) {
+    //   steps.splice(3,1);
+    // }
 
     return (
       <div className="opdateringskampagne">
-        {this.state.steps[this.state.step]}
+        <div className="col-sm-4 col-md-4 sidebar">
+          <Sidebar step={this.state.step} steps={this.state.steps} />
+        </div>
+        <div className="col-sm-8 col-md-8 main">
+          {this.state.steps[this.state.step]}
+        </div>
       </div>
     );
   }

@@ -51,80 +51,80 @@ module.exports = React.createClass({
 
     var nyhedsbreve_to_be_shown = [].concat(this.state.godttip_nyhedsbreve, this.state.tbt_nyhedsbreve, this.state.shop_nyhedsbreve, this.state.sweetdeal_generel_nyhedsbreve);
 
-    var postnummer_dk = this.props.data.postnummer_dk
+    var postnummer = parseInt(this.props.data.postnummer);
 
     // København (id 846) - postnummer 0900-3699
-    if (postnummer_dk >= 900 && postnummer_dk <= 3699) {
+    if (postnummer >= 900 && postnummer <= 3699) {
       nyhedsbreve_to_be_shown.push({id: 846, navn: 'Sweetdeal København', publisher: 32});
     }
 
     // Aabenraa (id 853) - postnummer 6200
-    if (postnummer_dk === 6200) {
+    if (postnummer === 6200) {
       nyhedsbreve_to_be_shown.push({id: 853, navn: 'Sweetdeal Aabenraa', publisher: 32});
     }
 
     // Aarhus (id 847) - postnummer 8000-8300
-    if (postnummer_dk >= 8000 && postnummer_dk <= 8300) {
+    if (postnummer >= 8000 && postnummer <= 8300) {
       nyhedsbreve_to_be_shown.push({id: 847, navn: 'Sweetdeal Aarhus', publisher: 32});
     }
 
     // Esbjerg (id 864) - postnummer 6700,6701,6705,6710,6715
-    if ([6700,6701,6705,6710,6715].indexOf(postnummer_dk) > -1) {
+    if ([6700,6701,6705,6710,6715].indexOf(postnummer) > -1) {
       nyhedsbreve_to_be_shown.push({id: 864, navn: 'Sweetdeal Esbjerg', publisher: 32});
     }
 
     // Haderslev (id 861) - postnummer 6100
-    if (postnummer_dk === 6100) {
+    if (postnummer === 6100) {
       nyhedsbreve_to_be_shown.push({id: 861, navn: 'Sweetdeal Haderslev', publisher: 32});
     }
 
     // Holstebro-Struer-Lemvig (id 854) - postnummer 7500,7600,7620
-    if ([7500,7600,7620].indexOf(postnummer_dk) > -1 ) {
+    if ([7500,7600,7620].indexOf(postnummer) > -1 ) {
       nyhedsbreve_to_be_shown.push({id: 854, navn: 'Sweetdeal Holstebro-Struer-Lemvig', publisher: 32});
     }
 
     // Kolding (id 859) - postnummer 6000
-    if (postnummer_dk === 6000) {
+    if (postnummer === 6000) {
       nyhedsbreve_to_be_shown.push({id: 859, navn: 'Sweetdeal Kolding', publisher: 32});
     }
 
     // Randers (id 856) - postnummer 8900,8920,8930,8940,8960
-    if ([8900,8920,8930,8940,8960].indexOf(postnummer_dk) > -1 ) {
+    if ([8900,8920,8930,8940,8960].indexOf(postnummer) > -1 ) {
       nyhedsbreve_to_be_shown.push({id: 856, navn: 'Sweetdeal Randers', publisher: 32});
     }
 
     // Ringkøbing-Skjern (id 875)  - postnummer 6900,6950
-    if (postnummer_dk === 6900 || postnummer_dk === 6950) {
+    if (postnummer === 6900 || postnummer === 6950) {
       nyhedsbreve_to_be_shown.push({id: 875, navn: 'Sweetdeal Ringkøbing-Skjern', publisher: 32});
     }
 
     // Skanderborg (id 849) - postnummer 8660
-    if (postnummer_dk === 8660) {
+    if (postnummer === 8660) {
       nyhedsbreve_to_be_shown.push({id: 849, navn: 'Sweetdeal Skanderborg', publisher: 32});
     }
 
     // Sønderborg (id 863) - postnummer 6400
-    if (postnummer_dk === 6400) {
+    if (postnummer === 6400) {
       nyhedsbreve_to_be_shown.push({id: 863, navn: 'Sweetdeal Sønderborg', publisher: 32});
     }
 
     // Tønder (id 869) - postnummer 6270
-    if (postnummer_dk === 6270) {
+    if (postnummer === 6270) {
       nyhedsbreve_to_be_shown.push({id: 869, navn: 'Sweetdeal Tønder', publisher: 32});
     }
 
     // Varde (id 862) - postnummer 6800
-    if (postnummer_dk === 6800) {
+    if (postnummer === 6800) {
       nyhedsbreve_to_be_shown.push({id: 862, navn: 'Sweetdeal Varde', publisher: 32});
     }
 
     // Viborg (id 851) - postnummer 8800
-    if (postnummer_dk === 8800) {
+    if (postnummer === 8800) {
       nyhedsbreve_to_be_shown.push({id: 851, navn: 'Sweetdeal Viborg', publisher: 32});
     }
 
     // Vejle (id 858) - postnummer 7100,7120
-    if (postnummer_dk === 7100 || postnummer_dk === 7120) {
+    if (postnummer === 7100 || postnummer === 7120) {
       nyhedsbreve_to_be_shown.push({id: 858, navn: 'Sweetdeal Vejle', publisher: 32});
     }
 
@@ -272,12 +272,12 @@ module.exports = React.createClass({
   render: function() {
     return (
       <div className="stepNyhedsbreveKom">
+        <input type="button" value="Tilbage" onClick={this.completeStep(this.props.stepBackwards)} />
         <h2>Dine tilmeldinger</h2>
         <NewsletterList data={this.state.nyhedsbreve_already} toggle={this.toggleNyhedsbrev} />
         <h2>Tilmeld dig</h2>
         <NewsletterList data={this.state.nyhedsbreve_not_yet} toggle={this.toggleNyhedsbrev} />
-        <input type="button" value="Tilbage" onClick={this.completeStep(this.props.stepBackwards)} />
-        <input type="button" value="Videre" onClick={this.completeStep(this.props.stepForward)} />
+        <input type="button" value="Næste" className="nextButton" onClick={this.completeStep(this.props.stepForward)} />
       </div>
     );
   }

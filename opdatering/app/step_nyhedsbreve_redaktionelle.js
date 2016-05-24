@@ -37,8 +37,8 @@ module.exports = React.createClass({
 
     var nyhedsbreve_to_be_shown = [].concat(this.state.berlingske_nyhedsbreve, this.state.bt_nyhedsbreve, this.state.business_nyhedsbreve);
 
-    var postnummer_dk = this.props.data.postnummer_dk;
-    if ((postnummer_dk >= 900 && postnummer_dk <= 3699) || (postnummer_dk >= 4000 && postnummer_dk <= 4999)) {
+    var postnummer = parseInt(this.props.data.postnummer);
+    if ((postnummer >= 900 && postnummer <= 3699) || (postnummer >= 4000 && postnummer <= 4999)) {
       nyhedsbreve_to_be_shown = nyhedsbreve_to_be_shown.concat(this.state.aok_nyhedsbreve);
     }
 
@@ -156,12 +156,12 @@ module.exports = React.createClass({
   render: function() {
     return (
       <div className="stepNyhedsbreveRed">
+        <input type="button" value="Tilbage" onClick={this.completeStep(this.props.stepBackwards)} />
         <h2>Dine tilmeldinger</h2>
         <NewsletterList data={this.state.nyhedsbreve_already} toggle={this.toggleNyhedsbrev} />
         <h2>Tilmeld dig</h2>
         <NewsletterList data={this.state.nyhedsbreve_not_yet} toggle={this.toggleNyhedsbrev} />
-        <input type="button" value="Tilbage" onClick={this.completeStep(this.props.stepBackwards)} />
-        <input type="button" value="Videre" onClick={this.completeStep(this.props.stepForward)} />
+        <input type="button" className="nextButton" value="Næste" onClick={this.completeStep(this.props.stepForward)} />
       </div>
     );
   }

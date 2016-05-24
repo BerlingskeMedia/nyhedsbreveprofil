@@ -31,7 +31,6 @@ module.exports = React.createClass({
       url: '/backend/kampagner/kampagnelinie',
       data: JSON.stringify(payload),
       contentType: "application/json; charset=utf-8",
-      dataType: 'json',
       error: function(xhr, status, err) {
         console.error(this.props.url, status, err.toString());
       }.bind(this)
@@ -40,9 +39,10 @@ module.exports = React.createClass({
   render: function() {
     return(
       <div>
+        <input type="button" value="Tilbage" onClick={this.props.stepBackwards} />
+        <h1>Tak for hjælpen</h1>
         <p>Tak</p>
         {this.state.showOffers === true ? <NewspaperOffers /> : null}
-        <input type="button" value="Tilbage" onClick={this.props.stepBackwards} />
       </div>
     );
   }
