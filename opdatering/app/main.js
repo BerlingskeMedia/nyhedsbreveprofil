@@ -22,7 +22,7 @@ var Opdateringskampagne = React.createClass({
       ekstern_id: ekstern_id !== null ? ekstern_id : '0cbf425b93500407ccc4481ede7b87da', // TEST TODO REMOVE
       abo: abo !== null ? abo.toUpperCase() : null,
       steps: [],
-      step: 0,
+      step: 4,
       showCheckbox300Perm: false,
       hideStepNyhKom: false,
       hideStepNyhKom_dirty: false
@@ -36,6 +36,22 @@ var Opdateringskampagne = React.createClass({
       if (!results) return null;
       if (!results[2]) return '';
       return decodeURIComponent(results[2].replace(/\+/g, " "));
+  },
+  setSearchParameter: function (key, value) {
+    // remove the hash part before operating on the uri
+    var uri = window.location.href;
+    var i = uri.indexOf('#');
+    var hash = i === -1 ? ''  : uri.substr(i);
+         uri = i === -1 ? uri : uri.substr(0, i);
+
+    var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+    var separator = uri.indexOf('?') !== -1 ? "&" : "?";
+    if (uri.match(re)) {
+      uri = uri.replace(re, '$1' + key + "=" + value + '$2');
+    } else {
+      uri = uri + separator + key + "=" + value;
+    }
+    return uri + hash;  // finally append the hash as well
   },
   componentDidMount: function () {
     this.loadUserData();
@@ -93,7 +109,10 @@ var Opdateringskampagne = React.createClass({
 
     this.setState({steps: steps});
   },
-  stepForward: function () {
+  stepForward: function (ekstern_id) {
+    if (ekstern_id !== undefined) {
+      this.setState({ekstern_id:ekstern_id});
+    }
     this.loadUserData().success(function() {
       var step = this.state.step;
       this.setState({step: ++step});
@@ -114,11 +133,11 @@ var Opdateringskampagne = React.createClass({
     }
 
     return (
-      <div className="opdateringskampagne">
-        <div className="col-sm-4 col-md-4 sidebar">
+      <div className="opdateringskampagne row" style={{paddingTop: '20px', marginBottom: '50px'}}>
+        <div className="col-sm-2 col-lg-2 sidebar">
           <Sidebar step={this.state.step} steps={steps} />
         </div>
-        <div className="col-sm-8 col-md-8 main">
+        <div className="col-sm-6 col-sm-offset-2 col-lg-5 col-lg-offset-2 main">
           {steps[this.state.step]}
         </div>
       </div>

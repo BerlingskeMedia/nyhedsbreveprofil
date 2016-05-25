@@ -101,14 +101,15 @@ module.exports = React.createClass({
         contentType: "application/json; charset=utf-8",
         dataType: 'json',
         success: function (data) {
-          this.props.stepForward({state: this.state});
+          console.log('data', data);
+          this.props.stepForward(data.ekstern_id);
         }.bind(this),
         error: function(xhr, status, err) {
           console.error(this.props.url, status, err.toString());
         }.bind(this)
       });
     } else {
-      this.props.stepForward({state: this.state});
+      this.props.stepForward();
     }
   },
   add300: function() {
@@ -141,7 +142,7 @@ module.exports = React.createClass({
     return (
       <div className="stepStamdata">
         <form onSubmit={this.handleSubmit}>
-          <h1>Opdatér venligst dine stamoplysninger</h1>
+          <h2>Opdatér venligst dine stamoplysninger</h2>
           <div className="form-group">
             <label htmlFor="email">Email</label>
             <input
