@@ -12,7 +12,8 @@ module.exports = React.createClass({
       nyhedsbreve_not_yet: [],
       nyhedsbreve: [],
       aok_nyhedsbreve: [
-        { id: 17, navn: 'AOK', description: 'Ugen og Weekend', publisher: 3 }],
+        { id: 17, navn: 'AOK', description: 'Ugen og Weekend', publisher: 3 },
+        { id: 282, navn: 'AOK', description: 'Breaking', publisher: 3 }],
       berlingske_nyhedsbreve: [
         { id: 1, navn: 'Berlingske Morgen', publisher: 1 },
         { id: 2, navn: 'Berlingske Middag', publisher: 1 },

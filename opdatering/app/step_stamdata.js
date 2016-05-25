@@ -8,54 +8,66 @@ module.exports = React.createClass({
       email: '',
       fornavn: '',
       efternavn: '',
+      mobil: '',
+      telefon: '',
       vejnavn: '',
-      postnummer: '',
+      husnummer: '',
+      husbogstav: '',
+      etage: '',
+      sidedoer: '',
       bynavn: '',
+      postnummer: '',
+      koen: '',
+      foedselsaar: '',
       data_dirty: false,
       has300: false,
       has300_dirty: false
     };
+  },
+  filterAllowesUserFields: function(key) {
+    return [
+      'ekstern_id',
+      'email',
+      'fornavn',
+      'efternavn',
+      'mobil',
+      'telefon',
+      'vejnavn',
+      'husnummer',
+      'husbogstav',
+      'etage',
+      'sidedoer',
+      'postnummer',
+      'bynavn',
+      'koen',
+      'foedselsaar'
+    ].indexOf(key) > -1;
   },
   componentDidMount: function() {
 
     ga('set', 'page', 'opdateringskampagne/step-stamdata');
     ga('send', 'pageview');
 
-    this.setState({ekstern_id: this.props.data.ekstern_id});
-    this.setState({email: this.props.data.email});
-    this.setState({fornavn: this.props.data.fornavn});
-    this.setState({efternavn: this.props.data.efternavn});
-    this.setState({vejnavn: this.props.data.vejnavn});
-    this.setState({postnummer: this.props.data.postnummer});
-    this.setState({bynavn: this.props.data.bynavn});
+    var userDataState = {};
+    Object.keys(this.props.data)
+    .filter(this.filterAllowesUserFields)
+    .forEach(function(key) {
+      userDataState[key] = this.props.data[key];
+    }.bind(this));
+    this.setState(userDataState);
+
     this.setState({has300: this.props.data.nyhedsbreve.indexOf(300) > -1});
   },
-  handleFornavnChange: function (e, a) {
-    this.setState({fornavn: e.target.value})
-    this.setState({data_dirty: true});
-  },
-  handleEfternavnChange: function (e, a) {
-    this.setState({efternavn: e.target.value});
-    this.setState({data_dirty: true});
-  },
-  handleEmailChange: function (e, a) {
-    this.setState({email: e.target.value});
-    this.setState({data_dirty: true});
-  },
-  handleVejnavnChange: function (e, a) {
-    this.setState({vejnavn: e.target.value});
-    this.setState({data_dirty: true});
-  },
-  handlePostnummerChange: function (e, a) {
-    this.setState({postnummer: e.target.value});
-    this.setState({data_dirty: true});
-  },
-  handleBynavnChange: function (e, a) {
-    this.setState({bynavn: e.target.value});
+  handleInputChange: function (e, a) {
+    var temp = {};
+    temp[e.target.id] = e.target.value;
+    this.setState(temp);
     this.setState({data_dirty: true});
   },
   handle300PermChange: function (e) {
-    this.setState({has300: !this.state.has300});
+    this.setState({has300: !this.state.has300}, function() {
+      this.props.setHideStepNyhKom(!this.state.has300);
+    });
     this.setState({has300_dirty: true});
   },
   handleSubmit: function(e) {
@@ -73,15 +85,15 @@ module.exports = React.createClass({
     if (this.state.data_dirty) {
 
       var payload = {
-        email: this.state.email,
-        fornavn: this.state.fornavn,
-        efternavn: this.state.efternavn,
-        vejnavn: this.state.vejnavn,
-        postnummer: this.state.postnummer,
-        bynavn: this.state.bynavn,
         location_id: 2059
       };
-      
+
+      Object.keys(this.state)
+      .filter(this.filterAllowesUserFields)
+      .forEach(function(key) {
+        payload[key] = this.state[key];
+      }.bind(this));
+
       return $.ajax({
         type: 'POST',
         url: '/backend/users/'.concat(this.state.ekstern_id),
@@ -89,14 +101,14 @@ module.exports = React.createClass({
         contentType: "application/json; charset=utf-8",
         dataType: 'json',
         success: function (data) {
-          this.props.stepForward();
+          this.props.stepForward({state: this.state});
         }.bind(this),
         error: function(xhr, status, err) {
           console.error(this.props.url, status, err.toString());
         }.bind(this)
       });
     } else {
-      this.props.stepForward();
+      this.props.stepForward({state: this.state});
     }
   },
   add300: function() {
@@ -137,7 +149,7 @@ module.exports = React.createClass({
               className="form-control"
               type="text"
               placeholder="Email"
-              onChange={this.handleEmailChange}
+              onChange={this.handleInputChange}
               value={this.state.email}
             />
           </div>
@@ -148,7 +160,7 @@ module.exports = React.createClass({
               className="form-control"
               type="text"
               placeholder="Fornavn"
-              onChange={this.handleFornavnChange}
+              onChange={this.handleInputChange}
               value={this.state.fornavn}
             />
           </div>
@@ -159,7 +171,7 @@ module.exports = React.createClass({
               className="form-control"
               type="text"
               placeholder="Efternavn"
-              onChange={this.handleEfternavnChange}
+              onChange={this.handleInputChange}
               value={this.state.efternavn}
             />
           </div>
@@ -170,8 +182,52 @@ module.exports = React.createClass({
               className="form-control"
               type="text"
               placeholder="Vejnavn"
-              onChange={this.handleVejnavnChange}
+              onChange={this.handleInputChange}
               value={this.state.vejnavn}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="husnummer">Husnummer</label>
+            <input
+              id="husnummer"
+              className="form-control"
+              type="text"
+              placeholder="Husnummer"
+              onChange={this.handleInputChange}
+              value={this.state.husnummer}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="husbogstav">Husbogstav</label>
+            <input
+              id="husbogstav"
+              className="form-control"
+              type="text"
+              placeholder="Husbogstav"
+              onChange={this.handleInputChange}
+              value={this.state.husbogstav}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="etage">Etage</label>
+            <input
+              id="etage"
+              className="form-control"
+              type="text"
+              placeholder="Etage"
+              onChange={this.handleInputChange}
+              value={this.state.etage}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="sidedoer">Side/dør</label>
+            <input
+              id="sidedoer"
+              className="form-control"
+              type="text"
+              placeholder="Side/dør"
+              onChange={this.handleInputChange}
+              value={this.state.sidedoer}
             />
           </div>
           <div className="form-group">
@@ -181,7 +237,7 @@ module.exports = React.createClass({
               className="form-control"
               type="text"
               placeholder="Postnummer"
-              onChange={this.handlePostnummerChange}
+              onChange={this.handleInputChange}
               value={this.state.postnummer}
             />
           </div>
@@ -192,8 +248,30 @@ module.exports = React.createClass({
               className="form-control"
               type="text"
               placeholder="By"
-              onChange={this.handleBynavnChange}
+              onChange={this.handleInputChange}
               value={this.state.bynavn}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="koen">Køn</label>
+            <input
+              id="koen"
+              className="form-control"
+              type="text"
+              placeholder="Køn"
+              onChange={this.handleInputChange}
+              value={this.state.koen}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="foedselsaar">Fødselsår</label>
+            <input
+              id="foedselsaar"
+              className="form-control"
+              type="text"
+              placeholder="Fødselsår"
+              onChange={this.handleInputChange}
+              value={this.state.foedselsaar}
             />
           </div>
           {this.props.showCheckbox300Perm ?

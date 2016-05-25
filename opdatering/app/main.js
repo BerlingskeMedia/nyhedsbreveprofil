@@ -24,7 +24,8 @@ var Opdateringskampagne = React.createClass({
       steps: [],
       step: 0,
       showCheckbox300Perm: false,
-      hideStepNyhKom: false
+      hideStepNyhKom: false,
+      hideStepNyhKom_dirty: false
     };
   },
   getSearchParameter: function(name, url) {
@@ -50,7 +51,9 @@ var Opdateringskampagne = React.createClass({
       success: [
         this.setUserState,
         this.determinShowCheckbox300Perm,
-        this.determinSteps],
+        this.determinShowStepNyhedsbreveKommmercial,
+        this.setStepsState
+      ],
       error: function(xhr, status, err) {
         console.error(this.props.url, status, err.toString());
       }.bind(this)
@@ -67,24 +70,26 @@ var Opdateringskampagne = React.createClass({
       this.setState({showCheckbox300Perm: data.nyhedsbreve.indexOf(300) === -1});
     }
   },
-  determinSteps: function () {
+  determinShowStepNyhedsbreveKommmercial: function(data) {
+    if (!this.state.hideStepNyhKom_dirty) {
+      var hideStepNyhKom = !data.nyhedsbreve.some(function(nyhedsbrev_id) {
+        return [66,108,300].indexOf(nyhedsbrev_id) > -1;
+      });
+
+      this.setState({hideStepNyhKom: hideStepNyhKom});
+    }
+  },
+  setHideStepNyhKom(hide) {
+    this.setState({hideStepNyhKom: hide, hideStepNyhKom_dirty: true});
+  },
+  setStepsState: function () {
     var steps = [
-      <StepStamdata sidebar_label="Stamoplysninger" stepForward={this.stepForward} showCheckbox300Perm={this.state.showCheckbox300Perm} data={this.state.userData} />,
+      <StepStamdata sidebar_label="Stamoplysninger" stepForward={this.stepForward} showCheckbox300Perm={this.state.showCheckbox300Perm} data={this.state.userData} setHideStepNyhKom={this.setHideStepNyhKom} />,
       <StepInteresser sidebar_label="Interesser" stepForward={this.stepForward} stepBackwards={this.stepBackwards} data={this.state.userData} />,
       <StepNyhedsbreveRed sidebar_label="Redaktionelle nyhedsbreve" stepForward={this.stepForward} stepBackwards={this.stepBackwards} data={this.state.userData} abo={this.state.abo} />,
       <StepNyhedsbreveKom sidebar_label="Kommercielle nyhedsbreve" stepForward={this.stepForward} stepBackwards={this.stepBackwards} data={this.state.userData} abo={this.state.abo} />,
       <StepFinished sidebar_label="Tak for hjælpen" stepBackwards={this.stepBackwards} data={this.state.userData} />
     ];
-
-    var hideStepNyhKom = !this.state.userData.nyhedsbreve.some(function(nyhedsbrev_id) {
-      return [66,108,300].indexOf(nyhedsbrev_id) > -1;
-    });
-console.log('hideStepNyhKom', hideStepNyhKom);
-    // this.setState({hideStepNyhKom: hideStepNyhKom});
-
-    if (hideStepNyhKom) {
-      steps.splice(3,1);
-    }
 
     this.setState({steps: steps});
   },
@@ -101,25 +106,20 @@ console.log('hideStepNyhKom', hideStepNyhKom);
     }.bind(this));
   },
   render: function() {
-    // var steps = [
-    //   <StepStamdata sidebar_label="Stamoplysninger" stepForward={this.stepForward} showCheckbox300Perm={this.state.showCheckbox300Perm} data={this.state.userData} />,
-    //   <StepInteresser sidebar_label="Interesser" stepForward={this.stepForward} stepBackwards={this.stepBackwards} data={this.state.userData} />,
-    //   <StepNyhedsbreveRed sidebar_label="Redaktionelle nyhedsbreve" stepForward={this.stepForward} stepBackwards={this.stepBackwards} data={this.state.userData} abo={this.state.abo} />,
-    //   <StepNyhedsbreveKom sidebar_label="Kommercielle nyhedsbreve" stepForward={this.stepForward} stepBackwards={this.stepBackwards} data={this.state.userData} abo={this.state.abo} />,
-    //   <StepFinished sidebar_label="Tak for hjælpen" stepBackwards={this.stepBackwards} data={this.state.userData} />
-    // ];
-    //
-    // if (this.state.hideStepNyhKom) {
-    //   steps.splice(3,1);
-    // }
+    var steps = [];
+    Object.assign(steps, this.state.steps);
+
+    if (this.state.hideStepNyhKom) {
+      steps.splice(3,1);
+    }
 
     return (
       <div className="opdateringskampagne">
         <div className="col-sm-4 col-md-4 sidebar">
-          <Sidebar step={this.state.step} steps={this.state.steps} />
+          <Sidebar step={this.state.step} steps={steps} />
         </div>
         <div className="col-sm-8 col-md-8 main">
-          {this.state.steps[this.state.step]}
+          {steps[this.state.step]}
         </div>
       </div>
     );
