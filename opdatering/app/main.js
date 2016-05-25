@@ -22,7 +22,7 @@ var Opdateringskampagne = React.createClass({
       ekstern_id: ekstern_id !== null ? ekstern_id : '0cbf425b93500407ccc4481ede7b87da', // TEST TODO REMOVE
       abo: abo !== null ? abo.toUpperCase() : null,
       steps: [],
-      step: 4,
+      step: 0,
       showCheckbox300Perm: false,
       hideStepNyhKom: false,
       hideStepNyhKom_dirty: false
