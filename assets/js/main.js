@@ -270,7 +270,8 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
   $q.all([getPublishers,getNyhedsbreve]).then(function () {
     $scope.publishers = $scope.publishers.filter(function (publisher) {
       return $scope.newsletters.some(function (newsletter) {
-        return newsletter.publisher_id === publisher.publisher_id;
+        // We only want to show publishers with enabled and non-hidden newsletters
+        return newsletter.enabled === 1 && newsletter.hidden === 0 && newsletter.publisher_id === publisher.publisher_id;
       });
     });
   });
