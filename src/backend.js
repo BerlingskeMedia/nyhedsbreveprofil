@@ -76,31 +76,6 @@ function updateUser (request, reply) {
 }
 
 
-function createDoubleopt (request, reply) {
-  proxy(request, function (error, response) {
-    if (error) {
-      return reply(error);
-    }
-
-    proxy({
-      method: 'POST',
-      url: {
-        path: '/mails/send'
-      },
-      payload: {
-        to: request.payload.email,
-        template: 'bebc5061-2da1-4995-85ab-a0e9f3f66241',
-        category: 'doubleopt-confirm-link',
-        substitutions: request.payload !== null ? request.payload : {}
-      },
-      headers: {}
-    });
-
-    reply(response);
-  });
-}
-
-
 var backend = {
   proxy: proxy,
   register: function (server, options, next) {
@@ -158,7 +133,7 @@ var backend = {
     server.route({
       method: 'POST',
       path: '/doubleopt',
-      handler: createDoubleopt
+      handler: proxy
     });
 
     server.route({
