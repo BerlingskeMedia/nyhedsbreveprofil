@@ -39,7 +39,6 @@ module.exports = React.createClass({
   render: function() {
     return(
       <div>
-        <input type="button" value="Tilbage" onClick={this.props.stepBackwards} />
         <h3>Tak for hjælpen</h3>
         <h3>Du er nu med i lodtrækningen om en iPad til en værdi af kr. 5.995,-</h3>
         {this.state.showOffers === true ? <NewspaperOffers showKidsNews={true} /> : null}

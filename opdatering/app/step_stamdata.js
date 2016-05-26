@@ -4,21 +4,21 @@ var React = require('react');
 module.exports = React.createClass({
   getInitialState: function() {
     return {
-      ekstern_id: '',
-      email: '',
-      fornavn: '',
-      efternavn: '',
-      mobil: '',
-      telefon: '',
-      vejnavn: '',
-      husnummer: '',
-      husbogstav: '',
-      etage: '',
-      sidedoer: '',
-      bynavn: '',
-      postnummer: '',
-      koen: '',
-      foedselsaar: '',
+      // ekstern_id: '',
+      // email: '',
+      // fornavn: '',
+      // efternavn: '',
+      // mobil: '',
+      // telefon: '',
+      // vejnavn: '',
+      // husnummer: '',
+      // husbogstav: '',
+      // etage: '',
+      // sidedoer: '',
+      // bynavn: '',
+      // postnummer: '',
+      // koen: '',
+      // foedselsaar: '',
       data_dirty: false,
       has300: false,
       has300_dirty: false
@@ -58,10 +58,8 @@ module.exports = React.createClass({
 
     this.setState({has300: this.props.data.nyhedsbreve.indexOf(300) > -1});
   },
-  handleInputChange: function (e, a) {
-    var temp = {};
-    temp[e.target.id] = e.target.value;
-    this.setState(temp);
+  handleInputChange: function(stateData) {
+    this.setState(stateData);
     this.setState({data_dirty: true});
   },
   handle300PermChange: function (e) {
@@ -96,7 +94,7 @@ module.exports = React.createClass({
 
       return $.ajax({
         type: 'POST',
-        url: '/backend/users/'.concat(this.state.ekstern_id),
+        url: '/backend/users/'.concat(this.props.data.ekstern_id),
         data: JSON.stringify(payload),
         contentType: "application/json; charset=utf-8",
         dataType: 'json',
@@ -115,7 +113,7 @@ module.exports = React.createClass({
   add300: function() {
     return $.ajax({
       type: 'POST',
-      url: '/backend/users/'.concat(this.state.ekstern_id, '/nyhedsbreve/300?location_id=2059'),
+      url: '/backend/users/'.concat(this.props.data.ekstern_id, '/nyhedsbreve/300?location_id=2059'),
       contentType: "application/json; charset=utf-8",
       dataType: 'json',
       success: function (data) {
@@ -128,7 +126,7 @@ module.exports = React.createClass({
   delete300: function() {
     return $.ajax({
       type: 'DELETE',
-      url: '/backend/users/'.concat(this.state.ekstern_id, '/nyhedsbreve/300?location_id=2059'),
+      url: '/backend/users/'.concat(this.props.data.ekstern_id, '/nyhedsbreve/300?location_id=2059'),
       contentType: "application/json; charset=utf-8",
       dataType: 'json',
       success: function (data) {
@@ -139,142 +137,31 @@ module.exports = React.createClass({
     });
   },
   render: function() {
+
+    var userData = {};
+    Object.keys(this.props.data)
+    .filter(this.filterAllowesUserFields)
+    .forEach(function(key) {
+      userData[key] = this.props.data[key];
+    }.bind(this));
+
     return (
       <div className="stepStamdata">
         <form onSubmit={this.handleSubmit}>
           <h2>Opdatér venligst dine stamoplysninger</h2>
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
-            <input
-              id="email"
-              className="form-control"
-              type="text"
-              placeholder="Email"
-              onChange={this.handleInputChange}
-              value={this.state.email}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="fornavn">Fornavn</label>
-            <input
-              id="fornavn"
-              className="form-control"
-              type="text"
-              placeholder="Fornavn"
-              onChange={this.handleInputChange}
-              value={this.state.fornavn}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="efternavn">Efternavn</label>
-            <input
-              id="efternavn"
-              className="form-control"
-              type="text"
-              placeholder="Efternavn"
-              onChange={this.handleInputChange}
-              value={this.state.efternavn}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="vejnavn">Vejnavn</label>
-            <input
-              id="vejnavn"
-              className="form-control"
-              type="text"
-              placeholder="Vejnavn"
-              onChange={this.handleInputChange}
-              value={this.state.vejnavn}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="husnummer">Husnummer</label>
-            <input
-              id="husnummer"
-              className="form-control"
-              type="text"
-              placeholder="Husnummer"
-              onChange={this.handleInputChange}
-              value={this.state.husnummer}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="husbogstav">Husbogstav</label>
-            <input
-              id="husbogstav"
-              className="form-control"
-              type="text"
-              placeholder="Husbogstav"
-              onChange={this.handleInputChange}
-              value={this.state.husbogstav}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="etage">Etage</label>
-            <input
-              id="etage"
-              className="form-control"
-              type="text"
-              placeholder="Etage"
-              onChange={this.handleInputChange}
-              value={this.state.etage}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="sidedoer">Side/dør</label>
-            <input
-              id="sidedoer"
-              className="form-control"
-              type="text"
-              placeholder="Side/dør"
-              onChange={this.handleInputChange}
-              value={this.state.sidedoer}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="postnummer">Postnummer</label>
-            <input
-              id="postnummer"
-              className="form-control"
-              type="text"
-              placeholder="Postnummer"
-              onChange={this.handleInputChange}
-              value={this.state.postnummer}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="bynavn">By</label>
-            <input
-              id="bynavn"
-              className="form-control"
-              type="text"
-              placeholder="By"
-              onChange={this.handleInputChange}
-              value={this.state.bynavn}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="koen">Køn</label>
-            <input
-              id="koen"
-              className="form-control"
-              type="text"
-              placeholder="Køn"
-              onChange={this.handleInputChange}
-              value={this.state.koen}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="foedselsaar">Fødselsår</label>
-            <input
-              id="foedselsaar"
-              className="form-control"
-              type="text"
-              placeholder="Fødselsår"
-              onChange={this.handleInputChange}
-              value={this.state.foedselsaar}
-            />
-          </div>
+          <TextInput id="email" label="Email" initialValue={userData.email} onChange={this.handleInputChange} />
+          <TextInput id="fornavn" label="Fornavn" initialValue={userData.fornavn} onChange={this.handleInputChange} />
+          <TextInput id="efternavn" label="Efternavn" initialValue={userData.efternavn} onChange={this.handleInputChange} />
+          <TextInput id="vejnavn" label="Vejnavn" initialValue={userData.vejnavn} onChange={this.handleInputChange} />
+          <TextInput id="husnummer" label="Husnummer" initialValue={userData.husnummer} onChange={this.handleInputChange} />
+          <TextInput id="husbogstav" label="Husbogstav" initialValue={userData.husbogstav} onChange={this.handleInputChange} />
+          <TextInput id="etage" label="Etage" initialValue={userData.etage} onChange={this.handleInputChange} />
+          <TextInput id="sidedoer" label="Side/dør" initialValue={userData.sidedoer} onChange={this.handleInputChange} />
+          <TextInput id="postnummer" label="Postnummer" initialValue={userData.postnummer} onChange={this.handleInputChange} />
+          <TextInput id="bynavn" label="By" initialValue={userData.bynavn} onChange={this.handleInputChange} />
+          <KoenSelect id="koen" label="Køn" initialValue={userData.koen} onChange={this.handleInputChange} />
+          <TextInput id="foedselsaar" label="Fødselsår" initialValue={userData.foedselsaar} onChange={this.handleInputChange} />
+          <TextInput id="foedselsaar" label="Fødselsår" initialValue={userData.foedselsaar} onChange={this.handleInputChange} />
           {this.props.showCheckbox300Perm ?
             <div className="checkbox">
               <label>
@@ -291,6 +178,70 @@ module.exports = React.createClass({
           : null }
           <input className="nextButton" type="submit" value="Næste" />
         </form>
+      </div>
+    );
+  }
+});
+
+var TextInput = React.createClass({
+  getInitialState: function() {
+    return {
+      value: this.props.initialValue
+    };
+  },
+  onChange: function(e) {
+    var temp = {};
+    temp[e.target.id] = e.target.value;
+    this.setState({value: e.target.value}, function() {
+      this.props.onChange(temp);
+    }.bind(this));
+  },
+  render: function() {
+
+    var placeholder = this.props.placeholder !== undefined ? this.props.placeholder : this.props.label;
+
+    return (
+      <div key={this.props.id} className="form-group">
+        <label htmlFor={this.props.id}>{this.props.label}</label>
+        <input
+          id={this.props.id}
+          className="form-control"
+          type="text"
+          placeholder={placeholder}
+          onChange={this.onChange}
+          value={this.state.value}
+        />
+      </div>
+    );
+  }
+});
+
+var KoenSelect = React.createClass({
+  getInitialState: function() {
+    return {
+      value: this.props.initialValue
+    };
+  },
+  onChange: function(e) {
+    var temp = {};
+    temp[e.target.id] = e.target.value;
+    this.setState({value: e.target.value}, function() {
+      this.props.onChange(temp);
+    }.bind(this));
+  },
+  render: function() {
+    return (
+      <div key={this.props.id} className="form-group">
+        <label htmlFor={this.props.id}>{this.props.label}</label>
+        <select
+          id={this.props.id}
+          className="form-control"
+          value={this.state.value}
+          onChange={this.onChange}>
+          <option key="-1" value="" disabled="disabled"></option>
+          <option key="0" value="M">Mand</option>
+          <option key="1" value="K">Kvinde</option>
+        </select>
       </div>
     );
   }
