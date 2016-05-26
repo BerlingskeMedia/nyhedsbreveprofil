@@ -51,7 +51,8 @@ var Opdateringskampagne = React.createClass({
     } else {
       uri = uri + separator + key + "=" + value;
     }
-    return uri + hash;  // finally append the hash as well
+    var href = uri + hash;
+    window.history.pushState({path:href},'',href)
   },
   componentDidMount: function () {
     this.loadUserData();
@@ -111,7 +112,9 @@ var Opdateringskampagne = React.createClass({
   },
   stepForward: function (ekstern_id) {
     if (ekstern_id !== undefined) {
-      this.setState({ekstern_id:ekstern_id});
+      this.setState({ekstern_id:ekstern_id}, function() {
+        this.setSearchParameter('ekstern_id', ekstern_id);
+      });
     }
     this.loadUserData().success(function() {
       var step = this.state.step;

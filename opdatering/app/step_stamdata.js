@@ -99,7 +99,7 @@ module.exports = React.createClass({
         contentType: "application/json; charset=utf-8",
         dataType: 'json',
         success: function (data) {
-          console.log('data', data);
+          console.log('user updated', data);
           this.props.stepForward(data.ekstern_id);
         }.bind(this),
         error: function(xhr, status, err) {
