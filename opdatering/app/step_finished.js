@@ -18,6 +18,7 @@ module.exports = React.createClass({
 
     this.setState({showOffers: temp});
     this.sendCampaignSignup();
+    this.sendReceiptEmail();
   },
   sendCampaignSignup: function() {
 
@@ -31,6 +32,20 @@ module.exports = React.createClass({
       url: '/backend/kampagner/kampagnelinie',
       data: JSON.stringify(payload),
       contentType: "application/json; charset=utf-8",
+      error: function(xhr, status, err) {
+        console.error(this.props.url, status, err.toString());
+      }.bind(this)
+    });
+  },
+  sendReceiptEmail: function() {
+    return $.ajax({
+      type: 'POST',
+      url: '/opdatering/finished',
+      data: JSON.stringify(this.props.data),
+      contentType: "application/json; charset=utf-8",
+      success: function(xhr, status, err) {
+        console.log('Email sent', xhr);
+      },
       error: function(xhr, status, err) {
         console.error(this.props.url, status, err.toString());
       }.bind(this)
