@@ -4,22 +4,8 @@ var React = require('react');
 module.exports = React.createClass({
   getInitialState: function() {
     return {
-      // ekstern_id: '',
-      // email: '',
-      // fornavn: '',
-      // efternavn: '',
-      // mobil: '',
-      // telefon: '',
-      // vejnavn: '',
-      // husnummer: '',
-      // husbogstav: '',
-      // etage: '',
-      // sidedoer: '',
-      // bynavn: '',
-      // postnummer: '',
-      // koen: '',
-      // foedselsaar: '',
       data_dirty: false,
+      email_conflict: false,
       has300: false,
       has300_dirty: false
     };
@@ -103,7 +89,11 @@ module.exports = React.createClass({
           this.props.stepForward(data.ekstern_id);
         }.bind(this),
         error: function(xhr, status, err) {
-          console.error(this.props.url, status, err.toString());
+          if (xhr.status === 409) {
+            this.setState({email_conflict: true});
+          } else {
+            console.error(xhr, status);
+          }
         }.bind(this)
       });
     } else {
@@ -149,7 +139,11 @@ module.exports = React.createClass({
       <div className="stepStamdata">
         <form onSubmit={this.handleSubmit}>
           <h2>Opdatér venligst dine stamoplysninger</h2>
-          <TextInput id="email" label="Email" initialValue={userData.email} onChange={this.handleInputChange} />
+          <TextInput id="email" label="Email" initialValue={userData.email} onChange={this.handleInputChange} hasError={this.state.email_conflict} />
+          {this.state.email_conflict ? <div className="alert alert-danger" role="alert">
+            <span className="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span> Email eksisterer</span>
+          </div> : null}
           <TextInput id="fornavn" label="Fornavn" initialValue={userData.fornavn} onChange={this.handleInputChange} />
           <TextInput id="efternavn" label="Efternavn" initialValue={userData.efternavn} onChange={this.handleInputChange} />
           <TextInput id="vejnavn" label="Vejnavn" initialValue={userData.vejnavn} onChange={this.handleInputChange} />
@@ -186,6 +180,7 @@ module.exports = React.createClass({
 var TextInput = React.createClass({
   getInitialState: function() {
     return {
+      hasError: false,
       value: this.props.initialValue
     };
   },
@@ -200,9 +195,11 @@ var TextInput = React.createClass({
 
     var placeholder = this.props.placeholder !== undefined ? this.props.placeholder : this.props.label;
 
+    var classes = "form-group".concat(this.state.hasError ? ' has-error' : '');
+
     return (
-      <div key={this.props.id} className="form-group">
-        <label htmlFor={this.props.id}>{this.props.label}</label>
+      <div key={this.props.id} className={classes}>
+        <label className="control-label" htmlFor={this.props.id}>{this.props.label}</label>
         <input
           id={this.props.id}
           className="form-control"
