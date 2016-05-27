@@ -1,7 +1,7 @@
 var $ = require('jquery');
 var React = require('react');
 
-var InteresseList = require('./checkbox_list');
+var CheckboxList = require('./checkbox_list');
 
 module.exports = React.createClass({
   getInitialState: function() {
@@ -117,9 +117,9 @@ module.exports = React.createClass({
         <input type="button" value="Tilbage" onClick={this.completeStep(this.props.stepBackwards)} />
         <h2>Opdatér venligst dine interesser</h2>
         <h3>Valgte</h3>
-        <InteresseList data={interesser_already} toggle={this.toggleInteresse} />
+        <CheckboxList data={interesser_already} toggle={this.toggleInteresse} />
         <h3>Tilføj</h3>
-        <InteresseList data={interesser_not_yet} toggle={this.toggleInteresse} />
+        <CheckboxList data={interesser_not_yet} toggle={this.toggleInteresse} />
         <input type="button" className="nextButton" value="Næste" onClick={this.completeStep(this.props.stepForward)} />
       </div>
     );

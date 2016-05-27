@@ -10,7 +10,6 @@ var Sidebar = require('./sidebar');
 
 var Opdateringskampagne = React.createClass({
   getInitialState: function() {
-
     return {
       userData: {
         nyhedsbreve: [],

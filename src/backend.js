@@ -52,26 +52,35 @@ function updateUser (request, reply) {
       return reply(response);
     }
 
-    proxy({
-      method: 'POST',
-      url: {
-        path: '/mails/send'
-      },
-      payload: {
-        to: request.payload.email,
-        template: '26a0a5b3-46ff-49a4-9201-afd4c6050aeb',
-        category: 'update-user',
-        substitutions: request.payload !== null ? request.payload : {}
-      },
-      headers: {}
-    }, function (error2, response2) {
-      if (error2) {
-        return reply(error2);
-      }
+    // We send a reciept for all updateUser request thats either
+    // a) not from our site
+    // b) not from opdateringskampagnen
+    // TODO: This should be done using cookies or OAuth to be secure
 
-      // We want to return the first response from POST /users/{id} - not the response from email
+    if (request.headers.origin.indexOf('profil.berlingske.media') === -1 || request.payload.location_id !== 2059) {
+      proxy({
+        method: 'POST',
+        url: {
+          path: '/mails/send'
+        },
+        payload: {
+          to: request.payload.email,
+          template: '26a0a5b3-46ff-49a4-9201-afd4c6050aeb',
+          category: 'update-user',
+          substitutions: request.payload !== null ? request.payload : {}
+        },
+        headers: {}
+      }, function (error2, response2) {
+        if (error2) {
+          return reply(error2);
+        }
+
+        // We want to return the first response from POST /users/{id} - not the response from email
+        reply(response);
+      });
+    } else {
       reply(response);
-    });
+    }
   });
 }
 

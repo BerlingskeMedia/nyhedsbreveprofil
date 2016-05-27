@@ -140,7 +140,7 @@ module.exports = React.createClass({
       <div className="stepStamdata">
         <form onSubmit={this.handleSubmit}>
           <h2>Opdatér venligst dine stamoplysninger</h2>
-          <TextInput id="email" label="Email" initialValue={userData.email} onChange={this.handleInputChange} hasError={this.state.email_error} />
+          <TextInput id="email" label="Email" type="email" initialValue={userData.email} onChange={this.handleInputChange} hasError={this.state.email_error} />
           {this.state.email_conflict ? <div className="alert alert-danger" role="alert">
             <span className="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
             <span> Email eksisterer</span>
@@ -196,13 +196,15 @@ var TextInput = React.createClass({
 
     var classes = "form-group".concat(this.props.hasError ? ' has-error' : '');
 
+    var type = this.props.type !== undefined ? this.props.type : 'text';
+
     return (
       <div key={this.props.id} className={classes}>
         <label className="control-label" htmlFor={this.props.id}>{this.props.label}</label>
         <input
           id={this.props.id}
           className="form-control"
-          type="text"
+          type={type}
           placeholder={placeholder}
           onChange={this.onChange}
           value={this.state.value}
