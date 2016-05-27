@@ -12,7 +12,7 @@ module.exports = {
         loaders: [
             { test: /\.css$/, loader: 'style!css' },
             { test: /\.json$/, loader: 'json-loader' },
-            { test: path.join(__dirname, 'opdatering/app'), loader: 'babel-loader' }
+            { test: path.join(__dirname, 'opdatering/app'), loader: 'babel-loader', query: { presets: ['react', 'es2015'] } }
         ]
     }
 };
