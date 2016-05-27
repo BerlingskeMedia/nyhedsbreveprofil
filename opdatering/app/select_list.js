@@ -10,7 +10,7 @@ module.exports = React.createClass({
     }.bind(this));
 
     return (
-      <div className="CheckboxList">
+      <div className="CheckboxList form">
         {items}
       </div>
     );
@@ -19,7 +19,9 @@ module.exports = React.createClass({
 
 var Select = React.createClass({
   getInitialState: function() {
-    return {value: ''};
+    return {
+      value: ''
+    };
   },
   componentWillReceiveProps: function() {
     if (this.props.data.initialValue && this.state.value === '') {
@@ -33,19 +35,25 @@ var Select = React.createClass({
     }.bind(this));
   },
   render: function() {
+    var classes = "form-group".concat(this.props.data.hasError ? ' has-error' : '');
 
     var options = this.props.data.options.map(function (option, index) {
       return <option key={index} value={option.value}>{option.label}</option>
     });
 
+    if (window.location.href.indexOf('localhost') != -1 && options.length === 0) {
+      options.push(<option key="999" value="999">TEST</option>);
+    }
+
     return (
-      <div key={this.props.data.id}>
-        <label htmlFor={this.props.data.id}>{this.props.data.navn}</label>
+      <div key={this.props.data.id} className={classes}>
+        <label className="control-label" htmlFor={this.props.data.id}>{this.props.data.navn}</label>
         <select
           id={this.props.data.id}
+          className="form-control"
           value={this.state.value}
           onChange={this.onChange}>
-          <option key="-1" value="" disabled="disabled"></option>
+          <option key="-1" value="" disabled="disabled">(Skal udfyldes)</option>
           {options}
         </select>
       </div>

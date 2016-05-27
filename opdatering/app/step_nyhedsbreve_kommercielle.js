@@ -1,6 +1,7 @@
 var $ = require('jquery');
 var React = require('react');
 var NewsletterList = require('./checkbox_list');
+var TheBusinessTargetInterests = require('./the_business_target_interests');
 
 module.exports = React.createClass({
   getInitialState: function() {
@@ -18,16 +19,15 @@ module.exports = React.createClass({
           id: 246,
           navn: 'Tilbud fra Godttip.dk',
           description: 'GodtTip.dk sender dig alle de gode tilbud først og giver ofte specielle rabatter kun til GodtTip.dk modtagere.',
-          permissiontext: <GodtTipPermText />,
           publisher: 34}],
       tbt_nyhedsbreve: [
         {
           id: 844,
           navn: 'The Business Target',
           description: 'Med Berlingske Medias B2B e-mail service er du sikker på at modtage relevante tilbud samt invitationer til spændende business events.',
-          permissiontext: <TheBusinessTargetPermText />,
-          interestsSelection: <TheBusinessTargetInterests toggle={this.setBusinessTargetInteresserSignUps} data={this.props.data} />,
           publisher: 51}],
+      business_target_interests_completed: false,
+      business_target_interests_error: false,
       shop_nyhedsbreve: [
         {
           id: 233,
@@ -48,6 +48,12 @@ module.exports = React.createClass({
 
     ga('set', 'page', 'opdateringskampagne/step_nyhedsbreve_redaktionelle');
     ga('send', 'pageview');
+
+    this.state.godttip_nyhedsbreve.forEach(this.addPermissiontekst(<GodtTipPermText />));
+    this.state.tbt_nyhedsbreve.forEach(this.addPermissiontekst(<TheBusinessTargetPermText />));
+    this.state.tbt_nyhedsbreve.forEach(function(nyhedsbrev) {
+      nyhedsbrev.interestsSelection = <TheBusinessTargetInterests toggle={this.setBusinessTargetInteresserSignUps} data={this.props.data} completed={this.setBusinessTargetIntestSelectionCompleted} hasError={this.state.business_target_interests_error} />;
+    }.bind(this));
 
     var nyhedsbreve_to_be_shown = [].concat(this.state.godttip_nyhedsbreve, this.state.tbt_nyhedsbreve, this.state.shop_nyhedsbreve, this.state.sweetdeal_generel_nyhedsbreve);
 
@@ -154,6 +160,11 @@ module.exports = React.createClass({
 
     this.setState({nyhedsbreve_already: nyhedsbreve_already});
   },
+  addPermissiontekst: function(permissiontext) {
+    return function(nyhedsbrev) {
+      nyhedsbrev.permissiontext = permissiontext;
+    }
+  },
   sortByAbonnement: function (nyhedsbrev_a, nyhedsbrev_b) {
     if (nyhedsbrev_a.publisher === nyhedsbrev_b.publisher) {
         return 0;
@@ -210,9 +221,28 @@ module.exports = React.createClass({
       new_signouts_businesstarget_interesser: new_signouts_businesstarget_interesser
     });
   },
+  setBusinessTargetIntestSelectionCompleted: function (completed) {
+    this.setState({business_target_interests_completed: true});
+  },
+  hasBusinessTargetNewsletter: function(nyhedsbrev_id) {
+    var tbt_ids = this.state.tbt_nyhedsbreve.map(function(n) {
+      return n.id;
+    });
+    return tbt_ids.indexOf(nyhedsbrev_id) > -1;
+  },
   completeStep: function(callback) {
     return function() {
       var ekstern_id = this.state.ekstern_id;
+
+
+      // If the user has signed up for The Business Target, or already subscribed and not signed out.
+      if (this.state.new_signups.some(this.hasBusinessTargetNewsletter) || (this.props.data.nyhedsbreve.some(this.hasBusinessTargetNewsletter) && !this.state.new_signouts.some(this.hasBusinessTargetNewsletter))) {
+        // Now we need to check if theres interests in both controls
+        if (!this.state.business_target_interests_completed) {
+          this.setState({business_target_interests_error: true});
+          return;
+        }
+      }
 
       var new_business_signups = Object.keys(this.state.new_signups_businesstarget_interesser).map(function(key) {
         return this.state.new_signups_businesstarget_interesser[key];
@@ -284,152 +314,20 @@ module.exports = React.createClass({
   }
 });
 
+
 var GodtTipPermText = React.createClass({
   render: function() {
     return(
-      <div>GodtTip.dk og Berlingske Media-koncernen (<a href="http://www.berlingskemedia.dk/berlingske-medias-selskaber-og-forretningsenheder">se udgivelser og forretningsenheder her</a>) må gerne gøre mig opmærksom på nyheder, tilbud og konkurrencer via brev og elektroniske medier (herunder e-mail, sms, mms, videobeskeder og pop-ups), når Berlingske Media-koncernen og vores samarbejdspartnere (<a href="http://www.berlingskemedia.dk/berlingske-medias-samarbejdspartnere/">se samarbejdspartnere her</a>) har nyheder, tilbud og konkurrencer inden for forskellige interesseområder (<a href="http://www.berlingskemedia.dk/liste-over-interesseomraader/">se hvilke her</a>).</div>
+      <div>GodtTip.dk og Berlingske Media-koncernen (<a href="http://www.berlingskemedia.dk/berlingske-medias-selskaber-og-forretningsenheder" target="_blank">se udgivelser og forretningsenheder her</a>) må gerne gøre mig opmærksom på nyheder, tilbud og konkurrencer via brev og elektroniske medier (herunder e-mail, sms, mms, videobeskeder og pop-ups), når Berlingske Media-koncernen og vores samarbejdspartnere (<a href="http://www.berlingskemedia.dk/berlingske-medias-samarbejdspartnere/" target="_blank">se samarbejdspartnere her</a>) har nyheder, tilbud og konkurrencer inden for forskellige interesseområder (<a href="http://www.berlingskemedia.dk/liste-over-interesseomraader/" target="_blank">se hvilke her</a>).</div>
     );
   }
 });
+
 
 var TheBusinessTargetPermText = React.createClass({
   render: function() {
     return(
-      <div>The Business Target og Berlingske Media-koncernen (<a href="http://www.berlingskemedia.dk/berlingske-medias-selskaber-og-forretningsenheder/">se udgivelser og forretningsenheder her</a>) må gerne gøre mig opmærksom på nyheder, tilbud og konkurrencer via brev og elektroniske medier (herunder e-mail, sms, mms, videobeskeder og pop-ups), når Berlingske Media-koncernen og vores samarbejdspartnere (<a href="http://www.berlingskemedia.dk/berlingske-medias-samarbejdspartnere/">se samarbejdspartnere her</a>) har nyheder, tilbud og konkurrencer inden for forskellige interesseområder (<a href="http://www.berlingskemedia.dk/liste-over-interesseomraader/">se hvilke her</a>).</div>
-    );
-  }
-});
-
-var BusinessInterestList = require('./select_list');
-
-var TheBusinessTargetInterests = React.createClass({
-  getInitialState: function() {
-    return {
-      new_signups: {},
-      new_signouts: {},
-      existing_signups: {},
-      thebusinesstargetInterests: [
-        {id: 310, navn: 'Branche', initialValue: '', options: []},
-        {id: 343, navn: 'Stillingsbetegnelse', initialValue: '', options: []},
-      ]
-    }
-  },
-  componentDidMount: function() {
-    this.loadingThebusinesstargetInterests = $.ajax({
-      url: '/backend/interesser/full?displayTypeId=6',
-      dataType: 'json',
-      cache: true,
-      success: [
-        this.createSelectOptions,
-        this.mapExistingUserSignups
-      ],
-      error: function(xhr, status, err) {
-        console.error(this.props.url, status, err.toString());
-      }.bind(this)
-    });
-  },
-  componentWillUnmount: function() {
-    this.loadingThebusinesstargetInterests.abort();
-  },
-  createSelectOptions: function(data) {
-
-    var user = this.props.data;
-    var temp = this.state.thebusinesstargetInterests;
-
-    temp.forEach(function (thebusinesstargetInterest) {
-
-      var parent_interesse = data.find(function (y) {
-        return y.interesse_id === thebusinesstargetInterest.id;
-      });
-
-      if (parent_interesse) {
-        thebusinesstargetInterest.initialValue = findInitialValue(parent_interesse);
-        thebusinesstargetInterest.options = parent_interesse.subinterests.sort(sortByName).map(function(subinterest) {
-          return {
-            value: subinterest.interesse_id,
-            label: subinterest.interesse_navn
-          };
-        });
-      }
-    });
-
-    this.setState({thebusinesstargetInterests: temp});
-
-    function findInitialValue (parent_interesse) {
-      var selected = parent_interesse.subinterests.find(function (subinterest) {
-        return user.interesser.indexOf(subinterest.interesse_id) > -1;
-      }.bind(this));
-
-      if (selected) {
-        return selected.interesse_id;
-      } else {
-        return null;
-      }
-    }
-
-    function sortByName(subinterest_a, subinterest_b) {
-      var a = subinterest_a.interesse_navn.toUpperCase(),
-          b = subinterest_b.interesse_navn.toUpperCase();
-
-      var c =
-        a < b ? -1 :
-        a > b ? 1 :
-        0;
-
-      return c;
-    }
-  },
-  mapExistingUserSignups: function(data) {
-    var existing_signups = {};
-
-    var user_interesser = this.props.data.interesser;
-
-    user_interesser.forEach(function(user_interesse_id) {
-      data.forEach(function(thebusinesstargetInterest) {
-          if (user_interesse_id === thebusinesstargetInterest.interesse_id) {
-
-            existing_signups[thebusinesstargetInterest.interesse_id] = user_interesse_id;
-
-          } else {
-
-            var a = thebusinesstargetInterest.subinterests.find(function(subinterest) {
-              return subinterest.interesse_id === user_interesse_id;
-            });
-
-            if (a) {
-              existing_signups[thebusinesstargetInterest.interesse_id] = a.interesse_id;
-            }
-          }
-      });
-    });
-
-    this.setState({existing_signups: existing_signups});
-  },
-  toggleInteresseBusinessTarget: function(interesse_id_str, parent_id) {
-    var interesse_id = parseInt(interesse_id_str);
-    var new_signups = this.state.new_signups,
-        new_signouts = this.state.new_signouts,
-        existing_signups = this.state.existing_signups;
-
-    if (existing_signups[parent_id] !== undefined && existing_signups[parent_id] !== interesse_id) {
-      new_signouts[parent_id] = existing_signups[parent_id];
-    }
-
-    // In case the user switches back to the existing interest
-    if (existing_signups[parent_id] === interesse_id) {
-      delete new_signups[parent_id];
-      delete new_signouts[parent_id];
-    } else {
-      new_signups[parent_id] = interesse_id;
-    }
-
-    this.setState({new_signups: new_signups, new_signouts: new_signouts}, function() {
-      this.props.toggle(new_signups, new_signouts);
-    }.bind(this));
-  },
-  render: function() {
-    return(
-      <BusinessInterestList data={this.state.thebusinesstargetInterests} toggle={this.toggleInteresseBusinessTarget} />
+      <div>The Business Target og Berlingske Media-koncernen (<a href="http://www.berlingskemedia.dk/berlingske-medias-selskaber-og-forretningsenheder/" target="_blank">se udgivelser og forretningsenheder her</a>) må gerne gøre mig opmærksom på nyheder, tilbud og konkurrencer via brev og elektroniske medier (herunder e-mail, sms, mms, videobeskeder og pop-ups), når Berlingske Media-koncernen og vores samarbejdspartnere (<a href="http://www.berlingskemedia.dk/berlingske-medias-samarbejdspartnere/" target="_blank">se samarbejdspartnere her</a>) har nyheder, tilbud og konkurrencer inden for forskellige interesseområder (<a href="http://www.berlingskemedia.dk/liste-over-interesseomraader/" target="_blank">se hvilke her</a>).</div>
     );
   }
 });

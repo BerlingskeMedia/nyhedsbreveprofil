@@ -11,22 +11,41 @@ var Sidebar = require('./sidebar');
 var Opdateringskampagne = React.createClass({
   getInitialState: function() {
 
-    var ekstern_id = this.getSearchParameter('ekstern_id');
-    var abo = this.getSearchParameter('a');
-
     return {
       userData: {
         nyhedsbreve: [],
         interesser: []
       },
-      ekstern_id: ekstern_id !== null ? ekstern_id : '0cbf425b93500407ccc4481ede7b87da', // TEST TODO REMOVE
-      abo: abo !== null ? abo.toUpperCase() : null,
+      ekstern_id: '0cbf425b93500407ccc4481ede7b87da', // TEST TODO REMOVE
+      abo: null,
       steps: [],
-      step: 0,
+      step: 3,
       showCheckbox300Perm: false,
       hideStepNyhKom: false,
       hideStepNyhKom_dirty: false
     };
+  },
+  componentDidMount: function() {
+    var ekstern_id = this.getSearchParameter('ekstern_id'),
+        id = this.getSearchParameter('id');
+    var abo = this.getSearchParameter('a');
+
+    if (ekstern_id === null && id !== null) {
+      ekstern_id = id;
+      this.setSearchParameter('id', null);
+      this.setSearchParameter('ekstern_id', ekstern_id);
+    }
+
+    if (ekstern_id !== null) {
+      this.setState({ekstern_id: ekstern_id, abo: abo.toUpperCase()});
+    } else {
+      // TODO: ERROR ???
+    }
+
+    this.loadUserData();
+  },
+  componentWillUnmount: function() {
+    this.loadingUserData.abort();
   },
   getSearchParameter: function(name, url) {
       if (!url) url = window.location.href;
@@ -46,19 +65,18 @@ var Opdateringskampagne = React.createClass({
 
     var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
     var separator = uri.indexOf('?') !== -1 ? "&" : "?";
-    if (uri.match(re)) {
+    if (value === undefined || value === null) {
+      uri = uri.replace(re, '$1' + '$2').replace('?&', '?');
+      if (uri.endsWith('&')) {
+        uri = uri.slice(0, -1);
+      }
+    } else if (uri.match(re)) {
       uri = uri.replace(re, '$1' + key + "=" + value + '$2');
     } else {
       uri = uri + separator + key + "=" + value;
     }
     var href = uri + hash;
     window.history.pushState({path:href},'',href)
-  },
-  componentDidMount: function () {
-    this.loadUserData();
-  },
-  componentWillUnmount: function() {
-    this.loadingUserData.abort();
   },
   loadUserData: function() {
     this.loadingUserData = $.ajax({
@@ -100,6 +118,11 @@ var Opdateringskampagne = React.createClass({
     this.setState({hideStepNyhKom: hide, hideStepNyhKom_dirty: true});
   },
   setStepsState: function () {
+    // The reason why steps are in the state in not just in render(), is because of data={this.state.userData}
+    // Since userData is fetched aync, during the first render userData will be an empty object.
+    // And after receiving userData and setting the state, the data={this.state.userData} won't get triggered.
+    // So this workaround puts the steps in the state after the userData is received.
+
     var steps = [
       <StepStamdata sidebar_label="Stamoplysninger" stepForward={this.stepForward} showCheckbox300Perm={this.state.showCheckbox300Perm} data={this.state.userData} setHideStepNyhKom={this.setHideStepNyhKom} />,
       <StepInteresser sidebar_label="Interesser" stepForward={this.stepForward} stepBackwards={this.stepBackwards} data={this.state.userData} />,

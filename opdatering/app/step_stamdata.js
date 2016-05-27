@@ -5,6 +5,7 @@ module.exports = React.createClass({
   getInitialState: function() {
     return {
       data_dirty: false,
+      email_error: false,
       email_conflict: false,
       has300: false,
       has300_dirty: false
@@ -139,7 +140,7 @@ module.exports = React.createClass({
       <div className="stepStamdata">
         <form onSubmit={this.handleSubmit}>
           <h2>Opdatér venligst dine stamoplysninger</h2>
-          <TextInput id="email" label="Email" initialValue={userData.email} onChange={this.handleInputChange} hasError={this.state.email_conflict} />
+          <TextInput id="email" label="Email" initialValue={userData.email} onChange={this.handleInputChange} hasError={this.state.email_error} />
           {this.state.email_conflict ? <div className="alert alert-danger" role="alert">
             <span className="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
             <span> Email eksisterer</span>
@@ -154,7 +155,6 @@ module.exports = React.createClass({
           <TextInput id="postnummer" label="Postnummer" initialValue={userData.postnummer} onChange={this.handleInputChange} />
           <TextInput id="bynavn" label="By" initialValue={userData.bynavn} onChange={this.handleInputChange} />
           <KoenSelect id="koen" label="Køn" initialValue={userData.koen} onChange={this.handleInputChange} />
-          <TextInput id="foedselsaar" label="Fødselsår" initialValue={userData.foedselsaar} onChange={this.handleInputChange} />
           <TextInput id="foedselsaar" label="Fødselsår" initialValue={userData.foedselsaar} onChange={this.handleInputChange} />
           {this.props.showCheckbox300Perm ?
             <div className="checkbox">
@@ -180,7 +180,6 @@ module.exports = React.createClass({
 var TextInput = React.createClass({
   getInitialState: function() {
     return {
-      hasError: false,
       value: this.props.initialValue
     };
   },
@@ -195,7 +194,7 @@ var TextInput = React.createClass({
 
     var placeholder = this.props.placeholder !== undefined ? this.props.placeholder : this.props.label;
 
-    var classes = "form-group".concat(this.state.hasError ? ' has-error' : '');
+    var classes = "form-group".concat(this.props.hasError ? ' has-error' : '');
 
     return (
       <div key={this.props.id} className={classes}>

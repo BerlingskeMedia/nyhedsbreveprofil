@@ -34,7 +34,7 @@ var Checkbox = React.createClass({
         <input type="checkbox" id={this.props.data.id} checked={this.state.checked} onChange={this.onChange} />
         <label htmlFor={this.props.data.id}>{this.props.data.navn}</label>
         {this.props.data.description ? <span style={{fontStyle: 'italic', marginLeft: '2px'}}>{this.props.data.description}</span> : null }
-        {this.state.checked && this.props.data.permissiontext ? <div>{this.props.data.permissiontext}</div> : null }
+        {this.state.checked && this.props.data.permissiontext ? <div style={{marginTop: '5px', marginBottom: '5px'}}>{this.props.data.permissiontext}</div> : null }
         {this.state.checked && this.props.data.interestsSelection ? <div>{this.props.data.interestsSelection}</div> : null }
       </div>
     );
