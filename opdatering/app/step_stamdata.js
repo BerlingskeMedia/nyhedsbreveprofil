@@ -143,7 +143,7 @@ module.exports = React.createClass({
           <TextInput id="email" label="Email" type="email" initialValue={userData.email} onChange={this.handleInputChange} hasError={this.state.email_error} />
           {this.state.email_conflict ? <div className="alert alert-danger" role="alert">
             <span className="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-            <span> Email eksisterer</span>
+            <span> E-mailadressen findes allerede i vores nyhedsbrevssystem. Skriv venligst til <a href='mailto:nyhedsbreve@berlingske.dk'>nyhedsbreve@berlingske.dk</a>, hvis du vil flytte alle tilmeldinger til nyhedsbreve fra en e-mailadresse til en anden - så hjælper vi dig så hurtigt som muligt.</span>
           </div> : null}
           <TextInput id="fornavn" label="Fornavn" initialValue={userData.fornavn} onChange={this.handleInputChange} />
           <TextInput id="efternavn" label="Efternavn" initialValue={userData.efternavn} onChange={this.handleInputChange} />
