@@ -12,11 +12,6 @@ module.exports = React.createClass({
     ga('set', 'page', 'opdateringskampagne/step_finished');
     ga('send', 'pageview');
 
-    var temp = this.props.data.nyhedsbreve.some(function(nyhedsbrev_id) {
-      return [66,108,283,300].indexOf(nyhedsbrev_id) > -1;
-    });
-
-    this.setState({showOffers: temp});
     this.sendCampaignSignup();
     this.sendReceiptEmail();
   },
@@ -52,11 +47,15 @@ module.exports = React.createClass({
     });
   },
   render: function() {
+    var showOffers = this.props.data.nyhedsbreve.some(function(nyhedsbrev_id) {
+      return [66,108,283,300].indexOf(nyhedsbrev_id) > -1;
+    });
+    
     return(
       <div>
         <h3>Tak for hjælpen</h3>
         <h3>Du er nu med i lodtrækningen om en iPad til en værdi af kr. 5.995,-</h3>
-        {this.state.showOffers === true ? <NewspaperOffers showKidsNews={true} /> : null}
+        {showOffers === true ? <NewspaperOffers showKidsNews={true} /> : null}
       </div>
     );
   }

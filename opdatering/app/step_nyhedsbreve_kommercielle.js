@@ -119,7 +119,7 @@ module.exports = React.createClass({
             callback();
           }
         };
-      }(done,count,callback));
+      }(done, count, callback));
 
       this.state.new_signups.forEach(function(id) {
         this.call_backend('POST', 'nyhedsbreve', id)
