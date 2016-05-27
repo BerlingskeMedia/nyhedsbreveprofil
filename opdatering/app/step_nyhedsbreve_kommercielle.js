@@ -6,164 +6,19 @@ var TheBusinessTargetInterests = require('./the_business_target_interests');
 module.exports = React.createClass({
   getInitialState: function() {
     return {
-      ekstern_id: '',
       new_signups_businesstarget_interesser: {},
       new_signouts_businesstarget_interesser: {},
+      business_target_interests_completed: false,
+      business_target_interests_error: false,
       new_signups: [],
       new_signouts: [],
       nyhedsbreve_already: [],
       nyhedsbreve_not_yet: [],
-      nyhedsbreve: [],
-      godttip_nyhedsbreve: [
-        {
-          id: 246,
-          navn: 'Tilbud fra Godttip.dk',
-          description: 'GodtTip.dk sender dig alle de gode tilbud først og giver ofte specielle rabatter kun til GodtTip.dk modtagere.',
-          publisher: 34}],
-      tbt_nyhedsbreve: [
-        {
-          id: 844,
-          navn: 'The Business Target',
-          description: 'Med Berlingske Medias B2B e-mail service er du sikker på at modtage relevante tilbud samt invitationer til spændende business events.',
-          publisher: 51}],
-      business_target_interests_completed: false,
-      business_target_interests_error: false,
-      shop_nyhedsbreve: [
-        {
-          id: 233,
-          navn: 'BT Shop',
-          description: 'I BT SHOP får du særtilbud på rejser, teater, events- og musikoplevelser, vin og mange andre lækre produkter.',
-          publisher: 4},
-        {
-          id: 241,
-          navn: 'Berlingske Shop',
-          description: 'I Berlingske Shop får du gode tilbud på alt det, der gør livet lidt bedre.',
-          publisher: 1}],
-      sweetdeal_generel_nyhedsbreve: [
-        {id: 845, navn: 'Sweetdeal Rejser', publisher: 32},
-        {id: 855, navn: 'Sweetdeal Shopping', publisher: 32}]
     };
   },
   componentDidMount: function() {
-
     ga('set', 'page', 'opdateringskampagne/step_nyhedsbreve_redaktionelle');
     ga('send', 'pageview');
-
-    this.state.godttip_nyhedsbreve.forEach(this.addPermissiontekst(<GodtTipPermText />));
-    this.state.tbt_nyhedsbreve.forEach(this.addPermissiontekst(<TheBusinessTargetPermText />));
-    this.state.tbt_nyhedsbreve.forEach(function(nyhedsbrev) {
-      nyhedsbrev.interestsSelection = <TheBusinessTargetInterests toggle={this.setBusinessTargetInteresserSignUps} data={this.props.data} completed={this.setBusinessTargetIntestSelectionCompleted} hasError={this.state.business_target_interests_error} />;
-    }.bind(this));
-
-    var nyhedsbreve_to_be_shown = [].concat(this.state.godttip_nyhedsbreve, this.state.tbt_nyhedsbreve, this.state.shop_nyhedsbreve, this.state.sweetdeal_generel_nyhedsbreve);
-
-    var postnummer = parseInt(this.props.data.postnummer);
-
-    // København (id 846) - postnummer 0900-3699
-    if (postnummer >= 900 && postnummer <= 3699) {
-      nyhedsbreve_to_be_shown.push({id: 846, navn: 'Sweetdeal København', publisher: 32});
-    }
-
-    // Aabenraa (id 853) - postnummer 6200
-    if (postnummer === 6200) {
-      nyhedsbreve_to_be_shown.push({id: 853, navn: 'Sweetdeal Aabenraa', publisher: 32});
-    }
-
-    // Aarhus (id 847) - postnummer 8000-8300
-    if (postnummer >= 8000 && postnummer <= 8300) {
-      nyhedsbreve_to_be_shown.push({id: 847, navn: 'Sweetdeal Aarhus', publisher: 32});
-    }
-
-    // Esbjerg (id 864) - postnummer 6700,6701,6705,6710,6715
-    if ([6700,6701,6705,6710,6715].indexOf(postnummer) > -1) {
-      nyhedsbreve_to_be_shown.push({id: 864, navn: 'Sweetdeal Esbjerg', publisher: 32});
-    }
-
-    // Haderslev (id 861) - postnummer 6100
-    if (postnummer === 6100) {
-      nyhedsbreve_to_be_shown.push({id: 861, navn: 'Sweetdeal Haderslev', publisher: 32});
-    }
-
-    // Holstebro-Struer-Lemvig (id 854) - postnummer 7500,7600,7620
-    if ([7500,7600,7620].indexOf(postnummer) > -1 ) {
-      nyhedsbreve_to_be_shown.push({id: 854, navn: 'Sweetdeal Holstebro-Struer-Lemvig', publisher: 32});
-    }
-
-    // Kolding (id 859) - postnummer 6000
-    if (postnummer === 6000) {
-      nyhedsbreve_to_be_shown.push({id: 859, navn: 'Sweetdeal Kolding', publisher: 32});
-    }
-
-    // Randers (id 856) - postnummer 8900,8920,8930,8940,8960
-    if ([8900,8920,8930,8940,8960].indexOf(postnummer) > -1 ) {
-      nyhedsbreve_to_be_shown.push({id: 856, navn: 'Sweetdeal Randers', publisher: 32});
-    }
-
-    // Ringkøbing-Skjern (id 875)  - postnummer 6900,6950
-    if (postnummer === 6900 || postnummer === 6950) {
-      nyhedsbreve_to_be_shown.push({id: 875, navn: 'Sweetdeal Ringkøbing-Skjern', publisher: 32});
-    }
-
-    // Skanderborg (id 849) - postnummer 8660
-    if (postnummer === 8660) {
-      nyhedsbreve_to_be_shown.push({id: 849, navn: 'Sweetdeal Skanderborg', publisher: 32});
-    }
-
-    // Sønderborg (id 863) - postnummer 6400
-    if (postnummer === 6400) {
-      nyhedsbreve_to_be_shown.push({id: 863, navn: 'Sweetdeal Sønderborg', publisher: 32});
-    }
-
-    // Tønder (id 869) - postnummer 6270
-    if (postnummer === 6270) {
-      nyhedsbreve_to_be_shown.push({id: 869, navn: 'Sweetdeal Tønder', publisher: 32});
-    }
-
-    // Varde (id 862) - postnummer 6800
-    if (postnummer === 6800) {
-      nyhedsbreve_to_be_shown.push({id: 862, navn: 'Sweetdeal Varde', publisher: 32});
-    }
-
-    // Viborg (id 851) - postnummer 8800
-    if (postnummer === 8800) {
-      nyhedsbreve_to_be_shown.push({id: 851, navn: 'Sweetdeal Viborg', publisher: 32});
-    }
-
-    // Vejle (id 858) - postnummer 7100,7120
-    if (postnummer === 7100 || postnummer === 7120) {
-      nyhedsbreve_to_be_shown.push({id: 858, navn: 'Sweetdeal Vejle', publisher: 32});
-    }
-
-    nyhedsbreve_to_be_shown.sort(this.sortByAbonnement);
-    this.setState({nyhedsbreve: nyhedsbreve_to_be_shown});
-
-    this.setState({ekstern_id: this.props.data.ekstern_id});
-    var user_nyhedsbreve = this.props.data.nyhedsbreve;
-
-    var nyhedsbreve_not_yet = nyhedsbreve_to_be_shown.filter(function(nyhedsbrev) {
-      return user_nyhedsbreve.indexOf(nyhedsbrev.id) === -1;
-    }.bind(this));
-
-    nyhedsbreve_not_yet.sort(this.sortByAbonnement);
-
-    this.setState({nyhedsbreve_not_yet: nyhedsbreve_not_yet});
-
-    var nyhedsbreve_already = nyhedsbreve_to_be_shown.filter(function(nyhedsbrev) {
-      return user_nyhedsbreve.indexOf(nyhedsbrev.id) > -1;
-    }.bind(this));
-
-    nyhedsbreve_already.sort(this.sortByAbonnement);
-
-    nyhedsbreve_already.forEach(function (n) {
-      n.preselect = true;
-    });
-
-    this.setState({nyhedsbreve_already: nyhedsbreve_already});
-  },
-  addPermissiontekst: function(permissiontext) {
-    return function(nyhedsbrev) {
-      nyhedsbrev.permissiontext = permissiontext;
-    }
   },
   sortByAbonnement: function (nyhedsbrev_a, nyhedsbrev_b) {
     if (nyhedsbrev_a.publisher === nyhedsbrev_b.publisher) {
@@ -225,15 +80,14 @@ module.exports = React.createClass({
     this.setState({business_target_interests_completed: true});
   },
   hasBusinessTargetNewsletter: function(nyhedsbrev_id) {
-    var tbt_ids = this.state.tbt_nyhedsbreve.map(function(n) {
-      return n.id;
-    });
-    return tbt_ids.indexOf(nyhedsbrev_id) > -1;
+    // var tbt_ids = this.state.tbt_nyhedsbreve.map(function(n) {
+    //   return n.id;
+    // });
+    // return tbt_ids.indexOf(nyhedsbrev_id) > -1;
+    return nyhedsbrev_id === 844;
   },
   completeStep: function(callback) {
     return function() {
-      var ekstern_id = this.state.ekstern_id;
-
 
       // If the user has signed up for The Business Target, or already subscribed and not signed out.
       if (this.state.new_signups.some(this.hasBusinessTargetNewsletter) || (this.props.data.nyhedsbreve.some(this.hasBusinessTargetNewsletter) && !this.state.new_signouts.some(this.hasBusinessTargetNewsletter))) {
@@ -259,55 +113,182 @@ module.exports = React.createClass({
         return callback();
       }
 
-      this.state.new_signups.forEach(add_nyhedsbrev);
-      this.state.new_signouts.forEach(delete_nyhedsbrev);
-      new_business_signups.forEach(add_interesse);
-      new_business_signouts.forEach(delete_interesse);
+      var successCallback = (function(done, count, callback) {
+        return function() {
+          if (++done === count) {
+            callback();
+          }
+        };
+      }(done,count,callback));
 
+      this.state.new_signups.forEach(function(id) {
+        this.call_backend('POST', 'nyhedsbreve', id)
+        .success(successCallback);
+      }.bind(this));
 
-      function add_nyhedsbrev (id) {
-        call_backend('POST', 'nyhedsbreve', id);
-      }
+      this.state.new_signouts.forEach(function(id) {
+        this.call_backend('DELETE', 'nyhedsbreve', id)
+        .success(successCallback);
+      }.bind(this));
 
-      function delete_nyhedsbrev (id) {
-        call_backend('DELETE', 'nyhedsbreve', id);
-      }
+      new_business_signups.forEach(function(id) {
+        this.call_backend('POST', 'interesser', id)
+        .success(successCallback);
+      }.bind(this));
 
-      function add_interesse (id) {
-        call_backend('POST', 'interesser', id);
-      }
+      new_business_signouts.forEach(function(id) {
+        this.call_backend('DELETE', 'interesser', id)
+        .success(successCallback);
+      }.bind(this));
 
-      function delete_interesse (id) {
-        call_backend('DELETE', 'interesser', id);
-      }
-
-      function call_backend (type, domain, id) {
-        $.ajax({
-          type: type,
-          url: '/backend/users/'.concat(ekstern_id, '/', domain, '/', id, '?location_id=2059'),
-          dataType: 'json',
-          success: function (data) {
-            if (++done === count) {
-              callback();
-            }
-          }.bind(this),
-          error: function(xhr, status, err) {
-            console.error(status, err.toString());
-          }.bind(this)
-        });
-      }
 
     }.bind(this);
   },
+  call_backend: function(type, domain, id) {
+    return $.ajax({
+      type: type,
+      url: '/backend/users/'.concat(this.props.data.ekstern_id, '/', domain, '/', id, '?location_id=2059'),
+      dataType: 'json',
+      error: function(xhr, status, err) {
+        console.error(status, err.toString());
+      }.bind(this)
+    });
+  },
   render: function() {
+    var godttip_nyhedsbreve = [
+          {
+            id: 246,
+            navn: 'Tilbud fra Godttip.dk',
+            description: 'GodtTip.dk sender dig alle de gode tilbud først og giver ofte specielle rabatter kun til GodtTip.dk modtagere.',
+            permissiontext: <GodtTipPermText />,
+            publisher: 34}],
+        tbt_nyhedsbreve = [
+          {
+            id: 844,
+            navn: 'The Business Target',
+            description: 'Med Berlingske Medias B2B e-mail service er du sikker på at modtage relevante tilbud samt invitationer til spændende business events.',
+            permissiontext: <TheBusinessTargetPermText />,
+            interestsSelection: <TheBusinessTargetInterests toggle={this.setBusinessTargetInteresserSignUps} data={this.props.data} completed={this.setBusinessTargetIntestSelectionCompleted} hasError={this.state.business_target_interests_error} />,
+            publisher: 51}],
+        shop_nyhedsbreve = [
+          {
+            id: 233,
+            navn: 'BT Shop',
+            description: 'I BT SHOP får du særtilbud på rejser, teater, events- og musikoplevelser, vin og mange andre lækre produkter.',
+            publisher: 4},
+          {
+            id: 241,
+            navn: 'Berlingske Shop',
+            description: 'I Berlingske Shop får du gode tilbud på alt det, der gør livet lidt bedre.',
+            publisher: 1}],
+        sweetdeal_generel_nyhedsbreve = [
+          {id: 845, navn: 'Sweetdeal Rejser', publisher: 32},
+          {id: 855, navn: 'Sweetdeal Shopping', publisher: 32}];
+
+
+    var nyhedsbreve = [].concat(godttip_nyhedsbreve, tbt_nyhedsbreve, shop_nyhedsbreve, sweetdeal_generel_nyhedsbreve);
+
+    var postnummer = parseInt(this.props.data.postnummer);
+
+    // København (id 846) - postnummer 0900-3699
+    if (postnummer >= 900 && postnummer <= 3699) {
+      nyhedsbreve.push({id: 846, navn: 'Sweetdeal København', publisher: 32});
+    }
+
+    // Aabenraa (id 853) - postnummer 6200
+    if (postnummer === 6200) {
+      nyhedsbreve.push({id: 853, navn: 'Sweetdeal Aabenraa', publisher: 32});
+    }
+
+    // Aarhus (id 847) - postnummer 8000-8300
+    if (postnummer >= 8000 && postnummer <= 8300) {
+      nyhedsbreve.push({id: 847, navn: 'Sweetdeal Aarhus', publisher: 32});
+    }
+
+    // Esbjerg (id 864) - postnummer 6700,6701,6705,6710,6715
+    if ([6700,6701,6705,6710,6715].indexOf(postnummer) > -1) {
+      nyhedsbreve.push({id: 864, navn: 'Sweetdeal Esbjerg', publisher: 32});
+    }
+
+    // Haderslev (id 861) - postnummer 6100
+    if (postnummer === 6100) {
+      nyhedsbreve.push({id: 861, navn: 'Sweetdeal Haderslev', publisher: 32});
+    }
+
+    // Holstebro-Struer-Lemvig (id 854) - postnummer 7500,7600,7620
+    if ([7500,7600,7620].indexOf(postnummer) > -1 ) {
+      nyhedsbreve.push({id: 854, navn: 'Sweetdeal Holstebro-Struer-Lemvig', publisher: 32});
+    }
+
+    // Kolding (id 859) - postnummer 6000
+    if (postnummer === 6000) {
+      nyhedsbreve.push({id: 859, navn: 'Sweetdeal Kolding', publisher: 32});
+    }
+
+    // Randers (id 856) - postnummer 8900,8920,8930,8940,8960
+    if ([8900,8920,8930,8940,8960].indexOf(postnummer) > -1 ) {
+      nyhedsbreve.push({id: 856, navn: 'Sweetdeal Randers', publisher: 32});
+    }
+
+    // Ringkøbing-Skjern (id 875)  - postnummer 6900,6950
+    if (postnummer === 6900 || postnummer === 6950) {
+      nyhedsbreve.push({id: 875, navn: 'Sweetdeal Ringkøbing-Skjern', publisher: 32});
+    }
+
+    // Skanderborg (id 849) - postnummer 8660
+    if (postnummer === 8660) {
+      nyhedsbreve.push({id: 849, navn: 'Sweetdeal Skanderborg', publisher: 32});
+    }
+
+    // Sønderborg (id 863) - postnummer 6400
+    if (postnummer === 6400) {
+      nyhedsbreve.push({id: 863, navn: 'Sweetdeal Sønderborg', publisher: 32});
+    }
+
+    // Tønder (id 869) - postnummer 6270
+    if (postnummer === 6270) {
+      nyhedsbreve.push({id: 869, navn: 'Sweetdeal Tønder', publisher: 32});
+    }
+
+    // Varde (id 862) - postnummer 6800
+    if (postnummer === 6800) {
+      nyhedsbreve.push({id: 862, navn: 'Sweetdeal Varde', publisher: 32});
+    }
+
+    // Viborg (id 851) - postnummer 8800
+    if (postnummer === 8800) {
+      nyhedsbreve.push({id: 851, navn: 'Sweetdeal Viborg', publisher: 32});
+    }
+
+    // Vejle (id 858) - postnummer 7100,7120
+    if (postnummer === 7100 || postnummer === 7120) {
+      nyhedsbreve.push({id: 858, navn: 'Sweetdeal Vejle', publisher: 32});
+    }
+
+    var nyhedsbreve_not_yet = nyhedsbreve.filter(function(nyhedsbrev) {
+      return this.props.data.nyhedsbreve.indexOf(nyhedsbrev.id) === -1;
+    }.bind(this));
+
+    nyhedsbreve_not_yet.sort(this.sortByAbonnement);
+
+    var nyhedsbreve_already = nyhedsbreve.filter(function(nyhedsbrev) {
+      return this.props.data.nyhedsbreve.indexOf(nyhedsbrev.id) > -1;
+    }.bind(this));
+
+    nyhedsbreve_already.sort(this.sortByAbonnement);
+
+    nyhedsbreve_already.forEach(function (n) {
+      n.preselect = true;
+    });
+
     return (
       <div className="stepNyhedsbreveKom">
         <input type="button" value="Tilbage" onClick={this.completeStep(this.props.stepBackwards)} />
         <h2>Vælg hvilke kommercielle nyhedsbreve du vil modtage</h2>
         <h3>Valgte</h3>
-        <NewsletterList data={this.state.nyhedsbreve_already} toggle={this.toggleNyhedsbrev} />
+        <NewsletterList data={nyhedsbreve_already} toggle={this.toggleNyhedsbrev} />
         <h3>Tilføj</h3>
-        <NewsletterList data={this.state.nyhedsbreve_not_yet} toggle={this.toggleNyhedsbrev} />
+        <NewsletterList data={nyhedsbreve_not_yet} toggle={this.toggleNyhedsbrev} />
         <input type="button" value="Næste" className="nextButton" onClick={this.completeStep(this.props.stepForward)} />
       </div>
     );
