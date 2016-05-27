@@ -15,7 +15,9 @@ var Opdateringskampagne = React.createClass({
         nyhedsbreve: [],
         interesser: []
       },
-      ekstern_id: '0cbf425b93500407ccc4481ede7b87da', // TEST TODO REMOVE
+      user_error: false,
+      // ekstern_id: '0cbf425b93500407ccc4481ede7b87da', // TEST TODO REMOVE
+      ekstern_id: null,
       abo: null,
       steps: [],
       step: 0,
@@ -36,12 +38,12 @@ var Opdateringskampagne = React.createClass({
     }
 
     if (ekstern_id !== null) {
-      this.setState({ekstern_id: ekstern_id, abo: abo.toUpperCase()});
+      this.setState({ekstern_id: ekstern_id, abo: abo !== null ? abo.toUpperCase() : null }, this.loadUserData);
     } else {
       // TODO: ERROR ???
+      this.setState({user_error: true});
     }
 
-    this.loadUserData();
   },
   componentWillUnmount: function() {
     this.loadingUserData.abort();
@@ -170,6 +172,17 @@ var Opdateringskampagne = React.createClass({
   }
 });
 
+var UserMissing = React.createClass({
+  render: function() {
+    return(
+      <div class="row">
+        <div className="col-xs-4 col-xs-offset-4">
+          <p className="text-center" style={{marginTop: '50px'}}>Bruger kunne ikke findes</p>
+        </div>
+      </div>
+    );
+  }
+})
 
 ReactDOM.render(
   <Opdateringskampagne />,
