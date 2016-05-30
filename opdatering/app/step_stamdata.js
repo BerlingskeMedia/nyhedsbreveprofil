@@ -285,12 +285,14 @@ var KidsController = React.createClass({
     }.bind(this));
 
     return (
-      <div className="kidsSelector form-inline">
+      <div className="KidsController">
         <button type="button" class="btn btn-default" onClick={this.addNew}>
-          <span className="glyphicon glyphicon-plus" aria-hidden="true"></span>
-          Tilføj hjemmeboende barn
+        <span className="glyphicon glyphicon-plus" aria-hidden="true"></span>
+        Tilføj hjemmeboende barn
         </button>
-        {kids}
+        <div className="kidsSelectors form">
+          {kids}
+        </div>
       </div>
     );
   }
@@ -303,25 +305,35 @@ var KidSelector = React.createClass({
   },
   render: function () {
     var label =
-      this.props.id === 0  ? 'Første barn' :
-      this.props.id === 1  ? 'Andet barn' :
-      this.props.id === 2  ? 'Tredje barn' :
-      this.props.id === 3  ? 'Fjerde barn' :
-      this.props.id === 4  ? 'Femte barn' :
-      this.props.id === 5  ? 'Sjette barn' :
-      (this.props.id + 1).toString().concat('. barn');
+      this.props.id === 0  ? 'Første' :
+      this.props.id === 1  ? 'Andet' :
+      this.props.id === 2  ? 'Tredje' :
+      this.props.id === 3  ? 'Fjerde' :
+      this.props.id === 4  ? 'Femte' :
+      this.props.id === 5  ? 'Sjette' :
+      this.props.id === 6  ? 'Syvende' :
+      this.props.id === 7  ? 'Ottende' :
+      (this.props.id + 1).toString().concat('.');
+
+    label = label.concat(' barns fødselsår')
+
+    var options = [];
+    for (var i = 0; i < 99; i++) {
+      var temp = new Date();
+      var value = (1900 + temp.getYear() - i).toString();
+      options.push(<option key={i} value={value}>{value}</option>);
+    }
 
     return (
-      <div key={this.props.id} className="kidBirth form-group">
+      <div key={this.props.id} className="kidSelector form-group">
         <label className="control-label" htmlFor={this.props.id}>{label}</label>
-        <input
+        <select
           id={this.props.id}
           className="form-control"
-          type="text"
-          placeholder="Fødselsår"
-          onChange={this.onChange}
           value={this.props.birthYear}
-        />
+          onChange={this.onChange}>
+          {options}
+        </select>
         <button type="button" class="btn btn-default" onClick={this.props.removeKid}>
           <span className="glyphicon glyphicon-minus" aria-hidden="true"></span>
         </button>
