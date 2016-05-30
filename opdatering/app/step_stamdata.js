@@ -1,5 +1,6 @@
 var $ = require('jquery');
 var React = require('react');
+var Checkbox = require('./checkbox__controlled');
 
 module.exports = React.createClass({
   getInitialState: function() {
@@ -8,7 +9,10 @@ module.exports = React.createClass({
       email_error: false,
       email_conflict: false,
       has300: false,
-      has300_dirty: false
+      has300_dirty: false,
+      kids: [
+        "1999", "2001"
+      ]
     };
   },
   filterAllowesUserFields: function(key) {
@@ -42,7 +46,6 @@ module.exports = React.createClass({
       userDataState[key] = this.props.data[key];
     }.bind(this));
     this.setState(userDataState);
-
     this.setState({has300: this.props.data.nyhedsbreve.indexOf(300) > -1});
   },
   handleInputChange: function(stateData) {
@@ -127,6 +130,21 @@ module.exports = React.createClass({
       }.bind(this)
     });
   },
+  addKid: function(birthYear, index) {
+    var kids = this.state.kids;
+    birthYear = birthYear !== undefined ? birthYear : '';
+    if (index !== undefined) {
+      kids[index] = birthYear;
+    } else {
+      kids.push(birthYear);
+    }
+    this.setState({kids: kids});
+  },
+  removeKid: function(index) {
+    var kids = this.state.kids;
+    kids.splice(index, 1);
+    this.setState({kids: kids});
+  },
   render: function() {
 
     var userData = {};
@@ -135,6 +153,13 @@ module.exports = React.createClass({
     .forEach(function(key) {
       userData[key] = this.props.data[key];
     }.bind(this));
+
+    var p300data = {
+      id: '300',
+      checked: this.state.has300,
+      navn: 'Tilbud fra Berlingske Media og vores partnere (E-post)',
+      permissiontext: <T300PermText />
+    };
 
     return (
       <div className="stepStamdata">
@@ -157,25 +182,16 @@ module.exports = React.createClass({
           <KoenSelect id="koen" label="Køn" initialValue={userData.koen} onChange={this.handleInputChange} />
           <TextInput id="foedselsaar" label="Fødselsår" initialValue={userData.foedselsaar} onChange={this.handleInputChange} />
           {this.props.showCheckbox300Perm ?
-            <div className="checkbox">
-              <label>
-                <input
-                id="300"
-                type="checkbox"
-                placeholder="300"
-                onChange={this.handle300PermChange}
-                checked={this.state.has300}
-                />
-                Tilbud fra Berlingske Media og vores partnere (E-post)
-              </label>
-            </div>
+            <Checkbox data={p300data} toggle={this.handle300PermChange} />
           : null }
+          <KidsController kids={this.state.kids} addKid={this.addKid} removeKid={this.removeKid} />
           <input className="nextButton" type="submit" value="Næste" />
         </form>
       </div>
     );
   }
 });
+
 
 var TextInput = React.createClass({
   getInitialState: function() {
@@ -214,6 +230,16 @@ var TextInput = React.createClass({
   }
 });
 
+
+var T300PermText = React.createClass({
+  render: function() {
+    return(
+      <div>Berlingske Media-koncernen (<a href="http://www.berlingskemedia.dk/?p=8231" target="_blank">se udgivelser og forretningsenheder her</a>) må gerne gøre mig opmærksom på nyheder, tilbud og konkurrencer via brev og elektroniske medier (herunder e-mail, sms, mms, videobeskeder og pop-ups), når Berlingske Media-koncernen og vores samarbejdspartnere (<a href="http://www.berlingskemedia.dk/?p=8233" target="_blank">se samarbejdspartnere her</a>) har nyheder, tilbud og konkurrencer inden for forskellige interesseområder (<a href="http://www.berlingskemedia.dk/?p=8235" target="_blank">se hvilke her</a>).</div>
+    );
+  }
+});
+
+
 var KoenSelect = React.createClass({
   getInitialState: function() {
     return {
@@ -240,6 +266,65 @@ var KoenSelect = React.createClass({
           <option key="0" value="M">Mand</option>
           <option key="1" value="K">Kvinde</option>
         </select>
+      </div>
+    );
+  }
+});
+
+
+var KidsController = React.createClass({
+  removeKid: function(i) {
+    this.props.removeKid(i);
+  },
+  addNew: function() {
+    this.props.addKid('');
+  },
+  render: function () {
+    var kids = this.props.kids.map(function(birthYear, index) {
+      return <KidSelector id={index} key={index} birthYear={birthYear} addKid={this.props.addKid} removeKid={this.removeKid.bind(this, index)} />
+    }.bind(this));
+
+    return (
+      <div className="kidsSelector form-inline">
+        <button type="button" class="btn btn-default" onClick={this.addNew}>
+          <span className="glyphicon glyphicon-plus" aria-hidden="true"></span>
+          Tilføj hjemmeboende barn
+        </button>
+        {kids}
+      </div>
+    );
+  }
+});
+
+
+var KidSelector = React.createClass({
+  onChange: function(e) {
+    this.props.addKid(e.target.value, this.props.id);
+  },
+  render: function () {
+    var label =
+      this.props.id === 0  ? 'Første barn' :
+      this.props.id === 1  ? 'Andet barn' :
+      this.props.id === 2  ? 'Tredje barn' :
+      this.props.id === 3  ? 'Fjerde barn' :
+      this.props.id === 4  ? 'Femte barn' :
+      this.props.id === 5  ? 'Sjette barn' :
+      (this.props.id + 1).toString().concat('. barn');
+
+    return (
+      <div key={this.props.id} className="kidBirth form-group">
+        <label className="control-label" htmlFor={this.props.id}>{label}</label>
+        <input
+          id={this.props.id}
+          className="form-control"
+          type="text"
+          placeholder="Fødselsår"
+          onChange={this.onChange}
+          value={this.props.birthYear}
+        />
+        <button type="button" class="btn btn-default" onClick={this.props.removeKid}>
+          <span className="glyphicon glyphicon-minus" aria-hidden="true"></span>
+        </button>
       </div>
     );
   }

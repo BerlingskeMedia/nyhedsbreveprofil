@@ -142,13 +142,17 @@ var Opdateringskampagne = React.createClass({
     }
     this.loadUserData().success(function() {
       var step = this.state.step;
-      this.setState({step: ++step});
+      if (step < this.state.steps.length) {
+        this.setState({step: ++step});
+      }
     }.bind(this));
   },
   stepBackwards: function () {
     this.loadUserData().success(function() {
       var step = this.state.step;
-      this.setState({step: --step});
+      if (step > 0) {
+        this.setState({step: --step});
+      }
     }.bind(this));
   },
   render: function() {
