@@ -9,10 +9,7 @@ module.exports = React.createClass({
       email_error: false,
       email_conflict: false,
       has300: false,
-      has300_dirty: false,
-      kids: [
-        "1999", "2001"
-      ]
+      has300_dirty: false
     };
   },
   filterAllowesUserFields: function(key) {
@@ -31,7 +28,8 @@ module.exports = React.createClass({
       'postnummer',
       'bynavn',
       'koen',
-      'foedselsaar'
+      'foedselsaar',
+      'kids'
     ].indexOf(key) > -1;
   },
   componentDidMount: function() {
@@ -49,8 +47,8 @@ module.exports = React.createClass({
     this.setState({has300: this.props.data.nyhedsbreve.indexOf(300) > -1});
   },
   handleInputChange: function(stateData) {
+    stateData.data_dirty = true;
     this.setState(stateData);
-    this.setState({data_dirty: true});
   },
   handle300PermChange: function (e) {
     this.setState({has300: !this.state.has300}, function() {
@@ -130,20 +128,20 @@ module.exports = React.createClass({
       }.bind(this)
     });
   },
-  addKid: function(birthYear, index) {
+  addKid: function(birthyear, index) {
     var kids = this.state.kids;
-    birthYear = birthYear !== undefined ? birthYear : '';
+    birthyear = birthyear !== undefined ? birthyear : '';
     if (index !== undefined) {
-      kids[index] = birthYear;
+      kids[index].birthyear = parseInt(birthyear);
     } else {
-      kids.push(birthYear);
+      kids.push({birthyear: birthyear});
     }
-    this.setState({kids: kids});
+    this.setState({kids: kids, data_dirty: true});
   },
   removeKid: function(index) {
     var kids = this.state.kids;
     kids.splice(index, 1);
-    this.setState({kids: kids});
+    this.setState({kids: kids, data_dirty: true});
   },
   render: function() {
 
@@ -184,7 +182,7 @@ module.exports = React.createClass({
           {this.props.showCheckbox300Perm ?
             <Checkbox data={p300data} toggle={this.handle300PermChange} />
           : null }
-          <KidsController kids={this.state.kids} addKid={this.addKid} removeKid={this.removeKid} />
+          <KidsController kids={userData.kids} addKid={this.addKid} removeKid={this.removeKid} />
           <input className="nextButton" type="submit" value="Næste" />
         </form>
       </div>
@@ -277,11 +275,12 @@ var KidsController = React.createClass({
     this.props.removeKid(i);
   },
   addNew: function() {
-    this.props.addKid('');
+    var temp = new Date();
+    this.props.addKid(1900 + temp.getYear());
   },
   render: function () {
-    var kids = this.props.kids.map(function(birthYear, index) {
-      return <KidSelector id={index} key={index} birthYear={birthYear} addKid={this.props.addKid} removeKid={this.removeKid.bind(this, index)} />
+    var kids = this.props.kids.map(function(kid, index) {
+      return <KidSelector id={index} key={index} birthyear={kid.birthyear} addKid={this.props.addKid} removeKid={this.removeKid.bind(this, index)} />
     }.bind(this));
 
     return (
@@ -320,7 +319,7 @@ var KidSelector = React.createClass({
     var options = [];
     for (var i = 0; i < 99; i++) {
       var temp = new Date();
-      var value = (1900 + temp.getYear() - i).toString();
+      var value = (1900 + temp.getYear() - i);
       options.push(<option key={i} value={value}>{value}</option>);
     }
 
@@ -330,7 +329,7 @@ var KidSelector = React.createClass({
         <select
           id={this.props.id}
           className="form-control"
-          value={this.props.birthYear}
+          value={this.props.birthyear}
           onChange={this.onChange}>
           {options}
         </select>
