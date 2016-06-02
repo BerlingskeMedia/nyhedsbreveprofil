@@ -164,7 +164,7 @@ module.exports = React.createClass({
     return (
       <div className="stepStamdata">
         <form onSubmit={this.handleSubmit}>
-          <h2>Opdatér venligst dine stamoplysninger</h2>
+          <h2>Opdater venligst dine oplysninger</h2>
           <TextInput id="email" label="Email" type="email" initialValue={userData.email} onChange={this.handleInputChange} hasError={this.state.email_error} />
           {this.state.email_conflict ? <div className="alert alert-danger" role="alert">
             <span className="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>

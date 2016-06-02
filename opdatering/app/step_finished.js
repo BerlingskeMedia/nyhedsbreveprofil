@@ -56,8 +56,11 @@ module.exports = React.createClass({
 
     return(
       <div>
-        <h3>Tak for hjælpen</h3>
-        <h3>Du er nu med i lodtrækningen om en iPad til en værdi af kr. 5.995,-</h3>
+        <h3>Tak for din hjælp</h3>
+        <h3>
+          Du er nu med i konkurrencen om de mange præmier inklusiv hovedpræmien, en iPad Air 2 til en værdi af kr. 4.499,-
+          Vinderne offentliggøres mandag d. 11. juli og de heldige vindere får direkte besked.
+        </h3>
         {showOffers === true ? <NewspaperOffers showKidsNews={showKidsNews} abo={this.props.abo} /> : null}
       </div>
     );
@@ -105,11 +108,12 @@ var NewspaperOffer = React.createClass({
   render: function() {
     return (
       <div className="newspaperOffer" style={{marginTop: '20px'}}>
+        <h2>Få et abonnement med {this.props.name}</h2>
         <a target="_blank" href={this.props.click_href}>
           <img src={this.props.logo_src} style={{width: '100%'}} />
         </a>
-        <h2>Få et abonnement med {this.props.name}</h2>
         <p>{this.props.description}</p>
+        <p><a target="_blank" href={this.props.click_href}>Klik her og få et et godt tilbud</a></p>
       </div>
     );
   }

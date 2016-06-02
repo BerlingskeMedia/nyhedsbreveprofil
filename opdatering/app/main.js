@@ -127,11 +127,11 @@ var Opdateringskampagne = React.createClass({
     // So this workaround puts the steps in the state after the userData is received.
 
     var steps = [
-      <StepStamdata sidebar_label="Stamoplysninger" stepForward={this.stepForward} showCheckbox300Perm={this.state.showCheckbox300Perm} data={this.state.userData} setHideStepNyhKom={this.setHideStepNyhKom} />,
-      <StepInteresser sidebar_label="Interesser" stepForward={this.stepForward} stepBackwards={this.stepBackwards} data={this.state.userData} />,
-      <StepNyhedsbreveRed sidebar_label="Redaktionelle nyhedsbreve" stepForward={this.stepForward} stepBackwards={this.stepBackwards} data={this.state.userData} abo={this.state.abo} />,
-      <StepNyhedsbreveKom sidebar_label="Kommercielle nyhedsbreve" stepForward={this.stepForward} stepBackwards={this.stepBackwards} data={this.state.userData} abo={this.state.abo} />,
-      <StepFinished sidebar_label="Tak for hjælpen" stepBackwards={this.stepBackwards} data={this.state.userData} abo={this.state.abo} />
+      <StepStamdata sidebar_label="Dine oplysninger" stepForward={this.stepForward} showCheckbox300Perm={this.state.showCheckbox300Perm} data={this.state.userData} setHideStepNyhKom={this.setHideStepNyhKom} />,
+      <StepInteresser sidebar_label="Dine interesser" stepForward={this.stepForward} stepBackwards={this.stepBackwards} data={this.state.userData} />,
+      <StepNyhedsbreveRed sidebar_label="Dine nyhedsbreve" stepForward={this.stepForward} stepBackwards={this.stepBackwards} data={this.state.userData} abo={this.state.abo} />,
+      <StepNyhedsbreveKom sidebar_label="Dine øvrige nyhedsbreve" stepForward={this.stepForward} stepBackwards={this.stepBackwards} data={this.state.userData} abo={this.state.abo} />,
+      <StepFinished sidebar_label="Tak for din hjælp" stepBackwards={this.stepBackwards} data={this.state.userData} abo={this.state.abo} />
     ];
 
     this.setState({steps: steps});
