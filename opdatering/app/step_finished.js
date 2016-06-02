@@ -50,7 +50,7 @@ module.exports = React.createClass({
 
     var showOffers = this.props.data.nyhedsbreve.some(function(nyhedsbrev_id) {
       return [66,108,283,300].indexOf(nyhedsbrev_id) > -1;
-    });
+    }) && this.props.abo !== 'NA';
 
     var showKidsNews = this.props.data.kids.length > 0 || this.props.data.interesser.indexOf(39) > -1;
 
@@ -58,7 +58,7 @@ module.exports = React.createClass({
       <div>
         <h3>Tak for hjælpen</h3>
         <h3>Du er nu med i lodtrækningen om en iPad til en værdi af kr. 5.995,-</h3>
-        {showOffers === true ? <NewspaperOffers showKidsNews={showKidsNews} /> : null}
+        {showOffers === true ? <NewspaperOffers showKidsNews={showKidsNews} abo={this.props.abo} /> : null}
       </div>
     );
   }
@@ -68,22 +68,28 @@ var NewspaperOffers = React.createClass({
   render: function() {
     return (
       <div className="newspaperOffers" style={{marginTop: '50px'}}>
-        <NewspaperOffer
-          name="Berlingske"
-          logo_src="opdatering/assets/images/400px_Berlingske_avis.png"
-          click_href="http://abonnement.b.dk/berlingske-alle-produkter-abonnementslink/?ns_campaign=_opdateringskampagne_berlingske&ns_mchannel=&ns_source=permissionmails&ns_linkname=pm_uspecificeret&ns_fee=AL-160509-CP-RLEDIT1OK"
-          description="Berlingske kæmper hver dag for at levere journalistik, der gør en forskel og flytter noget." />
-        <NewspaperOffer
-          name="BT"
-          logo_src="opdatering/assets/images/400px_BT_avis.png"
-          click_href="http://abonnement.bt.dk/abonnementer/?ns_campaign=_opdateringskampagne_BT&ns_mchannel=na&ns_source=permissionmails&ns_linkname=pm_uspecificeret&ns_fee=AL-160509-CP-RLEDIT1OK"
-          description="BT skaber dagsordenen og formidler væsentlig og vedkommende journalistik på en underholdende måde." />
-        <NewspaperOffer
-          name="Weekendavisen"
-          click_href="http://www.weekendavisen.dk/29"
-          logo_src="opdatering/assets/images/400px_Wea_avis.png"
-          description="Weekendavisen går i dybden og sætter tingene ind i en større sammenhæng." />
-        {this.props.showKidsNews ?
+        { this.props.abo === null ?
+          <NewspaperOffer
+            name="Berlingske"
+            logo_src="opdatering/assets/images/400px_Berlingske_avis.png"
+            click_href="http://abonnement.b.dk/berlingske-alle-produkter-abonnementslink/?ns_campaign=_opdateringskampagne_berlingske&ns_mchannel=&ns_source=permissionmails&ns_linkname=pm_uspecificeret&ns_fee=AL-160509-CP-RLEDIT1OK"
+            description="Berlingske kæmper hver dag for at levere journalistik, der gør en forskel og flytter noget." />
+          : null }
+        { this.props.abo === null ?
+          <NewspaperOffer
+            name="BT"
+            logo_src="opdatering/assets/images/400px_BT_avis.png"
+            click_href="http://abonnement.bt.dk/abonnementer/?ns_campaign=_opdateringskampagne_BT&ns_mchannel=na&ns_source=permissionmails&ns_linkname=pm_uspecificeret&ns_fee=AL-160509-CP-RLEDIT1OK"
+            description="BT skaber dagsordenen og formidler væsentlig og vedkommende journalistik på en underholdende måde." />
+          : null }
+        { this.props.abo === null ?
+          <NewspaperOffer
+            name="Weekendavisen"
+            click_href="http://www.weekendavisen.dk/29"
+            logo_src="opdatering/assets/images/400px_Wea_avis.png"
+            description="Weekendavisen går i dybden og sætter tingene ind i en større sammenhæng." />
+          : null }
+        {this.props.showKidsNews && this.props.abo !== 'KN' ?
           <NewspaperOffer
             name="Kids' News"
             click_href="http://kidsnews.kundeunivers.dk/koeb-abonnement/kidsnews?ns_campaign=_Opdateringskampagne_KN&ns_mchannel=&ns_source=permissionmails&ns_linkname=pm_uspecificeret&ns_fee=AL-160509-CP-RLEDIT1OK"
