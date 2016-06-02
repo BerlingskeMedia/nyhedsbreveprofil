@@ -176,66 +176,64 @@ module.exports = React.createClass({
             <span> E-mailadressen findes allerede i vores nyhedsbrevssystem. Skriv venligst til <a href='mailto:nyhedsbreve@berlingske.dk'>nyhedsbreve@berlingske.dk</a>, hvis du vil flytte alle tilmeldinger til nyhedsbreve fra en e-mailadresse til en anden - så hjælper vi dig så hurtigt som muligt.</span>
           </div> : null}
           <div className="row">
-            <div className="col-sm-6">
+            <div className="col-xs-6">
               <TextInput id="fornavn" label="Fornavn" initialValue={userData.fornavn} onChange={this.handleInputChange} />
             </div>
-            <div className="col-sm-6">
+            <div className="col-xs-6">
               <TextInput id="efternavn" label="Efternavn" initialValue={userData.efternavn} onChange={this.handleInputChange} />
             </div>
           </div>
           <div className="row">
-            <div className="col-sm-4">
+            <div className="col-xs-6 col-md-4">
               <TextInput id="vejnavn" label="Vejnavn" initialValue={userData.vejnavn} onChange={this.handleInputChange} />
             </div>
-            <div className="col-sm-2">
+            <div className="col-xs-6 col-md-2">
               <TextInput id="husnummer" label="Husnummer" placeholder="" initialValue={userData.husnummer} onChange={this.handleInputChange} />
             </div>
-            <div className="col-sm-2">
+            <div className="col-xs-4 col-md-2">
               <TextInput id="husbogstav" label="Husbogstav" placeholder="" initialValue={userData.husbogstav} onChange={this.handleInputChange} />
             </div>
-            <div className="col-sm-2">
+            <div className="col-xs-4 col-md-2">
               <TextInput id="etage" label="Etage" placeholder="" initialValue={userData.etage} onChange={this.handleInputChange} />
             </div>
-            <div className="col-sm-2">
+            <div className="col-xs-4 col-md-2">
               <TextInput id="sidedoer" label="Side/dør" placeholder="" initialValue={userData.sidedoer} onChange={this.handleInputChange} />
             </div>
-          </div>
-          <div className="row">
-            <div className="col-sm-2">
+            <div className="col-xs-6 col-md-2">
               <TextInput id="postnummer" label="Postnummer" initialValue={userData.postnummer} onChange={this.handleInputChange} />
             </div>
-            <div className="col-sm-5">
+            <div className="col-xs-6 col-md-5">
               <TextInput id="bynavn" label="By" initialValue={userData.bynavn} onChange={this.handleInputChange} />
             </div>
-            <div className="col-sm-5">
+            <div className="col-xs-12 col-md-5">
               <CountrySelector id="lande_kode" label="Land" initialValue={userData.lande_kode} onChange={this.handleInputChange} />
             </div>
           </div>
           <div className="row">
-            <div className="col-sm-6">
+            <div className="col-xs-6">
               <TextInput id="telefon" label="Telefon" initialValue={userData.telefon} onChange={this.handleInputChange} />
             </div>
-            <div className="col-sm-6">
+            <div className="col-xs-6">
               <TextInput id="mobil" label="Mobil" initialValue={userData.mobil} onChange={this.handleInputChange} />
             </div>
           </div>
           <div className="row">
-            <div className="col-sm-6">
+            <div className="col-xs-6">
               <KoenSelect id="koen" label="Køn" initialValue={userData.koen} onChange={this.handleInputChange} />
             </div>
-            <div className="col-sm-6">
+            <div className="col-xs-6">
               <BirthyearSelector id="foedselsaar" label="Fødselsår" initialValue={userData.foedselsaar} onChange={this.handleInputChange} />
             </div>
           </div>
           <div className="row">
-            <div className="col-sm-12">
+            <div className="col-xs-6">
               <KidsController kids={userData.kids} addKid={this.addKid} removeKid={this.removeKid} />
             </div>
           </div>
           {this.props.showCheckbox300Perm ?
             <Checkbox data={p300data} toggle={this.handle300PermChange} />
           : null }
-          <input className="nextButton" type="submit" value="Næste" disabled={this.state.stepping} />
+          <input className="btn btn-default nextButton pull-right" type="submit" value="Næste" disabled={this.state.stepping} />
         </form>
       </div>
     );
@@ -374,13 +372,13 @@ var KidsController = React.createClass({
 
     return (
       <div className="KidsController">
-        <button type="button" class="btn btn-default" onClick={this.addNew}>
-        <span className="glyphicon glyphicon-plus" aria-hidden="true"></span>
-        Tilføj hjemmeboende barn
-        </button>
         <div className="kidsSelectors form">
           {kids}
         </div>
+        <button type="button" className="btn btn-default" onClick={this.addNew}>
+          <span className="glyphicon glyphicon-plus" aria-hidden="true"></span>
+          Tilføj hjemmeboende barn
+        </button>
       </div>
     );
   }
@@ -414,7 +412,8 @@ var KidSelector = React.createClass({
 
     return (
       <div key={this.props.id} className="kidSelector form-group">
-        <label className="control-label" htmlFor={this.props.id}>{label}</label>
+      <label className="control-label" htmlFor={this.props.id}>{label}</label>
+      <div className="input-group">
         <select
           id={this.props.id}
           className="form-control"
@@ -422,9 +421,12 @@ var KidSelector = React.createClass({
           onChange={this.onChange}>
           {options}
         </select>
-        <button type="button" class="btn btn-default" onClick={this.props.removeKid}>
-          <span className="glyphicon glyphicon-minus" aria-hidden="true"></span>
-        </button>
+        <span className="input-group-btn">
+          <button type="button" className="btn btn-default" onClick={this.props.removeKid}>
+            <span className="glyphicon glyphicon-minus" aria-hidden="true"></span>
+          </button>
+        </span>
+      </div>
       </div>
     );
   }

@@ -7,6 +7,7 @@ var StepNyhedsbreveRed = require('./step_nyhedsbreve_redaktionelle');
 var StepNyhedsbreveKom = require('./step_nyhedsbreve_kommercielle');
 var StepFinished = require('./step_finished');
 var Sidebar = require('./sidebar');
+var ButtomNav = require('./buttomnav');
 
 var Opdateringskampagne = React.createClass({
   getInitialState: function() {
@@ -165,12 +166,18 @@ var Opdateringskampagne = React.createClass({
     }
 
     return (
-      <div className="opdateringskampagne row" style={{paddingTop: '20px', marginBottom: '50px'}}>
-        <div className="col-sm-2 col-lg-2 sidebar">
-          <Sidebar step={this.state.step} steps={steps} />
+      <div className="opdateringskampagne">
+        <div className="container-fluid">
+          <div className="row" style={{paddingTop: '20px', marginBottom: '50px'}}>
+            <div className="hidden-xs col-sm-3 col-md-3 col-lg-2 sidebar">
+              <Sidebar step={this.state.step} steps={steps} />
+            </div>
+            <div className="col-sm-9 col-md-offset-1 col-md-7 col-lg-6 col-lg-offset-2 main">
+              {steps[this.state.step]}
+            </div>
+          </div>
         </div>
-        <div className="col-sm-6 col-sm-offset-2 col-lg-5 col-lg-offset-2 main">
-          {steps[this.state.step]}
+        <div className="hidden-sm hidden-md hidden-lg buttomnav">
         </div>
       </div>
     );

@@ -114,7 +114,7 @@ module.exports = React.createClass({
 
     return (
       <div className="stepInteresser">
-        <input type="button" value="Tilbage" onClick={this.completeStep(this.props.stepBackwards)} />
+        <input type="button" value="Tilbage" className="btn btn-default prevButton" onClick={this.completeStep(this.props.stepBackwards)} />
         <h2>Opdater venligst dine interesser</h2>
         <h3>Valgte</h3>
         {interesser_already.length > 0
@@ -126,7 +126,7 @@ module.exports = React.createClass({
           ? <CheckboxList data={interesser_not_yet} toggle={this.toggleInteresse} />
           : <p>(Alt tilmeldt)</p>
         }
-        <input type="button" className="nextButton" value="Næste" onClick={this.completeStep(this.props.stepForward)} />
+        <input type="button" className="btn btn-default nextButton pull-right" value="Næste" onClick={this.completeStep(this.props.stepForward)} />
       </div>
     );
   }

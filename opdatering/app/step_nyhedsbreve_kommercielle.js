@@ -283,7 +283,7 @@ module.exports = React.createClass({
 
     return (
       <div className="stepNyhedsbreveKom">
-        <input type="button" value="Tilbage" onClick={this.completeStep(this.props.stepBackwards)} />
+        <input type="button" value="Tilbage" className="btn btn-default prevButton" onClick={this.completeStep(this.props.stepBackwards)} />
         <h2>Vælg hvilke øvrige nyhedsbreve du ønsker at modtage</h2>
         <h3>Valgte</h3>
         {nyhedsbreve_already.length > 0
@@ -295,7 +295,7 @@ module.exports = React.createClass({
           ? <NewsletterList data={nyhedsbreve_not_yet} toggle={this.toggleNyhedsbrev} />
           : <p>(Alt tilmeldt)</p>
         }
-        <input type="button" value="Næste" className="nextButton" onClick={this.completeStep(this.props.stepForward)} />
+        <input type="button" value="Næste" className="btn btn-default nextButton pull-right" onClick={this.completeStep(this.props.stepForward)} />
       </div>
     );
   }
