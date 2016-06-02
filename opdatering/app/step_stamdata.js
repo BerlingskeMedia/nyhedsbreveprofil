@@ -1,6 +1,7 @@
 var $ = require('jquery');
 var React = require('react');
 var Checkbox = require('./checkbox__controlled');
+var CountrySelector = require('./country_selector');
 
 module.exports = React.createClass({
   getInitialState: function() {
@@ -27,6 +28,7 @@ module.exports = React.createClass({
       'sidedoer',
       'postnummer',
       'bynavn',
+      'lande_kode',
       'koen',
       'foedselsaar',
       'kids'
@@ -177,6 +179,9 @@ module.exports = React.createClass({
           <TextInput id="sidedoer" label="Side/dør" initialValue={userData.sidedoer} onChange={this.handleInputChange} />
           <TextInput id="postnummer" label="Postnummer" initialValue={userData.postnummer} onChange={this.handleInputChange} />
           <TextInput id="bynavn" label="By" initialValue={userData.bynavn} onChange={this.handleInputChange} />
+          <CountrySelector id="lande_kode" label="Land" initialValue={userData.lande_kode} onChange={this.handleInputChange} />
+          <TextInput id="telefon" label="Telefon" initialValue={userData.telefon} onChange={this.handleInputChange} />
+          <TextInput id="mobil" label="Mobil" initialValue={userData.mobil} onChange={this.handleInputChange} />
           <KoenSelect id="koen" label="Køn" initialValue={userData.koen} onChange={this.handleInputChange} />
           <TextInput id="foedselsaar" label="Fødselsår" initialValue={userData.foedselsaar} onChange={this.handleInputChange} />
           {this.props.showCheckbox300Perm ?
