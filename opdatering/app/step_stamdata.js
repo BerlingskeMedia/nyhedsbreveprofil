@@ -82,6 +82,8 @@ module.exports = React.createClass({
         payload[key] = this.state[key];
       }.bind(this));
 
+      this.setState({stepping: true});
+
       return $.ajax({
         type: 'POST',
         url: '/backend/users/'.concat(this.props.data.ekstern_id),
@@ -98,6 +100,9 @@ module.exports = React.createClass({
           } else {
             console.error(xhr, status);
           }
+        }.bind(this),
+        complete: function() {
+          this.setState({stepping: false});
         }.bind(this)
       });
     } else {
@@ -164,31 +169,73 @@ module.exports = React.createClass({
     return (
       <div className="stepStamdata">
         <form onSubmit={this.handleSubmit}>
-          <h2>Opdater venligst dine oplysninger</h2>
+          <h2>Opdater venligst dine kontaktoplysninger</h2>
           <TextInput id="email" label="Email" type="email" initialValue={userData.email} onChange={this.handleInputChange} hasError={this.state.email_error} />
           {this.state.email_conflict ? <div className="alert alert-danger" role="alert">
             <span className="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
             <span> E-mailadressen findes allerede i vores nyhedsbrevssystem. Skriv venligst til <a href='mailto:nyhedsbreve@berlingske.dk'>nyhedsbreve@berlingske.dk</a>, hvis du vil flytte alle tilmeldinger til nyhedsbreve fra en e-mailadresse til en anden - så hjælper vi dig så hurtigt som muligt.</span>
           </div> : null}
-          <TextInput id="fornavn" label="Fornavn" initialValue={userData.fornavn} onChange={this.handleInputChange} />
-          <TextInput id="efternavn" label="Efternavn" initialValue={userData.efternavn} onChange={this.handleInputChange} />
-          <TextInput id="vejnavn" label="Vejnavn" initialValue={userData.vejnavn} onChange={this.handleInputChange} />
-          <TextInput id="husnummer" label="Husnummer" initialValue={userData.husnummer} onChange={this.handleInputChange} />
-          <TextInput id="husbogstav" label="Husbogstav" initialValue={userData.husbogstav} onChange={this.handleInputChange} />
-          <TextInput id="etage" label="Etage" initialValue={userData.etage} onChange={this.handleInputChange} />
-          <TextInput id="sidedoer" label="Side/dør" initialValue={userData.sidedoer} onChange={this.handleInputChange} />
-          <TextInput id="postnummer" label="Postnummer" initialValue={userData.postnummer} onChange={this.handleInputChange} />
-          <TextInput id="bynavn" label="By" initialValue={userData.bynavn} onChange={this.handleInputChange} />
-          <CountrySelector id="lande_kode" label="Land" initialValue={userData.lande_kode} onChange={this.handleInputChange} />
-          <TextInput id="telefon" label="Telefon" initialValue={userData.telefon} onChange={this.handleInputChange} />
-          <TextInput id="mobil" label="Mobil" initialValue={userData.mobil} onChange={this.handleInputChange} />
-          <KoenSelect id="koen" label="Køn" initialValue={userData.koen} onChange={this.handleInputChange} />
-          <TextInput id="foedselsaar" label="Fødselsår" initialValue={userData.foedselsaar} onChange={this.handleInputChange} />
+          <div className="row">
+            <div className="col-sm-6">
+              <TextInput id="fornavn" label="Fornavn" initialValue={userData.fornavn} onChange={this.handleInputChange} />
+            </div>
+            <div className="col-sm-6">
+              <TextInput id="efternavn" label="Efternavn" initialValue={userData.efternavn} onChange={this.handleInputChange} />
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-sm-4">
+              <TextInput id="vejnavn" label="Vejnavn" initialValue={userData.vejnavn} onChange={this.handleInputChange} />
+            </div>
+            <div className="col-sm-2">
+              <TextInput id="husnummer" label="Husnummer" placeholder="" initialValue={userData.husnummer} onChange={this.handleInputChange} />
+            </div>
+            <div className="col-sm-2">
+              <TextInput id="husbogstav" label="Husbogstav" placeholder="" initialValue={userData.husbogstav} onChange={this.handleInputChange} />
+            </div>
+            <div className="col-sm-2">
+              <TextInput id="etage" label="Etage" placeholder="" initialValue={userData.etage} onChange={this.handleInputChange} />
+            </div>
+            <div className="col-sm-2">
+              <TextInput id="sidedoer" label="Side/dør" placeholder="" initialValue={userData.sidedoer} onChange={this.handleInputChange} />
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-sm-2">
+              <TextInput id="postnummer" label="Postnummer" initialValue={userData.postnummer} onChange={this.handleInputChange} />
+            </div>
+            <div className="col-sm-5">
+              <TextInput id="bynavn" label="By" initialValue={userData.bynavn} onChange={this.handleInputChange} />
+            </div>
+            <div className="col-sm-5">
+              <CountrySelector id="lande_kode" label="Land" initialValue={userData.lande_kode} onChange={this.handleInputChange} />
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-sm-6">
+              <TextInput id="telefon" label="Telefon" initialValue={userData.telefon} onChange={this.handleInputChange} />
+            </div>
+            <div className="col-sm-6">
+              <TextInput id="mobil" label="Mobil" initialValue={userData.mobil} onChange={this.handleInputChange} />
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-sm-6">
+              <KoenSelect id="koen" label="Køn" initialValue={userData.koen} onChange={this.handleInputChange} />
+            </div>
+            <div className="col-sm-6">
+              <BirthyearSelector id="foedselsaar" label="Fødselsår" initialValue={userData.foedselsaar} onChange={this.handleInputChange} />
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-sm-12">
+              <KidsController kids={userData.kids} addKid={this.addKid} removeKid={this.removeKid} />
+            </div>
+          </div>
           {this.props.showCheckbox300Perm ?
             <Checkbox data={p300data} toggle={this.handle300PermChange} />
           : null }
-          <KidsController kids={userData.kids} addKid={this.addKid} removeKid={this.removeKid} />
-          <input className="nextButton" type="submit" value="Næste" />
+          <input className="nextButton" type="submit" value="Næste" disabled={this.state.stepping} />
         </form>
       </div>
     );
@@ -268,6 +315,43 @@ var KoenSelect = React.createClass({
           <option key="-1" value="" disabled="disabled"></option>
           <option key="0" value="M">Mand</option>
           <option key="1" value="K">Kvinde</option>
+        </select>
+      </div>
+    );
+  }
+});
+
+
+var BirthyearSelector = React.createClass({
+  getInitialState: function() {
+    return {
+      value: this.props.initialValue
+    };
+  },
+  onChange: function(e) {
+    var temp = {};
+    temp[e.target.id] = e.target.value;
+    this.setState({value: e.target.value}, function() {
+      this.props.onChange(temp);
+    }.bind(this));
+  },
+  render: function () {
+    var options = [];
+    for (var i = 0; i < 99; i++) {
+      var temp = new Date();
+      var value = (1900 + temp.getYear() - i);
+      options.push(<option key={i} value={value}>{value}</option>);
+    }
+
+    return (
+      <div key={this.props.id} className="birthyearSelector form-group">
+        <label className="control-label" htmlFor={this.props.id}>{this.props.label}</label>
+        <select
+          id={this.props.id}
+          className="form-control"
+          value={this.state.value}
+          onChange={this.onChange}>
+          {options}
         </select>
       </div>
     );

@@ -31,8 +31,6 @@ var Opdateringskampagne = React.createClass({
         id = this.getSearchParameter('id');
     var abo = this.getSearchParameter('a');
 
-    this.stepping = false;
-
     if (ekstern_id === null && id !== null) {
       ekstern_id = id;
       this.setSearchParameter('id', null);
@@ -127,7 +125,7 @@ var Opdateringskampagne = React.createClass({
     // So this workaround puts the steps in the state after the userData is received.
 
     var steps = [
-      <StepStamdata sidebar_label="Dine oplysninger" stepForward={this.stepForward} showCheckbox300Perm={this.state.showCheckbox300Perm} data={this.state.userData} setHideStepNyhKom={this.setHideStepNyhKom} />,
+      <StepStamdata sidebar_label="Dine kontaktoplysninger" stepForward={this.stepForward} showCheckbox300Perm={this.state.showCheckbox300Perm} data={this.state.userData} setHideStepNyhKom={this.setHideStepNyhKom} />,
       <StepInteresser sidebar_label="Dine interesser" stepForward={this.stepForward} stepBackwards={this.stepBackwards} data={this.state.userData} />,
       <StepNyhedsbreveRed sidebar_label="Dine nyhedsbreve" stepForward={this.stepForward} stepBackwards={this.stepBackwards} data={this.state.userData} abo={this.state.abo} />,
       <StepNyhedsbreveKom sidebar_label="Dine øvrige nyhedsbreve" stepForward={this.stepForward} stepBackwards={this.stepBackwards} data={this.state.userData} abo={this.state.abo} />,
@@ -142,33 +140,21 @@ var Opdateringskampagne = React.createClass({
         this.setSearchParameter('ekstern_id', ekstern_id);
       });
     }
-    if (this.stepping === false) {
-      this.stepping = true;
-      this.loadUserData().success(function() {
-        var step = this.state.step;
-        if (step < this.state.steps.length) {
-          this.setState({step: ++step});
-        }
-      }.bind(this))
-      .always(function() {
-        this.stepping = false;
-      }.bind(this));
-    }
+
+    this.loadUserData().success(function() {
+      var step = this.state.step;
+      if (step < this.state.steps.length) {
+        this.setState({step: ++step});
+      }
+    }.bind(this));
   },
   stepBackwards: function () {
-    if (this.stepping === false) {
-      this.stepping = true;
-      this.loadUserData().success(function() {
-        var step = this.state.step;
-        if (step > 0) {
-          this.setState({step: --step});
-        }
-        this.stepping = false;
-      }.bind(this))
-      .always(function() {
-        this.stepping = false;
-      }.bind(this));
-    }
+    this.loadUserData().success(function() {
+      var step = this.state.step;
+      if (step > 0) {
+        this.setState({step: --step});
+      }
+    }.bind(this));
   },
   render: function() {
     var steps = [];
