@@ -31,6 +31,8 @@ var Opdateringskampagne = React.createClass({
         id = this.getSearchParameter('id');
     var abo = this.getSearchParameter('a');
 
+    this.stepping = false;
+
     if (ekstern_id === null && id !== null) {
       ekstern_id = id;
       this.setSearchParameter('id', null);
@@ -140,20 +142,33 @@ var Opdateringskampagne = React.createClass({
         this.setSearchParameter('ekstern_id', ekstern_id);
       });
     }
-    this.loadUserData().success(function() {
-      var step = this.state.step;
-      if (step < this.state.steps.length) {
-        this.setState({step: ++step});
-      }
-    }.bind(this));
+    if (this.stepping === false) {
+      this.stepping = true;
+      this.loadUserData().success(function() {
+        var step = this.state.step;
+        if (step < this.state.steps.length) {
+          this.setState({step: ++step});
+        }
+      }.bind(this))
+      .always(function() {
+        this.stepping = false;
+      }.bind(this));
+    }
   },
   stepBackwards: function () {
-    this.loadUserData().success(function() {
-      var step = this.state.step;
-      if (step > 0) {
-        this.setState({step: --step});
-      }
-    }.bind(this));
+    if (this.stepping === false) {
+      this.stepping = true;
+      this.loadUserData().success(function() {
+        var step = this.state.step;
+        if (step > 0) {
+          this.setState({step: --step});
+        }
+        this.stepping = false;
+      }.bind(this))
+      .always(function() {
+        this.stepping = false;
+      }.bind(this));
+    }
   },
   render: function() {
     var steps = [];

@@ -47,15 +47,18 @@ module.exports = React.createClass({
     });
   },
   render: function() {
+
     var showOffers = this.props.data.nyhedsbreve.some(function(nyhedsbrev_id) {
       return [66,108,283,300].indexOf(nyhedsbrev_id) > -1;
     });
-    
+
+    var showKidsNews = this.props.data.kids.length > 0 || this.props.data.interesser.indexOf(39) > -1;
+
     return(
       <div>
         <h3>Tak for hjælpen</h3>
         <h3>Du er nu med i lodtrækningen om en iPad til en værdi af kr. 5.995,-</h3>
-        {showOffers === true ? <NewspaperOffers showKidsNews={true} /> : null}
+        {showOffers === true ? <NewspaperOffers showKidsNews={showKidsNews} /> : null}
       </div>
     );
   }
@@ -63,7 +66,6 @@ module.exports = React.createClass({
 
 var NewspaperOffers = React.createClass({
   render: function() {
-    console.log('showKidsNews', this.props.showKidsNews);
     return (
       <div className="newspaperOffers" style={{marginTop: '50px'}}>
         <NewspaperOffer
@@ -77,15 +79,17 @@ var NewspaperOffers = React.createClass({
           click_href="http://abonnement.bt.dk/abonnementer/?ns_campaign=_opdateringskampagne_BT&ns_mchannel=na&ns_source=permissionmails&ns_linkname=pm_uspecificeret&ns_fee=AL-160509-CP-RLEDIT1OK"
           description="BT skaber dagsordenen og formidler væsentlig og vedkommende journalistik på en underholdende måde." />
         <NewspaperOffer
-          name="Kids' News"
-          click_href="http://kidsnews.kundeunivers.dk/koeb-abonnement/kidsnews?ns_campaign=_Opdateringskampagne_KN&ns_mchannel=&ns_source=permissionmails&ns_linkname=pm_uspecificeret&ns_fee=AL-160509-CP-RLEDIT1OK"
-          logo_src="opdatering/assets/images/400px_KN_avis.png"
-          description="Kids' News beretter om politik, samfund og begivenheder fra den store vide verden med det formål at forklare baggrund, årsager og sammenhænge, så begivenhederne giver mening for børn." />
-        <NewspaperOffer
           name="Weekendavisen"
           click_href="http://www.weekendavisen.dk/29"
           logo_src="opdatering/assets/images/400px_Wea_avis.png"
           description="Weekendavisen går i dybden og sætter tingene ind i en større sammenhæng." />
+        {this.props.showKidsNews ?
+          <NewspaperOffer
+            name="Kids' News"
+            click_href="http://kidsnews.kundeunivers.dk/koeb-abonnement/kidsnews?ns_campaign=_Opdateringskampagne_KN&ns_mchannel=&ns_source=permissionmails&ns_linkname=pm_uspecificeret&ns_fee=AL-160509-CP-RLEDIT1OK"
+            logo_src="opdatering/assets/images/400px_KN_avis.png"
+            description="Kids' News beretter om politik, samfund og begivenheder fra den store vide verden med det formål at forklare baggrund, årsager og sammenhænge, så begivenhederne giver mening for børn." />
+          : null }
       </div>
     );
   }
