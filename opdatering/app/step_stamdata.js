@@ -366,9 +366,12 @@ var KidsController = React.createClass({
     this.props.addKid(1900 + temp.getYear());
   },
   render: function () {
-    var kids = this.props.kids.map(function(kid, index) {
-      return <KidSelector id={index} key={index} birthyear={kid.birthyear} addKid={this.props.addKid} removeKid={this.removeKid.bind(this, index)} />
-    }.bind(this));
+    var kids = [];
+    if (this.props.kids) {
+      kids = this.props.kids.map(function(kid, index) {
+        return <KidBirthyearSelector id={index} key={index} birthyear={kid.birthyear} addKid={this.props.addKid} removeKid={this.removeKid.bind(this, index)} />
+      }.bind(this));
+    }
 
     return (
       <div className="KidsController">
@@ -385,7 +388,7 @@ var KidsController = React.createClass({
 });
 
 
-var KidSelector = React.createClass({
+var KidBirthyearSelector = React.createClass({
   onChange: function(e) {
     this.props.addKid(e.target.value, this.props.id);
   },
