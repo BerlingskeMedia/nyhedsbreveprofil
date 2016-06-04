@@ -24,7 +24,7 @@ module.exports = React.createClass({
 
     return (
       <div className="CountrySelector form-group">
-        <label htmlFor={id}>{label}</label>
+        <label className="control-label" htmlFor={id}>{label}</label>
         <select
           id={id}
           className="form-control"

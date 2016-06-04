@@ -7,7 +7,8 @@ var StepNyhedsbreveRed = require('./step_nyhedsbreve_redaktionelle');
 var StepNyhedsbreveKom = require('./step_nyhedsbreve_kommercielle');
 var StepFinished = require('./step_finished');
 var Sidebar = require('./sidebar');
-var ButtomNav = require('./buttomnav');
+var TopNavbar = require('./topnavbar');
+var ButtomNavbar = require('./buttomnav');
 
 var Opdateringskampagne = React.createClass({
   getInitialState: function() {
@@ -147,7 +148,10 @@ var Opdateringskampagne = React.createClass({
       if (step < this.state.steps.length) {
         this.setState({step: ++step});
       }
+      
+      ReactDOM.findDOMNode(this).scrollIntoView();
     }.bind(this));
+
   },
   stepBackwards: function () {
     this.loadUserData().success(function() {
@@ -155,7 +159,10 @@ var Opdateringskampagne = React.createClass({
       if (step > 0) {
         this.setState({step: --step});
       }
+
+      ReactDOM.findDOMNode(this).scrollIntoView();
     }.bind(this));
+
   },
   render: function() {
     var steps = [];
@@ -166,18 +173,22 @@ var Opdateringskampagne = React.createClass({
     }
 
     return (
-      <div className="opdateringskampagne">
-        <div className="container-fluid">
-          <div className="row" style={{paddingTop: '20px', marginBottom: '50px'}}>
-            <div className="hidden-xs col-sm-3 col-md-3 col-lg-2 sidebar">
-              <Sidebar step={this.state.step} steps={steps} />
-            </div>
+      <div id="opdateringskampagne" className="opdateringskampagne">
+        <div className="hidden-sm hidden-md hidden-lg topnav">
+          <TopNavbar steps={this.state.steps} step={this.state.step} />
+        </div>
+        <div className="hidden-xs col-sm-3 col-md-3 col-lg-2 sidebar">
+          <Sidebar step={this.state.step} steps={steps} />
+        </div>
+        <div className="steppage container-fluid">
+          <div className="row">
             <div className="col-sm-9 col-md-offset-1 col-md-7 col-lg-6 col-lg-offset-2 main">
               {steps[this.state.step]}
             </div>
           </div>
         </div>
         <div className="hidden-sm hidden-md hidden-lg buttomnav">
+          <ButtomNavbar steps={this.state.steps} step={this.state.step} />
         </div>
       </div>
     );

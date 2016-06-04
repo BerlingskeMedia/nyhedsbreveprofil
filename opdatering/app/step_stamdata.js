@@ -169,40 +169,40 @@ module.exports = React.createClass({
     return (
       <div className="stepStamdata">
         <form onSubmit={this.handleSubmit}>
-          <h2>Opdater venligst dine kontaktoplysninger</h2>
+          <h3 className="stepheader">Opdater venligst dine kontaktoplysninger</h3>
           <TextInput id="email" label="Email" type="email" initialValue={userData.email} onChange={this.handleInputChange} hasError={this.state.email_error} />
           {this.state.email_conflict ? <div className="alert alert-danger" role="alert">
             <span className="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
             <span> E-mailadressen findes allerede i vores nyhedsbrevssystem. Skriv venligst til <a href='mailto:nyhedsbreve@berlingske.dk'>nyhedsbreve@berlingske.dk</a>, hvis du vil flytte alle tilmeldinger til nyhedsbreve fra en e-mailadresse til en anden - så hjælper vi dig så hurtigt som muligt.</span>
           </div> : null}
           <div className="row">
-            <div className="col-xs-6">
+            <div className="col-xs-12">
               <TextInput id="fornavn" label="Fornavn" initialValue={userData.fornavn} onChange={this.handleInputChange} />
             </div>
-            <div className="col-xs-6">
+            <div className="col-xs-12">
               <TextInput id="efternavn" label="Efternavn" initialValue={userData.efternavn} onChange={this.handleInputChange} />
             </div>
           </div>
           <div className="row">
-            <div className="col-xs-6 col-md-4">
+            <div className="col-xs-12 col-md-4">
               <TextInput id="vejnavn" label="Vejnavn" initialValue={userData.vejnavn} onChange={this.handleInputChange} />
             </div>
             <div className="col-xs-6 col-md-2">
               <TextInput id="husnummer" label="Husnummer" placeholder="" initialValue={userData.husnummer} onChange={this.handleInputChange} />
             </div>
-            <div className="col-xs-4 col-md-2">
+            <div className="col-xs-6 col-md-2">
               <TextInput id="husbogstav" label="Husbogstav" placeholder="" initialValue={userData.husbogstav} onChange={this.handleInputChange} />
             </div>
-            <div className="col-xs-4 col-md-2">
+            <div className="col-xs-6 col-md-2">
               <TextInput id="etage" label="Etage" placeholder="" initialValue={userData.etage} onChange={this.handleInputChange} />
             </div>
-            <div className="col-xs-4 col-md-2">
+            <div className="col-xs-6 col-md-2">
               <TextInput id="sidedoer" label="Side/dør" placeholder="" initialValue={userData.sidedoer} onChange={this.handleInputChange} />
             </div>
-            <div className="col-xs-6 col-md-2">
+            <div className="col-xs-12 col-md-2">
               <TextInput id="postnummer" label="Postnummer" initialValue={userData.postnummer} onChange={this.handleInputChange} />
             </div>
-            <div className="col-xs-6 col-md-5">
+            <div className="col-xs-12 col-md-5">
               <TextInput id="bynavn" label="By" initialValue={userData.bynavn} onChange={this.handleInputChange} />
             </div>
             <div className="col-xs-12 col-md-5">
@@ -226,7 +226,7 @@ module.exports = React.createClass({
             </div>
           </div>
           <div className="row">
-            <div className="col-xs-6">
+            <div className="col-xs-12 col-md-6">
               <KidsController kids={userData.kids} addKid={this.addKid} removeKid={this.removeKid} />
             </div>
           </div>
@@ -304,7 +304,7 @@ var KoenSelect = React.createClass({
   render: function() {
     return (
       <div key={this.props.id} className="form-group">
-        <label htmlFor={this.props.id}>{this.props.label}</label>
+        <label className="control-label" htmlFor={this.props.id}>{this.props.label}</label>
         <select
           id={this.props.id}
           className="form-control"

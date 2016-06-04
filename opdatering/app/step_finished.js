@@ -1,6 +1,5 @@
 var $ = require('jquery');
 var React = require('react');
-
 var InteresseList = require('./checkbox_list');
 
 module.exports = React.createClass({

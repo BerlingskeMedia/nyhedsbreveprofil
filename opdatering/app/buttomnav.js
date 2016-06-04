@@ -10,17 +10,20 @@ module.exports = React.createClass({
       }
     }.bind(this));
 
-    return (
-      <footer className="footer">
-        <div className="container">
-          <div className="row">
-            <div className="col-xs-4 col-xs-offset-4">
-              <p>Dots</p>
-              <input type="button" className="nextButton" value="Næste" onClick={this.props.next} />
-            </div>
-          </div>
-        </div>
-      </footer>
-    );
+    return(null);
+
   }
 });
+
+// return (
+//   <footer className="footer">
+//     <div className="container">
+//       <div className="row">
+//         <div className="col-xs-4 col-xs-offset-4">
+//           <p>Dots</p>
+//           <input type="button" className="nextButton" value="Næste" onClick={this.props.next} />
+//         </div>
+//       </div>
+//     </div>
+//   </footer>
+// );

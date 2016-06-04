@@ -17,8 +17,10 @@ module.exports = React.createClass({
     };
   },
   componentDidMount: function() {
+
     ga('set', 'page', 'opdateringskampagne/step_nyhedsbreve_redaktionelle');
     ga('send', 'pageview');
+
   },
   sortByAbonnement: function (nyhedsbrev_a, nyhedsbrev_b) {
     if (nyhedsbrev_a.publisher === nyhedsbrev_b.publisher) {
@@ -283,18 +285,18 @@ module.exports = React.createClass({
 
     return (
       <div className="stepNyhedsbreveKom">
-        <input type="button" value="Tilbage" className="btn btn-default prevButton" onClick={this.completeStep(this.props.stepBackwards)} />
-        <h2>Vælg hvilke øvrige nyhedsbreve du ønsker at modtage</h2>
-        <h3>Valgte</h3>
+        <h3 className="stepheader">Vælg hvilke øvrige nyhedsbreve du ønsker at modtage</h3>
+        <h4 className="selectionheader">Valgte</h4>
         {nyhedsbreve_already.length > 0
           ? <NewsletterList data={nyhedsbreve_already} toggle={this.toggleNyhedsbrev} />
           : <p>(Ingen)</p>
         }
-        <h3>Tilføj</h3>
+        <h4 className="selectionheader">Tilføj</h4>
         {nyhedsbreve_not_yet.length > 0
           ? <NewsletterList data={nyhedsbreve_not_yet} toggle={this.toggleNyhedsbrev} />
           : <p>(Alt tilmeldt)</p>
         }
+        <input type="button" value="Tilbage" className="btn btn-default prevButton" onClick={this.completeStep(this.props.stepBackwards)} />
         <input type="button" value="Næste" className="btn btn-default nextButton pull-right" onClick={this.completeStep(this.props.stepForward)} />
       </div>
     );

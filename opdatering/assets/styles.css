@@ -1,0 +1,99 @@
+html, .container, .container-fluid {
+  background-color: #F5F5F5;
+}
+
+html, div, h1, h2, h3, h4 {
+  font-family: 'Roboto', sans-serif;
+}
+
+.topnavbar {
+  height: 40px;
+  color: #FFFFFF;
+  background-color: #124680;
+}
+
+.topnav .navbar {
+  margin-bottom: 0px;
+  min-height: 40px;
+  max-height: 40px;
+}
+
+.topnav .navbar .container {
+  max-height: 40px;
+}
+
+.topnavbarheader {
+  font-family: 'Roboto', sans-serif;
+  font-size: 24px;
+  font-weight: 500;
+  padding: 0px;
+}
+
+.topnavfiller {
+  height: 40px;
+  /*padding-top: 40px;*/
+}
+
+.navbar-default {
+  border: none;
+}
+
+.steppage {
+  /*padding-top: 20px;*/
+  /*margin-top: 30px;*/
+  margin-bottom: 50px;
+  background-color: #F5F5F5;
+}
+
+.stepheader {
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.selectionheader {
+  font-family: 'Roboto', sans-serif;
+  font-size: 20px;
+  font-weight: 500;
+  margin-top: 30px;
+}
+
+.control-label {
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.form-control {
+  height: 45px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 18px;
+  border: 1px solid #DDDDDD;
+  border-radius: 2px;
+  box-shadow: none;
+}
+
+button, .btn {
+  height: 45px;
+  border: 1px solid #DDDDDD;
+  border-radius: 2px;
+}
+
+.nextButton {
+  height: 36px;
+  background-color: #393939;
+  color: #FFFFFF;
+  border-radius: 2px;
+}
+
+.mdbCheckbox .description {
+  font-style: italic;
+  margin-left: 2px;
+}
+
+.mdbCheckbox .permissiontext {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding: 0px 20px 10px 30px;
+  color: #5A5A5A;
+}
+.mdbCheckbox .interestsSelection {
+}

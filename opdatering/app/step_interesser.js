@@ -1,5 +1,6 @@
 var $ = require('jquery');
 var React = require('react');
+var ReactDOM = require('react-dom');
 
 var CheckboxList = require('./checkbox_list');
 
@@ -13,8 +14,10 @@ module.exports = React.createClass({
     };
   },
   componentDidMount: function() {
+    
     ga('set', 'page', 'opdateringskampagne/step_interesser');
     ga('send', 'pageview');
+
   },
   toggleInteresse: function (subscribe, interesse) {
     var new_signups = this.state.new_signups;
@@ -114,19 +117,19 @@ module.exports = React.createClass({
 
     return (
       <div className="stepInteresser">
-        <input type="button" value="Tilbage" className="btn btn-default prevButton" onClick={this.completeStep(this.props.stepBackwards)} />
-        <h2>Opdater venligst dine interesser</h2>
-        <h3>Valgte</h3>
+        <h3 className="stepheader">Opdater venligst dine interesser</h3>
+        <h4 className="selectionheader">Valgte</h4>
         {interesser_already.length > 0
           ? <CheckboxList data={interesser_already} toggle={this.toggleInteresse} />
           : <p>(Ingen)</p>
         }
-        <h3>Tilføj</h3>
+        <h4 className="selectionheader">Tilføj</h4>
         {interesser_not_yet.length > 0
           ? <CheckboxList data={interesser_not_yet} toggle={this.toggleInteresse} />
           : <p>(Alt tilmeldt)</p>
         }
-        <input type="button" className="btn btn-default nextButton pull-right" value="Næste" onClick={this.completeStep(this.props.stepForward)} />
+        <input type="button" value="Tilbage" className="btn btn-default prevButton" onClick={this.completeStep(this.props.stepBackwards)} />
+        <input type="button" value="Næste" className="btn btn-default nextButton pull-right" onClick={this.completeStep(this.props.stepForward)} />
       </div>
     );
   }

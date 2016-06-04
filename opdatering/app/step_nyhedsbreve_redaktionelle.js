@@ -153,19 +153,19 @@ module.exports = React.createClass({
 
     return (
       <div className="stepNyhedsbreveRed">
-        <input type="button" value="Tilbage" className="btn btn-default prevButton" onClick={this.completeStep(this.props.stepBackwards)} />
-        <h2>Vælg hvilke nyhedsbreve du ønsker at modtage</h2>
-        <h3>Valgte</h3>
+        <h3 className="stepheader">Vælg hvilke nyhedsbreve du ønsker at modtage</h3>
+        <h4 className="selectionheader">Valgte</h4>
         {nyhedsbreve_already.length > 0
           ? <NewsletterList data={nyhedsbreve_already} toggle={this.toggleNyhedsbrev} />
           : <p>(Ingen)</p>
         }
-        <h3>Tilføj</h3>
+        <h4 className="selectionheader">Tilføj</h4>
         {nyhedsbreve_not_yet.length > 0
           ? <NewsletterList data={nyhedsbreve_not_yet} toggle={this.toggleNyhedsbrev} />
           : <p>(Alt tilmeldt)</p>
         }
-        <input type="button" className="btn btn-default nextButton pull-right" value="Næste" onClick={this.completeStep(this.props.stepForward)} />
+        <input type="button" value="Tilbage" className="btn btn-default prevButton" onClick={this.completeStep(this.props.stepBackwards)} />
+        <input type="button" value="Næste" className="btn btn-default nextButton pull-right" onClick={this.completeStep(this.props.stepForward)} />
       </div>
     );
   }
