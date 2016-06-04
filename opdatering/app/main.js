@@ -148,7 +148,7 @@ var Opdateringskampagne = React.createClass({
       if (step < this.state.steps.length) {
         this.setState({step: ++step});
       }
-      
+
       ReactDOM.findDOMNode(this).scrollIntoView();
     }.bind(this));
 
@@ -177,12 +177,12 @@ var Opdateringskampagne = React.createClass({
         <div className="hidden-sm hidden-md hidden-lg topnav">
           <TopNavbar steps={this.state.steps} step={this.state.step} />
         </div>
-        <div className="hidden-xs col-sm-3 col-md-3 col-lg-2 sidebar">
-          <Sidebar step={this.state.step} steps={steps} />
-        </div>
         <div className="steppage container-fluid">
           <div className="row">
-            <div className="col-sm-9 col-md-offset-1 col-md-7 col-lg-6 col-lg-offset-2 main">
+            <div className="hidden-xs col-sm-1 col-md-2 col-lg-2 sidebar">
+              <Sidebar step={this.state.step} steps={steps} />
+            </div>
+            <div className="col-sm-8 col-sm-offset-4 col-md-7 col-md-offset-4 col-lg-6 col-lg-offset-4 main">
               {steps[this.state.step]}
             </div>
           </div>

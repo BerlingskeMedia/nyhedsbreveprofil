@@ -48,9 +48,10 @@ module.exports = React.createClass({
     this.setState(userDataState);
     this.setState({has300: this.props.data.nyhedsbreve.indexOf(300) > -1});
   },
-  handleInputChange: function(stateData) {
-    stateData.data_dirty = true;
-    this.setState(stateData);
+  handleInputChange: function(e) {
+    var temp = {data_dirty: true};
+    temp[e.target.id] = e.target.value;
+    this.setState(temp);
   },
   handle300PermChange: function (e) {
     this.setState({has300: !this.state.has300}, function() {
@@ -137,12 +138,16 @@ module.exports = React.createClass({
   },
   addKid: function(birthyear, index) {
     var kids = this.state.kids;
+
     birthyear = birthyear !== undefined ? birthyear : '';
     if (index !== undefined) {
       kids[index].birthyear = parseInt(birthyear);
+    } else if (kids === undefined) {
+      kids = [{birthyear: birthyear}];
     } else {
       kids.push({birthyear: birthyear});
     }
+
     this.setState({kids: kids, data_dirty: true});
   },
   removeKid: function(index) {
@@ -151,13 +156,6 @@ module.exports = React.createClass({
     this.setState({kids: kids, data_dirty: true});
   },
   render: function() {
-
-    var userData = {};
-    Object.keys(this.props.data)
-    .filter(this.filterAllowesUserFields)
-    .forEach(function(key) {
-      userData[key] = this.props.data[key];
-    }.bind(this));
 
     var p300data = {
       id: '300',
@@ -170,64 +168,64 @@ module.exports = React.createClass({
       <div className="stepStamdata">
         <form onSubmit={this.handleSubmit}>
           <h3 className="stepheader">Opdater venligst dine kontaktoplysninger</h3>
-          <TextInput id="email" label="Email" type="email" initialValue={userData.email} onChange={this.handleInputChange} hasError={this.state.email_error} />
+          <TextInput id="email" label="Email" type="email" value={this.state.email} onChange={this.handleInputChange} hasError={this.state.email_error} />
           {this.state.email_conflict ? <div className="alert alert-danger" role="alert">
             <span className="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
             <span> E-mailadressen findes allerede i vores nyhedsbrevssystem. Skriv venligst til <a href='mailto:nyhedsbreve@berlingske.dk'>nyhedsbreve@berlingske.dk</a>, hvis du vil flytte alle tilmeldinger til nyhedsbreve fra en e-mailadresse til en anden - så hjælper vi dig så hurtigt som muligt.</span>
           </div> : null}
           <div className="row">
             <div className="col-xs-12">
-              <TextInput id="fornavn" label="Fornavn" initialValue={userData.fornavn} onChange={this.handleInputChange} />
+              <TextInput id="fornavn" label="Fornavn" value={this.state.fornavn} onChange={this.handleInputChange} />
             </div>
             <div className="col-xs-12">
-              <TextInput id="efternavn" label="Efternavn" initialValue={userData.efternavn} onChange={this.handleInputChange} />
+              <TextInput id="efternavn" label="Efternavn" value={this.state.efternavn} onChange={this.handleInputChange} />
             </div>
           </div>
           <div className="row">
             <div className="col-xs-12 col-md-4">
-              <TextInput id="vejnavn" label="Vejnavn" initialValue={userData.vejnavn} onChange={this.handleInputChange} />
+              <TextInput id="vejnavn" label="Vejnavn" value={this.state.vejnavn} onChange={this.handleInputChange} />
             </div>
             <div className="col-xs-6 col-md-2">
-              <TextInput id="husnummer" label="Husnummer" placeholder="" initialValue={userData.husnummer} onChange={this.handleInputChange} />
+              <TextInput id="husnummer" label="Husnummer" placeholder="" value={this.state.husnummer} onChange={this.handleInputChange} />
             </div>
             <div className="col-xs-6 col-md-2">
-              <TextInput id="husbogstav" label="Husbogstav" placeholder="" initialValue={userData.husbogstav} onChange={this.handleInputChange} />
+              <TextInput id="husbogstav" label="Husbogstav" placeholder="" value={this.state.husbogstav} onChange={this.handleInputChange} />
             </div>
             <div className="col-xs-6 col-md-2">
-              <TextInput id="etage" label="Etage" placeholder="" initialValue={userData.etage} onChange={this.handleInputChange} />
+              <TextInput id="etage" label="Etage" placeholder="" value={this.state.etage} onChange={this.handleInputChange} />
             </div>
             <div className="col-xs-6 col-md-2">
-              <TextInput id="sidedoer" label="Side/dør" placeholder="" initialValue={userData.sidedoer} onChange={this.handleInputChange} />
+              <TextInput id="sidedoer" label="Side/dør" placeholder="" value={this.state.sidedoer} onChange={this.handleInputChange} />
             </div>
             <div className="col-xs-12 col-md-2">
-              <TextInput id="postnummer" label="Postnummer" initialValue={userData.postnummer} onChange={this.handleInputChange} />
+              <TextInput id="postnummer" label="Postnummer" value={this.state.postnummer} onChange={this.handleInputChange} />
             </div>
             <div className="col-xs-12 col-md-5">
-              <TextInput id="bynavn" label="By" initialValue={userData.bynavn} onChange={this.handleInputChange} />
+              <TextInput id="bynavn" label="By" value={this.state.bynavn} onChange={this.handleInputChange} />
             </div>
             <div className="col-xs-12 col-md-5">
-              <CountrySelector id="lande_kode" label="Land" initialValue={userData.lande_kode} onChange={this.handleInputChange} />
+              <CountrySelector id="lande_kode" label="Land" value={this.state.lande_kode} onChange={this.handleInputChange} />
             </div>
           </div>
           <div className="row">
             <div className="col-xs-6">
-              <TextInput id="telefon" label="Telefon" initialValue={userData.telefon} onChange={this.handleInputChange} />
+              <TextInput id="telefon" label="Telefon" value={this.state.telefon} onChange={this.handleInputChange} />
             </div>
             <div className="col-xs-6">
-              <TextInput id="mobil" label="Mobil" initialValue={userData.mobil} onChange={this.handleInputChange} />
+              <TextInput id="mobil" label="Mobil" value={this.state.mobil} onChange={this.handleInputChange} />
             </div>
           </div>
           <div className="row">
             <div className="col-xs-6">
-              <KoenSelect id="koen" label="Køn" initialValue={userData.koen} onChange={this.handleInputChange} />
+              <KoenSelect id="koen" label="Køn" value={this.state.koen} onChange={this.handleInputChange} />
             </div>
             <div className="col-xs-6">
-              <BirthyearSelector id="foedselsaar" label="Fødselsår" initialValue={userData.foedselsaar} onChange={this.handleInputChange} />
+              <BirthyearSelector id="foedselsaar" label="Fødselsår" value={this.state.foedselsaar} onChange={this.handleInputChange} />
             </div>
           </div>
           <div className="row">
             <div className="col-xs-12 col-md-6">
-              <KidsController kids={userData.kids} addKid={this.addKid} removeKid={this.removeKid} />
+              <KidsController kids={this.state.kids} addKid={this.addKid} removeKid={this.removeKid} />
             </div>
           </div>
           {this.props.showCheckbox300Perm ?
@@ -242,18 +240,6 @@ module.exports = React.createClass({
 
 
 var TextInput = React.createClass({
-  getInitialState: function() {
-    return {
-      value: this.props.initialValue
-    };
-  },
-  onChange: function(e) {
-    var temp = {};
-    temp[e.target.id] = e.target.value;
-    this.setState({value: e.target.value}, function() {
-      this.props.onChange(temp);
-    }.bind(this));
-  },
   render: function() {
 
     var placeholder = this.props.placeholder !== undefined ? this.props.placeholder : this.props.label;
@@ -270,8 +256,8 @@ var TextInput = React.createClass({
           className="form-control"
           type={type}
           placeholder={placeholder}
-          onChange={this.onChange}
-          value={this.state.value}
+          onChange={this.props.onChange}
+          value={this.props.value}
         />
       </div>
     );
@@ -289,18 +275,6 @@ var T300PermText = React.createClass({
 
 
 var KoenSelect = React.createClass({
-  getInitialState: function() {
-    return {
-      value: this.props.initialValue
-    };
-  },
-  onChange: function(e) {
-    var temp = {};
-    temp[e.target.id] = e.target.value;
-    this.setState({value: e.target.value}, function() {
-      this.props.onChange(temp);
-    }.bind(this));
-  },
   render: function() {
     return (
       <div key={this.props.id} className="form-group">
@@ -308,8 +282,8 @@ var KoenSelect = React.createClass({
         <select
           id={this.props.id}
           className="form-control"
-          value={this.state.value}
-          onChange={this.onChange}>
+          value={this.props.value}
+          onChange={this.props.onChange}>
           <option key="-1" value="" disabled="disabled"></option>
           <option key="0" value="M">Mand</option>
           <option key="1" value="K">Kvinde</option>
@@ -321,18 +295,6 @@ var KoenSelect = React.createClass({
 
 
 var BirthyearSelector = React.createClass({
-  getInitialState: function() {
-    return {
-      value: this.props.initialValue
-    };
-  },
-  onChange: function(e) {
-    var temp = {};
-    temp[e.target.id] = e.target.value;
-    this.setState({value: e.target.value}, function() {
-      this.props.onChange(temp);
-    }.bind(this));
-  },
   render: function () {
     var options = [];
     for (var i = 0; i < 99; i++) {
@@ -347,8 +309,8 @@ var BirthyearSelector = React.createClass({
         <select
           id={this.props.id}
           className="form-control"
-          value={this.state.value}
-          onChange={this.onChange}>
+          value={this.props.value}
+          onChange={this.props.onChange}>
           {options}
         </select>
       </div>
@@ -367,6 +329,7 @@ var KidsController = React.createClass({
   },
   render: function () {
     var kids = [];
+
     if (this.props.kids) {
       kids = this.props.kids.map(function(kid, index) {
         return <KidBirthyearSelector id={index} key={index} birthyear={kid.birthyear} addKid={this.props.addKid} removeKid={this.removeKid.bind(this, index)} />

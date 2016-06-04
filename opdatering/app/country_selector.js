@@ -1,18 +1,6 @@
 var React = require('react');
 
 module.exports = React.createClass({
-  getInitialState: function() {
-    return {
-      value: ['', 'N/A'].indexOf(this.props.initialValue) === -1 ? this.props.initialValue : 'DK'
-    };
-  },
-  onChange: function(e) {
-    var temp = {};
-    temp[e.target.id] = e.target.value;
-    this.setState({value: e.target.value}, function() {
-      this.props.onChange(temp);
-    }.bind(this));
-  },
   render: function() {
 
     var options = countries.map(function(country, index) {
@@ -28,8 +16,8 @@ module.exports = React.createClass({
         <select
           id={id}
           className="form-control"
-          value={this.state.value}
-          onChange={this.onChange}>
+          value={this.props.value}
+          onChange={this.props.onChange}>
           {options}
           <option key={-1} value='N/A'>Ikke oplyst</option>
         </select>
