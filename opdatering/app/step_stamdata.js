@@ -54,6 +54,20 @@ module.exports = React.createClass({
     temp[e.target.id] = e.target.value;
     this.setState(temp);
   },
+  handleEmailChange: function (e) {
+    var eventdata = e;
+    if (validateEmail(e.target.value)) {
+      this.setState({email_error: false});
+      this.handleInputChange(eventdata);
+    } else {
+      this.setState({email_error: true});
+    }
+
+    function validateEmail(email) {
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(email);
+    }
+  },
   handle300PermChange: function (e) {
     this.setState({has300: !this.state.has300}, function() {
       this.props.setHideStepNyhKom(!this.state.has300);
@@ -62,6 +76,10 @@ module.exports = React.createClass({
   },
   handleSubmit: function(e) {
     e.preventDefault();
+
+    if (this.state.email_error) {
+      return;
+    }
 
     // Tilmeld og afmeld perm 300
     if (this.state.has300_dirty) {
@@ -169,7 +187,7 @@ module.exports = React.createClass({
       <div className="stepStamdata">
         <form onSubmit={this.handleSubmit}>
           <h3 className="stepheader">Opdater venligst dine kontaktoplysninger</h3>
-          <TextInput id="email" label="Email" type="email" initialValue={this.props.data.email} onChange={this.handleInputChange} hasError={this.state.email_error} />
+          <TextInput id="email" label="Email" type="email" initialValue={this.props.data.email} onChange={this.handleEmailChange} hasError={this.state.email_error} />
           {this.state.email_conflict ? <div className="alert alert-danger" role="alert">
             <span className="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
             <span> E-mailadressen findes allerede i vores nyhedsbrevssystem. Skriv venligst til <a href='mailto:nyhedsbreve@berlingske.dk'>nyhedsbreve@berlingske.dk</a>, hvis du vil flytte alle tilmeldinger til nyhedsbreve fra en e-mailadresse til en anden - så hjælper vi dig så hurtigt som muligt.</span>
