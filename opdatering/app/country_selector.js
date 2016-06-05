@@ -9,6 +9,7 @@ module.exports = React.createClass({
 
     var id = this.props.id ? this.props.id : 'country';
     var label = this.props.label ? this.props.label : 'Land';
+    var initialValue = this.props.initialValue !== 'N/A' ? this.props.initialValue : 'DK';
 
     return (
       <div className="CountrySelector form-group">
@@ -16,8 +17,8 @@ module.exports = React.createClass({
         <select
           id={id}
           className="form-control"
-          value={this.props.value}
-          onChange={this.props.onChange}>
+          onChange={this.props.onChange}
+          defaultValue={initialValue}>
           {options}
           <option key={-1} value='N/A'>Ikke oplyst</option>
         </select>

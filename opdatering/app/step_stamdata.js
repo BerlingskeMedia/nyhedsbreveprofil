@@ -205,15 +205,15 @@ module.exports = React.createClass({
               <TextInput id="bynavn" label="By" initialValue={this.props.data.bynavn} onChange={this.handleInputChange} />
             </div>
             <div className="col-xs-12 col-sm-12 col-md-12 col-lg-5">
-              <CountrySelector id="lande_kode" label="Land" value={this.props.data.lande_kode} onChange={this.handleInputChange} />
+              <CountrySelector id="lande_kode" label="Land" initialValue={this.props.data.lande_kode} onChange={this.handleInputChange} />
             </div>
           </div>
           <div className="row">
             <div className="col-xs-6">
-              <TextInput id="telefon" label="Telefon" initialValue={this.props.data.telefon} onChange={this.handleInputChange} />
+              <TextInput id="telefon" label="Telefon" type="number" initialValue={this.props.data.telefon} onChange={this.handleInputChange} />
             </div>
             <div className="col-xs-6">
-              <TextInput id="mobil" label="Mobil" initialValue={this.props.data.mobil} onChange={this.handleInputChange} />
+              <TextInput id="mobil" label="Mobil" type="number" initialValue={this.props.data.mobil} onChange={this.handleInputChange} />
             </div>
           </div>
           <div className="row">
