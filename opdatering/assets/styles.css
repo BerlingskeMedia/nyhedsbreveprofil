@@ -124,11 +124,18 @@ button, .btn {
   border-radius: 2px;
 }
 
-.nextButton {
+.navButtons {
+    margin-top: 45px;
+}
+
+.navButtons .btn {
   height: 36px;
+  border-radius: 2px;
+}
+
+.nextButton {
   background-color: #393939;
   color: #FFFFFF;
-  border-radius: 2px;
 }
 
 .mdbCheckbox .description {

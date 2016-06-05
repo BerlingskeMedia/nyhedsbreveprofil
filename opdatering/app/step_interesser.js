@@ -14,7 +14,7 @@ module.exports = React.createClass({
     };
   },
   componentDidMount: function() {
-    
+
     ga('set', 'page', 'opdateringskampagne/step_interesser');
     ga('send', 'pageview');
 
@@ -128,8 +128,11 @@ module.exports = React.createClass({
           ? <CheckboxList data={interesser_not_yet} toggle={this.toggleInteresse} />
           : <p>(Alt tilmeldt)</p>
         }
-        <input type="button" value="Tilbage" className="btn btn-default prevButton" onClick={this.completeStep(this.props.stepBackwards)} />
-        <input type="button" value="Næste" className="btn btn-default nextButton pull-right" onClick={this.completeStep(this.props.stepForward)} />
+
+        <div className="navButtons">
+          <input type="button" value="Tilbage" className="btn btn-default prevButton" onClick={this.completeStep(this.props.stepBackwards)} />
+          <input type="button" value="Næste" className="btn btn-default nextButton pull-right" onClick={this.completeStep(this.props.stepForward)} />
+        </div>
       </div>
     );
   }

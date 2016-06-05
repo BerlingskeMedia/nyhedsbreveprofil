@@ -250,7 +250,10 @@ module.exports = React.createClass({
           {this.props.showCheckbox300Perm ?
             <Checkbox data={p300data} toggle={this.handle300PermChange} />
           : null }
-          <input className="btn btn-default nextButton pull-right" type="submit" value="Næste" disabled={this.state.stepping} />
+
+          <div className="navButtons">
+            <input className="btn btn-default nextButton pull-right" type="submit" value="Næste" disabled={this.state.stepping} />
+          </div>
         </form>
       </div>
     );
