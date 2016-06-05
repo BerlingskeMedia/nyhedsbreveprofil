@@ -168,64 +168,64 @@ module.exports = React.createClass({
       <div className="stepStamdata">
         <form onSubmit={this.handleSubmit}>
           <h3 className="stepheader">Opdater venligst dine kontaktoplysninger</h3>
-          <TextInput id="email" label="Email" type="email" value={this.state.email} onChange={this.handleInputChange} hasError={this.state.email_error} />
+          <TextInput id="email" label="Email" type="email" initialValue={this.props.data.email} onChange={this.handleInputChange} hasError={this.state.email_error} />
           {this.state.email_conflict ? <div className="alert alert-danger" role="alert">
             <span className="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
             <span> E-mailadressen findes allerede i vores nyhedsbrevssystem. Skriv venligst til <a href='mailto:nyhedsbreve@berlingske.dk'>nyhedsbreve@berlingske.dk</a>, hvis du vil flytte alle tilmeldinger til nyhedsbreve fra en e-mailadresse til en anden - så hjælper vi dig så hurtigt som muligt.</span>
           </div> : null}
           <div className="row">
             <div className="col-xs-12">
-              <TextInput id="fornavn" label="Fornavn" value={this.state.fornavn} onChange={this.handleInputChange} />
+              <TextInput id="fornavn" label="Fornavn" initialValue={this.props.data.fornavn} onChange={this.handleInputChange} />
             </div>
             <div className="col-xs-12">
-              <TextInput id="efternavn" label="Efternavn" value={this.state.efternavn} onChange={this.handleInputChange} />
+              <TextInput id="efternavn" label="Efternavn" initialValue={this.props.data.efternavn} onChange={this.handleInputChange} />
             </div>
           </div>
           <div className="row">
-            <div className="col-xs-12 col-sm-8 col-md-8 col-lg-4">
-              <TextInput id="vejnavn" label="Vejnavn" value={this.state.vejnavn} onChange={this.handleInputChange} />
+            <div className="col-xs-12 col-sm-8 col-md-8 col-lg-8">
+              <TextInput id="vejnavn" label="Vejnavn" initialValue={this.props.data.vejnavn} onChange={this.handleInputChange} />
             </div>
-            <div className="col-xs-6  col-sm-4 col-md-4 col-lg-2">
-              <TextInput id="husnummer" label="Husnummer" placeholder="" value={this.state.husnummer} onChange={this.handleInputChange} />
+            <div className="col-xs-6  col-sm-4 col-md-4 col-lg-4">
+              <TextInput id="husnummer" label="Husnummer" type="number" placeholder="" initialValue={this.props.data.husnummer} onChange={this.handleInputChange} />
             </div>
-            <div className="col-xs-6 col-sm-4 col-md-4 col-lg-2">
-              <TextInput id="husbogstav" label="Husbogstav" placeholder="" value={this.state.husbogstav} onChange={this.handleInputChange} />
+            <div className="col-xs-6 col-sm-4 col-md-4 col-lg-4">
+              <TextInput id="husbogstav" label="Husbogstav" placeholder="" initialValue={this.props.data.husbogstav} onChange={this.handleInputChange} />
             </div>
-            <div className="col-xs-6 col-sm-4 col-md-4 col-lg-2">
-              <TextInput id="etage" label="Etage" placeholder="" value={this.state.etage} onChange={this.handleInputChange} />
+            <div className="col-xs-6 col-sm-4 col-md-4 col-lg-4">
+              <TextInput id="etage" label="Etage" placeholder="" initialValue={this.props.data.etage} onChange={this.handleInputChange} />
             </div>
-            <div className="col-xs-6 col-sm-4 col-md-4 col-lg-2">
-              <TextInput id="sidedoer" label="Side/dør" placeholder="" value={this.state.sidedoer} onChange={this.handleInputChange} />
+            <div className="col-xs-6 col-sm-4 col-md-4 col-lg-4">
+              <TextInput id="sidedoer" label="Side/dør" placeholder="" initialValue={this.props.data.sidedoer} onChange={this.handleInputChange} />
             </div>
-            <div className="col-xs-12 col-sm-2 col-md-2 col-lg-2">
-              <TextInput id="postnummer" label="Postnr" value={this.state.postnummer} onChange={this.handleInputChange} />
+            <div className="col-xs-12 col-sm-4 col-md-4 col-lg-2">
+              <TextInput id="postnummer" label="Postnr" type="number" initialValue={this.props.data.postnummer} onChange={this.handleInputChange} />
             </div>
-            <div className="col-xs-12 col-sm-5 col-md-5 col-lg-5">
-              <TextInput id="bynavn" label="By" value={this.state.bynavn} onChange={this.handleInputChange} />
+            <div className="col-xs-12 col-sm-8 col-md-8 col-lg-5">
+              <TextInput id="bynavn" label="By" initialValue={this.props.data.bynavn} onChange={this.handleInputChange} />
             </div>
-            <div className="col-xs-12 col-sm-5 col-md-5 col-lg-5">
-              <CountrySelector id="lande_kode" label="Land" value={this.state.lande_kode} onChange={this.handleInputChange} />
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-xs-6">
-              <TextInput id="telefon" label="Telefon" value={this.state.telefon} onChange={this.handleInputChange} />
-            </div>
-            <div className="col-xs-6">
-              <TextInput id="mobil" label="Mobil" value={this.state.mobil} onChange={this.handleInputChange} />
+            <div className="col-xs-12 col-sm-12 col-md-12 col-lg-5">
+              <CountrySelector id="lande_kode" label="Land" value={this.props.data.lande_kode} onChange={this.handleInputChange} />
             </div>
           </div>
           <div className="row">
             <div className="col-xs-6">
-              <KoenSelect id="koen" label="Køn" value={this.state.koen} onChange={this.handleInputChange} />
+              <TextInput id="telefon" label="Telefon" initialValue={this.props.data.telefon} onChange={this.handleInputChange} />
             </div>
             <div className="col-xs-6">
-              <BirthyearSelector id="foedselsaar" label="Fødselsår" value={this.state.foedselsaar} onChange={this.handleInputChange} />
+              <TextInput id="mobil" label="Mobil" initialValue={this.props.data.mobil} onChange={this.handleInputChange} />
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-xs-6">
+              <KoenSelect id="koen" label="Køn" initialValue={this.props.data.koen} onChange={this.handleInputChange} />
+            </div>
+            <div className="col-xs-6">
+              <BirthyearSelector id="foedselsaar" label="Fødselsår" initialValue={this.props.data.foedselsaar} onChange={this.handleInputChange} />
             </div>
           </div>
           <div className="row">
             <div className="col-xs-12 col-md-6">
-              <KidsController kids={this.state.kids} addKid={this.addKid} removeKid={this.removeKid} />
+              <KidsController kids={this.props.data.kids} addKid={this.addKid} removeKid={this.removeKid} />
             </div>
           </div>
           {this.props.showCheckbox300Perm ?
@@ -257,7 +257,7 @@ var TextInput = React.createClass({
           type={type}
           placeholder={placeholder}
           onChange={this.props.onChange}
-          value={this.props.value}
+          defaultValue={this.props.initialValue}
         />
       </div>
     );
@@ -282,7 +282,7 @@ var KoenSelect = React.createClass({
         <select
           id={this.props.id}
           className="form-control"
-          value={this.props.value}
+          defaultValue={this.props.initialValue}
           onChange={this.props.onChange}>
           <option key="-1" value="" disabled="disabled"></option>
           <option key="0" value="M">Mand</option>
@@ -309,7 +309,7 @@ var BirthyearSelector = React.createClass({
         <select
           id={this.props.id}
           className="form-control"
-          value={this.props.value}
+          defaultValue={this.props.initialValue}
           onChange={this.props.onChange}>
           {options}
         </select>
