@@ -179,7 +179,7 @@ var Opdateringskampagne = React.createClass({
         </div>
         <div className="steppage container-fluid">
           <div className="row">
-            <div className="hidden-xs col-sm-1 col-md-2 col-lg-2 sidebar">
+            <div className="hidden-xs col-sm-4 col-md-2 col-lg-2 sidebar">
               <Sidebar step={this.state.step} steps={steps} />
             </div>
             <div className="col-sm-8 col-sm-offset-4 col-md-7 col-md-offset-4 col-lg-6 col-lg-offset-4 main">

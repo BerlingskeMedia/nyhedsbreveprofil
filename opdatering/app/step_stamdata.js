@@ -182,28 +182,28 @@ module.exports = React.createClass({
             </div>
           </div>
           <div className="row">
-            <div className="col-xs-12 col-md-4">
+            <div className="col-xs-12 col-sm-8 col-md-8 col-lg-4">
               <TextInput id="vejnavn" label="Vejnavn" value={this.state.vejnavn} onChange={this.handleInputChange} />
             </div>
-            <div className="col-xs-6 col-md-2">
+            <div className="col-xs-6  col-sm-4 col-md-4 col-lg-2">
               <TextInput id="husnummer" label="Husnummer" placeholder="" value={this.state.husnummer} onChange={this.handleInputChange} />
             </div>
-            <div className="col-xs-6 col-md-2">
+            <div className="col-xs-6 col-sm-4 col-md-4 col-lg-2">
               <TextInput id="husbogstav" label="Husbogstav" placeholder="" value={this.state.husbogstav} onChange={this.handleInputChange} />
             </div>
-            <div className="col-xs-6 col-md-2">
+            <div className="col-xs-6 col-sm-4 col-md-4 col-lg-2">
               <TextInput id="etage" label="Etage" placeholder="" value={this.state.etage} onChange={this.handleInputChange} />
             </div>
-            <div className="col-xs-6 col-md-2">
+            <div className="col-xs-6 col-sm-4 col-md-4 col-lg-2">
               <TextInput id="sidedoer" label="Side/dør" placeholder="" value={this.state.sidedoer} onChange={this.handleInputChange} />
             </div>
-            <div className="col-xs-12 col-md-2">
-              <TextInput id="postnummer" label="Postnummer" value={this.state.postnummer} onChange={this.handleInputChange} />
+            <div className="col-xs-12 col-sm-2 col-md-2 col-lg-2">
+              <TextInput id="postnummer" label="Postnr" value={this.state.postnummer} onChange={this.handleInputChange} />
             </div>
-            <div className="col-xs-12 col-md-5">
+            <div className="col-xs-12 col-sm-5 col-md-5 col-lg-5">
               <TextInput id="bynavn" label="By" value={this.state.bynavn} onChange={this.handleInputChange} />
             </div>
-            <div className="col-xs-12 col-md-5">
+            <div className="col-xs-12 col-sm-5 col-md-5 col-lg-5">
               <CountrySelector id="lande_kode" label="Land" value={this.state.lande_kode} onChange={this.handleInputChange} />
             </div>
           </div>

@@ -45,6 +45,8 @@ html, div, h1, h2, h3, h4 {
   bottom: 0px;
   overflow-x: hidden;
   overflow-y: auto;
+  z-index: 1000;
+  display: block;
   color: #FFFFFF;
   /*background-color: #124680;*/
   padding: 20px;
@@ -66,6 +68,21 @@ html, div, h1, h2, h3, h4 {
 }
 .sidebar .item {
   padding: 5px;
+  font-size: 16px;
+}
+
+.main {
+
+}
+
+@media (min-width: 767px) {
+  .main {
+      padding-top: 60px;
+  }
+
+  .stepheader {
+    padding-bottom: 20px;
+  }
 }
 
 .steppage {
