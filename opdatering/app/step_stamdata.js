@@ -74,6 +74,22 @@ module.exports = React.createClass({
     });
     this.setState({has300_dirty: true});
   },
+  completeStepFunc: function (callback) {
+    console.log('completeStepFunc');
+    var payload = {
+      location_id: 2059
+    };
+
+    Object.keys(this.state)
+    .filter(this.filterAllowesUserFields)
+    .forEach(function(key) {
+      payload[key] = this.state[key];
+    }.bind(this));
+
+    console.log('test payload', payload);
+    callback(true);
+    return;
+  },
   handleSubmit: function(e) {
     e.preventDefault();
 
@@ -186,12 +202,18 @@ module.exports = React.createClass({
     return (
       <div className="stepStamdata">
         <form onSubmit={this.handleSubmit}>
-          <h3 className="stepheader">Opdater venligst dine kontaktoplysninger</h3>
-          <TextInput id="email" label="Email" type="email" initialValue={this.props.data.email} onChange={this.handleEmailChange} hasError={this.state.email_error} />
-          {this.state.email_conflict ? <div className="alert alert-danger" role="alert">
-            <span className="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-            <span> E-mailadressen findes allerede i vores nyhedsbrevssystem. Skriv venligst til <a href='mailto:nyhedsbreve@berlingske.dk'>nyhedsbreve@berlingske.dk</a>, hvis du vil flytte alle tilmeldinger til nyhedsbreve fra en e-mailadresse til en anden - så hjælper vi dig så hurtigt som muligt.</span>
-          </div> : null}
+          <div className="stamdataStepheaderPadding">
+            <h3 className="stepheader">Opdater venligst dine kontaktoplysninger</h3>
+          </div>
+          <div className="row">
+            <div className="col-xs-12">
+              <TextInput id="email" label="Email" type="email" initialValue={this.props.data.email} onChange={this.handleEmailChange} hasError={this.state.email_error} />
+              {this.state.email_conflict ? <div className="alert alert-danger" role="alert">
+                <span className="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <span> E-mailadressen findes allerede i vores nyhedsbrevssystem. Skriv venligst til <a href='mailto:nyhedsbreve@berlingske.dk'>nyhedsbreve@berlingske.dk</a>, hvis du vil flytte alle tilmeldinger til nyhedsbreve fra en e-mailadresse til en anden - så hjælper vi dig så hurtigt som muligt.</span>
+              </div> : null}
+            </div>
+          </div>
           <div className="row">
             <div className="col-xs-12">
               <TextInput id="fornavn" label="Fornavn" initialValue={this.props.data.fornavn} onChange={this.handleInputChange} />
@@ -216,13 +238,13 @@ module.exports = React.createClass({
             <div className="col-xs-6 col-sm-4 col-md-4 col-lg-4">
               <TextInput id="sidedoer" label="Side/dør" placeholder="" initialValue={this.props.data.sidedoer} onChange={this.handleInputChange} />
             </div>
-            <div className="col-xs-12 col-sm-4 col-md-4 col-lg-2">
+            <div className="col-xs-12 col-sm-4 col-md-4 col-lg-4">
               <TextInput id="postnummer" label="Postnr" type="number" initialValue={this.props.data.postnummer} onChange={this.handleInputChange} />
             </div>
-            <div className="col-xs-12 col-sm-8 col-md-8 col-lg-5">
+            <div className="col-xs-12 col-sm-8 col-md-8 col-lg-8">
               <TextInput id="bynavn" label="By" initialValue={this.props.data.bynavn} onChange={this.handleInputChange} />
             </div>
-            <div className="col-xs-12 col-sm-12 col-md-12 col-lg-5">
+            <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
               <CountrySelector id="lande_kode" label="Land" initialValue={this.props.data.lande_kode} onChange={this.handleInputChange} />
             </div>
           </div>
@@ -242,14 +264,18 @@ module.exports = React.createClass({
               <BirthyearSelector id="foedselsaar" label="Fødselsår" initialValue={this.props.data.foedselsaar} onChange={this.handleInputChange} />
             </div>
           </div>
+          <KidsSelector kids={this.props.data.kids} addKid={this.addKid} removeKid={this.removeKid} />
           <div className="row">
             <div className="col-xs-12 col-md-6">
-              <KidsSelector kids={this.props.data.kids} addKid={this.addKid} removeKid={this.removeKid} />
             </div>
           </div>
-          {this.props.showCheckbox300Perm ?
-            <Checkbox data={p300data} toggle={this.handle300PermChange} />
-          : null }
+          <div className="row">
+            <div className="col-xs-12">
+              {this.props.showCheckbox300Perm ?
+                <Checkbox data={p300data} toggle={this.handle300PermChange} />
+              : null }
+              </div>
+            </div>
 
           <div className="navButtons">
             <input className="btn btn-default nextButton pull-right" type="submit" value="Næste" disabled={this.state.stepping} />

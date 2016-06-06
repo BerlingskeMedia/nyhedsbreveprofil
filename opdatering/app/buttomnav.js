@@ -11,19 +11,22 @@ module.exports = React.createClass({
     }.bind(this));
 
     return(null);
-
   }
 });
 
+
 // return (
 //   <footer className="footer">
-//     <div className="container">
-//       <div className="row">
-//         <div className="col-xs-4 col-xs-offset-4">
-//           <p>Dots</p>
-//           <input type="button" className="nextButton" value="Næste" onClick={this.props.next} />
-//         </div>
-//       </div>
-//     </div>
+//   <div className="container">
+//   <div className="row">
+//   <div className="col-xs-4 col-xs-offset-4">
+//   <div className="navButtons">
+//   <input type="button" value="Tilbage v2" className="btn btn-default prevButton" onClick={this.props.prevFunc} />
+//   <p>Dots</p>
+//   <input type="button" value="Næste v2" className="btn btn-default nextButton pull-right" onClick={this.props.nextFunc} />
+//   </div>
+//   </div>
+//   </div>
+//   </div>
 //   </footer>
 // );

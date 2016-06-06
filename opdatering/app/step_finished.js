@@ -54,9 +54,10 @@ module.exports = React.createClass({
     var showKidsNews = (this.props.data.kids !== undefined && this.props.data.kids.length > 0) || this.props.data.interesser.indexOf(39) > -1;
 
     return(
-      <div>
-        <h3>Tak for din hjælp</h3>
-        <h3>
+      <div className="stepFinished">
+
+        <h2>Tak for din hjælp</h2>
+        <h3 className="stepsubtitle">
           Du er nu med i konkurrencen om de mange præmier inklusiv hovedpræmien, en iPad Air 2 til en værdi af kr. 4.499,-
           Vinderne offentliggøres mandag d. 11. juli og de heldige vindere får direkte besked.
         </h3>
@@ -69,7 +70,7 @@ module.exports = React.createClass({
 var NewspaperOffers = React.createClass({
   render: function() {
     return (
-      <div className="newspaperOffers" style={{marginTop: '50px'}}>
+      <div className="newspaperOffers">
         { this.props.abo === null ?
           <NewspaperOffer
             name="Berlingske"
@@ -106,13 +107,15 @@ var NewspaperOffers = React.createClass({
 var NewspaperOffer = React.createClass({
   render: function() {
     return (
-      <div className="newspaperOffer" style={{marginTop: '20px'}}>
-        <h2>Få et abonnement med {this.props.name}</h2>
-        <a target="_blank" href={this.props.click_href}>
+      <div className="newspaperOffer">
+        <a className="nodecor" target="_blank" href={this.props.click_href}>
+          <h2 className="nodecor">Få et abonnement med {this.props.name}</h2>
           <img src={this.props.logo_src} style={{width: '100%'}} />
+          <p className="nodecor">{this.props.description}</p>
         </a>
-        <p>{this.props.description}</p>
-        <p><a target="_blank" href={this.props.click_href}>Klik her og få et et godt tilbud</a></p>
+        <a target="_blank" href={this.props.click_href}>
+          <p>Klik her og få et et godt tilbud</p>
+        </a>
       </div>
     );
   }

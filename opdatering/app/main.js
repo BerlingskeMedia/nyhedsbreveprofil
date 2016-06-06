@@ -127,7 +127,7 @@ var Opdateringskampagne = React.createClass({
     // So this workaround puts the steps in the state after the userData is received.
 
     var steps = [
-      <StepStamdata sidebar_label="Dine kontaktoplysninger" stepForward={this.stepForward} showCheckbox300Perm={this.state.showCheckbox300Perm} data={this.state.userData} setHideStepNyhKom={this.setHideStepNyhKom} />,
+      <StepStamdata ref={this.getCompleteStepFunc} sidebar_label="Dine kontaktoplysninger" stepForward={this.stepForward} showCheckbox300Perm={this.state.showCheckbox300Perm} data={this.state.userData} setHideStepNyhKom={this.setHideStepNyhKom} />,
       <StepInteresser sidebar_label="Dine interesser" stepForward={this.stepForward} stepBackwards={this.stepBackwards} data={this.state.userData} />,
       <StepNyhedsbreveRed sidebar_label="Dine nyhedsbreve" stepForward={this.stepForward} stepBackwards={this.stepBackwards} data={this.state.userData} abo={this.state.abo} />,
       <StepNyhedsbreveKom sidebar_label="Dine øvrige nyhedsbreve" stepForward={this.stepForward} stepBackwards={this.stepBackwards} data={this.state.userData} abo={this.state.abo} />,
@@ -135,6 +135,18 @@ var Opdateringskampagne = React.createClass({
     ];
 
     this.setState({steps: steps});
+  },
+  getCompleteStepFunc: function (step) {
+    if (step && step.completeStepFunc) {
+      var completeStepFunc = this.stepForwardTestDamn.bind(this, step.completeStepFunc);
+      this.setState({completeStepFunc: completeStepFunc})
+    }
+  },
+  stepForwardTestDamn: function (input) {
+    console.log('stepForwardTestDamn', input);
+    input(function(complete) {
+      console.log('complete', complete);
+    });
   },
   stepForward: function (ekstern_id) {
     if (ekstern_id !== undefined) {
@@ -181,7 +193,7 @@ var Opdateringskampagne = React.createClass({
         </div>
         <div className="steppage container-fluid">
           <div className="row">
-            <div className="hidden-xs col-sm-4 col-md-2 col-lg-2 sidebar">
+            <div className="hidden-xs col-sm-3 col-md-2 col-lg-2 sidebar">
               <Sidebar step={this.state.step} steps={steps} />
             </div>
             <div className="col-sm-8 col-sm-offset-4 col-md-7 col-md-offset-4 col-lg-6 col-lg-offset-4 main">
@@ -193,7 +205,7 @@ var Opdateringskampagne = React.createClass({
           </div>
         </div>
         <div className="hidden-sm hidden-md hidden-lg buttomnav">
-          <ButtomNavbar steps={this.state.steps} step={this.state.step} />
+          <ButtomNavbar steps={this.state.steps} step={this.state.step} nextFunc={this.state.completeStepFunc} prevFunc="" />
         </div>
       </div>
     );
@@ -204,7 +216,10 @@ var UserMissing = React.createClass({
   render: function() {
     return(
       <div className="userMissing">
-        <p className="text-center" style={{marginTop: '50px'}}>Bruger kunne ikke findes</p>
+        <p className="text-center" style={{marginTop: '50px', fontSize: '20px'}}>
+          <p>Vi kunne desværre ikke finde din profil.</p>
+          <p>Videresend den mail, som du har modtaget til <a href="mailto:nyhedsbreve@berlingske.dk">nyhedsbreve@berlingske.dk</a>, så svarer vi dig hurtigst muligt.</p>
+        </p>
       </div>
     );
   }

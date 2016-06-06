@@ -17,7 +17,7 @@ module.exports = React.createClass({
           <label className="control-label" htmlFor={this.props.data.id}>
             <input type="checkbox" id={this.props.data.id} checked={this.state.checked} onChange={this.onChange} />
             {this.props.data.navn}
-            {this.props.data.description ? <span className="description">{this.props.data.description}</span> : null }
+            {this.props.data.description ? <div className="description">{this.props.data.description}</div> : null }
           </label>
         </div>
         {this.state.checked && this.props.data.permissiontext ? <div className="permissiontext">{this.props.data.permissiontext}</div> : null }

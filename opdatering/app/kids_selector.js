@@ -17,15 +17,20 @@ module.exports = React.createClass({
       }.bind(this));
     }
 
+    var kidsCount = kids.length,
+        buttonStyle = kidsCount % 2 !== 0 ? {marginTop: '30px'} : null;
+
     return (
-      <div className="KidsController">
-        <div className="kidsSelectors form">
+      <div className="row KidsController">
+        <div className="kidsSelectors">
           {kids}
         </div>
-        <button type="button" className="btn btn-default" onClick={this.addNew}>
-          <span className="glyphicon glyphicon-plus" aria-hidden="true"></span>
-          Tilføj hjemmeboende barn
-        </button>
+        <div className="col-xs-12 col-md-6">
+          <button type="button" className="btn btn-default" onClick={this.addNew} style={buttonStyle}>
+            <span className="glyphicon glyphicon-plus" aria-hidden="true"></span>
+            Tilføj hjemmeboende barn
+          </button>
+        </div>
       </div>
     );
   }
@@ -58,22 +63,24 @@ var KidBirthyearSelector = React.createClass({
     }
 
     return (
-      <div key={this.props.id} className="kidSelector form-group">
-      <label className="control-label" htmlFor={this.props.id}>{label}</label>
-      <div className="input-group">
-        <select
-          id={this.props.id}
-          className="form-control"
-          value={this.props.birthyear}
-          onChange={this.onChange}>
-          {options}
-        </select>
-        <span className="input-group-btn">
-          <button type="button" className="btn btn-default" onClick={this.props.removeKid}>
-            <span className="glyphicon glyphicon-minus" aria-hidden="true"></span>
-          </button>
-        </span>
-      </div>
+      <div className="col-xs-12 col-md-6">
+        <div key={this.props.id} className="kidSelector form-group">
+          <label className="control-label" htmlFor={this.props.id}>{label}</label>
+          <div className="input-group">
+            <select
+              id={this.props.id}
+              className="form-control"
+              value={this.props.birthyear}
+              onChange={this.onChange}>
+              {options}
+            </select>
+            <span className="input-group-btn">
+              <button type="button" className="btn btn-default" onClick={this.props.removeKid}>
+                <span className="glyphicon glyphicon-minus" aria-hidden="true"></span>
+              </button>
+            </span>
+          </div>
+        </div>
       </div>
     );
   }
