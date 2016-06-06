@@ -42,7 +42,6 @@ var Opdateringskampagne = React.createClass({
     if (ekstern_id !== null) {
       this.setState({ekstern_id: ekstern_id, abo: abo !== null ? abo.toUpperCase() : null }, this.loadUserData);
     } else {
-      // TODO: ERROR ???
       this.setState({user_error: true});
     }
 
@@ -93,7 +92,8 @@ var Opdateringskampagne = React.createClass({
         this.setStepsState
       ],
       error: function(xhr, status, err) {
-        console.error(this.props.url, status, err.toString());
+        this.setState({user_error: true});
+        console.error(xhr, status, err.toString());
       }.bind(this)
     });
 
@@ -165,12 +165,14 @@ var Opdateringskampagne = React.createClass({
 
   },
   render: function() {
+
     var steps = [];
     Object.assign(steps, this.state.steps);
 
     if (this.state.hideStepNyhKom) {
       steps.splice(3,1);
     }
+
 
     return (
       <div id="opdateringskampagne" className="opdateringskampagne">
@@ -183,7 +185,10 @@ var Opdateringskampagne = React.createClass({
               <Sidebar step={this.state.step} steps={steps} />
             </div>
             <div className="col-sm-8 col-sm-offset-4 col-md-7 col-md-offset-4 col-lg-6 col-lg-offset-4 main">
-              {steps[this.state.step]}
+              {this.state.user_error === false ?
+                steps[this.state.step] :
+                <UserMissing />
+              }
             </div>
           </div>
         </div>
@@ -198,10 +203,8 @@ var Opdateringskampagne = React.createClass({
 var UserMissing = React.createClass({
   render: function() {
     return(
-      <div class="row">
-        <div className="col-xs-4 col-xs-offset-4">
-          <p className="text-center" style={{marginTop: '50px'}}>Bruger kunne ikke findes</p>
-        </div>
+      <div className="userMissing">
+        <p className="text-center" style={{marginTop: '50px'}}>Bruger kunne ikke findes</p>
       </div>
     );
   }
