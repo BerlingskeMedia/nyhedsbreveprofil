@@ -22,7 +22,7 @@ var Opdateringskampagne = React.createClass({
       ekstern_id: null,
       abo: null,
       steps: [],
-      step: 0,
+      step: window.location.host.indexOf('profil.berlingskemedia.dk') > -1 ? 0 : 1,
       showCheckbox300Perm: false,
       hideStepNyhKom: false,
       hideStepNyhKom_dirty: false

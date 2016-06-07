@@ -18,8 +18,10 @@ module.exports = React.createClass({
   },
   componentDidMount: function() {
 
-    ga('set', 'page', 'opdateringskampagne/step_nyhedsbreve_redaktionelle');
-    ga('send', 'pageview');
+    if (window.location.host.indexOf('profil.berlingskemedia.dk') > -1) {
+      ga('set', 'page', 'opdateringskampagne/step_nyhedsbreve_redaktionelle');
+      ga('send', 'pageview');
+    }
 
   },
   sortByAbonnement: function (nyhedsbrev_a, nyhedsbrev_b) {

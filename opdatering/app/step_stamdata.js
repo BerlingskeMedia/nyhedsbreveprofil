@@ -37,8 +37,10 @@ module.exports = React.createClass({
   },
   componentDidMount: function() {
 
-    ga('set', 'page', 'opdateringskampagne/step-stamdata');
-    ga('send', 'pageview');
+    if (window.location.host.indexOf('profil.berlingskemedia.dk') > -1) {
+      ga('set', 'page', 'opdateringskampagne/step-stamdata');
+      ga('send', 'pageview');
+    }
 
     var userDataState = {};
     Object.keys(this.props.data)

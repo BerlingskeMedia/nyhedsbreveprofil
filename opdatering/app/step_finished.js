@@ -8,8 +8,10 @@ module.exports = React.createClass({
   },
   componentDidMount: function() {
 
-    ga('set', 'page', 'opdateringskampagne/step_finished');
-    ga('send', 'pageview');
+    if (window.location.host.indexOf('profil.berlingskemedia.dk') > -1) {
+      ga('set', 'page', 'opdateringskampagne/step_finished');
+      ga('send', 'pageview');
+    }
 
     this.sendCampaignSignup();
     this.sendReceiptEmail();
