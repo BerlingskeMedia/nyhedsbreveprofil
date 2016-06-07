@@ -19,7 +19,7 @@ module.exports = React.createClass({
   componentDidMount: function() {
 
     if (window.location.host.indexOf('profil.berlingskemedia.dk') > -1) {
-      ga('set', 'page', 'opdateringskampagne/step_nyhedsbreve_redaktionelle');
+      ga('set', 'page', 'opdateringskampagne/step_nyhedsbreve_kommercielle');
       ga('send', 'pageview');
     }
 
