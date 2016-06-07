@@ -163,6 +163,19 @@ button, .btn {
   color: #FFFFFF;
 }
 
+.mdbCheckbox input[type="checkbox"] {
+  visibility: hidden;
+}
+
+.mdbCheckbox input[type="checkbox"] + label {
+  background:url(/opdatering/assets/unchecked.svg) 0px 2px no-repeat;
+  padding-left: 30px;
+}
+
+.mdbCheckbox input[type="checkbox"]:checked + label {
+  background:url(/opdatering/assets/checked.svg) 0px 2px no-repeat;
+}
+
 .mdbCheckbox .description {
   font-size: 14px;
   font-style: italic;
@@ -177,6 +190,7 @@ button, .btn {
 }
 
 .mdbCheckbox .interestsSelection {
+  padding: 0px 20px 10px 30px;
 }
 
 .newspaperOffer {
@@ -187,21 +201,3 @@ button, .btn {
   color: #333;
   text-decoration: none;
 }
-
-/*input[type="checkbox"] {
-  background:url(/opdatering/assets/unchecked.svg) left top no-repeat;
-}*/
-
-/*input[type="checkbox"] {
-  display:inline-block;
-  width:19px;
-  height:19px;
-  margin:-1px 4px 0 0;
-  vertical-align:middle;
-  background:url(/opdatering/assets/unchecked.svg) left top no-repeat;
-  cursor:pointer;
-}*/
-
-/*input[type="checkbox"]:checked {
-  background:url(/opdatering/assets/checked.svg) -19px top no-repeat;
-}*/

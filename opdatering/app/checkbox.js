@@ -14,8 +14,8 @@ module.exports = React.createClass({
     return (
       <div className="mdbCheckbox">
         <div className="checkbox">
+          <input type="checkbox" id={this.props.data.id} checked={this.state.checked} onChange={this.onChange} />
           <label className="control-label" htmlFor={this.props.data.id}>
-            <input type="checkbox" id={this.props.data.id} checked={this.state.checked} onChange={this.onChange} />
             {this.props.data.navn}
             {this.props.data.description ? <div className="description">{this.props.data.description}</div> : null }
           </label>
