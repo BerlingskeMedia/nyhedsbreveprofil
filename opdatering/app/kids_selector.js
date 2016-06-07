@@ -18,7 +18,13 @@ module.exports = React.createClass({
     }
 
     var kidsCount = kids.length,
-        buttonStyle = kidsCount % 2 !== 0 ? {marginTop: '30px'} : null;
+        buttonStyle = {width: '100%'};
+
+    if (kidsCount % 2 !== 0 ) {
+      buttonStyle.marginTop = '30px';
+    }
+
+    buttonStyle.width = '100%';
 
     return (
       <div className="row KidsController">
