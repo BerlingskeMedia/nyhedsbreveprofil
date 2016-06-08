@@ -163,7 +163,8 @@ button, .btn {
   color: #FFFFFF;
 }
 
-.mdbCheckbox input[type="checkbox"], .mdbLogoCheckbox input[type="checkbox"] {
+.mdbCheckbox input[type="checkbox"],
+.mdbLogoCheckbox input[type="checkbox"] {
   visibility: hidden;
 }
 

@@ -11,7 +11,7 @@ module.exports = React.createClass({
     }.bind(this));
 
     return (
-      <div className="CheckboxList form">
+      <div className="CheckboxList">
         {items}
       </div>
     );

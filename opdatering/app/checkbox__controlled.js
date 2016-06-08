@@ -5,8 +5,8 @@ module.exports = React.createClass({
     return (
       <div className="mdbCheckbox">
         <div className="checkbox">
+          <input type="checkbox" id={this.props.data.id} checked={this.props.data.checked} onChange={this.props.toggle} />
           <label className="control-label" htmlFor={this.props.data.id}>
-            <input type="checkbox" id={this.props.data.id} checked={this.props.data.checked} onChange={this.props.toggle} />
             {this.props.data.navn}
             {this.props.data.description ? <span className="description">{this.props.data.description}</span> : null }
           </label>

@@ -268,17 +268,12 @@ module.exports = React.createClass({
           </div>
           <KidsSelector kids={this.props.data.kids} addKid={this.addKid} removeKid={this.removeKid} />
           <div className="row">
-            <div className="col-xs-12 col-md-6">
-            </div>
-          </div>
-          <div className="row">
             <div className="col-xs-12">
               {this.props.showCheckbox300Perm ?
                 <Checkbox data={p300data} toggle={this.handle300PermChange} />
               : null }
-              </div>
             </div>
-
+          </div>
           <div className="navButtons">
             <input className="btn btn-default nextButton pull-right" type="submit" value="Næste" disabled={this.state.stepping} />
           </div>
