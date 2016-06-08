@@ -163,7 +163,7 @@ button, .btn {
   color: #FFFFFF;
 }
 
-.mdbCheckbox input[type="checkbox"] {
+.mdbCheckbox input[type="checkbox"], .mdbLogoCheckbox input[type="checkbox"] {
   visibility: hidden;
 }
 
@@ -175,6 +175,28 @@ button, .btn {
 .mdbCheckbox input[type="checkbox"]:checked + label {
   background:url(/opdatering/assets/checked.svg) 0px 2px no-repeat;
 }
+
+.mdbLogoCheckbox input[type="checkbox"] + label {
+  padding: 10px 0px 0px 0px;
+}
+
+.mdbLogoCheckbox input[type="checkbox"] + label div {
+  position: relative;
+}
+
+.mdbLogoCheckbox input[type="checkbox"] + label .checkmark {
+  visibility: hidden;
+  position: absolute;
+}
+
+.mdbLogoCheckbox input[type="checkbox"]:checked + label .checkmark {
+  visibility: visible;
+  top: -10px;
+  left: -10px;
+  z-index: 1000;
+}
+
+
 
 .mdbCheckbox .description {
   font-size: 14px;

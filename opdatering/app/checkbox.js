@@ -11,17 +11,33 @@ module.exports = React.createClass({
     }.bind(this));
   },
   render: function() {
+    var majorClassName = this.props.data.logo_src !== undefined ? 'mdbLogoCheckbox' : 'mdbCheckbox';
+
     return (
-      <div className="mdbCheckbox">
+      <div className={majorClassName}>
         <div className="checkbox">
           <input type="checkbox" id={this.props.data.id} checked={this.state.checked} onChange={this.onChange} />
           <label className="control-label" htmlFor={this.props.data.id}>
-            {this.props.data.navn}
+            {this.props.data.logo_src ?
+              <LogoCheckbox logo_src={this.props.data.logo_src} /> :
+              <span>{this.props.data.navn}</span>
+            }
             {this.props.data.description ? <div className="description">{this.props.data.description}</div> : null }
           </label>
         </div>
         {this.state.checked && this.props.data.permissiontext ? <div className="permissiontext">{this.props.data.permissiontext}</div> : null }
         {this.state.checked && this.props.data.interestsSelection ? <div className="interestsSelection">{this.props.data.interestsSelection}</div> : null }
+      </div>
+    );
+  }
+});
+
+var LogoCheckbox = React.createClass({
+  render: function() {
+    return(
+      <div>
+        <img className="checkmark" src="/opdatering/assets/checked_stroked.svg" />
+        <img style={{width: '100%', border: '#C3C3C3 1px solid'}} src={this.props.logo_src} />
       </div>
     );
   }

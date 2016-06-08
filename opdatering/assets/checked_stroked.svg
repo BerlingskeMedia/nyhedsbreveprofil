@@ -1,0 +1,16 @@
+<svg width="22px" height="22px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 22 22" enable-background="new 0 0 22 22" xml:space="preserve">
+<title>Checked</title>
+<desc>Created with Sketch.</desc>
+<g id="Page-1">
+	<g id="Checked">
+		<g id="Oval-1">
+			<path fill="#65AB17" d="M11,21.5C5.2,21.5,0.5,16.8,0.5,11C0.5,5.2,5.2,0.5,11,0.5c5.8,0,10.5,4.7,10.5,10.5
+				C21.5,16.8,16.8,21.5,11,21.5z"/>
+			<path fill="#FFFFFF" d="M11,1c5.5,0,10,4.5,10,10s-4.5,10-10,10S1,16.5,1,11S5.5,1,11,1 M11,0C4.9,0,0,4.9,0,11s4.9,11,11,11
+				s11-4.9,11-11S17.1,0,11,0L11,0z"/>
+		</g>
+		<polygon id="Path-29" fill="#FFFFFF" points="4,11.4 5.3,10.1 8.7,13.7 16.2,5 17.8,6.4 8.7,17 		"/>
+	</g>
+</g>
+</svg>
