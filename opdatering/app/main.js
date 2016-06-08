@@ -196,7 +196,7 @@ var Opdateringskampagne = React.createClass({
             <div className="hidden-xs col-sm-3 col-md-2 col-lg-2 sidebar">
               <Sidebar step={this.state.step} steps={steps} />
             </div>
-            <div className="col-sm-8 col-sm-offset-4 col-md-7 col-md-offset-4 col-lg-6 col-lg-offset-4 main">
+            <div className="col-sm-7 col-sm-offset-4 col-md-6 col-md-offset-4 col-lg-5 col-lg-offset-4 main">
               {this.state.user_error === false ?
                 steps[this.state.step] :
                 <UserMissing />

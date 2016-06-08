@@ -99,6 +99,8 @@ module.exports = React.createClass({
       return;
     }
 
+    this.setState({stepping: true});
+
     // Tilmeld og afmeld perm 300
     if (this.state.has300_dirty) {
       if (this.state.has300) {
@@ -119,8 +121,6 @@ module.exports = React.createClass({
       .forEach(function(key) {
         payload[key] = this.state[key];
       }.bind(this));
-
-      this.setState({stepping: true});
 
       return $.ajax({
         type: 'POST',
@@ -144,6 +144,7 @@ module.exports = React.createClass({
         }.bind(this)
       });
     } else {
+      this.setState({stepping: false});
       this.props.stepForward();
     }
   },

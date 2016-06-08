@@ -23,7 +23,6 @@ html, div, h1, h2, h3, h4 {
 }
 
 .topnavbarheader {
-  font-family: 'Roboto', sans-serif;
   font-size: 24px;
   font-weight: 500;
   padding: 0px;
@@ -109,11 +108,10 @@ html, div, h1, h2, h3, h4 {
 }
 
 .selectionheader {
-  font-family: 'Roboto', sans-serif;
   font-size: 20px;
   font-weight: 500;
-  padding-top: 20px;
-  padding-bottom: 20px;
+  padding-top: 40px;
+  padding-bottom: 10px;
 }
 
 .stepStamdata .stamdataStepheaderPadding {
@@ -124,8 +122,14 @@ html, div, h1, h2, h3, h4 {
   padding: 0px 0px 13px 0px;
 }
 
-.stepStamdata .mdbCheckbox {
+.stepStamdata .mdbGreenCheckbox {
   padding: 40px 0px 0px 0px;
+}
+
+@media (max-width: 767px) {
+  .stepFinished h2 {
+    margin-top: 30px;
+  }
 }
 
 .control-label {
@@ -135,12 +139,16 @@ html, div, h1, h2, h3, h4 {
 
 .form-control {
   height: 45px;
-  font-family: 'Roboto', sans-serif;
   font-size: 18px;
   border: 1px solid #DDDDDD;
   border-radius: 2px;
   box-shadow: none;
   -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+}
+
+input, select {
+  -webkit-appearance: none;
 }
 
 button, .btn {
@@ -150,12 +158,23 @@ button, .btn {
 }
 
 .navButtons {
-    margin-top: 45px;
+  margin-top: 45px;
 }
 
-.navButtons .btn {
-  height: 36px;
-  border-radius: 2px;
+@media (max-width: 767px) {
+  .navButtons .btn {
+    height: 54px;
+    padding-left: 26px;
+    padding-right: 26px;
+    font-size: 18px;
+  }
+}
+
+@media (min-width: 767px) {
+  .navButtons .btn {
+    height: 36px;
+    font-size: 14px;
+  }
 }
 
 .nextButton {
@@ -163,18 +182,65 @@ button, .btn {
   color: #FFFFFF;
 }
 
-.mdbCheckbox input[type="checkbox"],
-.mdbLogoCheckbox input[type="checkbox"] {
+.mdbCheckbox input[type="checkbox"] {
   visibility: hidden;
 }
 
-.mdbCheckbox input[type="checkbox"] + label {
-  background:url(/opdatering/assets/unchecked.svg) 0px 2px no-repeat;
-  padding-left: 30px;
+.mdbGreenCheckbox {
+
 }
 
-.mdbCheckbox input[type="checkbox"]:checked + label {
+@media (max-width: 767px) {
+  .mdbGreenCheckbox {
+    padding-top: 2px;
+    padding-bottom: 3px;
+  }
+
+  .mdbLogoCheckbox {
+    padding-bottom: 3px;
+  }
+}
+
+.mdbGreenCheckbox input[type="checkbox"] + label {
+  background:url(/opdatering/assets/unchecked.svg) 0px 2px no-repeat;
+  padding-left: 30px;
+  height: 26px;
+}
+
+.mdbGreenCheckbox input[type="checkbox"]:checked + label {
   background:url(/opdatering/assets/checked.svg) 0px 2px no-repeat;
+}
+
+/*.mdbGreenCheckbox .description {
+  font-size: 14px;
+  font-style: italic;
+  margin-left: 2px;
+  padding: 25px 0px;
+}*/
+
+.mdbCheckbox .permissiontext {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding: 0px 20px 10px 30px;
+  color: #5A5A5A;
+  text-align: justify;
+}
+
+.mdbCheckbox .description {
+  font-size: 18px;
+}
+
+.mdbCheckbox .permissiontext {
+  padding-top: 10px;
+  padding-left: 10px;
+}
+
+.mdbCheckbox .interestsSelection {
+  padding: 10px 0px 0px 10px;
+}
+
+.mdbLogoCheckbox label {
+  width: 100%;
 }
 
 .mdbLogoCheckbox input[type="checkbox"] + label {
@@ -185,35 +251,33 @@ button, .btn {
   position: relative;
 }
 
-.mdbLogoCheckbox input[type="checkbox"] + label .checkmark {
+.mdbLogoCheckbox input[type="checkbox"] + label .checked_img {
   visibility: hidden;
   position: absolute;
 }
 
-.mdbLogoCheckbox input[type="checkbox"]:checked + label .checkmark {
+.mdbLogoCheckbox input[type="checkbox"]:checked + label .checked_img {
   visibility: visible;
   top: -10px;
   left: -10px;
   z-index: 1000;
 }
 
-
-
-.mdbCheckbox .description {
-  font-size: 14px;
-  font-style: italic;
-  margin-left: 2px;
+.mdbLogoCheckbox input[type="checkbox"] + label .unchecked_img {
+  position: absolute;
+  visibility: visible;
+  top: -10px;
+  left: -10px;
+  z-index: 1000;
 }
 
-.mdbCheckbox .permissiontext {
-  margin-top: 5px;
-  margin-bottom: 5px;
-  padding: 0px 20px 10px 30px;
-  color: #5A5A5A;
+.mdbLogoCheckbox input[type="checkbox"]:checked + label .unchecked_img {
+  visibility: hidden;
 }
 
-.mdbCheckbox .interestsSelection {
-  padding: 0px 20px 10px 30px;
+.mdbLogoCheckbox .checkboxCheckedAssets {
+  /*padding-top: 10px;*/
+  padding-bottom: 25px;
 }
 
 .newspaperOffer {

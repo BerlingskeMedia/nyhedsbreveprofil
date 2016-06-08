@@ -1,5 +1,6 @@
 var $ = require('jquery');
 var React = require('react');
+var ReactDOM = require('react-dom');
 var InteresseList = require('./checkbox_list');
 
 module.exports = React.createClass({
@@ -15,6 +16,8 @@ module.exports = React.createClass({
 
     this.sendCampaignSignup();
     this.sendReceiptEmail();
+
+    ReactDOM.findDOMNode(this).scrollIntoView();
   },
   sendCampaignSignup: function() {
 

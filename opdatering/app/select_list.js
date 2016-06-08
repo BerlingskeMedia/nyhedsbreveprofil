@@ -41,7 +41,8 @@ var Select = React.createClass({
       return <option key={index} value={option.value}>{option.label}</option>
     });
 
-    if (window.location.href.indexOf('localhost') != -1 && options.length === 0) {
+
+    if (window.location.host.indexOf('profil.berlingskemedia.dk') === -1 && options.length === 0) {
       options.push(<option key="999" value="999">TEST</option>);
     }
 
