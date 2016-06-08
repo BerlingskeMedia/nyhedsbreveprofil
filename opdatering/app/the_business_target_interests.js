@@ -150,7 +150,7 @@ module.exports = React.createClass({
         <SelectList data={this.state.thebusinesstargetInterests} toggle={this.toggleInteresseBusinessTarget} />
         {this.props.hasError ? <div className="alert alert-danger" role="alert">
           <span className="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-          <span> Skal udfyldes</span>
+          <span> Branche og stillingsbetegnelse skal udfyldes</span>
         </div> : null}
       </div>
     );
