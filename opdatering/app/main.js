@@ -178,8 +178,9 @@ var Opdateringskampagne = React.createClass({
   },
   render: function() {
 
-    var steps = [];
-    Object.assign(steps, this.state.steps);
+    // var steps = [];
+    // Object.assign(steps, this.state.steps);
+    var steps = [].concat(this.state.steps);
 
     if (this.state.hideStepNyhKom) {
       steps.splice(3,1);

@@ -43,7 +43,7 @@ var LogoCheckbox = React.createClass({
       <div>
         <img className="checked_img" src="/opdatering/assets/checked_stroked.svg" />
         <img className="unchecked_img" src="/opdatering/assets/unchecked.svg" />
-        <img style={{width: '100%', border: '#C3C3C3 1px solid'}} src={this.props.logo_src} />
+        <img style={{width: '100%', height: '100%', border: '#C3C3C3 1px solid'}} src={this.props.logo_src} />
       </div>
     );
   }

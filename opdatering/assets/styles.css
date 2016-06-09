@@ -218,29 +218,29 @@ button, .btn {
   padding: 25px 0px;
 }*/
 
-.mdbCheckbox .permissiontext {
-  margin-top: 5px;
-  margin-bottom: 5px;
-  padding: 0px 20px 10px 30px;
-  color: #5A5A5A;
-  text-align: justify;
-}
-
 .mdbCheckbox .description {
   font-size: 18px;
 }
 
 .mdbCheckbox .permissiontext {
-  padding-top: 10px;
-  padding-left: 10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding: 7px 20px 10px 0px;
+  color: #5A5A5A;
+  text-align: justify;
+}
+
+.mdbGreenCheckbox .permissiontext {
+  padding-left: 30px;
 }
 
 .mdbCheckbox .interestsSelection {
-  padding: 10px 0px 0px 10px;
+  padding: 10px 0px 0px 0px;
 }
 
 .mdbLogoCheckbox label {
   width: 100%;
+  height: 100%;
 }
 
 .mdbLogoCheckbox input[type="checkbox"] + label {
