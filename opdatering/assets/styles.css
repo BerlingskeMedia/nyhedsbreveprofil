@@ -98,17 +98,16 @@ html, div, h1, h2, h3, h4 {
   vertical-align: middle;
 }
 
-.main {
-
-}
 
 @media (min-width: 767px) {
   .main {
       padding-top: 60px;
   }
+}
 
-  .stepheader {
-    /*padding-bottom: 20px;*/
+@media (max-width: 767px) {
+  .main {
+      padding-bottom: 60px;
   }
 }
 
@@ -204,9 +203,14 @@ button, .btn {
   }
 }
 
-.nextButton, .nextButton:focus, .nextButton:active {
+.nextButton, .nextButton:focus, .nextButton:active, .nextButton:visited, .nextButton:hover {
   background-color: #393939;
   color: #FFFFFF;
+}
+
+.prevButton, .prevButton:focus, .prevButton:active, .prevButton:visited, .prevButton:hover {
+  background-color: #fff;
+  color: #333;
 }
 
 .mdbCheckbox input[type="checkbox"] {

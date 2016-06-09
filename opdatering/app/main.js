@@ -24,6 +24,7 @@ var Opdateringskampagne = React.createClass({
       abo: null,
       steps: [],
       step: window.location.host.indexOf('profil.berlingskemedia.dk') > -1 ? 0 : 0,
+      stepping: false,
       showCheckbox300Perm: false,
       hideStepNyhKom: false,
       hideStepNyhKom_dirty: false
@@ -139,50 +140,61 @@ var Opdateringskampagne = React.createClass({
   },
   getCompleteStepFunc: function (step) {
     if (step && step.completeStepFunc) {
-      var stepForwardsFunc = this.stepForwardsTestDamn.bind(this, step.completeStepFunc);
-      var stepBackwardsFunc = this.stepBackwardsTestDamn.bind(this, step.completeStepFunc);
-      this.setState({stepForwardsFunc: stepForwardsFunc, stepBackwardsFunc: stepBackwardsFunc})
+      var stepForwardFunc = this.stepForward.bind(this, step.completeStepFunc);
+      var stepBackwardFunc = this.stepBackward.bind(this, step.completeStepFunc);
+      this.setState({stepForwardFunc: stepForwardFunc, stepBackwardFunc: stepBackwardFunc})
+    } else {
+      // Just to be safe.
+      this.setState({stepForwardFunc: null, stepBackwardFunc: null})
     }
   },
-  stepForwardsTestDamn: function (input) {
-    console.log('stepForwardsTestDamn', input);
-    input(function(complete) {
-      console.log('complete', complete);
-    });
-  },
-  stepBackwardsTestDamn: function (input) {
-    console.log('stepBackwardsTestDamn', input);
-    input(function(complete) {
-      console.log('complete', complete);
-    });
-  },
-  stepForward: function (ekstern_id) {
-    if (ekstern_id !== undefined) {
-      this.setState({ekstern_id:ekstern_id}, function() {
-        this.setSearchParameter('ekstern_id', ekstern_id);
-      });
-    }
+  stepForward: function (completeStepFunc) {
+    this.setState({stepping: true});
 
-    this.loadUserData().success(function() {
-      var step = this.state.step;
-      if (step < this.state.steps.length) {
-        this.setState({step: ++step});
+    completeStepFunc(function(err, ekstern_id) {
+      if (err) {
+        console.error(err);
+        this.setState({stepping: false});
+        return;
       }
 
-      ReactDOM.findDOMNode(this).scrollIntoView();
-    }.bind(this));
-
-  },
-  stepBackwards: function () {
-    this.loadUserData().success(function() {
-      var step = this.state.step;
-      if (step > 0) {
-        this.setState({step: --step});
+      if (ekstern_id !== undefined) {
+        this.setState({ekstern_id:ekstern_id}, function() {
+          this.setSearchParameter('ekstern_id', ekstern_id);
+        });
       }
 
-      ReactDOM.findDOMNode(this).scrollIntoView();
-    }.bind(this));
+      this.loadUserData().success(function() {
+        var step = this.state.step;
+        if (step < this.state.steps.length) {
+          this.setState({step: ++step});
+        }
 
+        ReactDOM.findDOMNode(this).scrollIntoView();
+        this.setState({stepping: false});
+      }.bind(this));
+    }.bind(this));
+  },
+  stepBackward: function (completeStepFunc) {
+    this.setState({stepping: true});
+
+    completeStepFunc(function(err) {
+      if (err) {
+        console.error(err);
+        this.setState({stepping: false});
+        return;
+      }
+
+      this.loadUserData().success(function() {
+        var step = this.state.step;
+        if (step > 0) {
+          this.setState({step: --step});
+        }
+
+        ReactDOM.findDOMNode(this).scrollIntoView();
+        this.setState({stepping: false});
+      }.bind(this));
+    }.bind(this));
   },
   render: function() {
 
@@ -193,8 +205,6 @@ var Opdateringskampagne = React.createClass({
     if (this.state.hideStepNyhKom) {
       steps.splice(3,1);
     }
-
-    var showNewNavBar = true;
 
     return (
       <div id="opdateringskampagne" className="opdateringskampagne">
@@ -210,24 +220,28 @@ var Opdateringskampagne = React.createClass({
               {this.state.user_error === false ?
                 <div>
                   {steps[this.state.step]}
-                  {showNewNavBar ?
-                    <div className="hidden-xs">
-                      <BottomNavbarDesktop steps={this.state.steps} step={this.state.step} nextFunc={this.state.stepForwardsFunc} prevFunc={this.state.stepBackwardsFunc} />
-                    </div>
-                    :null
-                  }
+                  <div className="hidden-xs">
+                    <BottomNavbarDesktop
+                      steps={this.state.steps}
+                      step={this.state.step}
+                      stepping={this.state.stepping}
+                      nextFunc={this.state.stepForwardFunc}
+                      prevFunc={this.state.stepBackwardFunc} />
+                  </div>
                 </div>
                 : <UserMissing />
               }
             </div>
           </div>
         </div>
-        {showNewNavBar ?
-          <div className="hidden-sm hidden-md hidden-lg bottomnav">
-            <BottomNavbar steps={this.state.steps} step={this.state.step} nextFunc={this.state.stepForwardsFunc} prevFunc={this.state.stepBackwardsFunc} />
-          </div>
-          : null
-        }
+        <div className="hidden-sm hidden-md hidden-lg bottomnav">
+          <BottomNavbar
+            steps={this.state.steps}
+            step={this.state.step}
+            stepping={this.state.stepping}
+            nextFunc={this.state.stepForwardFunc}
+            prevFunc={this.state.stepBackwardFunc} />
+        </div>
       </div>
     );
   }

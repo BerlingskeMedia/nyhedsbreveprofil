@@ -9,12 +9,12 @@ module.exports = React.createClass({
       <div className="navButtons">
 
         {!userIsOnFirstStep & !userIsOnLastStep ?
-          <input type="button" value="Tilbage" className="btn btn-default prevButton" onClick={this.props.prevFunc} />
+          <input type="button" value="Tilbage" className="btn btn-default prevButton" onClick={this.props.prevFunc} disabled={this.props.stepping} />
           : null
         }
 
         {!userIsOnLastStep ?
-          <input type="button" value="Næste" className="btn btn-default nextButton pull-right" onClick={this.props.nextFunc} />
+          <input type="button" value="Næste" className="btn btn-default nextButton pull-right" onClick={this.props.nextFunc} disabled={this.props.stepping} />
           :null
         }
       </div>

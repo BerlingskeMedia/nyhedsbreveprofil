@@ -76,30 +76,10 @@ module.exports = React.createClass({
     });
     this.setState({has300_dirty: true});
   },
-  completeStepFunc: function (callback) {
-    console.log('completeStepFunc');
-    var payload = {
-      location_id: 2059
-    };
-
-    Object.keys(this.state)
-    .filter(this.filterAllowesUserFields)
-    .forEach(function(key) {
-      payload[key] = this.state[key];
-    }.bind(this));
-
-    console.log('test payload', payload);
-    callback(true);
-    return;
-  },
-  handleSubmit: function(e) {
-    e.preventDefault();
-
+  completeStepFunc: function(callback) {
     if (this.state.email_error) {
-      return;
+      return callback('Email error.');
     }
-
-    this.setState({stepping: true});
 
     // Tilmeld og afmeld perm 300
     if (this.state.has300_dirty) {
@@ -130,22 +110,21 @@ module.exports = React.createClass({
         dataType: 'json',
         success: function (data) {
           console.log('user updated', data);
-          this.props.stepForward(data.ekstern_id);
+          this.setState({email_conflict: false});
+          callback(null, data.ekstern_id);
         }.bind(this),
         error: function(xhr, status, err) {
           if (xhr.status === 409) {
             this.setState({email_conflict: true});
+            callback('Email conflict');
           } else {
             console.error(xhr, status);
+            callback(err);
           }
         }.bind(this),
-        complete: function() {
-          this.setState({stepping: false});
-        }.bind(this)
       });
     } else {
-      this.setState({stepping: false});
-      this.props.stepForward();
+      callback();
     }
   },
   add300: function() {
@@ -274,9 +253,6 @@ module.exports = React.createClass({
                 <Checkbox data={p300data} toggle={this.handle300PermChange} />
               : null }
             </div>
-          </div>
-          <div className="navButtons">
-            <input className="btn btn-default nextButton pull-right" type="submit" value="Næste" disabled={this.state.stepping} />
           </div>
         </form>
       </div>

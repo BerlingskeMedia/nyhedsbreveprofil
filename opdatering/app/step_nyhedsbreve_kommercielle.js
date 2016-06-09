@@ -90,63 +90,60 @@ module.exports = React.createClass({
     // return tbt_ids.indexOf(nyhedsbrev_id) > -1;
     return nyhedsbrev_id === 844;
   },
-  completeStep: function(callback) {
-    return function() {
+  completeStepFunc: function(callback) {
 
-      // If the user has signed up for The Business Target, or already subscribed and not signed out.
-      if (this.state.new_signups.some(this.hasBusinessTargetNewsletter) || (this.props.data.nyhedsbreve.some(this.hasBusinessTargetNewsletter) && !this.state.new_signouts.some(this.hasBusinessTargetNewsletter))) {
-        // Now we need to check if theres interests in both controls
-        if (!this.state.business_target_interests_completed) {
-          this.setState({business_target_interests_error: true});
-          return;
+    // If the user has signed up for The Business Target, or already subscribed and not signed out.
+    if (this.state.new_signups.some(this.hasBusinessTargetNewsletter) || (this.props.data.nyhedsbreve.some(this.hasBusinessTargetNewsletter) && !this.state.new_signouts.some(this.hasBusinessTargetNewsletter))) {
+      // Now we need to check if theres interests in both controls
+      if (!this.state.business_target_interests_completed) {
+        this.setState({business_target_interests_error: true});
+        callback('Business Target interests missing.');
+        return;
+      }
+    }
+
+    var new_business_signups = Object.keys(this.state.new_signups_businesstarget_interesser).map(function(key) {
+      return this.state.new_signups_businesstarget_interesser[key];
+    }.bind(this));
+
+    var new_business_signouts = Object.keys(this.state.new_signouts_businesstarget_interesser).map(function(key) {
+      return this.state.new_signouts_businesstarget_interesser[key];
+    }.bind(this));
+
+    var count = this.state.new_signups.length + this.state.new_signouts.length + new_business_signups.length + new_business_signouts.length,
+        done = 0;
+
+    if (count === 0) {
+      return callback();
+    }
+
+    var successCallback = (function(done, count, callback) {
+      return function() {
+        if (++done === count) {
+          callback();
         }
-      }
+      };
+    }(done, count, callback));
 
-      var new_business_signups = Object.keys(this.state.new_signups_businesstarget_interesser).map(function(key) {
-        return this.state.new_signups_businesstarget_interesser[key];
-      }.bind(this));
+    this.state.new_signups.forEach(function(id) {
+      this.call_backend('POST', 'nyhedsbreve', id)
+      .success(successCallback);
+    }.bind(this));
 
-      var new_business_signouts = Object.keys(this.state.new_signouts_businesstarget_interesser).map(function(key) {
-        return this.state.new_signouts_businesstarget_interesser[key];
-      }.bind(this));
+    this.state.new_signouts.forEach(function(id) {
+      this.call_backend('DELETE', 'nyhedsbreve', id)
+      .success(successCallback);
+    }.bind(this));
 
-      var count = this.state.new_signups.length + this.state.new_signouts.length + new_business_signups.length + new_business_signouts.length,
-          done = 0;
+    new_business_signups.forEach(function(id) {
+      this.call_backend('POST', 'interesser', id)
+      .success(successCallback);
+    }.bind(this));
 
-      if (count === 0) {
-        return callback();
-      }
-
-      var successCallback = (function(done, count, callback) {
-        return function() {
-          if (++done === count) {
-            callback();
-          }
-        };
-      }(done, count, callback));
-
-      this.state.new_signups.forEach(function(id) {
-        this.call_backend('POST', 'nyhedsbreve', id)
-        .success(successCallback);
-      }.bind(this));
-
-      this.state.new_signouts.forEach(function(id) {
-        this.call_backend('DELETE', 'nyhedsbreve', id)
-        .success(successCallback);
-      }.bind(this));
-
-      new_business_signups.forEach(function(id) {
-        this.call_backend('POST', 'interesser', id)
-        .success(successCallback);
-      }.bind(this));
-
-      new_business_signouts.forEach(function(id) {
-        this.call_backend('DELETE', 'interesser', id)
-        .success(successCallback);
-      }.bind(this));
-
-
-    }.bind(this);
+    new_business_signouts.forEach(function(id) {
+      this.call_backend('DELETE', 'interesser', id)
+      .success(successCallback);
+    }.bind(this));
   },
   call_backend: function(type, domain, id) {
     return $.ajax({
@@ -303,11 +300,6 @@ module.exports = React.createClass({
           ? <NewsletterList data={nyhedsbreve_not_yet} toggle={this.toggleNyhedsbrev} />
           : <p>(Alt tilmeldt)</p>
         }
-
-        <div className="navButtons">
-          <input type="button" value="Tilbage" className="btn btn-default prevButton" onClick={this.completeStep(this.props.stepBackwards)} />
-          <input type="button" value="Næste" className="btn btn-default nextButton pull-right" onClick={this.completeStep(this.props.stepForward)} />
-        </div>
       </div>
     );
   }

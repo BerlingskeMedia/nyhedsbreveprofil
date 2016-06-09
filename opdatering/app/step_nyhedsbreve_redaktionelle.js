@@ -68,35 +68,32 @@ module.exports = React.createClass({
     this.setState({new_signups: new_signups});
     this.setState({new_signouts: new_signouts});
   },
-  completeStep: function(callback) {
-    return function() {
+  completeStepFunc: function(callback) {
 
-      var count = this.state.new_signups.length + this.state.new_signouts.length,
-          done = 0;
+    var count = this.state.new_signups.length + this.state.new_signouts.length,
+        done = 0;
 
-      if (count === 0) {
-        return callback();
-      }
+    if (count === 0) {
+      return callback();
+    }
 
-      var successCallback = (function(done, count, callback) {
-        return function() {
-          if (++done === count) {
-            callback();
-          }
-        };
-      }(done, count, callback));
+    var successCallback = (function(done, count, callback) {
+      return function() {
+        if (++done === count) {
+          callback();
+        }
+      };
+    }(done, count, callback));
 
-      this.state.new_signups.forEach(function(id) {
-        this.call_backend('POST', id)
-        .success(successCallback);
-      }.bind(this));
+    this.state.new_signups.forEach(function(id) {
+      this.call_backend('POST', id)
+      .success(successCallback);
+    }.bind(this));
 
-      this.state.new_signouts.forEach(function(id) {
-        this.call_backend('DELETE', id)
-        .success(successCallback);
-      }.bind(this));
-
-    }.bind(this);
+    this.state.new_signouts.forEach(function(id) {
+      this.call_backend('DELETE', id)
+      .success(successCallback);
+    }.bind(this));
   },
   call_backend: function(type, id) {
     return $.ajax({
@@ -182,11 +179,6 @@ module.exports = React.createClass({
           ? <NewsletterList data={nyhedsbreve_not_yet} toggle={this.toggleNyhedsbrev} />
           : <p>(Alt tilmeldt)</p>
         }
-
-        <div className="navButtons">
-          <input type="button" value="Tilbage" className="btn btn-default prevButton" onClick={this.completeStep(this.props.stepBackwards)} />
-          <input type="button" value="Næste" className="btn btn-default nextButton pull-right" onClick={this.completeStep(this.props.stepForward)} />
-        </div>
       </div>
     );
   }

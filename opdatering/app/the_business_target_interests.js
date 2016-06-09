@@ -34,7 +34,7 @@ module.exports = React.createClass({
   },
   componentWillReceiveProps: function (nextProp) {
     if (this.props.hasError === true) {
-      ReactDOM.findDOMNode(this).scrollIntoView();
+      // ReactDOM.findDOMNode(this).scrollIntoView();
     }
   },
   createSelectOptions: function(data) {
