@@ -1,4 +1,4 @@
-html, .container, .container-fluid {
+html, #content, .container, .container-fluid {
   background-color: #F5F5F5;
 }
 
