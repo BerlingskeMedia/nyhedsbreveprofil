@@ -9,7 +9,7 @@ var StepFinished = require('./step_finished');
 var Sidebar = require('./sidebar');
 var TopNavbar = require('./topnavbar');
 var BottomNavbarDesktop = require('./bottomnavbar_desktop');
-var BottomNavbar = require('./buttomnav');
+var BottomNavbar = require('./bottomnavbar_mobile');
 
 var Opdateringskampagne = React.createClass({
   getInitialState: function() {
