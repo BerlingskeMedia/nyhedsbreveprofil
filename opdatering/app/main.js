@@ -8,7 +8,8 @@ var StepNyhedsbreveKom = require('./step_nyhedsbreve_kommercielle');
 var StepFinished = require('./step_finished');
 var Sidebar = require('./sidebar');
 var TopNavbar = require('./topnavbar');
-var ButtomNavbar = require('./buttomnav');
+var BottomNavbarDesktop = require('./bottomnavbar_desktop');
+var BottomNavbar = require('./buttomnav');
 
 var Opdateringskampagne = React.createClass({
   getInitialState: function() {
@@ -128,9 +129,9 @@ var Opdateringskampagne = React.createClass({
 
     var steps = [
       <StepStamdata ref={this.getCompleteStepFunc} sidebar_label="Dine kontaktoplysninger" stepForward={this.stepForward} showCheckbox300Perm={this.state.showCheckbox300Perm} data={this.state.userData} setHideStepNyhKom={this.setHideStepNyhKom} />,
-      <StepInteresser sidebar_label="Dine interesser" stepForward={this.stepForward} stepBackwards={this.stepBackwards} data={this.state.userData} />,
-      <StepNyhedsbreveRed sidebar_label="Dine nyhedsbreve" stepForward={this.stepForward} stepBackwards={this.stepBackwards} data={this.state.userData} abo={this.state.abo} />,
-      <StepNyhedsbreveKom sidebar_label="Dine øvrige nyhedsbreve" stepForward={this.stepForward} stepBackwards={this.stepBackwards} data={this.state.userData} abo={this.state.abo} />,
+      <StepInteresser ref={this.getCompleteStepFunc} sidebar_label="Dine interesser" stepForward={this.stepForward} stepBackwards={this.stepBackwards} data={this.state.userData} />,
+      <StepNyhedsbreveRed ref={this.getCompleteStepFunc} sidebar_label="Dine nyhedsbreve" stepForward={this.stepForward} stepBackwards={this.stepBackwards} data={this.state.userData} abo={this.state.abo} />,
+      <StepNyhedsbreveKom ref={this.getCompleteStepFunc} sidebar_label="Dine øvrige nyhedsbreve" stepForward={this.stepForward} stepBackwards={this.stepBackwards} data={this.state.userData} abo={this.state.abo} />,
       <StepFinished sidebar_label="Tak for din hjælp" stepBackwards={this.stepBackwards} data={this.state.userData} abo={this.state.abo} />
     ];
 
@@ -138,12 +139,19 @@ var Opdateringskampagne = React.createClass({
   },
   getCompleteStepFunc: function (step) {
     if (step && step.completeStepFunc) {
-      var completeStepFunc = this.stepForwardTestDamn.bind(this, step.completeStepFunc);
-      this.setState({completeStepFunc: completeStepFunc})
+      var stepForwardsFunc = this.stepForwardsTestDamn.bind(this, step.completeStepFunc);
+      var stepBackwardsFunc = this.stepBackwardsTestDamn.bind(this, step.completeStepFunc);
+      this.setState({stepForwardsFunc: stepForwardsFunc, stepBackwardsFunc: stepBackwardsFunc})
     }
   },
-  stepForwardTestDamn: function (input) {
-    console.log('stepForwardTestDamn', input);
+  stepForwardsTestDamn: function (input) {
+    console.log('stepForwardsTestDamn', input);
+    input(function(complete) {
+      console.log('complete', complete);
+    });
+  },
+  stepBackwardsTestDamn: function (input) {
+    console.log('stepBackwardsTestDamn', input);
     input(function(complete) {
       console.log('complete', complete);
     });
@@ -186,6 +194,7 @@ var Opdateringskampagne = React.createClass({
       steps.splice(3,1);
     }
 
+    var showNewNavBar = true;
 
     return (
       <div id="opdateringskampagne" className="opdateringskampagne">
@@ -199,21 +208,40 @@ var Opdateringskampagne = React.createClass({
             </div>
             <div className="col-sm-7 col-sm-offset-4 col-md-6 col-md-offset-4 col-lg-5 col-lg-offset-4 main">
               {this.state.user_error === false ?
-                steps[this.state.step] :
-                <UserMissing />
+                <div>
+                  {steps[this.state.step]}
+                  {showNewNavBar ?
+                    <div className="hidden-xs">
+                      <BottomNavbarDesktop steps={this.state.steps} step={this.state.step} nextFunc={this.state.stepForwardsFunc} prevFunc={this.state.stepBackwardsFunc} />
+                    </div>
+                    :null
+                  }
+                </div>
+                : <UserMissing />
               }
             </div>
           </div>
         </div>
-        <div className="hidden-sm hidden-md hidden-lg buttomnav">
-          <ButtomNavbar steps={this.state.steps} step={this.state.step} nextFunc={this.state.completeStepFunc} prevFunc="" />
-        </div>
+        {showNewNavBar ?
+          <div className="hidden-sm hidden-md hidden-lg bottomnav">
+            <BottomNavbar steps={this.state.steps} step={this.state.step} nextFunc={this.state.stepForwardsFunc} prevFunc={this.state.stepBackwardsFunc} />
+          </div>
+          : null
+        }
       </div>
     );
   }
 });
 
 var UserMissing = React.createClass({
+  componentDidMount: function() {
+
+    if (window.location.host.indexOf('profil.berlingskemedia.dk') > -1) {
+      ga('set', 'page', 'opdateringskampagne/user-missing');
+      ga('send', 'pageview');
+    }
+
+  },
   render: function() {
     return(
       <div className="userMissing">

@@ -71,6 +71,33 @@ html, div, h1, h2, h3, h4 {
   font-size: 16px;
 }
 
+.bottomnavbar {
+  position: fixed;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  z-index: 1000;
+  display: block;
+}
+
+.bottomnavbar .container {
+  background-color: #FFFFFF;
+  padding: 5px 10px;
+  box-shadow: 0px 1px 9px black;
+  -webkit-box-shadow: 0px 1px 9px black;
+  -moz-box-shadow: 0px 1px 9px black;
+}
+
+.bottomnavbar .navdotscol {
+  height: 45px;
+  line-height: 45px;
+}
+
+.bottomnavbar .navdots {
+  text-align: center;
+  vertical-align: middle;
+}
+
 .main {
 
 }
@@ -177,7 +204,7 @@ button, .btn {
   }
 }
 
-.nextButton {
+.nextButton, .nextButton:focus, .nextButton:active {
   background-color: #393939;
   color: #FFFFFF;
 }

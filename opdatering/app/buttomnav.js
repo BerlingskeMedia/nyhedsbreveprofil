@@ -3,30 +3,58 @@ var React = require('react');
 module.exports = React.createClass({
   render: function() {
     var dots = this.props.steps.map(function(s,i) {
-      if (i === this.props.step) {
-        return <div key={i} className="activeSidebarStep" style={{fontWeight: 'bold'}}>{s.props.sidebar_label}</div>
-      } else {
-        return <div key={i}>{s.props.sidebar_label}</div>
-      }
+      return <Dot key={i} active={i === this.props.step ? true : false} />
     }.bind(this));
 
-    return(null);
+    var userIsOnFirstStep = this.props.step === 0,
+        userIsOnLastStep = this.props.step + 1 === this.props.steps.length;
+
+    return (
+      <footer className="bottomnavbar">
+        <div className="container">
+          <div className="row">
+            <div className="col-xs-3">
+            {!userIsOnFirstStep & !userIsOnLastStep ?
+              <input type="button" value="Tilbage" className="btn btn-default prevButton pull-left" onClick={this.props.prevFunc} />
+              : null
+            }
+            </div>
+            <div className="col-xs-6 navdotscol">
+              <div className="navdots">{dots}</div>
+            </div>
+            <div className="col-xs-3">
+              {!userIsOnLastStep ?
+                <input type="button" value="Næste" className="btn btn-default nextButton pull-right" onClick={this.props.nextFunc} />
+                : null
+              }
+            </div>
+          </div>
+        </div>
+      </footer>
+    );
   }
 });
 
+var Dot = React.createClass({
+  render: function() {
+    var size = 12,
+        sizePx = size.toString().concat('px'),
+        borderSizePx = (size / 2).toString().concat('px'),
+        active = this.props.active ? true : false;
 
-// return (
-//   <footer className="footer">
-//   <div className="container">
-//   <div className="row">
-//   <div className="col-xs-4 col-xs-offset-4">
-//   <div className="navButtons">
-//   <input type="button" value="Tilbage v2" className="btn btn-default prevButton" onClick={this.props.prevFunc} />
-//   <p>Dots</p>
-//   <input type="button" value="Næste v2" className="btn btn-default nextButton pull-right" onClick={this.props.nextFunc} />
-//   </div>
-//   </div>
-//   </div>
-//   </div>
-//   </footer>
-// );
+    var styleObj = {
+      width: sizePx,
+      height: sizePx,
+      background: active ? '#333' : '#C5C5C5',
+      MozBorderRadius: borderSizePx,
+      WebkitBorderRadius: borderSizePx,
+      borderRadius: borderSizePx,
+      display: 'inline-block',
+      margin: '0px 6px'
+    };
+
+    return (
+      <div style={styleObj}></div>
+    );
+  }
+});

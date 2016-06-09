@@ -1,5 +1,6 @@
 var $ = require('jquery');
 var React = require('react');
+var ReactDOM = require('react-dom');
 var SelectList = require('./select_list');
 
 module.exports = React.createClass({
@@ -30,6 +31,11 @@ module.exports = React.createClass({
   },
   componentWillUnmount: function() {
     this.loadingThebusinesstargetInterests.abort();
+  },
+  componentWillReceiveProps: function (nextProp) {
+    if (this.props.hasError === true) {
+      ReactDOM.findDOMNode(this).scrollIntoView();
+    }
   },
   createSelectOptions: function(data) {
 

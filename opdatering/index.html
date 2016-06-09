@@ -36,6 +36,10 @@
 
       // ga('create', 'UA-53615302-2', 'auto');
       ga('create', 'UA-53615302-3', 'auto');
+      if (window.location.host.indexOf('profil.berlingskemedia.dk') > -1) {
+        ga('set', 'page', 'opdateringskampagne/load');
+        ga('send', 'pageview');
+      }
     </script>
 
     <script src="/opdatering/build/bundle.js"></script>
