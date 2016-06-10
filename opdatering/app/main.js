@@ -31,6 +31,12 @@ var Opdateringskampagne = React.createClass({
     };
   },
   componentDidMount: function() {
+
+    if (window.location.host.indexOf('profil.berlingskemedia.dk') > -1) {
+      ga('set', 'page', 'opdateringskampagne/start');
+      ga('send', 'pageview');
+    }
+
     var ekstern_id = this.getSearchParameter('ekstern_id'),
         id = this.getSearchParameter('id');
     var abo = this.getSearchParameter('a');
