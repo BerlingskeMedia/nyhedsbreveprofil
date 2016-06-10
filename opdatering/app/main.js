@@ -155,6 +155,10 @@ var Opdateringskampagne = React.createClass({
     }
   },
   stepForward: function (completeStepFunc) {
+    if (this.state.stepping === true) {
+      return;
+    }
+
     this.setState({stepping: true});
 
     completeStepFunc(function(err, ekstern_id) {
@@ -182,6 +186,10 @@ var Opdateringskampagne = React.createClass({
     }.bind(this));
   },
   stepBackward: function (completeStepFunc) {
+    if (this.state.stepping === true) {
+      return;
+    }
+
     this.setState({stepping: true});
 
     completeStepFunc(function(err) {
