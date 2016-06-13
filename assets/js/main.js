@@ -549,7 +549,9 @@ function ($scope, $routeParams, $http, $q, $modal, $location, $sce, UserService)
       console.log('tilmeldt:',$scope.my_subscriptions);
 
       $scope.filtered_newsletters = $scope.newsletters.filter(function (newsletter) {
-        if ($routeParams.nyhedsbrev_id) {
+        if (newsletter.nyhedsbrev_navn.indexOf('_TMP_') > -1) {
+          return false;
+        } else if ($routeParams.nyhedsbrev_id) {
           return newsletter.nyhedsbrev_id == $routeParams.nyhedsbrev_id;
         } else {
           return $scope.my_subscriptions.indexOf(newsletter.nyhedsbrev_id) !== -1;
