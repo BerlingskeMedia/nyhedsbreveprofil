@@ -32,6 +32,7 @@ module.exports = React.createClass({
       'lande_kode',
       'koen',
       'foedselsaar',
+      'foedselsdato',
       'kids'
     ].indexOf(key) > -1;
   },
@@ -327,6 +328,47 @@ var BirthyearSelector = React.createClass({
 
     return (
       <div key={this.props.id} className="birthyearSelector form-group">
+        <label className="control-label" htmlFor={this.props.id}>{this.props.label}</label>
+        <select
+          id={this.props.id}
+          className="form-control"
+          defaultValue={this.props.initialValue}
+          onChange={this.props.onChange}>
+          {options}
+        </select>
+      </div>
+    );
+  }
+});
+
+var BirthdateSelector = React.createClass({
+  getLastDateOfMonth: function(year, month) {
+    var lastDay = new Date();
+    lastDay.setFullYear(year, month + 1, 0);
+    return lastDay.getDate();
+  },
+  render: function () {
+    var classes = this.props.className !== undefined ? this.props.className : 'col-xs-6';
+    var date = new Date(this.props.date):
+
+
+    console.log('a', this.getLastDateOfMonth(2011, 1));
+    console.log('s', this.getLastDateOfMonth(2011, 2));
+    console.log('d', this.getLastDateOfMonth(1954, 10));
+    console.log('f', this.getLastDateOfMonth(2014, 1));
+    console.log('g', this.getLastDateOfMonth(1981, 7));
+    console.log('h', this.getLastDateOfMonth(1977, 5));
+    console.log('j', this.getLastDateOfMonth(2014, 11));
+
+    var options = [];
+    for (var i = 0; i < 99; i++) {
+      var temp = new Date();
+      var value = (1900 + temp.getYear() - i);
+      options.push(<option key={i} value={value}>{value}</option>);
+    }
+
+    return (
+      <div key={this.props.id} className="birthdateSelector form-group">
         <label className="control-label" htmlFor={this.props.id}>{this.props.label}</label>
         <select
           id={this.props.id}
