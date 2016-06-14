@@ -98,19 +98,6 @@ html, div, h1, h2, h3, h4 {
   vertical-align: middle;
 }
 
-
-@media (min-width: 767px) {
-  .main {
-      padding-top: 60px;
-  }
-}
-
-@media (max-width: 767px) {
-  .main {
-      padding-bottom: 60px;
-  }
-}
-
 .steppage {
   /*padding-top: 20px;*/
   /*margin-top: 30px;*/
@@ -152,12 +139,6 @@ html, div, h1, h2, h3, h4 {
   padding: 40px 0px 0px 0px;
 }
 
-@media (max-width: 767px) {
-  .stepFinished h2 {
-    margin-top: 30px;
-  }
-}
-
 .control-label {
   font-size: 18px;
   font-weight: 400;
@@ -188,19 +169,46 @@ button, .btn {
 }
 
 @media (max-width: 767px) {
+  .main {
+      padding-bottom: 60px;
+  }
+
+  .stepFinished h2 {
+    margin-top: 30px;
+  }
+
   .navButtons .btn {
     height: 54px;
     padding-left: 26px;
     padding-right: 26px;
     font-size: 18px;
   }
+
+  .mdbGreenCheckbox {
+    padding-top: 2px;
+    padding-bottom: 3px;
+  }
+
+  .mdbLogoCheckbox {
+    padding-bottom: 3px;
+  }
 }
 
 @media (min-width: 767px) {
+  .main {
+      padding-top: 60px;
+  }
+
   .navButtons .btn {
     height: 36px;
     font-size: 14px;
   }
+
+  /*.newspaperOffer img.newspaperOfferImg {
+    width: 69%;
+    margin: 0 auto;
+    display: block;
+  }*/
 }
 
 .nextButton, .nextButton:focus, .nextButton:active, .nextButton:visited, .nextButton:hover {
@@ -219,17 +227,6 @@ button, .btn {
 
 .mdbGreenCheckbox {
 
-}
-
-@media (max-width: 767px) {
-  .mdbGreenCheckbox {
-    padding-top: 2px;
-    padding-bottom: 3px;
-  }
-
-  .mdbLogoCheckbox {
-    padding-bottom: 3px;
-  }
 }
 
 .mdbGreenCheckbox input[type="checkbox"] + label {
@@ -319,3 +316,22 @@ button, .btn {
   color: #333;
   text-decoration: none;
 }
+
+.newspaperOffer .nodecor {
+  color: #333;
+  text-decoration: none;
+}
+
+.newspaperOffer img.newspaperOfferImg {
+  width: 100%;
+  margin: 0 auto;
+  display: block;
+}
+
+/*@media (min-width: 1401px) {
+  .newspaperOffer img.newspaperOfferImg {
+    width: 80%;
+    margin: 0 auto;
+    display: block;
+  }
+}*/

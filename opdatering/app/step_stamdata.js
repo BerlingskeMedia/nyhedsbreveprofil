@@ -349,7 +349,7 @@ var BirthdateSelector = React.createClass({
   },
   render: function () {
     var classes = this.props.className !== undefined ? this.props.className : 'col-xs-6';
-    var date = new Date(this.props.date):
+    var date = new Date(this.props.date);
 
 
     console.log('a', this.getLastDateOfMonth(2011, 1));
