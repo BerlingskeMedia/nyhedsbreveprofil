@@ -3,6 +3,8 @@
 
 var http = require('http');
 
+console.log('Connecting to MDBAPI on host', process.env.MDBAPI_ADDRESS, 'and port', process.env.MDBAPI_PORT);
+
 function proxy (request, reply) {
 
   if (reply === undefined) {
