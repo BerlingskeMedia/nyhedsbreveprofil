@@ -86,7 +86,9 @@ var Opdateringskampagne = React.createClass({
       uri = uri + separator + key + "=" + value;
     }
     var href = uri + hash;
-    window.history.pushState({path:href},'',href)
+    if (window.history.pushState) {
+      window.history.pushState({path:href},'',href)
+    }
   },
   loadUserData: function() {
     this.loadingUserData = $.ajax({

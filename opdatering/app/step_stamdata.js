@@ -10,6 +10,7 @@ module.exports = React.createClass({
       data_dirty: false,
       email_error: false,
       email_conflict: false,
+      birthdate_error: false,
       has300: false,
       has300_dirty: false
     };
@@ -63,9 +64,7 @@ module.exports = React.createClass({
       this.setState({birthdate_error: false});
       this.handleInputChange(eventdata);
     } else {
-      var tmp = {};
-      tmp[e.target.id.concat('_error')] = true;
-      this.setState(tmp);
+      this.setState({birthdate_error: true});
     }
 
     function validateDate(dateString) {
@@ -276,7 +275,7 @@ module.exports = React.createClass({
               <KoenSelect id="koen" label="Køn" initialValue={this.props.data.koen} onChange={this.handleInputChange} />
             </div>
             <div className="col-xs-6">
-              <TextInput id="foedselsdato" label="Fødselsdato" type="date" initialValue={this.props.data.foedselsdato} onChange={this.handleDateChange} hasError={this.state.foedselsdato_error} />
+              <TextInput id="foedselsdato" label="Fødselsdato" type="date" initialValue={this.props.data.foedselsdato} onChange={this.handleDateChange} hasError={this.state.birthdate_error} />
             </div>
           </div>
           <KidsSelector kids={this.props.data.kids} addKid={this.addKid} removeKid={this.removeKid} />
@@ -355,145 +354,6 @@ var KoenSelect = React.createClass({
           <option key="0" value="M">Mand</option>
           <option key="1" value="K">Kvinde</option>
         </select>
-      </div>
-    );
-  }
-});
-
-
-var BirthyearSelector = React.createClass({
-  render: function () {
-    var options = [];
-    for (var i = 0; i < 99; i++) {
-      var temp = new Date();
-      var value = (1900 + temp.getYear() - i);
-      options.push(<option key={i} value={value}>{value}</option>);
-    }
-
-    return (
-      <div key={this.props.id} className="birthyearSelector form-group">
-        <label className="control-label" htmlFor={this.props.id}>{this.props.label}</label>
-        <select
-          id={this.props.id}
-          className="form-control"
-          defaultValue={this.props.initialValue}
-          onChange={this.props.onChange}>
-          {options}
-        </select>
-      </div>
-    );
-  }
-});
-
-var BirthdateSelector = React.createClass({
-  getInitialState: function() {
-    if (this.props.initialValue) {
-      var date = new Date(this.props.initialValue);
-      return {
-        year: this.numberToTwoString(date.getFullYear()),
-        month: this.numberToTwoString(date.getMonth() + 1),
-        date: this.numberToTwoString(date.getDate()),
-        lastDateOfMonth: this.getLastDateOfMonth(date.getYear(), date.getMonth())
-      };
-    } else {
-      return {
-        year: '',
-        month: '',
-        date: '',
-        lastDateOfMonth: 0
-      };
-    }
-  },
-  getLastDateOfMonth: function(year, month) {
-    var lastDate = new Date();
-    lastDate.setFullYear(year, month + 1, 0);
-    return lastDate.getDate();
-  },
-  numberToTwoString: function(number) {
-    var temp = number.toString();
-    return  temp.length === 1 ? '0'.concat(number) :
-            temp.length === 2 ? temp :
-            temp.length === 4 ? temp :
-            '';
-  },
-  onYearChange: function(e) {
-    console.log('onYearChange', e.target.value);
-    this.setState({year: e.target.value}, this.promoteChange);
-  },
-  onMonthChange: function(e) {
-    console.log('onMonthChange', e.target.value);
-    this.setState({month: e.target.value}, this.promoteChange);
-    this.setState({lastDateOfMonth: 31});
-  },
-  onDateChange: function(e) {
-    console.log('onDateChange', e.target.value);
-    this.setState({date: e.target.value}, this.promoteChange);
-  },
-  promoteChange: function() {
-    var value = this.state.year.concat('-', this.state.month, '-', this.state.date);
-    console.log('promoteChange', value);
-    this.props.onChange({target: {id: this.props.id, value: value}});
-  },
-  render: function () {
-    var classes = this.props.className !== undefined ? this.props.className : 'col-xs-4';
-    // var date = new Date(this.props.initialValue),
-    //     initialYear = this.state.date ? this.numberToTwoString(this.state.date.getFullYear()) : null,
-    //     initialMonth = this.state.date ? this.numberToTwoString(this.state.date.getMonth() + 1) : null,
-    //     initialDate = this.state.date ? this.numberToTwoString(this.state.date.getDate()) : null;
-
-    // console.log('date', date, initialYear, initialMonth,  initialDate);
-    //
-    // console.log('a', this.getLastDateOfMonth(2011, 1));
-    // console.log('s', this.getLastDateOfMonth(2011, 2));
-    // console.log('d', this.getLastDateOfMonth(1954, 10));
-    // console.log('f', this.getLastDateOfMonth(2014, 1));
-    // console.log('g', this.getLastDateOfMonth(1981, 7));
-    // console.log('h', this.getLastDateOfMonth(1977, 5));
-    // console.log('j', this.getLastDateOfMonth(2014, 11));
-
-    var years = [],
-        months = [],
-        dates = [];
-
-    for (var i = 0; i < 99; i++) {
-      var temp = new Date();
-      var value = (1900 + temp.getYear() - i);
-      years.push(<option key={i} value={value}>{value}</option>);
-    }
-
-    for (var j = 1; j <= 12; j++) {
-      var value = this.numberToTwoString(j);
-      months.push(<option key={j} value={value}>{value}</option>);
-    }
-
-    for (var l = 1; l <= this.state.lastDateOfMonth; l++) {
-      var value = this.numberToTwoString(l);
-      dates.push(<option key={l} value={value}>{value}</option>);
-    }
-
-    return (
-      <div className={classes}>
-        <div key={this.props.id} className="birthdateSelector form-group">
-          <label className="control-label" htmlFor={this.props.id}>{this.props.label}</label>
-          <select
-            className="form-control"
-            value={this.state.year}
-            onChange={this.onYearChange}>
-            {years}
-          </select>
-          <select
-            className="form-control"
-            value={this.state.month}
-            onChange={this.onMonthChange}>
-            {months}
-          </select>
-          <select
-            className="form-control"
-            value={this.state.date}
-            onChange={this.onDateChange}>
-            {dates}
-          </select>
-        </div>
       </div>
     );
   }
