@@ -238,7 +238,7 @@ var Opdateringskampagne = React.createClass({
                   {steps[this.state.step]}
                   <div className="hidden-xs">
                     <BottomNavbarDesktop
-                      steps={this.state.steps}
+                      steps={steps}
                       step={this.state.step}
                       stepping={this.state.stepping}
                       nextFunc={this.state.stepForwardFunc}
@@ -252,7 +252,7 @@ var Opdateringskampagne = React.createClass({
         </div>
         <div className="hidden-sm hidden-md hidden-lg bottomnav">
           <BottomNavbar
-            steps={this.state.steps}
+            steps={steps}
             step={this.state.step}
             stepping={this.state.stepping}
             nextFunc={this.state.stepForwardFunc}

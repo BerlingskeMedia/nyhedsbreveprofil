@@ -296,7 +296,7 @@ module.exports = React.createClass({
 var TextInput = React.createClass({
   getDateFormat: function(value) {
     var temp = new Date(value),
-        month = this.numberToTwoString(temp.getMonth()),
+        month = this.numberToTwoString(temp.getMonth() + 1),
         date = this.numberToTwoString(temp.getDate());
     return temp.getFullYear().toString().concat('-', month, '-', date);
   },
