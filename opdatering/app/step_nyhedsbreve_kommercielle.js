@@ -14,6 +14,7 @@ module.exports = React.createClass({
       new_signouts: [],
       nyhedsbreve_already: [],
       nyhedsbreve_not_yet: [],
+      show_sweetdeal: false
     };
   },
   componentDidMount: function() {
@@ -192,83 +193,89 @@ module.exports = React.createClass({
           {id: 855, navn: 'Sweetdeal Shopping', description: 'Sweetdeal Shopping', publisher: 32, logo_src: sweetdeal_logo_src}];
 
 
-    var nyhedsbreve = [].concat(godttip_nyhedsbreve, tbt_nyhedsbreve, shop_nyhedsbreve, sweetdeal_generel_nyhedsbreve);
+    var nyhedsbreve = [].concat(godttip_nyhedsbreve, tbt_nyhedsbreve, shop_nyhedsbreve);
 
-    var postnummer = parseInt(this.props.data.postnummer);
+    if (this.state.show_sweetdeal === true) {
 
-    // København (id 846) - postnummer 0900-3699
-    if (postnummer >= 900 && postnummer <= 3699) {
-      nyhedsbreve.push({id: 846, navn: 'Sweetdeal København', description: 'Sweetdeal København', publisher: 32, logo_src: sweetdeal_logo_src});
-    }
+      nyhedsbreve = nyhedsbreve.concat(sweetdeal_generel_nyhedsbreve);
 
-    // Aabenraa (id 853) - postnummer 6200
-    if (postnummer === 6200) {
-      nyhedsbreve.push({id: 853, navn: 'Sweetdeal Aabenraa', description: 'Sweetdeal Aabenraa', publisher: 32, logo_src: sweetdeal_logo_src});
-    }
+      var postnummer = parseInt(this.props.data.postnummer);
 
-    // Aarhus (id 847) - postnummer 8000-8300
-    if (postnummer >= 8000 && postnummer <= 8300) {
-      nyhedsbreve.push({id: 847, navn: 'Sweetdeal Aarhus', description: 'Sweetdeal Aarhus', publisher: 32, logo_src: sweetdeal_logo_src});
-    }
+      // København (id 846) - postnummer 0900-3699
+      if (postnummer >= 900 && postnummer <= 3699) {
+        nyhedsbreve.push({id: 846, navn: 'Sweetdeal København', description: 'Sweetdeal København', publisher: 32, logo_src: sweetdeal_logo_src});
+      }
 
-    // Esbjerg (id 864) - postnummer 6700,6701,6705,6710,6715
-    if ([6700,6701,6705,6710,6715].indexOf(postnummer) > -1) {
-      nyhedsbreve.push({id: 864, navn: 'Sweetdeal Esbjerg', description: 'Sweetdeal Esbjerg', publisher: 32, logo_src: sweetdeal_logo_src});
-    }
+      // Aabenraa (id 853) - postnummer 6200
+      if (postnummer === 6200) {
+        nyhedsbreve.push({id: 853, navn: 'Sweetdeal Aabenraa', description: 'Sweetdeal Aabenraa', publisher: 32, logo_src: sweetdeal_logo_src});
+      }
 
-    // Haderslev (id 861) - postnummer 6100
-    if (postnummer === 6100) {
-      nyhedsbreve.push({id: 861, navn: 'Sweetdeal Haderslev', description: 'Sweetdeal Haderslev', publisher: 32, logo_src: sweetdeal_logo_src});
-    }
+      // Aarhus (id 847) - postnummer 8000-8300
+      if (postnummer >= 8000 && postnummer <= 8300) {
+        nyhedsbreve.push({id: 847, navn: 'Sweetdeal Aarhus', description: 'Sweetdeal Aarhus', publisher: 32, logo_src: sweetdeal_logo_src});
+      }
 
-    // Holstebro-Struer-Lemvig (id 854) - postnummer 7500,7600,7620
-    if ([7500,7600,7620].indexOf(postnummer) > -1 ) {
-      nyhedsbreve.push({id: 854, navn: 'Sweetdeal Holstebro-Struer-Lemvig', description: 'Sweetdeal Holstebro-Struer-Lemvig', publisher: 32, logo_src: sweetdeal_logo_src});
-    }
+      // Esbjerg (id 864) - postnummer 6700,6701,6705,6710,6715
+      if ([6700,6701,6705,6710,6715].indexOf(postnummer) > -1) {
+        nyhedsbreve.push({id: 864, navn: 'Sweetdeal Esbjerg', description: 'Sweetdeal Esbjerg', publisher: 32, logo_src: sweetdeal_logo_src});
+      }
 
-    // Kolding (id 859) - postnummer 6000
-    if (postnummer === 6000) {
-      nyhedsbreve.push({id: 859, navn: 'Sweetdeal Kolding', description: 'Sweetdeal Kolding', publisher: 32, logo_src: sweetdeal_logo_src});
-    }
+      // Haderslev (id 861) - postnummer 6100
+      if (postnummer === 6100) {
+        nyhedsbreve.push({id: 861, navn: 'Sweetdeal Haderslev', description: 'Sweetdeal Haderslev', publisher: 32, logo_src: sweetdeal_logo_src});
+      }
 
-    // Randers (id 856) - postnummer 8900,8920,8930,8940,8960
-    if ([8900,8920,8930,8940,8960].indexOf(postnummer) > -1 ) {
-      nyhedsbreve.push({id: 856, navn: 'Sweetdeal Randers', description: 'Sweetdeal Randers', publisher: 32, logo_src: sweetdeal_logo_src});
-    }
+      // Holstebro-Struer-Lemvig (id 854) - postnummer 7500,7600,7620
+      if ([7500,7600,7620].indexOf(postnummer) > -1 ) {
+        nyhedsbreve.push({id: 854, navn: 'Sweetdeal Holstebro-Struer-Lemvig', description: 'Sweetdeal Holstebro-Struer-Lemvig', publisher: 32, logo_src: sweetdeal_logo_src});
+      }
 
-    // Ringkøbing-Skjern (id 875)  - postnummer 6900,6950
-    if (postnummer === 6900 || postnummer === 6950) {
-      nyhedsbreve.push({id: 875, navn: 'Sweetdeal Ringkøbing-Skjern', description: 'Sweetdeal Ringkøbing-Skjern', publisher: 32, logo_src: sweetdeal_logo_src});
-    }
+      // Kolding (id 859) - postnummer 6000
+      if (postnummer === 6000) {
+        nyhedsbreve.push({id: 859, navn: 'Sweetdeal Kolding', description: 'Sweetdeal Kolding', publisher: 32, logo_src: sweetdeal_logo_src});
+      }
 
-    // Skanderborg (id 849) - postnummer 8660
-    if (postnummer === 8660) {
-      nyhedsbreve.push({id: 849, navn: 'Sweetdeal Skanderborg', description: 'Sweetdeal Skanderborg', publisher: 32, logo_src: sweetdeal_logo_src});
-    }
+      // Randers (id 856) - postnummer 8900,8920,8930,8940,8960
+      if ([8900,8920,8930,8940,8960].indexOf(postnummer) > -1 ) {
+        nyhedsbreve.push({id: 856, navn: 'Sweetdeal Randers', description: 'Sweetdeal Randers', publisher: 32, logo_src: sweetdeal_logo_src});
+      }
 
-    // Sønderborg (id 863) - postnummer 6400
-    if (postnummer === 6400) {
-      nyhedsbreve.push({id: 863, navn: 'Sweetdeal Sønderborg', description: 'Sweetdeal Sønderborg', publisher: 32, logo_src: sweetdeal_logo_src});
-    }
+      // Ringkøbing-Skjern (id 875)  - postnummer 6900,6950
+      if (postnummer === 6900 || postnummer === 6950) {
+        nyhedsbreve.push({id: 875, navn: 'Sweetdeal Ringkøbing-Skjern', description: 'Sweetdeal Ringkøbing-Skjern', publisher: 32, logo_src: sweetdeal_logo_src});
+      }
 
-    // Tønder (id 869) - postnummer 6270
-    if (postnummer === 6270) {
-      nyhedsbreve.push({id: 869, navn: 'Sweetdeal Tønder', description: 'Sweetdeal Tønder', publisher: 32, logo_src: sweetdeal_logo_src});
-    }
+      // Skanderborg (id 849) - postnummer 8660
+      if (postnummer === 8660) {
+        nyhedsbreve.push({id: 849, navn: 'Sweetdeal Skanderborg', description: 'Sweetdeal Skanderborg', publisher: 32, logo_src: sweetdeal_logo_src});
+      }
 
-    // Varde (id 862) - postnummer 6800
-    if (postnummer === 6800) {
-      nyhedsbreve.push({id: 862, navn: 'Sweetdeal Varde', description: 'Sweetdeal Varde', publisher: 32, logo_src: sweetdeal_logo_src});
-    }
+      // Sønderborg (id 863) - postnummer 6400
+      if (postnummer === 6400) {
+        nyhedsbreve.push({id: 863, navn: 'Sweetdeal Sønderborg', description: 'Sweetdeal Sønderborg', publisher: 32, logo_src: sweetdeal_logo_src});
+      }
 
-    // Viborg (id 851) - postnummer 8800
-    if (postnummer === 8800) {
-      nyhedsbreve.push({id: 851, navn: 'Sweetdeal Viborg', description: 'Sweetdeal Viborg', publisher: 32, logo_src: sweetdeal_logo_src});
-    }
+      // Tønder (id 869) - postnummer 6270
+      if (postnummer === 6270) {
+        nyhedsbreve.push({id: 869, navn: 'Sweetdeal Tønder', description: 'Sweetdeal Tønder', publisher: 32, logo_src: sweetdeal_logo_src});
+      }
 
-    // Vejle (id 858) - postnummer 7100,7120
-    if (postnummer === 7100 || postnummer === 7120) {
-      nyhedsbreve.push({id: 858, navn: 'Sweetdeal Vejle', description: 'Sweetdeal Vejle', publisher: 32, logo_src: sweetdeal_logo_src});
+      // Varde (id 862) - postnummer 6800
+      if (postnummer === 6800) {
+        nyhedsbreve.push({id: 862, navn: 'Sweetdeal Varde', description: 'Sweetdeal Varde', publisher: 32, logo_src: sweetdeal_logo_src});
+      }
+
+      // Viborg (id 851) - postnummer 8800
+      if (postnummer === 8800) {
+        nyhedsbreve.push({id: 851, navn: 'Sweetdeal Viborg', description: 'Sweetdeal Viborg', publisher: 32, logo_src: sweetdeal_logo_src});
+      }
+
+      // Vejle (id 858) - postnummer 7100,7120
+      if (postnummer === 7100 || postnummer === 7120) {
+        nyhedsbreve.push({id: 858, navn: 'Sweetdeal Vejle', description: 'Sweetdeal Vejle', publisher: 32, logo_src: sweetdeal_logo_src});
+      }
+
     }
 
     var nyhedsbreve_not_yet = nyhedsbreve.filter(function(nyhedsbrev) {
