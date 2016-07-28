@@ -286,10 +286,10 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
 
       var request;
       if (checkbox.checked) {
-        request = $http.post(url +"?location_id=" + location_id);
+        request = $http.post(url + "?location_id=" + location_id);
       }
       else {
-        request = $http.delete(url);
+        request = $http.delete(url + "?location_id=" + location_id);
       }
       request.then(function (response) {
         $scope.user.nyhedsbreve = response.data;
