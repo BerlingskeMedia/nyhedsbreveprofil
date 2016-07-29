@@ -95,6 +95,7 @@ function ($http, $location, UserService) {
     var search = $location.search();
     var ekstern_id =
       search.eksternid ? search.eksternid
+      : search.ekstern_id ? search.ekstern_id
       : search.userid ? search.userid
       : search.id ? search.id
       : UserService.isLoggedIn() ? UserService.getExternalId()
