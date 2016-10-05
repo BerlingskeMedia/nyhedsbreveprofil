@@ -424,7 +424,6 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
 
   var ekstern_id = UserService.getExternalId();
   var user = $http.get("/backend/users/" + ekstern_id);
-  var newsletters = $http.get("/backend/users/" + ekstern_id + "/nyhedsbreve");
   var interests = $http.get("/backend/interesser?displayTypeId=3&toplevels=1");
   var permissions = $http.get("/backend/nyhedsbreve?permission=1&orderBy=sort_id&orderDirection=asc");
 
@@ -434,8 +433,7 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
 
   $scope.tab = $routeParams.tab ? $routeParams.tab : 'kontakt';
 
-
-  $q.all([user, newsletters, interests, permissions]).then(function(resolved) {
+  $q.all([user, interests, permissions]).then(function(resolved) {
     $scope.user = resolved[0].data;
     $scope.user.postnummer_dk = parseInt($scope.user.postnummer_dk);
     if ($scope.user.postnummer_dk === 0) {
@@ -445,9 +443,8 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
     if ($scope.user.foedselsaar === 0) {
       $scope.user.foedselsaar = NaN;
     }
-    $scope.newsletters = resolved[1].data;
-    $scope.interests = resolved[2].data;
-    $scope.permissions = resolved[3].data;
+    $scope.interests = resolved[1].data;
+    $scope.permissions = resolved[2].data;
     $scope.permissions.forEach(function (permission) {
       permission.indhold_safe = $sce.trustAsHtml(permission.indhold);
     });
@@ -511,6 +508,10 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
         $scope.permissionSaveSuccess = true;
         $scope.user.nyhedsbreve = response.data;
       }
+      if (type === 'permissions') {
+        $scope.permissionSaveSuccess = true;
+        $scope.user.permissions = response.data;
+      }
       if (type === 'interesser') {
         $scope.user.interesser = response.data;
         $scope.interestsSaveSuccess = true;
@@ -531,7 +532,7 @@ function ($scope, $routeParams, $http, $q, $modal, $location, $sce, UserService)
 
   function update () {
 
-    var my_newsletters = $http.get("/backend/users/" + UserService.getExternalId() + "/nyhedsbreve");
+    var my_newsletters = $http.get("/backend/users/" + UserService.getExternalId());
     var newsletters = $http.get("/backend/nyhedsbreve?orderBy=nyhedsbrev_navn&orderDirection=asc");
 
 
@@ -545,7 +546,7 @@ function ($scope, $routeParams, $http, $q, $modal, $location, $sce, UserService)
         newsletter.indhold_safe = $sce.trustAsHtml(newsletter.indhold);
       });
 
-      $scope.my_subscriptions = resolved[1].data;
+      $scope.my_subscriptions = resolved[1].data.nyhedsbreve;
 
       console.log('tilmeldt:',$scope.my_subscriptions);
 

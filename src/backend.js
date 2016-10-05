@@ -158,11 +158,11 @@ var backend = {
       handler: proxy
     });
 
-    server.route({
-      method: 'GET',
-      path: '/users/{user_id}/nyhedsbreve',
-      handler: proxy
-    });
+    // server.route({
+    //   method: 'GET',
+    //   path: '/users/{user_id}/nyhedsbreve',
+    //   handler: proxy
+    // });
 
     server.route({
       method: ['POST', 'DELETE'],
@@ -171,10 +171,16 @@ var backend = {
     });
 
     server.route({
-      method: ['GET', 'POST'],
-      path: '/users/{user_id}/interesser',
+      method: ['POST', 'DELETE'],
+      path: '/users/{user_id}/permissions/{permission_id}',
       handler: proxy
     });
+
+    // server.route({
+    //   method: ['POST', 'DELETE'],
+    //   path: '/users/{user_id}/interesser',
+    //   handler: proxy
+    // });
 
     server.route({
       method: ['POST', 'DELETE'],

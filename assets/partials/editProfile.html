@@ -141,9 +141,9 @@
             <h3 class="title">Kontaktsamtykker</h3>
             <ul class="list-default ">
               <li ng-repeat="permission in permissions">
-                <div class="checkbox" ng-if="permission.hidden === 0 || $parent.user.nyhedsbreve.indexOf(permission.nyhedsbrev_id) > -1">
+                <div class="checkbox" ng-if="permission.hidden === 0 || $parent.user.permissions.indexOf(permission.nyhedsbrev_id) > -1">
                   <label>
-                    <input checklist-model="$parent.user.nyhedsbreve" checklist-value="permission.nyhedsbrev_id" ng-change="$parent.checkbox_change(this, permission.nyhedsbrev_id, 'nyhedsbreve')" type="checkbox">
+                    <input checklist-model="$parent.user.permissions" checklist-value="permission.nyhedsbrev_id" ng-change="$parent.checkbox_change(this, permission.nyhedsbrev_id, 'permissions')" type="checkbox">
                     <small>
                       <strong class="xs-block">{{permission.nyhedsbrev_navn}}</strong>
                     </small>
