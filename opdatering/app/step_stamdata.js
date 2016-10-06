@@ -51,7 +51,7 @@ module.exports = React.createClass({
       userDataState[key] = this.props.data[key];
     }.bind(this));
     this.setState(userDataState);
-    this.setState({has300: this.props.data.nyhedsbreve.indexOf(300) > -1});
+    this.setState({has300: this.props.data.permissions.indexOf(300) > -1});
   },
   handleInputChange: function(e) {
     var temp = {data_dirty: true};
@@ -162,7 +162,7 @@ module.exports = React.createClass({
   add300: function() {
     return $.ajax({
       type: 'POST',
-      url: '/backend/users/'.concat(this.props.data.ekstern_id, '/nyhedsbreve/300?location_id=2059'),
+      url: '/backend/users/'.concat(this.props.data.ekstern_id, '/permissions/300?location_id=2059'),
       contentType: "application/json; charset=utf-8",
       dataType: 'json',
       success: function (data) {
@@ -175,7 +175,7 @@ module.exports = React.createClass({
   delete300: function() {
     return $.ajax({
       type: 'DELETE',
-      url: '/backend/users/'.concat(this.props.data.ekstern_id, '/nyhedsbreve/300?location_id=2059'),
+      url: '/backend/users/'.concat(this.props.data.ekstern_id, '/permissions/300?location_id=2059'),
       contentType: "application/json; charset=utf-8",
       dataType: 'json',
       success: function (data) {

@@ -115,13 +115,13 @@ var Opdateringskampagne = React.createClass({
   determinShowCheckbox300Perm: function (data) {
     // We should still show the 300-perm checkbox is the user didn't have the perm to begin with, accepted the perm and comes back to step 1 later.
     if (this.state.showCheckbox300Perm === false) {
-      this.setState({showCheckbox300Perm: data.nyhedsbreve.indexOf(300) === -1});
+      this.setState({showCheckbox300Perm: data.permissions.indexOf(300) === -1});
     }
   },
   determinShowStepNyhedsbreveKommmercial: function(data) {
     if (!this.state.hideStepNyhKom_dirty) {
-      var hideStepNyhKom = !data.nyhedsbreve.some(function(nyhedsbrev_id) {
-        return [66,108,300].indexOf(nyhedsbrev_id) > -1;
+      var hideStepNyhKom = !data.permissions.some(function(permission_id) {
+        return [66,108,300].indexOf(permission_id) > -1;
       });
 
       this.setState({hideStepNyhKom: hideStepNyhKom});
