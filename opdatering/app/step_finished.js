@@ -52,8 +52,8 @@ module.exports = React.createClass({
   },
   render: function() {
 
-    var showOffers = this.props.data.nyhedsbreve.some(function(nyhedsbrev_id) {
-      return [66,108,283,300].indexOf(nyhedsbrev_id) > -1;
+    var showOffers = this.props.data.permissions.some(function(permission_id) {
+      return [66,108,283,300].indexOf(permission_id) > -1;
     }) && this.props.abo !== 'NA';
 
     var showKidsNews = (this.props.data.kids !== undefined && this.props.data.kids.length > 0) || this.props.data.interesser.indexOf(39) > -1;
