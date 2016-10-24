@@ -121,7 +121,7 @@ module.exports = React.createClass({
     if (this.state.data_dirty) {
 
       var payload = {
-        location_id: 2059
+        location_id: 2077
       };
 
       Object.keys(this.state)
@@ -162,7 +162,7 @@ module.exports = React.createClass({
   add300: function() {
     return $.ajax({
       type: 'POST',
-      url: '/backend/users/'.concat(this.props.data.ekstern_id, '/permissions/300?location_id=2059'),
+      url: '/backend/users/'.concat(this.props.data.ekstern_id, '/permissions/300?location_id=2077'),
       contentType: "application/json; charset=utf-8",
       dataType: 'json',
       success: function (data) {
@@ -175,7 +175,7 @@ module.exports = React.createClass({
   delete300: function() {
     return $.ajax({
       type: 'DELETE',
-      url: '/backend/users/'.concat(this.props.data.ekstern_id, '/permissions/300?location_id=2059'),
+      url: '/backend/users/'.concat(this.props.data.ekstern_id, '/permissions/300?location_id=2077'),
       contentType: "application/json; charset=utf-8",
       dataType: 'json',
       success: function (data) {

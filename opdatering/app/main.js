@@ -13,6 +13,9 @@ var BottomNavbar = require('./bottomnavbar_mobile');
 
 var Opdateringskampagne = React.createClass({
   getInitialState: function() {
+
+    var runningInProduction = window.location.host.indexOf('profil.berlingskemedia.dk') > -1;
+
     return {
       userData: {
         nyhedsbreve: [],
@@ -23,7 +26,7 @@ var Opdateringskampagne = React.createClass({
       ekstern_id: null,
       abo: null,
       steps: [],
-      step: window.location.host.indexOf('profil.berlingskemedia.dk') > -1 ? 0 : 0,
+      step: runningInProduction ? 0 : 0, // You can override the starting step. But we  make sure the flow starts at first step in procution
       stepping: false,
       showCheckbox300Perm: false,
       hideStepNyhKom: false,

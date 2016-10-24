@@ -22,7 +22,7 @@ module.exports = React.createClass({
   sendCampaignSignup: function() {
 
     var payload = {
-      kampagne_id: 3703,
+      kampagne_id: 3712,
       ekstern_id: this.props.data.ekstern_id
     };
 
@@ -56,7 +56,13 @@ module.exports = React.createClass({
       return [66,108,283,300].indexOf(permission_id) > -1;
     }) && this.props.abo !== 'NA';
 
-    var showKidsNews = (this.props.data.kids !== undefined && this.props.data.kids.length > 0) || this.props.data.interesser.indexOf(39) > -1;
+    var showKidsNews = (this.props.data.kids !== undefined && this.props.data.kids.length > 0 && this.props.data.kids.some(isBetweenSixAndTwelveYearsOld)) || this.props.data.interesser.indexOf(39) > -1;
+
+    function isBetweenSixAndTwelveYearsOld(kid){
+      var thisYear = new Date().getFullYear();
+      var kidsAge = thisYear - kid.birthyear;
+      return kidsAge >=6 && kidsAge <= 12;
+    }
 
     return(
       <div className="stepFinished">
