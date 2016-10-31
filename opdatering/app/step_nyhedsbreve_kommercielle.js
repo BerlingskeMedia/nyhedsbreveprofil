@@ -187,7 +187,7 @@ module.exports = React.createClass({
             navn: 'Berlingske Shop',
             description: 'I Berlingske Shop får du gode tilbud på alt det, der gør livet lidt bedre.',
             logo_src: 'https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/opdateringskampagne/berlingske_shop.png',
-            logo_style: { padding: '10px 4px 4px 4px'},
+            logo_style: { padding: '10px 4px 4px 4px', backgroundColor: 'white'},
             publisher: 1}],
         sweetdeal_generel_nyhedsbreve = [
           {id: 845, navn: 'Sweetdeal Rejser', description: 'Sweetdeal Rejser', publisher: 32, logo_src: sweetdeal_logo_src},
