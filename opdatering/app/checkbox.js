@@ -17,9 +17,9 @@ module.exports = React.createClass({
       <div className={majorClassName}>
         <div className="checkbox">
           <input type="checkbox" id={this.props.data.id} checked={this.state.checked} onChange={this.onChange} />
-          <label className="control-label" htmlFor={this.props.data.id}>
+          <label className="control-label" htmlFor={this.props.data.id} style={this.props.data.label_style}>
             {this.props.data.logo_src ?
-              <LogoCheckbox logo_src={this.props.data.logo_src} /> :
+              <LogoCheckbox logo_src={this.props.data.logo_src} logo_style={this.props.data.logo_style} /> :
               <span>{this.props.data.navn}</span>
             }
           </label>
@@ -39,11 +39,14 @@ module.exports = React.createClass({
 
 var LogoCheckbox = React.createClass({
   render: function() {
+
+    var logo_style = Object.assign({width: '100%', height: '100%', border: '#C3C3C3 1px solid'}, this.props.logo_style);
+
     return(
       <div>
         <img className="checked_img" src="/opdatering/assets/checked_stroked.svg" />
         <img className="unchecked_img" src="/opdatering/assets/unchecked.svg" />
-        <img style={{width: '100%', height: '100%', border: '#C3C3C3 1px solid'}} src={this.props.logo_src} />
+        <img style={logo_style} src={this.props.logo_src} />
       </div>
     );
   }

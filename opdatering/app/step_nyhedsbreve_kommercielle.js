@@ -164,7 +164,7 @@ module.exports = React.createClass({
             navn: 'Tilbud fra Godttip.dk',
             description: 'GodtTip.dk sender dig alle de gode tilbud først og giver ofte specielle rabatter kun til GodtTip.dk modtagere.',
             permissiontext: <GodtTipPermText />,
-            logo_src: 'https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/opdateringskampagne/godt_tip.png',
+            logo_src: 'https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/opdateringskampagne/godt_tip.jpg',
             publisher: 34}],
         tbt_nyhedsbreve = [
           {
@@ -186,7 +186,8 @@ module.exports = React.createClass({
             id: 241,
             navn: 'Berlingske Shop',
             description: 'I Berlingske Shop får du gode tilbud på alt det, der gør livet lidt bedre.',
-            logo_src: 'https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/opdateringskampagne/Berlingske_shop.png',
+            logo_src: 'https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/opdateringskampagne/berlingske_shop.png',
+            logo_style: { padding: '10px 4px 4px 4px'},
             publisher: 1}],
         sweetdeal_generel_nyhedsbreve = [
           {id: 845, navn: 'Sweetdeal Rejser', description: 'Sweetdeal Rejser', publisher: 32, logo_src: sweetdeal_logo_src},
