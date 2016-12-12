@@ -200,7 +200,7 @@ function($locationProvider, $routeProvider) {
       resolve: {
         login: 'LoginService'
       },
-      redirectTo: '/nyhedsbreve'
+      redirectTo: '/tilmeldt'
     });
 }]).controller('newsletterController', ['$scope', '$routeParams', '$http', '$q', '$location', '$sce', 'UserService',
 function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
