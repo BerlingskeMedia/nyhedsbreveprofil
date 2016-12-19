@@ -112,6 +112,12 @@ var backend = {
 
     server.route({
       method: 'GET',
+      path: '/nyhedsbreve/{nyhedsbrev_id}',
+      handler: proxy
+    });
+
+    server.route({
+      method: 'GET',
       path: '/interesser',
       handler: proxy
     });
