@@ -29,7 +29,7 @@
 
             <div class="hidden-labels">
               <div class="form-group required has-feedback">
-                <label for="exampleInputEmail1">Email</label>
+                <label for="email">Email</label>
                 <input type="email" ng-required="true" ng-model="user.email" class="form-control input-sm" id="email" name="email">
                 <small ng-show="userForm.email.$dirty && userForm.email.$invalid" class="help-block">Email adressen er ugyldig</small>
               </div>
@@ -37,7 +37,7 @@
               <div class="row">
                 <div class="col-sm-6">
                   <div class="form-group required has-feedback">
-                    <label for="">Fornavn</label>
+                    <label for="firstname">Fornavn</label>
                     <input type="text" ng-required="true" ng-model="user.fornavn" name="firstName" class="form-control input-sm" id="firstname">
                     <small ng-show="userForm.firstName.$dirty && userForm.firstName.$invalid" class="help-block">Fornavn er påkrævet</small>
                   </div>
@@ -45,7 +45,7 @@
 
                 <div class="col-sm-6">
                   <div class="form-group required has-feedback">
-                    <label for="">Efternavn</label>
+                    <label for="lastname">Efternavn</label>
                     <input type="text" ng-required="true" ng-model="user.efternavn" name="lastname" class="form-control input-sm" id="lastname">
                     <small ng-show="userForm.lastname.$dirty && userForm.lastname.$invalid" class="help-block">Efternavn er påkrævet</small>
                   </div>
@@ -55,14 +55,14 @@
               <div class="row">
                 <div class="col-xs-6">
                   <div class="form-group required">
-                    <label for="">Postnr.</label>
+                    <label for="zip">Postnr.</label>
                     <input min="999" max="9999" ng-model="user.postnummer_dk" ng-required="true" type="number" name="zip" class="form-control input-sm" id="zip">
                     <small ng-show="userForm.zip.$dirty && userForm.zip.$invalid" class="help-block">Indtast et gyldigt postnummer</small>
                   </div>
                 </div>
                 <div class="col-xs-6">
                   <div class="form-group required">
-                    <label for="">Fødselsår</label>
+                    <label for="birthyear">Fødselsår</label>
                     <input class="form-control input-sm" name="birthyear" max="2015" min="1900" ng-model="user.foedselsaar" ng-required="true" type="number">
                     <small ng-show="userForm.birthyear.$dirty && userForm.birthyear.$invalid" class="help-block">Indtast et gyldigt fødselsår</small>
                   </div>
