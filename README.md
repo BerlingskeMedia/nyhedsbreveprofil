@@ -1,82 +1,66 @@
-# nyhedsbreve
+# Nyhedsbreveprofil
 
-## Sider (opgavebeskrivelse)
-
-### /
-Parametre:
-
-- ekstern_id (optional)
-- publisher_id (optional)
-
-Tilmeld siden ala. http://email.medieimperiet.dk/ hvor publishers er i dropdown.
-Logoer på "publisher". Men ingen logoer på "nyhedsbreve". De skal bare se ud som Berlingske.
-
-Vælg publisher i i dropdown, hvis `publisher_id` er sat.
-
-Efter man trykker tilmeld, lander man på enten `/opret` eller `/tilmeldt` alt efter om man er anonym eller logget ind.
+This is the customer-facing part of the newsletter application portfolio, which
+covers functionality for signing up to newsletters as a new user, and making
+changes to newsletter subscriptions as well as personal profile information.
 
 
-### /tilmeldt
-Når man tilmelder sig, kan vi endnu ikke udsende nogen email som bekræftelse. Det er vist nok effektivt med det samme.
-Så vi viser en "tak for tilmeldind" ala. http://email.medieimperiet.dk/step-4.php uden email-delen.
+## Technology Stack
+
+- React.js
+- Less.js
+- Hapi.js
+- Webpack
 
 
-### /opret /login
-Hvis man ikke findes kom kunde, lander man på denne efter "tilmeld" siden:
+## Description
 
-Ala. en blading af http://email.medieimperiet.dk/step-2.php og http://email.medieimperiet.dk/my-subscriptions.php?user=anon
+The application is mostly a frontend and doesn't have its own database. Instead,
+it communicates with MDBAPI via a basic proxy middleware written in `Hapi.js`.
 
-Hvis man allerede er oprettet, logges der ind ved at lave en `POST /mails/profile-page-link`.
-**Bemærk:**: Den er live og læser fra produktionsdatabasen.
 
-Benyt `"publisher_id": 1` som standard. Ellers benyt `publisher_id` fra parametre.
+## For Developers
 
-Ved opret af nye bruger, sendes man forbi http://email.medieimperiet.dk/step-3.php for at sætte permissions.
-Profilen oprettes allerede efter step-2. Dvs. Step-3 med interesser er optional.
+You'll need a recent version of node.js, _v4.2.2 or newer_. You'll need to setup
+the following environment variables before you start;
 
-### /afmeld
-Parametre:
+```
+export NODE_ENV="development"
+export TZ="Europe/Copenhagen"
+export MDBAPI_ADDRESS=mdbapi.bemit.dk
+export MDBAPI_PORT=80
+```
 
-- ekstern_id
-- nyhedsbrev_id
-- publisher_id (optional)
+These can of course be reconfigured as required. You'll also need `bower.js`, if
+you don't have it already. Webpack is not a prerequisite as it will be installed
+with the application itself.
 
-Afmelder ét nyhedsbrev med årsag/begrundelse (optional)
-Ala. http://email.medieimperiet.dk/my-subscriptions.php?user=email-link
 
-Vis ekstern_id ikke er valid, sendes brugeren til `/login`.
+You can build the application by running;
 
-### /profil
-Parametre:
+```
+npm install && bower update
+```
 
-- ekstern_id
+There's a simple node-based web server included that can serve the application
+as static files. Simply run;
 
-Viser tilmeldte nyhedsbreve og interesser
-Ala. http://email.medieimperiet.dk/my-subscriptions.php?user=goodboy
+```
+gulp start_server
+```
 
-Ved ingen nyhedsbreve, vises noget ala.
-http://email.medieimperiet.dk/my-subscriptions.php?user=noletters
+You'll also need to watch the frontend files for changes so Webpack will rebuild
+them automatically;
 
-Vis ekstern_id ikke er valid, sendes brugeren til `/login`.
+```
+gulp start_webpack
+```
 
-Interesser hentes fra `http://54.77.4.249:8000/interesser?displayTypeId=3`
 
-## Permissions
-En liste over permissions hente ved `http://54.77.4.249:8000/nyhedsbreve?permission=1`.
-Man tilmelder sig en persmission på samme måde som man tilmelder sig et nyhedsbrev.
+## Deploying to Production
 
-# Smartlinks
+When merging changes into the `Production` branch on GitHub, Jenkins will
+automatically build and deploy the Docker images for that release.
 
-Nyhedsbreve (multiselect af /nyhedsbreve)
-Interesser (multiselect af /interesser)
-Permissions (multiselect af /permissions)
-Location (tekst indtastning, med knap til at oprette en location via POST /location - returnerer location_id som skal anvendes i smartlinket. Teksten kan ændres via PUT.)
-Flow (Drop down med simpel og doubleopt)
-Action (Drop down med tilmeld og afmeld)
-Startdato (datepicker)
-Slutdato (datepicker, ikke påkrævet)
-Kunde felt (Drop down med email og ekstern id)
-Landingpage (ikke påkrævet)
-
-eg
-http://localhost:8000/smartlinks/?action=70c4dd8af56f5dad9d5483513f049eb6&command=cmd_berlingske_quicksignup&customer_key=a40e4703a823d1d11977928620c6ead0&nlids=300&intids=&stack_key=dcc741e9544beb16005993da368b855c&lid=1799&mid=1&rtype=1&url=&email=<EMAIL>&action=1
+Deployment time varies, but is somewhere between 5-15 minutes after the build
+has finished in Jenkins.
