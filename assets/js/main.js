@@ -50,10 +50,18 @@ function ($http) {
     window.sessionStorage.setItem('user', JSON.stringify(user));
   }
 
-
   function addToBasket (nyhedsbrev_id) {
     var basket = getBasket();
     basket.nyhedsbreve.push(nyhedsbrev_id);
+    window.sessionStorage.setItem('user', JSON.stringify(basket));
+  }
+
+  function removeFromBasket (nyhedsbrev_id) {
+    var basket = getBasket(),
+      idIndex = basket.nyhedsbreve.indexOf(nyhedsbrev_id);
+    if (idIndex > -1) {
+      basket.nyhedsbreve.splice(idIndex, 1);
+    }
     window.sessionStorage.setItem('user', JSON.stringify(basket));
   }
 
@@ -84,6 +92,7 @@ function ($http) {
     getBasket: getBasket,
     saveBasket: saveBasket,
     addToBasket: addToBasket,
+    removeFromBasket: removeFromBasket,
     clearBasket: clearBasket,
     sendLoginEmail: sendLoginEmail,
     userExists: userExists
@@ -300,13 +309,17 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
         console.error(response);
       });
     } else {
-      UserService.addToBasket(nyhedsbrev_id);
+      if (checkbox.checked) {
+        UserService.addToBasket(nyhedsbrev_id);
+      } else {
+        UserService.removeFromBasket(nyhedsbrev_id);
+      }
     }
   };
 
   $scope.createProfile = function () {
     if (!UserService.isLoggedIn()) {
-      $location.path('opret/profil')
+      $location.path('opret/profil');
     }
   };
 }]).controller('createProfileController', ['$scope', '$routeParams', '$http', '$q', '$location', '$sce', 'UserService',
