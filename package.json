@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node src/server.js",
     "build": "docker build -t berlingskemedia/$npm_package_name:$npm_package_version . && docker tag berlingskemedia/$npm_package_name:$npm_package_version berlingskemedia/$npm_package_name:latest",
-    "push": "docker push berlingskemedia/$npm_package_name:$npm_package_version && docker push berlingskemedia/$npm_package_name:latest"
+    "push": "docker push berlingskemedia/$npm_package_name:$npm_package_version && docker push berlingskemedia/$npm_package_name:latest",
+    "build-test": "docker build -t berlingskemedia/$npm_package_name:$npm_package_version . && docker tag berlingskemedia/$npm_package_name:$npm_package_version berlingskemedia/$npm_package_name:test",
+    "push-test": "docker push berlingskemedia/$npm_package_name:$npm_package_version && docker push berlingskemedia/$npm_package_name:test"
   },
   "repository": {
     "type": "git",
