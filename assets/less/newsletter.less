@@ -497,7 +497,7 @@
 .fv-form-uikit .fv-icon-no-label,.uk-form-horizontal.fv-form-uikit .fv-control-feedback{top:0}
 .fv-form-uikit .fv-has-error .fv-control-feedback,.fv-form-uikit .fv-has-error .uk-form-label,.fv-form-uikit .fv-has-error label{color:#D85030}
 
-.newsletter-notification {  
+.newsletter-notification {
     margin-top: 12px;
     padding: 7px;
 }
@@ -529,4 +529,21 @@
 
 .unsubscribe_button {
 	margin-top: 10px;
+}
+
+.mdbCheckbox input[type="checkbox"] {
+  visibility: hidden;
+}
+
+.mdbGreenCheckbox {
+}
+
+.mdbGreenCheckbox input[type="checkbox"] + label {
+  background:url(/opdatering/assets/unchecked.svg) 0px 2px no-repeat;
+  padding-left: 30px;
+  height: 26px;
+}
+
+.mdbGreenCheckbox input[type="checkbox"]:checked + label {
+  background:url(/opdatering/assets/checked.svg) 0px 2px no-repeat;
 }
