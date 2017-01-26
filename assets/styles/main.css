@@ -7189,6 +7189,10 @@ input[type="button"].btn-block {
     font-size: 25px;
   }
 }
+#toppic {
+  height: 30px;
+  margin-top: -5px;
+}
 .navi-toggle {
   font-weight: 600;
   text-transform: uppercase;
@@ -7831,4 +7835,15 @@ input[type="button"].btn-block {
 }
 .unsubscribe_button {
   margin-top: 10px;
+}
+.mdbCheckbox input[type="checkbox"] {
+  visibility: hidden;
+}
+.mdbGreenCheckbox input[type="checkbox"] + label {
+  background: url(/opdatering/assets/unchecked.svg) 0px 2px no-repeat;
+  padding-left: 30px;
+  height: 26px;
+}
+.mdbGreenCheckbox input[type="checkbox"]:checked + label {
+  background: url(/opdatering/assets/checked.svg) 0px 2px no-repeat;
 }

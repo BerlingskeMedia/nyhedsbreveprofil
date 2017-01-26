@@ -1,6 +1,5 @@
 var location_id = 1775;
 
-
 var newsletterApp = angular.module('newsletter', [
   'ngRoute',
   'ui.bootstrap',
@@ -50,10 +49,18 @@ function ($http) {
     window.sessionStorage.setItem('user', JSON.stringify(user));
   }
 
-
   function addToBasket (nyhedsbrev_id) {
     var basket = getBasket();
     basket.nyhedsbreve.push(nyhedsbrev_id);
+    window.sessionStorage.setItem('user', JSON.stringify(basket));
+  }
+
+  function removeFromBasket (nyhedsbrev_id) {
+    var basket = getBasket(),
+      idIndex = basket.nyhedsbreve.indexOf(nyhedsbrev_id);
+    if (idIndex > -1) {
+      basket.nyhedsbreve.splice(idIndex, 1);
+    }
     window.sessionStorage.setItem('user', JSON.stringify(basket));
   }
 
@@ -67,6 +74,14 @@ function ($http) {
     payload.publisher_id = 1;
 
     return $http.post("/backend/mails/profile-page-link", payload);
+  }
+
+  function getCurrentPublisher() {
+    return window.sessionStorage.getItem('publisher');
+  }
+
+  function setCurrentPublisher(publisher) {
+    window.sessionStorage.setItem('publisher', publisher);
   }
 
   return {
@@ -84,8 +99,11 @@ function ($http) {
     getBasket: getBasket,
     saveBasket: saveBasket,
     addToBasket: addToBasket,
+    removeFromBasket: removeFromBasket,
     clearBasket: clearBasket,
     sendLoginEmail: sendLoginEmail,
+    getCurrentPublisher: getCurrentPublisher,
+    setCurrentPublisher: setCurrentPublisher,
     userExists: userExists
   };
 }]).factory('LoginService', ['$http', '$location', 'UserService',
@@ -202,8 +220,8 @@ function($locationProvider, $routeProvider) {
       },
       redirectTo: '/nyhedsbreve'
     });
-}]).controller('newsletterController', ['$scope', '$routeParams', '$http', '$q', '$location', '$sce', 'UserService',
-function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
+}]).controller('newsletterController', ['$scope', '$rootScope', '$routeParams', '$http', '$q', '$location', '$sce', 'UserService',
+function ($scope, $rootScope, $routeParams, $http, $q, $location, $sce, UserService) {
 
   $scope.loggedIn = UserService.isLoggedIn();
 
@@ -225,7 +243,7 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
       if ($routeParams.publisher) {
         var publisher_exists = $scope.publishers.some(function (publisher) {
           if ($routeParams.publisher == publisher.publisher_id || angular.lowercase($routeParams.publisher) === angular.lowercase(publisher.publisher_navn)) {
-            $scope.current_publisher = publisher;
+            $scope.setCurrentPublisher(publisher);
             $scope.h1_prefix = publisher.publisher_navn + ' ';
             return true;
           } else {
@@ -234,25 +252,24 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
         });
 
         if (!publisher_exists) {
-          $location.path('nyhedsbreve')
+          $location.path('nyhedsbreve');
         }
 
       } else {
         $scope.publishers.forEach(function (publisher) {
           if (publisher.publisher_navn === 'Berlingske') {
-            $scope.current_publisher = publisher;
+            $scope.setCurrentPublisher(publisher);
           }
         });
 
         if ($scope.current_publisher === undefined) {
-          $scope.current_publisher = $scope.publishers[0];
+          $scope.setCurrentPublisher($scope.publishers[0]);
         }
 
         $scope.show_publisher_selector = true;
       }
     }
   });
-
 
   var getNyhedsbreve = $http.get("/backend/nyhedsbreve?orderBy=sort_id&orderDirection=asc").then(function (response) {
     if (response.data) {
@@ -278,10 +295,12 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
   });
 
   $scope.setCurrentPublisher = function (publisher) {
+    UserService.setCurrentPublisher(publisher);
     $scope.current_publisher = publisher;
+    $rootScope.$broadcast('publisher_changed', publisher);
   };
 
-  $scope.toggleSubscription = function(checkbox, nyhedsbrev_id) {
+  $scope.toggleSubscription = function (checkbox, nyhedsbrev_id) {
     if (UserService.isLoggedIn()) {
       var url = '/backend/users/' + UserService.getExternalId() + '/nyhedsbreve/' + nyhedsbrev_id;
 
@@ -300,13 +319,17 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
         console.error(response);
       });
     } else {
-      UserService.addToBasket(nyhedsbrev_id);
+      if (checkbox.checked) {
+        UserService.addToBasket(nyhedsbrev_id);
+      } else {
+        UserService.removeFromBasket(nyhedsbrev_id);
+      }
     }
   };
 
   $scope.createProfile = function () {
     if (!UserService.isLoggedIn()) {
-      $location.path('opret/profil')
+      $location.path('opret/profil');
     }
   };
 }]).controller('createProfileController', ['$scope', '$routeParams', '$http', '$q', '$location', '$sce', 'UserService',
@@ -617,6 +640,14 @@ function ($scope, $routeParams, $http, $q, $modal, $location, $sce, UserService)
 function ($scope, $routeParams, $http, $q, $rootScope, $location, UserService) {
 
   $scope.testenvironment = $location.host().indexOf('profil.berlingskemedia.dk') === -1;
+
+  $rootScope.$on('publisher_changed', function(event, newPublisher) {
+    var defaultLogo = 'https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/logos/berlingskemedia.jpg';
+    $scope.current_publisher = newPublisher;
+    angular.element(document.querySelector('#toppic'))
+      .prop('src', newPublisher && newPublisher.publisher_toppic || defaultLogo);
+
+  });
 
   $scope.$on('$routeChangeSuccess', function () {
     $scope.loggedIn = UserService.isLoggedIn();

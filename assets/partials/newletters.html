@@ -29,29 +29,27 @@
         <li ng-repeat="newsletter in newsletters | filter : {publisher_id : current_publisher.publisher_id} : true">
           <div class="li-body" ng-if="newsletter.hidden === 0  || $parent.user.nyhedsbreve.indexOf(newsletter.nyhedsbrev_id) > -1">
             <div class="row">
-              <div class="col-xs-4 col-sm-2 col-md-2 col-lg-2">
-                <div class="newsletter_logo center-block">
-                  <label class="center-block" for="label_nes_{{ $index }}">
-                    <img src="{{ newsletter.nyhedsbrev_image }}" class="center-block img-responsive" alt="" />
-                  </label>
+              <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                <div class="mdbCheckbox mdbGreenCheckbox">
+                  <input type="checkbox" checklist-model="$parent.user.nyhedsbreve"
+                    checklist-value="newsletter.nyhedsbrev_id"
+                    ng-change="toggleSubscription(this, newsletter.nyhedsbrev_id)"
+                    id="label_nes_{{ $index }}" >
+                  <label class="control-label" for="label_nes_{{ $index }}"></label>
                 </div>
               </div>
-              <div class="col-xs-8 col-sm-10 col-md-10 col-lg-10">
-                <div class="checkbox">
+              <div class="col-xs-11 col-sm-11 col-md-11 col-lg-11">
                   <label>
-                    <input type="checkbox" checklist-model="$parent.user.nyhedsbreve" checklist-value="newsletter.nyhedsbrev_id"
-                      ng-change="toggleSubscription(this, newsletter.nyhedsbrev_id)" id="label_nes_{{ $index }}">
-                    <strong class="newsletter-title"  data-publisher-id="{{ newsletter.publisher_id }}" data-newsletter-id="{{ newsletter.nyhedsbrev_id }}">{{newsletter.nyhedsbrev_navn}}</strong>
-                    <small ng-bind-html="newsletter.indhold_safe"></small>
-                    <!-- <div><em><small>Udsendes {{ newsletter.tidspunkt }}</small></em></div> -->
+                    <strong class="newsletter-title" data-publisher-id="{{ newsletter.publisher_id }}" data-newsletter-id="{{ newsletter.nyhedsbrev_id }}">{{newsletter.nyhedsbrev_navn}}</strong>
                   </label>
+                    <span ng-bind-html="newsletter.indhold_safe"></span>
+                    <!-- <div><em><small>Udsendes {{ newsletter.tidspunkt }}</small></em></div> -->
                   <div ng-show="deleted" class="newsletter-notification">
                     <small class="alert alert-danger">Du er nu frameldt nyhedsbrevet</small>
                   </div>
                   <div ng-show="created" class="newsletter-notification">
                     <small class="alert alert-success">Du er nu tilmeldt nyhedsbrevet</small>
                   </div>
-                </div>
               </div>
             </div>
           </div>
