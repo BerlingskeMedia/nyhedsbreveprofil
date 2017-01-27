@@ -7851,3 +7851,6 @@ input[type="button"].btn-block {
 .mdbGreenCheckbox input[type="checkbox"]:checked + label {
   background: url(/opdatering/assets/checked.svg) 0px 2px no-repeat;
 }
+.row {
+  margin-bottom: 15px;
+}
