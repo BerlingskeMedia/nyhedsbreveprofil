@@ -38,13 +38,11 @@ if (!module.parent) {
   });
 }
 
-
 function cb (err) {
   if (err) {
     console.log('Error when loading plugin', err);
     server.stop();
   }
 }
-
 
 module.exports = server;
