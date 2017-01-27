@@ -7196,6 +7196,11 @@ input[type="button"].btn-block {
   height: 70px;
   margin-top: -5px;
 }
+@media (max-width: 768px) {
+  #toppic {
+    height: 50px;
+  }
+}
 .navi-toggle {
   font-weight: 600;
   text-transform: uppercase;
