@@ -4,17 +4,22 @@ var newsletterApp = angular.module('newsletter', [
   'ngRoute',
   'ui.bootstrap',
   "checklist-model"
-]).factory('UserService', ['$http',
-function ($http) {
+])
+.constant(
+  'DEFAULT_LOGO',
+  'https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/logos/berlingskemedia.jpg'
+)
+.factory('UserService', ['$http', 'PublisherService', 'DEFAULT_LOGO',
+function ($http, PublisherService, DEFAULT_LOGO) {
   function getExternalId () {
     return window.sessionStorage.getItem('ekstern_id');
   }
 
-  function setExternalId (ekstern_id) {
+  function setExternalId(ekstern_id) {
     window.sessionStorage.setItem('ekstern_id', ekstern_id);
   }
 
-  function userExists (trueFalse) {
+  function userExists(trueFalse) {
     if (trueFalse === undefined) {
       var userExists = window.sessionStorage.getItem('userExists');
       return userExists !== null ? userExists : false;
@@ -23,19 +28,19 @@ function ($http) {
     }
   }
 
-  function getDoubleOptKey (double_opt_key) {
+  function getDoubleOptKey(double_opt_key) {
     return window.sessionStorage.getItem('double_opt_key');
   }
 
-  function setDoubleOptKey (double_opt_key) {
+  function setDoubleOptKey(double_opt_key) {
     window.sessionStorage.setItem('double_opt_key', double_opt_key);
   }
 
-  function removeExternalId (ekstern_id) {
+  function removeExternalId(ekstern_id) {
     window.sessionStorage.removeItem('ekstern_id');
   }
 
-  function getBasket () {
+  function getBasket() {
     var basket = JSON.parse(window.sessionStorage.getItem('user'));
     return basket !== null ? basket :
     {
@@ -45,18 +50,17 @@ function ($http) {
     };
   }
 
-  function saveBasket (user) {
+  function saveBasket(user) {
     window.sessionStorage.setItem('user', JSON.stringify(user));
   }
 
-  function addToBasket (newsletter) {
+  function addToBasket(newsletter) {
     var basket = getBasket();
     basket.nyhedsbreve.push(newsletter);
     window.sessionStorage.setItem('user', JSON.stringify(basket));
   }
 
-  function removeFromBasket (newsletterId) {
-    console.log('remove', newsletterId, typeof newsletterId);
+  function removeFromBasket(newsletterId) {
     var basket = getBasket(),
       idIndex;
     for (var index = 0; index < basket.nyhedsbreve.length; index++) {
@@ -71,11 +75,11 @@ function ($http) {
     window.sessionStorage.setItem('user', JSON.stringify(basket));
   }
 
-  function clearBasket () {
+  function clearBasket() {
     window.sessionStorage.removeItem('user');
   }
 
-  function sendLoginEmail (email) {
+  function sendLoginEmail(email) {
     var payload = {};
     payload.email = email;
     payload.publisher_id = 1;
@@ -99,6 +103,26 @@ function ($http) {
     return getExternalId() !== null;
   }
 
+  // Pick default logo if there are more than one publisher - otherwise,
+  // pick the logo that matches the publisher of the newsletter(s).
+  function updateLogo(newPublisher) {
+    var basket = getBasket(),
+      logo, publisherIds;
+    if (basket.nyhedsbreve.length) {
+      publisherIds = basket.nyhedsbreve.map(function(newsletter) {
+        return newsletter.publisher_id;
+      }).sort();
+      if (publisherIds.length && publisherIds[0] !== publisherIds[publisherIds.length-1]) {
+        logo = DEFAULT_LOGO;
+      } else {
+        logo = PublisherService.getById(publisherIds[0]).publisher_toppic;
+      }
+    } else {
+      logo = DEFAULT_LOGO;
+    }
+    angular.element(document.querySelector('#toppic')).prop('src', logo);
+  }
+
   return {
     getData: getData,
     getExternalId: getExternalId,
@@ -115,9 +139,11 @@ function ($http) {
     sendLoginEmail: sendLoginEmail,
     getCurrentPublisher: getCurrentPublisher,
     setCurrentPublisher: setCurrentPublisher,
-    userExists: userExists
+    userExists: userExists,
+    updateLogo: updateLogo
   };
-}]).factory('LoginService', ['$http', '$location', 'UserService',
+}])
+.factory('LoginService', ['$http', '$location', 'UserService',
 function ($http, $location, UserService) {
   return function () {
 
@@ -147,7 +173,8 @@ function ($http, $location, UserService) {
       return false; // Provider must return a value from $get factory method.
     }
   }();
-}]).factory('NewsletterService', ['$http', '$sce', function ($http, $sce) {
+}])
+.factory('NewsletterService', ['$http', '$sce', function ($http, $sce) {
 
   var newsletters = [];
 
@@ -171,7 +198,6 @@ function ($http, $location, UserService) {
   }
 
   function getById(id) {
-    console.log(newsletters.length);
     for (var index = 0; index < newsletters.length; index++) {
       if (newsletters[index].nyhedsbrev_id === id) {
         return newsletters[index];
@@ -186,7 +212,8 @@ function ($http, $location, UserService) {
     getById: getById
   };
 
-}]).factory('PublisherService', ['$http', function ($http) {
+}])
+.factory('PublisherService', ['$http', function ($http) {
 
   var publishers = [];
 
@@ -203,11 +230,22 @@ function ($http, $location, UserService) {
     return publishers;
   }
 
+  function getById(publisherId) {
+    for (var index = 0; index < publishers.length; index++) {
+      if (publishers[index].publisher_id === publisherId) {
+        return publishers[index];
+      }
+    }
+    return null;
+  }
+
   return {
     fetchPublishers: fetchPublishers,
-    getPublishers: getPublishers
+    getPublishers: getPublishers,
+    getById: getById
   };
-}]).config(['$locationProvider', '$routeProvider',
+}])
+.config(['$locationProvider', '$routeProvider',
 function($locationProvider, $routeProvider) {
 
   $locationProvider.html5Mode(true);
@@ -291,7 +329,8 @@ function($locationProvider, $routeProvider) {
       },
       redirectTo: '/nyhedsbreve'
     });
-}]).controller('newsletterController', ['$scope', '$rootScope', '$routeParams', '$http', '$q', '$location', '$sce', 'UserService', 'PublisherService', 'NewsletterService',
+}])
+.controller('newsletterController', ['$scope', '$rootScope', '$routeParams', '$http', '$q', '$location', '$sce', 'UserService', 'PublisherService', 'NewsletterService',
 function ($scope, $rootScope, $routeParams, $http, $q, $location, $sce, UserService, PublisherService, NewsletterService) {
 
   $scope.loggedIn = UserService.isLoggedIn();
@@ -361,15 +400,13 @@ function ($scope, $rootScope, $routeParams, $http, $q, $location, $sce, UserServ
     $scope.current_publisher = publisher;
   };
 
-  $scope.toggleSubscription = function (checkbox, newsletterId, newsletterName) {
+  $scope.toggleSubscription = function (checkbox, newsletterId, newsletterName, publisherId) {
     if (UserService.isLoggedIn()) {
-      var url = '/backend/users/' + UserService.getExternalId() + '/nyhedsbreve/' + newsletterId;
-
-      var request;
+      var url = '/backend/users/' + UserService.getExternalId() + '/nyhedsbreve/' + newsletterId,
+        request;
       if (checkbox.checked) {
         request = $http.post(url + "?location_id=" + location_id);
-      }
-      else {
+      } else {
         request = $http.delete(url + "?location_id=" + location_id);
       }
       request.then(function (response) {
@@ -382,12 +419,15 @@ function ($scope, $rootScope, $routeParams, $http, $q, $location, $sce, UserServ
     } else {
       if (checkbox.checked) {
         UserService.addToBasket({
-          nyhedsbrev_id: newsletterId, nyhedsbrev_navn: newsletterName
+          nyhedsbrev_id: newsletterId,
+          nyhedsbrev_navn: newsletterName,
+          publisher_id: publisherId
         });
       } else {
         UserService.removeFromBasket(newsletterId);
       }
     }
+    UserService.updateLogo();
   };
 
   $scope.createProfile = function () {
@@ -395,7 +435,8 @@ function ($scope, $rootScope, $routeParams, $http, $q, $location, $sce, UserServ
       $location.path('opret/profil');
     }
   };
-}]).controller('createProfileController', ['$scope', '$routeParams', '$http', '$q', '$location', '$sce', 'UserService', 'NewsletterService',
+}])
+.controller('createProfileController', ['$scope', '$routeParams', '$http', '$q', '$location', '$sce', 'UserService', 'NewsletterService',
 function ($scope, $routeParams, $http, $q, $location, $sce, UserService, NewsletterService) {
 
   if (UserService.isLoggedIn()) {
@@ -459,7 +500,8 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService, Newslet
       }
     });
   };
-}]).controller('addInterestsController', ['$scope', '$routeParams', '$http', '$q', '$location', 'UserService',
+}])
+.controller('addInterestsController', ['$scope', '$routeParams', '$http', '$q', '$location', 'UserService',
     function ($scope, $routeParams, $http, $q, $location, UserService) {
 
   // Assign those newsletters to $scope which are in the basket.
@@ -488,12 +530,14 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService, Newslet
     });
   };
 
-}]).controller('createProfileDoneController', ['$scope', 'UserService',
+}])
+.controller('createProfileDoneController', ['$scope', 'UserService',
 function ($scope, UserService) {
 
   $scope.exists = UserService.userExists();
 
-}]).controller('loginController', ['$scope', '$routeParams', '$http', '$rootScope', '$location', 'UserService',
+}])
+.controller('loginController', ['$scope', '$routeParams', '$http', '$rootScope', '$location', 'UserService',
 function ($scope, $routeParams, $http, $rootScope, $location, UserService, login) {
 
   if (UserService.isLoggedIn()) {
@@ -513,7 +557,8 @@ function ($scope, $routeParams, $http, $rootScope, $location, UserService, login
     });
   };
 
-}]).controller('editProfileController', ['$scope', '$routeParams', '$http', '$q', '$location', '$sce', 'UserService',
+}])
+.controller('editProfileController', ['$scope', '$routeParams', '$http', '$q', '$location', '$sce', 'UserService',
 function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
 
   if (!UserService.isLoggedIn()) {
@@ -616,7 +661,8 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
     });
   };
 
-}]).controller('subscriptionsController', ['$scope', '$routeParams', '$http', '$q', '$modal', '$location', '$sce', 'UserService',
+}])
+.controller('subscriptionsController', ['$scope', '$routeParams', '$http', '$q', '$modal', '$location', '$sce', 'UserService',
 function ($scope, $routeParams, $http, $q, $modal, $location, $sce, UserService) {
   $scope.reasons = [
     "I sender for mange mails",
@@ -708,17 +754,14 @@ function ($scope, $routeParams, $http, $q, $modal, $location, $sce, UserService)
   } else {
     $location.path('login');
   }
-}]).controller('menuController', ['$scope', '$routeParams', '$http', '$q', '$rootScope', '$location', 'UserService',
+}])
+.controller('menuController', ['$scope', '$routeParams', '$http', '$q', '$rootScope', '$location', 'UserService',
 function ($scope, $routeParams, $http, $q, $rootScope, $location, UserService) {
 
   $scope.testenvironment = $location.host().indexOf('profil.berlingskemedia.dk') === -1;
 
   $rootScope.$on('publisher_changed', function(event, newPublisher) {
-    var defaultLogo = 'https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/logos/berlingskemedia.jpg';
     $scope.current_publisher = newPublisher;
-    angular.element(document.querySelector('#toppic'))
-      .prop('src', newPublisher && newPublisher.publisher_toppic || defaultLogo);
-
   });
 
   $scope.$on('$routeChangeSuccess', function () {
@@ -730,7 +773,8 @@ function ($scope, $routeParams, $http, $q, $rootScope, $location, UserService) {
       });
     }
   });
-}]).controller('confirmController', ['$scope', '$location', '$http', 'UserService',
+}])
+.controller('confirmController', ['$scope', '$location', '$http', 'UserService',
 function ($scope, $location, $http, UserService) {
 
   var search = $location.search();

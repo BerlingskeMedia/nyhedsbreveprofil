@@ -33,7 +33,7 @@
                 <div class="mdbCheckbox mdbGreenCheckbox">
                   <input type="checkbox" checklist-model="$parent.user.nyhedsbreve"
                     checklist-value="newsletter.nyhedsbrev_id"
-                    ng-change="toggleSubscription(this, newsletter.nyhedsbrev_id, newsletter.nyhedsbrev_navn)"
+                    ng-change="toggleSubscription(this, newsletter.nyhedsbrev_id, newsletter.nyhedsbrev_navn, newsletter.publisher_id)"
                     id="label_nes_{{ $index }}" >
                   <label class="control-label" for="label_nes_{{ $index }}"></label>
                 </div>
