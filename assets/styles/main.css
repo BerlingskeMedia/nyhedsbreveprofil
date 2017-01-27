@@ -7189,8 +7189,11 @@ input[type="button"].btn-block {
     font-size: 25px;
   }
 }
+#main {
+  margin-top: 20px;
+}
 #toppic {
-  height: 30px;
+  height: 70px;
   margin-top: -5px;
 }
 .navi-toggle {
@@ -7811,6 +7814,7 @@ input[type="button"].btn-block {
 }
 .newsletter-notification {
   margin-top: 12px;
+  margin-bottom: 12px;
   padding: 7px;
 }
 .savesucess.hide-opacity {
@@ -7837,7 +7841,7 @@ input[type="button"].btn-block {
   margin-top: 10px;
 }
 .mdbCheckbox input[type="checkbox"] {
-  visibility: hidden;
+  display: none;
 }
 .mdbGreenCheckbox input[type="checkbox"] + label {
   background: url(/opdatering/assets/unchecked.svg) 0px 2px no-repeat;
