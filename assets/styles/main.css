@@ -7221,6 +7221,12 @@ input[type="button"].btn-block {
   margin: 0 0 1em;
   padding: 0;
 }
+ul.letter-list {
+  padding-left: 20px;
+}
+ul.letter-list li {
+  list-style: circle;
+}
 .list-small li {
   font-size: 90%;
 }
@@ -7735,6 +7741,7 @@ input[type="button"].btn-block {
 }
 .fv-form-bootstrap .help-block {
   margin-bottom: 0;
+  color: red;
 }
 .fv-form-bootstrap .tooltip-inner {
   text-align: left;

@@ -434,6 +434,10 @@ function ($scope, $rootScope, $routeParams, $http, $q, $location, $sce, UserServ
     $scope.current_publisher = publisher;
   };
 
+  $scope.compareNewsletters = function(letterOne, letterTwo) {
+    return letterOne.nyhedsbrev_id === letterTwo.nyhedsbrev_id;
+  };
+
   $scope.toggleSubscription = function (checkbox, newsletterId, newsletterName,
       publisherId) {
 
