@@ -1,16 +1,18 @@
-var location_id = 1775;
-
 var newsletterApp = angular.module('newsletter', [
   'ngRoute',
   'ui.bootstrap',
   "checklist-model"
 ])
+.constant('LOCATION_ID', 1775)
+.constant('DOMAIN_NAME', 'profil.berlingskemedia.dk')
 .constant(
   'DEFAULT_LOGO',
   'https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/logos/berlingskemedia.jpg'
 )
-.factory('UserService', ['$http', 'PublisherService', 'DEFAULT_LOGO',
-function ($http, PublisherService, DEFAULT_LOGO) {
+.factory('UserService', ['$q', '$http', 'PublisherService', 'DEFAULT_LOGO',
+    'LOCATION_ID', function ($q, $http, PublisherService, DEFAULT_LOGO,
+    LOCATION_ID) {
+
   function getExternalId () {
     return window.sessionStorage.getItem('ekstern_id');
   }
@@ -46,7 +48,7 @@ function ($http, PublisherService, DEFAULT_LOGO) {
     {
       nyhedsbreve: [],
       interesser: [],
-      location_id: location_id
+      location_id: LOCATION_ID
     };
   }
 
@@ -106,6 +108,7 @@ function ($http, PublisherService, DEFAULT_LOGO) {
   // Pick default logo if there are more than one publisher - otherwise,
   // pick the logo that matches the publisher of the newsletter(s).
   function updateLogo(newPublisher) {
+
     var basket = getBasket(),
       logo, publisherIds;
     if (basket.nyhedsbreve.length) {
@@ -121,6 +124,32 @@ function ($http, PublisherService, DEFAULT_LOGO) {
       logo = DEFAULT_LOGO;
     }
     angular.element(document.querySelector('#toppic')).prop('src', logo);
+
+  }
+
+  function toggleSubscription(doEnable, subscriptionObject) {
+
+    var deferred = $q.defer(),
+      httpRequest,
+      url = '/backend/users/' + getExternalId() + '/nyhedsbreve/' +
+          subscriptionObject.nyhedsbrev_id;
+    if (isLoggedIn()) {
+      httpRequest = doEnable ? $http.post : $http.delete;
+      httpRequest(url + "?location_id=" + LOCATION_ID).then(function(response) {
+        deferred.resolve(response);
+      }, function(err) {
+        deferred.reject(err);
+      });
+    } else {
+      if (doEnable) {
+        addToBasket(subscriptionObject);
+      } else {
+        removeFromBasket(subscriptionObject.nyhedsbrev_id);
+      }
+    }
+    deferred.resolve(true);
+    return deferred.promise;
+
   }
 
   return {
@@ -140,7 +169,8 @@ function ($http, PublisherService, DEFAULT_LOGO) {
     getCurrentPublisher: getCurrentPublisher,
     setCurrentPublisher: setCurrentPublisher,
     userExists: userExists,
-    updateLogo: updateLogo
+    updateLogo: updateLogo,
+    toggleSubscription: toggleSubscription
   };
 }])
 .factory('LoginService', ['$http', '$location', 'UserService',
@@ -194,16 +224,20 @@ function ($http, $location, UserService) {
   }
 
   function getAll() {
+
     return newsletters;
+
   }
 
   function getById(id) {
+
     for (var index = 0; index < newsletters.length; index++) {
       if (newsletters[index].nyhedsbrev_id === id) {
         return newsletters[index];
       }
     }
     return null;
+
   }
 
   return {
@@ -400,44 +434,37 @@ function ($scope, $rootScope, $routeParams, $http, $q, $location, $sce, UserServ
     $scope.current_publisher = publisher;
   };
 
-  $scope.toggleSubscription = function (checkbox, newsletterId, newsletterName, publisherId) {
-    if (UserService.isLoggedIn()) {
-      var url = '/backend/users/' + UserService.getExternalId() + '/nyhedsbreve/' + newsletterId,
-        request;
-      if (checkbox.checked) {
-        request = $http.post(url + "?location_id=" + location_id);
-      } else {
-        request = $http.delete(url + "?location_id=" + location_id);
-      }
-      request.then(function (response) {
+  $scope.toggleSubscription = function (checkbox, newsletterId, newsletterName,
+      publisherId) {
+
+    UserService.toggleSubscription(checkbox.checked, {
+      nyhedsbrev_id: newsletterId,
+      nyhedsbrev_navn: newsletterName,
+      publisher_id: publisherId
+    }).then(function(response) {
+      if (angular.isObject(response)) {
         $scope.user.nyhedsbreve = response.data;
         checkbox.$parent.created = checkbox.checked;
         checkbox.$parent.deleted = !checkbox.checked;
-      }, function (error) {
-        console.error(response);
-      });
-    } else {
-      if (checkbox.checked) {
-        UserService.addToBasket({
-          nyhedsbrev_id: newsletterId,
-          nyhedsbrev_navn: newsletterName,
-          publisher_id: publisherId
-        });
-      } else {
-        UserService.removeFromBasket(newsletterId);
       }
-    }
-    UserService.updateLogo();
+      UserService.updateLogo();
+    }, function(err) {
+      console.log(err);
+    });
   };
 
   $scope.createProfile = function () {
+
     if (!UserService.isLoggedIn()) {
       $location.path('opret/profil');
     }
+
   };
+
 }])
-.controller('createProfileController', ['$scope', '$routeParams', '$http', '$q', '$location', '$sce', 'UserService', 'NewsletterService',
-function ($scope, $routeParams, $http, $q, $location, $sce, UserService, NewsletterService) {
+.controller('createProfileController', ['$scope', '$routeParams', '$http', '$q',
+    '$location', '$sce', 'UserService', 'NewsletterService', function ($scope,
+    $routeParams, $http, $q, $location, $sce, UserService, NewsletterService) {
 
   if (UserService.isLoggedIn()) {
     $location.path('oplysninger');
@@ -456,9 +483,31 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService, Newslet
     });
   });
 
-  $scope.go_back =  function () {
+  $scope.go_back = function () {
+
     UserService.saveBasket($scope.user);
     $location.path('nyhedsbreve');
+
+  };
+
+  $scope.toggleSubscription = function (checkbox, newsletterId, newsletterName,
+      publisherId) {
+
+    UserService.toggleSubscription(checkbox.checked, {
+      nyhedsbrev_id: newsletterId,
+      nyhedsbrev_navn: newsletterName,
+      publisher_id: publisherId
+    }).then(function(response) {
+      if (angular.isObject(response)) {
+        $scope.user.nyhedsbreve = response.data;
+        checkbox.$parent.created = checkbox.checked;
+        checkbox.$parent.deleted = !checkbox.checked;
+      }
+      UserService.updateLogo();
+    }, function (err) {
+      console.log(err);
+    });
+
   };
 
   $scope.submit = function () {
@@ -480,9 +529,9 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService, Newslet
     }
 
     // Convert "nyhedsbreve" back ito array of id's before making API request.
-    payload.nyhedsbreve = payload.nyhedsbreve.map(function(newsletter) {
-      return newsletter.nyhedsbrev_id;
-    });
+    payload.nyhedsbreve = payload.nyhedsbreve.map(function (newsletter) {
+      return angular.isObject(newsletter) ? newsletter.nyhedsbrev_id : newsletter;
+    }).filter(Boolean);
 
     $http.post("/backend/doubleopt", payload).then(function (response) {
       UserService.setDoubleOptKey(response.data.double_opt_key);
@@ -501,8 +550,9 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService, Newslet
     });
   };
 }])
-.controller('addInterestsController', ['$scope', '$routeParams', '$http', '$q', '$location', 'UserService',
-    function ($scope, $routeParams, $http, $q, $location, UserService) {
+.controller('addInterestsController', ['$scope', '$routeParams', '$http', '$q',
+    '$location', 'UserService', 'LOCATION_ID', function ($scope, $routeParams,
+    $http, $q, $location, UserService, LOCATION_ID) {
 
   // Assign those newsletters to $scope which are in the basket.
   $scope.newsletters = UserService.getBasket().nyhedsbreve;
@@ -518,7 +568,7 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService, Newslet
 
   $scope.submit = function () {
     var payload = {};
-    payload.location_id = location_id;
+    payload.location_id = LOCATION_ID;
     payload.interesser = $scope.user.interests_choices;
     $http.post("backend/doubleopt/" + UserService.getDoubleOptKey() +  "/interesser", payload).then(function (response) {
       $location.path('tak');
@@ -558,8 +608,9 @@ function ($scope, $routeParams, $http, $rootScope, $location, UserService, login
   };
 
 }])
-.controller('editProfileController', ['$scope', '$routeParams', '$http', '$q', '$location', '$sce', 'UserService',
-function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
+.controller('editProfileController', ['$scope', '$routeParams', '$http', '$q',
+    '$location', '$sce', 'UserService', 'LOCATION_ID', function ($scope,
+    $routeParams, $http, $q, $location, $sce, UserService, LOCATION_ID) {
 
   if (!UserService.isLoggedIn()) {
     return $location.path('login');
@@ -613,7 +664,7 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
     }
 
     var payload = angular.copy(user);
-    payload.location_id = location_id;
+    payload.location_id = LOCATION_ID;
 
     if (user.foedselsaar !== null) {
       payload.foedselsaar = user.foedselsaar.toString();
@@ -634,7 +685,7 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
   };
 
   $scope.checkbox_change = function(val, nid, type) {
-    var change_url = "/backend/users/" + ekstern_id + "/" + type +"/" + nid + "?location_id=" + location_id;
+    var change_url = "/backend/users/" + ekstern_id + "/" + type +"/" + nid + "?location_id=" + LOCATION_ID;
 
     var method;
     if (val.checked) {
@@ -662,8 +713,10 @@ function ($scope, $routeParams, $http, $q, $location, $sce, UserService) {
   };
 
 }])
-.controller('subscriptionsController', ['$scope', '$routeParams', '$http', '$q', '$modal', '$location', '$sce', 'UserService',
-function ($scope, $routeParams, $http, $q, $modal, $location, $sce, UserService) {
+.controller('subscriptionsController', ['$scope', '$routeParams', '$http', '$q',
+    '$modal', '$location', '$sce', 'UserService', 'LOCATION_ID',
+    function ($scope, $routeParams, $http, $q, $modal, $location, $sce,
+    UserService, LOCATION_ID) {
   $scope.reasons = [
     "I sender for mange mails",
     "Indholdet i jeres mails er ikke relevant for mig",
@@ -676,7 +729,6 @@ function ($scope, $routeParams, $http, $q, $modal, $location, $sce, UserService)
     var my_newsletters = $http.get("/backend/users/" + UserService.getExternalId());
     var newsletters = $http.get("/backend/nyhedsbreve?orderBy=nyhedsbrev_navn&orderDirection=asc");
 
-
     $q.all([newsletters, my_newsletters]).then(function(resolved) {
 
       $scope.newsletters = resolved[0].data;
@@ -688,8 +740,7 @@ function ($scope, $routeParams, $http, $q, $modal, $location, $sce, UserService)
       });
 
       $scope.my_subscriptions = resolved[1].data.nyhedsbreve;
-
-      console.log('tilmeldt:',$scope.my_subscriptions);
+      console.log('tilmeldt:', $scope.my_subscriptions);
 
       $scope.filtered_newsletters = $scope.newsletters.filter(function (newsletter) {
         if (newsletter.nyhedsbrev_navn.indexOf('_TMP_') > -1) {
@@ -701,6 +752,7 @@ function ($scope, $routeParams, $http, $q, $modal, $location, $sce, UserService)
         }
       });
     });
+
   }
 
   $scope.unsubscribe = function(feedback) {
@@ -710,7 +762,7 @@ function ($scope, $routeParams, $http, $q, $modal, $location, $sce, UserService)
     }
     $scope.unsubscribeError = false;
     var payload = {};
-    payload.location_id = location_id;
+    payload.location_id = LOCATION_ID;
     payload.nyhedsbrev_id = $scope.to_unsubscribe.nyhedsbrev_id;
     payload.user_feedback = feedback;
     $http.post("/backend/users/" + UserService.getExternalId() + "/nyhedsbreve/delete", payload ).then(function (response) {
@@ -755,10 +807,12 @@ function ($scope, $routeParams, $http, $q, $modal, $location, $sce, UserService)
     $location.path('login');
   }
 }])
-.controller('menuController', ['$scope', '$routeParams', '$http', '$q', '$rootScope', '$location', 'UserService',
-function ($scope, $routeParams, $http, $q, $rootScope, $location, UserService) {
+.controller('menuController', ['$scope', '$routeParams', '$http', '$q',
+    '$rootScope', '$location', 'UserService', 'LOCATION_ID', 'DOMAIN_NAME',
+    function ($scope, $routeParams, $http, $q, $rootScope, $location,
+      UserService, LOCATION_ID, DOMAIN_NAME) {
 
-  $scope.testenvironment = $location.host().indexOf('profil.berlingskemedia.dk') === -1;
+  $scope.testenvironment = $location.host().indexOf(DOMAIN_NAME) === -1;
 
   $rootScope.$on('publisher_changed', function(event, newPublisher) {
     $scope.current_publisher = newPublisher;
@@ -780,7 +834,7 @@ function ($scope, $location, $http, UserService) {
   var search = $location.search();
 
   if (!UserService.isLoggedIn() && search.confirm_key !== undefined) {
-    $http.post("/backend/doubleopt/" + search.confirm_key + "/confirm?location_id = " + location_id).then(function (response) {
+    $http.post("/backend/doubleopt/" + search.confirm_key + "/confirm?location_id = " + LOCATION_ID).then(function (response) {
       var user = response.data;
       UserService.setExternalId(user.ekstern_id);
       $location.search('success', true);
