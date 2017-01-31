@@ -470,11 +470,10 @@ function ($scope, $rootScope, $routeParams, $http, $q, $location, $sce, UserServ
   };
 
   $scope.createProfile = function () {
-
-    if (!UserService.isLoggedIn()) {
+    if (UserService.getBasket().nyhedsbreve.length > 0 &&
+        !UserService.isLoggedIn()) {
       $location.path('opret/profil');
     }
-
   };
 
 }])
