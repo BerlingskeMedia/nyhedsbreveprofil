@@ -33,14 +33,14 @@
             <div class="form-group required">
               <label for="zip">Postnr.</label>
               <input min="999" max="9999" ng-model="user.postnummer_dk" ng-required="true" type="number" name="zip" class="form-control input-sm" id="zip">
-              <small ng-show="userForm.zip.$dirty && userForm.zip.$invalid" class="help-block">Indtast et gyldigt postnummer</small>
+              <small ng-show="userForm.zip.$touched && userForm.zip.$invalid" class="help-block">Indtast et gyldigt postnummer</small>
             </div>
           </div>
           <div class="col-xs-4 col-lg-2 col-md-3">
             <div class="form-group required">
               <label for="birthyear">Fødselsår</label>
               <input class="form-control input-sm" name="birthyear" max="2020" min="1900" ng-model="user.foedselsaar" ng-required="true" type="number" id="birthyear">
-              <small ng-show="userForm.birthyear.$dirty && userForm.birthyear.$invalid" class="help-block">Indtast et gyldigt fødselsår</small>
+              <small ng-show="userForm.birthyear.$touched && userForm.birthyear.$invalid" class="help-block">Indtast et gyldigt fødselsår</small>
             </div>
           </div>
         </div>
@@ -74,7 +74,6 @@
               </div>
             </div>
 
-
             <div class="col-xs-4 col-md-2">
               <div class="form-group">
                 <label for="">Etage</label>
@@ -87,7 +86,6 @@
                 <input type="text" class="form-control input-sm" ng-model="user.sidedoer" id="id_side">
               </div>
             </div>
-
 
             <div class="col-xs-6">
               <div class="form-group">
@@ -116,18 +114,27 @@
                 <div class="checkbox" ng-if="permission.hidden === 0">
                   <label>
                     <input type="checkbox" checklist-model="$parent.user.nyhedsbreve" checklist-value="permission.nyhedsbrev_id"
-                      ng-change="toggleSubscription(this, permission.nyhedsbrev_id)">
+                      ng-change="toggleSubscription(this, permission.nyhedsbrev_id, permission.nyhedsbrev_navn, permission.publisher_id)">
                     <small>
                       <strong class="xs-block">{{permission.nyhedsbrev_navn}}</strong>
                     </small>
                   </label>
                   <small>
-                    <a class="show_permission_info" role="button" ng-click="permission.show_indhold = true" ng-hide="permission.show_indhold">Vis info <i class="fa fa-angle-down"></i></a>
-                    <a class="show_permission_info" role="button" ng-click="permission.show_indhold = false" ng-show="permission.show_indhold">Skjul info <i class="fa fa-angle-up"></i></a>
+                    <a class="show_permission_info" role="button"
+                        ng-click="permission.show_indhold = true"
+                        ng-hide="permission.show_indhold">
+                      Vis info <i class="fa fa-angle-down"></i>
+                    </a>
+                    <a class="show_permission_info" role="button"
+                        ng-click="permission.show_indhold = false"
+                        ng-show="permission.show_indhold">
+                      Skjul info <i class="fa fa-angle-up"></i>
+                    </a>
                   </small>
                   <p class="permission_info">
                     <small>
-                      <span ng-show="permission.show_indhold" ng-bind-html="permission.indhold_safe"></span>
+                      <span ng-show="permission.show_indhold"
+                        ng-bind-html="permission.indhold_safe"></span>
                     </small>
                   </p>
                 </div>
@@ -136,9 +143,24 @@
           </div>
         </div>
         <div class="row">
+          <div class="col-xs-12">
+          <h4>Valgte nyhedsbreve</h4>
+
+          <ul class="list-default letter-list">
+            <li ng-repeat="letter in newsletters">
+              {{ letter.nyhedsbrev_navn }}
+            </li>
+          </ul>
+          </div>
+        </div>
+        <div class="row">
           <div class="module-top ">
             <a ng-click="go_back()" class="btn btn-link pull-left"><i class="fa fa-angle-left"></i> Flere nyhedsbreve</a>
-            <button type="submit" ng-click="submit()" ng-class="{'btn-invalid ': userForm.$invalid, 'btn-success': userForm.$valid}" class="btn pull-right ">TILMELD <i class="fa fa-angle-right"></i></button>
+            <button type="submit" ng-click="submit()"
+                ng-class="{'btn-invalid ': userForm.$invalid, 'btn-success': userForm.$valid}"
+                class="btn pull-right">
+              TILMELD <i class="fa fa-angle-right"></i>
+            </button>
           </div>
         </div>
       </form>

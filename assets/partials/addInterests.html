@@ -1,6 +1,20 @@
 <div class="row">
   <div class="col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
-    <h1>Vælg dine interesser</h1>
+    <h1>Tak for din tilmelding!</h1>
+
+    <div class="row">
+      <div class="col-xs-12">
+      <h4>Tilvalgte nyhedsbreve</h4>
+
+      <ul class="list-default letter-list">
+        <li ng-repeat="letter in newsletters">
+          {{ letter.nyhedsbrev_navn }}
+        </li>
+      </ul>
+      </div>
+    </div>
+
+    <h3>Vælg dine interesser</h3>
 
     <p>Fortæl os, hvad du interesserer dig for, så vi kan sende dig relevante tilbud og nyhedsbreve.</p>
     <div class="row">
@@ -18,5 +32,6 @@
     <div class="module-top">
       <small class="alert alert-danger pull-right" ng-show="doubleoptNotFound"><strong>Fejl</strong> Dine interesser blev ikke gemt. Måske har du allerede bekræftet oprettelsen via fremsendte email?</small>
     </div>
+
   </div>
 </div>

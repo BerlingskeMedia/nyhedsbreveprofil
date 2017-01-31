@@ -7189,9 +7189,17 @@ input[type="button"].btn-block {
     font-size: 25px;
   }
 }
+#main {
+  margin-top: 20px;
+}
 #toppic {
-  height: 30px;
+  height: 70px;
   margin-top: -5px;
+}
+@media (max-width: 768px) {
+  #toppic {
+    height: 50px;
+  }
 }
 .navi-toggle {
   font-weight: 600;
@@ -7212,6 +7220,12 @@ input[type="button"].btn-block {
 .list-default li {
   margin: 0 0 1em;
   padding: 0;
+}
+ul.letter-list {
+  padding-left: 20px;
+}
+ul.letter-list li {
+  list-style: circle;
 }
 .list-small li {
   font-size: 90%;
@@ -7727,6 +7741,7 @@ input[type="button"].btn-block {
 }
 .fv-form-bootstrap .help-block {
   margin-bottom: 0;
+  color: red;
 }
 .fv-form-bootstrap .tooltip-inner {
   text-align: left;
@@ -7811,6 +7826,7 @@ input[type="button"].btn-block {
 }
 .newsletter-notification {
   margin-top: 12px;
+  margin-bottom: 12px;
   padding: 7px;
 }
 .savesucess.hide-opacity {
@@ -7837,7 +7853,7 @@ input[type="button"].btn-block {
   margin-top: 10px;
 }
 .mdbCheckbox input[type="checkbox"] {
-  visibility: hidden;
+  display: none;
 }
 .mdbGreenCheckbox input[type="checkbox"] + label {
   background: url(/opdatering/assets/unchecked.svg) 0px 2px no-repeat;
@@ -7846,4 +7862,7 @@ input[type="button"].btn-block {
 }
 .mdbGreenCheckbox input[type="checkbox"]:checked + label {
   background: url(/opdatering/assets/checked.svg) 0px 2px no-repeat;
+}
+.row {
+  margin-bottom: 15px;
 }

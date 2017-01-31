@@ -6,9 +6,19 @@
 	}
 }
 
+#main {
+	margin-top: 20px;
+}
+
 #toppic {
-	height: 30px;
+	height: 70px;
 	margin-top: -5px; // Counteracts the margin of the containing LI
+}
+
+@media (max-width: @screen-sm) {
+	#toppic {
+		height: 50px;
+	}
 }
 
 .navi-toggle {
@@ -18,7 +28,6 @@
 .icon-square {
 	text-align: center;
 }
-
 
 .border-top {
 	border-top: 1px solid #ccc;
@@ -33,6 +42,12 @@
 		margin: 0 0 1em;
 		padding: 0;
 	}
+}
+ul.letter-list {
+	padding-left: 20px;
+}
+ul.letter-list li {
+	list-style: circle;
 }
 .list-small {
 	li {
@@ -480,7 +495,7 @@
 .fv-form-uikit .uk-text-danger,.fv-help-block{display:block}
 .fv-has-feedback{position:relative}
 .fv-control-feedback{position:absolute;top:0;right:0;z-index:2;display:block;width:34px;height:34px;line-height:34px;text-align:center}
-.fv-form-bootstrap .help-block{margin-bottom:0}
+.fv-form-bootstrap .help-block{margin-bottom:0; color: red;}
 .fv-form-bootstrap .tooltip-inner{text-align:left}
 .fv-form-bootstrap .fv-icon-no-label{top:0}
 .fv-form-bootstrap .fv-bootstrap-icon-input-group{z-index:100}
@@ -504,6 +519,7 @@
 
 .newsletter-notification {
     margin-top: 12px;
+    margin-bottom: 12px;
     padding: 7px;
 }
 
@@ -537,7 +553,7 @@
 }
 
 .mdbCheckbox input[type="checkbox"] {
-  visibility: hidden;
+  display: none;
 }
 
 .mdbGreenCheckbox {
@@ -551,4 +567,8 @@
 
 .mdbGreenCheckbox input[type="checkbox"]:checked + label {
   background:url(/opdatering/assets/checked.svg) 0px 2px no-repeat;
+}
+
+.row {
+	margin-bottom: 15px;
 }
