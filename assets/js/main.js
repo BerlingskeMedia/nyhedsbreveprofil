@@ -587,15 +587,20 @@ function ($scope, $rootScope, $routeParams, $http, $q, $location, $sce, UserServ
   $scope.submit = function () {
     var payload = {};
     payload.location_id = LOCATION_ID;
-    payload.interesser = $scope.user.interests_choices;
-    $http.post("backend/doubleopt/" + UserService.getDoubleOptKey() +  "/interesser", payload).then(function (response) {
+    // Allow user to continue to "tak" page without picking interests.
+    if ($scope.user && !$scope.user.interests_choices) {
+      payload.interesser = $scope.user.interests_choices;
+      $http.post("backend/doubleopt/" + UserService.getDoubleOptKey() +  "/interesser", payload).then(function (response) {
+        $location.path('tak');
+      }, function (error) {
+        console.error(error);
+        if (error.status === 404) {
+          $scope.doubleoptNotFound = true;
+        }
+      });
+    } else {
       $location.path('tak');
-    }, function (error) {
-      console.error(error);
-      if (error.status === 404) {
-        $scope.doubleoptNotFound = true;
-      }
-    });
+    }
   };
 
 }])
