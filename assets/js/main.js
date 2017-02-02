@@ -111,7 +111,7 @@ var newsletterApp = angular.module('newsletter', [
   function updateLogo(newPublisher) {
 
     var basket = getBasket(),
-      logo, publisherIds;
+      logo, publisherIds, topPicElem;
     if (basket.nyhedsbreve.length) {
       publisherIds = basket.nyhedsbreve.map(function (newsletter) {
         return newsletter.publisher_id;
@@ -124,7 +124,9 @@ var newsletterApp = angular.module('newsletter', [
     } else {
       logo = DEFAULT_LOGO;
     }
-    angular.element(document.querySelector('#toppic')).prop('src', logo);
+    topPicElem = angular.element(document.querySelector('#toppic'));
+    topPicElem.prop('src', logo);
+    topPicElem.parent().prop('href', newPublisher.publisher_url || '/');
 
   }
 
@@ -463,7 +465,7 @@ function ($scope, $rootScope, $routeParams, $http, $q, $location, $sce, UserServ
         checkbox.$parent.created = checkbox.checked;
         checkbox.$parent.deleted = !checkbox.checked;
       }
-      UserService.updateLogo();
+      UserService.updateLogo(PublisherService.getById(publisherId));
     }, function (err) {
       console.log(err);
     });
@@ -478,8 +480,9 @@ function ($scope, $rootScope, $routeParams, $http, $q, $location, $sce, UserServ
 
 }])
 .controller('createProfileController', ['$scope', '$routeParams', '$http', '$q',
-    '$location', '$sce', 'UserService', 'NewsletterService', function ($scope,
-    $routeParams, $http, $q, $location, $sce, UserService, NewsletterService) {
+    '$location', '$sce', 'UserService', 'NewsletterService', 'PublisherService',
+    function ($scope, $routeParams, $http, $q, $location, $sce, UserService,
+    NewsletterService, PublisherService) {
 
   if (UserService.isLoggedIn()) {
     $location.path('oplysninger');
@@ -518,7 +521,7 @@ function ($scope, $rootScope, $routeParams, $http, $q, $location, $sce, UserServ
         checkbox.$parent.created = checkbox.checked;
         checkbox.$parent.deleted = !checkbox.checked;
       }
-      UserService.updateLogo();
+      UserService.updateLogo(PublisherService.getById(publisherId));
     }, function (err) {
       console.log(err);
     });

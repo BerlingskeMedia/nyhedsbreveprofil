@@ -25,6 +25,10 @@
     </section>
 
     <section class="newsletters">
+
+      <img id="spinner" ng-if="!newsletters.length"
+        src="/assets/images/loading.gif" alt="loading..." />
+
       <ul class="list-brand">
         <li ng-repeat="newsletter in newsletters | filter : {publisher_id : current_publisher.publisher_id} : true">
           <div class="li-body" ng-if="newsletter.hidden === 0 || user.nyhedsbreve.indexOf(newsletter.nyhedsbrev_id) > -1">

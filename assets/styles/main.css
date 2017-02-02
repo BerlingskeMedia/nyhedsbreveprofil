@@ -7192,9 +7192,13 @@ input[type="button"].btn-block {
 #main {
   margin-top: 20px;
 }
+#spinner {
+  display: block;
+  margin: 5px auto;
+}
 #toppic {
   height: 70px;
-  margin-top: -5px;
+  margin-top: 10px;
 }
 @media (max-width: 768px) {
   #toppic {
