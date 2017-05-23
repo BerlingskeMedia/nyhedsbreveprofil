@@ -1,16 +1,50 @@
 <div class="row">
   <div class="col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
     <h1>Dine nyhedsbreve</h1>
-    <div ng-show="filtered_newsletters.length === 0">
+
+    <div ng-show="looking_at_one_newsletter">
+      <div ng-show="is_subscribed_to_the_one_newsletter">
+        <p>Du er tilmeldt nedenstående nyhedsbrev. Klik på "Afmeld" hvis du ikke længere ønsker at modtage.</p>
+      </div>
+      <div ng-hide="is_subscribed_to_the_one_newsletter">
+        <p>Du er ikke tilmeldt nedenstående nyhedsbrev. Klik på "Tilmeld" hvis du ønsker at modtage.</p>
+      </div>
+      <ul class="list-brand list-border">
+        <li>
+          <div class="row">
+            <div class="col-xs-4 col-sm-2 col-md-2 col-lg-2">
+              <div class="newsletter_logo center-block">
+                <img src="{{ newsletter.nyhedsbrev_image }}" class="center-block img-responsive" alt="" />
+              </div>
+            </div>
+            <div class="col-xs-8 col-sm-10 col-md-10 col-lg-10">
+              <strong class="newsletter-title">{{newsletter.nyhedsbrev_navn}}
+                <span>{{newsletter.nyhedsbrev_tag}}</span>
+              </strong>
+              <small ng-bind-html="newsletter.indhold_safe"></small>
+              <div ng-hide="is_subscribed_to_the_one_newsletter" class="unsubscribe_button text-left">
+                <a class="btn btn-xs btn-default" href="" ng-click="subscribe(newsletter)">Tilmeld</a>
+              </div>
+              <div ng-show="is_subscribed_to_the_one_newsletter" class="unsubscribe_button text-left">
+                <a class="btn btn-xs btn-default" href="" ng-click="open(newsletter)">Afmeld</a>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div ng-show="!looking_at_one_newsletter && newsletters.length === 0">
       <p>Du er ikke tilmeldt nogen nyhedsbreve.</p>
       <p>Du kan tilmelde dig
         <a href="{{$root.my_id}}">her</a>
       </p>
     </div>
-    <div ng-show="filtered_newsletters.length != 0">
+
+    <div ng-show="!looking_at_one_newsletter && newsletters.length > 0">
       <p>Du er tilmeldt følgende nyhedsbreve. Klik på "Afmeld" ud for de nyhedsbreve du ikke ønsker at modtage.</p>
       <ul class="list-brand list-border">
-        <li ng-repeat="newsletter in filtered_newsletters">
+        <li ng-repeat="newsletter in newsletters">
           <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
               <strong class="newsletter-title">{{newsletter.nyhedsbrev_navn}}
