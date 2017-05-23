@@ -747,33 +747,59 @@ function ($scope, $routeParams, $http, $rootScope, $location, UserService, login
     "Jeg har deltaget i en konkurrence, men ønsker ikke at være tilmeldt",
     "Jeg er blevet tilmeldt ved en fejl"];
 
+
+
   function update () {
 
-    var my_newsletters = $http.get("/backend/users/" + UserService.getExternalId());
-    var newsletters = $http.get("/backend/nyhedsbreve?orderBy=nyhedsbrev_navn&orderDirection=asc");
+    var newsletter_request;
+    if ($routeParams.nyhedsbrev_id) {
+      $scope.looking_at_one_newsletter = true;
+      newsletter_request = $http.get("/backend/nyhedsbreve/".concat($routeParams.nyhedsbrev_id));
+    } else {
+      $scope.looking_at_one_newsletter = false;
+      newsletter_request = $http.get("/backend/nyhedsbreve?orderBy=nyhedsbrev_navn&orderDirection=asc");
+    }
 
-    $q.all([newsletters, my_newsletters]).then(function (resolved) {
+    var user_request = $http.get("/backend/users/" + UserService.getExternalId());
 
-      $scope.newsletters = resolved[0].data;
-      $scope.newsletters.forEach(function (newsletter) {
-        if (newsletter.nyhedsbrev_image === null || newsletter.nyhedsbrev_image === '') {
-          newsletter.nyhedsbrev_image = 'http://nlstatic.berlingskemedia.dk/newsletter_logos/' + newsletter.nyhedsbrev_id + '.png';
-        }
-        newsletter.indhold_safe = $sce.trustAsHtml(newsletter.indhold);
-      });
+    $q.all([newsletter_request, user_request]).then(function(resolved) {
 
       $scope.my_subscriptions = resolved[1].data.nyhedsbreve;
       console.log('tilmeldt:', $scope.my_subscriptions);
 
-      $scope.filtered_newsletters = $scope.newsletters.filter(function (newsletter) {
-        if (newsletter.nyhedsbrev_navn.indexOf('_TMP_') > -1) {
-          return false;
-        } else if ($routeParams.nyhedsbrev_id) {
-          return newsletter.nyhedsbrev_id == $routeParams.nyhedsbrev_id;
-        } else {
+      // When $routeParams.nyhedsbrev_id is not set, the result comes as an array
+      if (resolved[0].data instanceof Array) {
+        $scope.newsletters = resolved[0].data.filter(function (newsletter) {
           return $scope.my_subscriptions.indexOf(newsletter.nyhedsbrev_id) !== -1;
+        });
+        $scope.newsletters.forEach(image_and_safe_indhold);
+      } else {
+        $scope.newsletter = resolved[0].data;
+        $scope.is_subscribed_to_the_one_newsletter = $scope.my_subscriptions.indexOf($scope.newsletter.nyhedsbrev_id) > -1;
+        image_and_safe_indhold($scope.newsletter);
+      }
+
+
+      function image_and_safe_indhold(newsletter){
+        if (newsletter.nyhedsbrev_image === null || newsletter.nyhedsbrev_image === '') {
+          newsletter.nyhedsbrev_image = 'http://nlstatic.berlingskemedia.dk/newsletter_logos/' + newsletter.nyhedsbrev_id + '.png';
         }
-      });
+        newsletter.indhold_safe = $sce.trustAsHtml(newsletter.indhold);
+      }
+
+    }, function (err){
+      console.error('err', err);
+      if (err.status === 404){
+        $location.path('tilmeldt/');
+      }
+    });
+  };
+
+  $scope.subscribe = function(newsletter) {
+    $http.post("/backend/users/" + UserService.getExternalId() + "/nyhedsbreve/" + newsletter.nyhedsbrev_id + '?location_id=' + LOCATION_ID , null).then(function (response) {
+      $scope.is_subscribed_to_the_one_newsletter = true;
+    }, function (error) {
+      console.error(error);
     });
 
   }
@@ -791,8 +817,8 @@ function ($scope, $routeParams, $http, $rootScope, $location, UserService, login
     $http.post("/backend/users/" + UserService.getExternalId() + "/nyhedsbreve/delete", payload ).then(function (response) {
 
       // If the user has a direct link, he/she will be redirected to the publishers newsletter page
-      if ($routeParams.nyhedsbrev_id) {
-        $location.path('nyhedsbreve/' + $scope.filtered_newsletters[0].publisher_id);
+      if ($scope.looking_at_one_newsletter && $scope.newsletter) {
+        $location.path('nyhedsbreve/' + $scope.newsletter.publisher_id);
       } else {
         update();
       }
