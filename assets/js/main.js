@@ -877,13 +877,13 @@ function ($scope, $routeParams, $http, $rootScope, $location, UserService, login
     }
   });
 }])
-.controller('confirmController', ['$scope', '$location', '$http', 'UserService',
-function ($scope, $location, $http, UserService) {
+.controller('confirmController', ['$scope', '$location', '$http', 'UserService', 'LOCATION_ID',
+function ($scope, $location, $http, UserService, LOCATION_ID) {
 
   var search = $location.search();
 
   if (!UserService.isLoggedIn() && search.confirm_key !== undefined) {
-    $http.post("/backend/doubleopt/" + search.confirm_key + "/confirm?location_id = " + LOCATION_ID).then(function (response) {
+    $http.post("/backend/doubleopt/" + search.confirm_key + "/confirm?location_id=" + LOCATION_ID).then(function (response) {
       var user = response.data;
       UserService.setExternalId(user.ekstern_id);
       $location.search('success', true);
