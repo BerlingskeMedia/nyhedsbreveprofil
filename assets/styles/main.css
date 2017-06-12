@@ -7197,7 +7197,8 @@ input[type="button"].btn-block {
   margin: 5px auto;
 }
 #toppic {
-  height: 70px;
+  max-height: 70px;
+  max-width: 500px;
   margin-top: 10px;
 }
 @media (max-width: 768px) {
@@ -7331,6 +7332,7 @@ ul.letter-list li {
 }
 .main-nav {
   text-align: right;
+  min-height: 100px;
 }
 .main-nav ul {
   margin: 0;
