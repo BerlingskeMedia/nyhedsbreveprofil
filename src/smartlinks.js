@@ -18,6 +18,12 @@ module.exports.register = function (server, options, next) {
     handler: backend.proxy
   });
 
+  server.route({
+    method: 'OPTIONS',
+    path: '/',
+    handler: backend.proxy
+  });
+
   next();
 };
 
