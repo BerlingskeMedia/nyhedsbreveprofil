@@ -126,30 +126,31 @@ var newsletterApp = angular.module('newsletter', [
     }
     topPicElem = angular.element(document.querySelector('#toppic'));
     topPicElem.prop('src', logo);
-    topPicElem.parent().prop('href', newPublisher.publisher_url || '/');
+    // topPicElem.parent().prop('href', newPublisher.publisher_url || '/');
 
   }
 
   function toggleSubscription(doEnable, subscriptionObject) {
     var deferred = $q.defer(),
-      httpRequest,
       url = '/backend/users/' + getExternalId() + '/nyhedsbreve/' +
           subscriptionObject.nyhedsbrev_id;
-    if (isLoggedIn()) {
-      httpRequest = doEnable ? $http.post : $http.delete;
-      httpRequest(url + "?location_id=" + LOCATION_ID).then(function (response) {
+
+    if (isLoggedIn() && doEnable) {
+      $http.post(url + "?location_id=" + LOCATION_ID).then(function (response) {
         deferred.resolve(response);
       }, function (err) {
         deferred.reject(err);
       });
-    } else {
+    } else if (!isLoggedIn()) {
       if (doEnable) {
         addToBasket(subscriptionObject);
       } else {
         removeFromBasket(subscriptionObject.nyhedsbrev_id);
       }
+      deferred.resolve(true);
+    } else {
+      deferred.resolve(false);
     }
-    deferred.resolve(true);
     return deferred.promise;
   }
 
@@ -389,6 +390,8 @@ function ($scope, $rootScope, $routeParams, $http, $q, $location, $sce, UserServ
     $scope.user = UserService.getBasket();
   }
 
+  $scope.h1_prefix = 'Alle ';
+
   var getPublishers = PublisherService.fetchPublishers().then(function () {
     if ($routeParams.publisher) {
       var publisher_exists = PublisherService.getPublishers().some(function (publisher) {
@@ -449,11 +452,21 @@ function ($scope, $rootScope, $routeParams, $http, $q, $location, $sce, UserServ
   };
 
   $scope.compareNewsletters = function (letterOne, letterTwo) {
-    return letterOne.nyhedsbrev_id === letterTwo.nyhedsbrev_id;
+    if (typeof letterOne === 'object') {
+      return letterOne.nyhedsbrev_id === letterTwo.nyhedsbrev_id;
+    } else if (typeof letterOne === 'number') {
+      return letterOne === letterTwo.nyhedsbrev_id;
+    } else {
+    }
+    return false;
   };
 
   $scope.toggleSubscription = function (checkbox, newsletterId, newsletterName,
       publisherId) {
+
+    if ($scope.loggedIn && !checkbox.checked){
+      return;
+    }
 
     UserService.toggleSubscription(checkbox.checked, {
       nyhedsbrev_id: newsletterId,
@@ -465,9 +478,11 @@ function ($scope, $rootScope, $routeParams, $http, $q, $location, $sce, UserServ
         checkbox.$parent.created = checkbox.checked;
         checkbox.$parent.deleted = !checkbox.checked;
       }
-      UserService.updateLogo(PublisherService.getById(publisherId));
+      if (!$scope.loggedIn) {
+        UserService.updateLogo(PublisherService.getById(publisherId));
+      }
     }, function (err) {
-      console.log(err);
+      console.error(err);
     });
   };
 
