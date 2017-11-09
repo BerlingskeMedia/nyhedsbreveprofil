@@ -22,7 +22,7 @@ module.exports = React.createClass({
   sendCampaignSignup: function() {
 
     var payload = {
-      kampagne_id: 3712,
+      kampagne_id: 3713,
       ekstern_id: this.props.data.ekstern_id
     };
 
