@@ -63,12 +63,12 @@ module.exports = React.createClass({
 
     this.state.new_signups.forEach(function(id) {
       this.call_backend('POST', id)
-      .success(successCallback);
+      .done(successCallback);
     }.bind(this));
 
     this.state.new_signouts.forEach(function(id) {
       this.call_backend('DELETE', id)
-      .success(successCallback);
+      .done(successCallback);
     }.bind(this));
   },
   call_backend: function(type, id) {

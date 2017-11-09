@@ -128,22 +128,22 @@ module.exports = React.createClass({
 
     this.state.new_signups.forEach(function(id) {
       this.call_backend('POST', 'nyhedsbreve', id)
-      .success(successCallback);
+      .done(successCallback);
     }.bind(this));
 
     this.state.new_signouts.forEach(function(id) {
       this.call_backend('DELETE', 'nyhedsbreve', id)
-      .success(successCallback);
+      .done(successCallback);
     }.bind(this));
 
     new_business_signups.forEach(function(id) {
       this.call_backend('POST', 'interesser', id)
-      .success(successCallback);
+      .done(successCallback);
     }.bind(this));
 
     new_business_signouts.forEach(function(id) {
       this.call_backend('DELETE', 'interesser', id)
-      .success(successCallback);
+      .done(successCallback);
     }.bind(this));
   },
   call_backend: function(type, domain, id) {

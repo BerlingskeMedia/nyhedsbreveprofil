@@ -179,7 +179,7 @@ var Opdateringskampagne = React.createClass({
         });
       }
 
-      this.loadUserData().success(function() {
+      this.loadUserData().done(function() {
         var step = this.state.step;
         if (step < this.state.steps.length) {
           this.setState({step: ++step});
@@ -204,7 +204,7 @@ var Opdateringskampagne = React.createClass({
         return;
       }
 
-      this.loadUserData().success(function() {
+      this.loadUserData().done(function() {
         var step = this.state.step;
         if (step > 0) {
           this.setState({step: --step});
