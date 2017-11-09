@@ -12,7 +12,9 @@ module.exports = React.createClass({
 
     return (
       <div className="sidebar">
-        <div className="logo" />
+        <div className="logo">
+          <img src="/opdatering/assets/bem-logo.svg" alt="BEM logo" />
+        </div>
         <div className="items">
           {labels}
         </div>

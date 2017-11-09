@@ -39,6 +39,7 @@ html, div, h1, h2, h3, h4 {
 }
 
 .sidebar {
+  width: 240px;
   position: fixed;
   left: 0px;
   top: 0px;
@@ -57,10 +58,13 @@ html, div, h1, h2, h3, h4 {
 }
 
 .sidebar .logo {
-  background: url(/opdatering/assets/bem-logo-no-fold.svg) 0 50% no-repeat;
+  /*background: url(/opdatering/assets/bem-logo-no-fold.svg) 0 50% no-repeat;*/
   display: block;
-  height: 100px;
-  width: 240px;
+  height: 30px;
+}
+
+.sidebar .logo img {
+  width: 200px;
 }
 
 .sidebar .items {
