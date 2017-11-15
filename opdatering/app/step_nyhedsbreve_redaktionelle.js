@@ -98,7 +98,7 @@ module.exports = React.createClass({
   call_backend: function(type, id) {
     return $.ajax({
       type: type,
-      url: '/backend/users/'.concat(this.props.data.ekstern_id, '/nyhedsbreve/', id, '?location_id=2077'),
+      url: '/backend/users/'.concat(this.props.data.ekstern_id, '/nyhedsbreve/', id, '?location_id=2635'),
       dataType: 'json',
       error: function(xhr, status, err) {
         console.error(status, err.toString());
