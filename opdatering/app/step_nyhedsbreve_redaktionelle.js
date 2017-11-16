@@ -108,9 +108,10 @@ module.exports = React.createClass({
   render: function() {
     var aok_nyhedsbreve = [
           { id: 17, navn: 'AOK Ugen og Weekend', description: '', publisher: 3,
-            logo_src: 'https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/opdateringskampagne/aok.png'},
-          { id: 282, navn: 'AOK Breaking', description: '', publisher: 3,
-            logo_src: 'https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/opdateringskampagne/aok_breaking.png'}],
+            logo_src: 'https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/opdateringskampagne/aok.png'}
+          // { id: 282, navn: 'AOK Breaking', description: '', publisher: 3,
+          //   logo_src: 'https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/opdateringskampagne/aok_breaking.png'}
+        ],
         berlingske_nyhedsbreve = [
           { id: 1, navn: 'Berlingske Morgen', publisher: 1,
             logo_src: 'https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/opdateringskampagne/berlingske_morgen.jpg'},
@@ -121,7 +122,8 @@ module.exports = React.createClass({
           { id: 248, navn: 'Berlingske Aften', publisher: 1,
             logo_src: 'https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/opdateringskampagne/berlingske_aften.jpg'},
           { id: 3, navn: 'Berlingske Weekend', publisher: 1,
-            logo_src: 'https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/opdateringskampagne/berlingske_weekend.jpg'}],
+            logo_src: 'https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/opdateringskampagne/berlingske_weekend.jpg'}
+        ],
         bt_nyhedsbreve = [
           { id: 24, navn: 'BT Morgen', publisher: 4, label_style: { marginTop: '16px', marginBottom: '16px'},
             logo_src: 'https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/opdateringskampagne/bt_morgen.png'},
@@ -130,14 +132,16 @@ module.exports = React.createClass({
           { id: 26, navn: 'BT Breaking News', publisher: 4, label_style: { marginTop: '16px', marginBottom: '16px'},
             logo_src: 'https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/opdateringskampagne/bt_breaking.png'},
           { id: 27, navn: 'BT Sporten', publisher: 4, label_style: { marginTop: '16px', marginBottom: '16px'},
-            logo_src: 'https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/opdateringskampagne/bt_sport.png'}],
+            logo_src: 'https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/opdateringskampagne/bt_sport.png'}
+        ],
         business_nyhedsbreve = [
           { id: 9, navn: 'Berlingske Business Morgen', publisher: 2,
             logo_src: 'https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/opdateringskampagne/business_morgen.jpg'},
           { id: 10, navn: 'Berlingske Business Eftermiddag', publisher: 2,
             logo_src: 'https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/opdateringskampagne/business_eftermiddag.jpg'},
           { id: 13, navn: 'Berlingske Business Breaking News', publisher: 2,
-            logo_src: 'https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/opdateringskampagne/business_breaking.jpg'}];
+            logo_src: 'https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/opdateringskampagne/business_breaking.jpg'}
+        ];
 
     var nyhedsbreve_to_be_shown = [].concat(berlingske_nyhedsbreve, bt_nyhedsbreve, business_nyhedsbreve);
 
