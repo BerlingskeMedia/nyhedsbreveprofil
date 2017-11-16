@@ -6,7 +6,9 @@ var Hapi = require('hapi'),
     profil = require('./profil'),
     smartlinks = require('./smartlinks'),
     opdatering = require('./opdatering'),
-    inert = require('inert');
+    inert = require('inert'),
+    good = require('good'),
+    goodConsole = require('good-console');
 
 var server = new Hapi.Server({
   connections: {
@@ -15,6 +17,18 @@ var server = new Hapi.Server({
     }
   }
 });
+
+var goodOpts = {
+  reporters: {
+    cliReporter: [{
+      module: 'good-squeeze',
+      name: 'Squeeze',
+      args: [{ log: '*', response: '*' }]
+    }, {
+      module: 'good-console'
+    }, 'stdout']
+  }
+};
 
 server.connection({ port: process.env.PORT ? process.env.PORT : 8000 });
 
@@ -26,6 +40,7 @@ server.route({
   }
 });
 
+server.register({register: good, options: goodOpts}, cb);
 server.register(inert, cb);
 server.register(profil, cb);
 server.register(opdatering, { routes: { prefix: '/opdatering' } }, cb);
