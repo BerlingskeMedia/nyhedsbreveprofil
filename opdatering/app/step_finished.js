@@ -70,7 +70,7 @@ module.exports = React.createClass({
         <h2>Tak for din hjælp</h2>
         <h3 className="stepsubtitle">
           Du er nu med i konkurrencen om de mange præmier inklusiv hovedpræmien, en iPad til en værdi af 4.199 kr.
-          Vinderne offentliggøres torsdag d. 4. januar 2018 og de heldige vindere får direkte besked.
+          Vinderne offentliggøres torsdag d. 11. januar 2018 og de heldige vindere får direkte besked.
         </h3>
         {showOffers === true ? <NewspaperOffers showKidsNews={showKidsNews} abo={this.props.abo} /> : null}
       </div>
