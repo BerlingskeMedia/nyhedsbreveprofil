@@ -88,14 +88,14 @@ var NewspaperOffers = React.createClass({
         { this.props.abo === null ?
           <NewspaperOffer
             name="Berlingske"
-            logo_src="https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/opdateringskampagne/newspapers/400px_Berlingske_avis.png"
+            logo_src="https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/opdateringskampagne/62874_Berl_600px_mediebillede_iPhone_1017.png"
             click_href="https://www.b.dk/berlingske-abonnementer?flow=bdk_print_checkout&product=Komplet&offerId=BMSUBU12P4&utm_source=own_links&utm_medium=bem&utm_content=link_other&utm_campaign=opdateringskampagne2017&ns_fee=AL-151222-CP-WKLEDIT1WK"
             description="Berlingske kæmper hver dag for at levere journalistik, der gør en forskel og flytter noget." />
           : null }
         { this.props.abo === null ?
           <NewspaperOffer
             name="BT"
-            logo_src="https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/opdateringskampagne/newspapers/400px_BT_avis.png"
+            logo_src="https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/opdateringskampagne/63328_708x492px_BT_Komplet_1117.png"
             click_href="https://bt.kundeunivers.dk/koeb-abonnement/dine-oplysninger?offer=BTSUBU12P4&utm_source=own_links&utm_medium=bem&utm_term=AL-151222-CP-WKLEDIT1WK&utm_content=link_other&utm_campaign=Opdateringskampagne2017&ns_fee=AL-151222-CP-WKLEDIT1WK"
             description="BT skaber dagsordenen og formidler væsentlig og vedkommende journalistik på en underholdende måde." />
           : null }
