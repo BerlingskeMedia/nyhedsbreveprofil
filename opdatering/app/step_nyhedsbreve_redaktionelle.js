@@ -126,13 +126,13 @@ module.exports = React.createClass({
         ],
         bt_nyhedsbreve = [
           { id: 24, navn: 'BT Morgen', publisher: 4, label_style: { marginTop: '16px', marginBottom: '16px'},
-            logo_src: 'https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/opdateringskampagne/bt_morgen.png'},
+            logo_src: 'https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/opdateringskampagne/63361_530x80px_Morgen_1117.jpg'},
           { id: 25, navn: 'BT Eftermiddag', publisher: 4, label_style: { marginTop: '16px', marginBottom: '16px'},
-            logo_src: 'https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/opdateringskampagne/bt_eftermiddag.png'},
+            logo_src: 'https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/opdateringskampagne/63361_530x80px_Eftermiddag_1117.jpg'},
           { id: 26, navn: 'BT Breaking News', publisher: 4, label_style: { marginTop: '16px', marginBottom: '16px'},
-            logo_src: 'https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/opdateringskampagne/bt_breaking.png'},
+            logo_src: 'https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/opdateringskampagne/63361_530x80px_BreakingNews_1117.jpg'},
           { id: 27, navn: 'BT Sporten', publisher: 4, label_style: { marginTop: '16px', marginBottom: '16px'},
-            logo_src: 'https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/opdateringskampagne/bt_sport.png'}
+            logo_src: 'https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/opdateringskampagne/63361_530x80px_Sport_1117.jpg'}
         ],
         business_nyhedsbreve = [
           { id: 9, navn: 'Berlingske Business Morgen', publisher: 2,

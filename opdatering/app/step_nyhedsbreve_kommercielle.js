@@ -180,7 +180,7 @@ module.exports = React.createClass({
             id: 233,
             navn: 'BT Shop',
             description: 'I BT SHOP får du særtilbud på rejser, teater, events- og musikoplevelser, vin og mange andre lækre produkter.',
-            logo_src: 'https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/opdateringskampagne/BT_shop.png',
+            logo_src: 'https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/opdateringskampagne/63361_530x80px_Shop_1117.jpg',
             publisher: 4},
           {
             id: 241,
