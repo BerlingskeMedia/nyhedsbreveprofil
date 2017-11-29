@@ -58,7 +58,7 @@ function updateUser (request, reply) {
     // a) not from our site and
     // b) not from opdateringskampagnen
     // TODO: This should be done using cookies or OAuth to be secure
-    if (request.headers.referer.indexOf('profil.berlingskemedia.dk') > -1 && [2059, 2077, 2635].indexOf(request.payload.location_id) > 0) {
+    if (request.headers.referer.indexOf('profil.berlingskemedia.dk') > -1 && [2059, 2077, 2635].indexOf(request.payload.location_id) > -1) {
       reply(response);
     } else {
       proxy({
