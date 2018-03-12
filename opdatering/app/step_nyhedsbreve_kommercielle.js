@@ -170,10 +170,10 @@ module.exports = React.createClass({
           {
             id: 844,
             navn: 'The Business Target',
-            description: 'Med Berlingske Medias B2B e-mail service er du sikker på at modtage relevante tilbud samt invitationer til spændende business events.',
+            description: 'Modtag invitationer til business events samt skræddersyede business tilbud med The Business Target, der er Berlingske Medias B2B e-mail service.',
             permissiontext: <TheBusinessTargetPermText />,
             interestsSelection: <TheBusinessTargetInterests toggle={this.setBusinessTargetInteresserSignUps} data={this.props.data} completed={this.setBusinessTargetIntestSelectionCompleted} hasError={this.state.business_target_interests_error} />,
-            logo_src: 'https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/opdateringskampagne/TBT.png',
+            logo_src: 'https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/opdateringskampagne/TBTBanner_530x80.jpg',
             publisher: 51}],
         shop_nyhedsbreve = [
           {
