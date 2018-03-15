@@ -3,10 +3,10 @@ var gulp = require('gulp');
   less = require('gulp-less'),
   path = require('path');
 
-gulp.task('default', ['less:watch', 'server', 'start_webpack']);
+gulp.task('default', ['less:watch', 'server', 'start_opdatering', 'start_mine_data']);
 gulp.task('build', ['less']);
 
-var node, webpack;
+var node, opdateringWebpack, mineDataWebpack;
 
 gulp.task('start_server', function() {
   if (node) {
@@ -31,9 +31,16 @@ gulp.task('less:watch', function () {
   gulp.watch('./assets/less/**/*.less', ['less']);
 });
 
-gulp.task('start_webpack', function() {
-  if (webpack) {
-    webpack.kill();
+gulp.task('start_opdatering', function() {
+  if (opdateringWebpack) {
+    opdateringWebpack.kill();
   }
-  webpack = spawn('webpack', ['--watch'], {stdio: 'inherit'});
+  opdateringWebpack = spawn('webpack', ['--watch', '--config', 'webpack.opdatering.config.js'], {stdio: 'inherit'});
+});
+
+gulp.task('start_mine_data', function() {
+  if (mineDataWebpack) {
+    mineDataWebpack.kill();
+  }
+  mineDataWebpack = spawn('webpack', ['--watch', '--config', 'webpack.mine-data.config.js'], {stdio: 'inherit'});
 });

@@ -1,14 +1,15 @@
 /*jshint node: true */
 'use strict';
 
-var Hapi = require('hapi'),
-    backend = require('./backend'),
-    profil = require('./profil'),
-    smartlinks = require('./smartlinks'),
-    opdatering = require('./opdatering'),
-    inert = require('inert'),
-    good = require('good'),
-    goodConsole = require('good-console');
+const Hapi = require('hapi');
+const backend = require('./backend');
+const profil = require('./profil');
+const smartlinks = require('./smartlinks');
+const opdatering = require('./opdatering');
+const mineData = require('./mine-data');
+const inert = require('inert');
+const good = require('good');
+const goodConsole = require('good-console');
 
 var server = new Hapi.Server({
   connections: {
@@ -44,6 +45,7 @@ server.register({register: good, options: goodOpts}, cb);
 server.register(inert, cb);
 server.register(profil, cb);
 server.register(opdatering, { routes: { prefix: '/opdatering' } }, cb);
+server.register(mineData, { routes: { prefix: '/mine-data' } }, cb);
 server.register(backend, { routes: { prefix: '/backend' } }, cb);
 server.register(smartlinks, { routes: { prefix: '/smartlinks' } }, cb);
 
