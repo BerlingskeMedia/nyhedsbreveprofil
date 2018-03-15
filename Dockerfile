@@ -21,7 +21,7 @@ COPY ./assets /app/assets
 COPY ./bower_components /app/bower_components
 COPY ./client /app/client
 COPY ./node_modules /app/node_modules
-COPY ./src /app/src
+COPY ./server /app/server
 COPY ./opdatering /app/opdatering
 COPY ./mine-data /app/mine-data
 
@@ -29,4 +29,4 @@ COPY ./mine-data /app/mine-data
 EXPOSE  8000
 
 # When starting a container with our image, this command will be run.
-CMD ["node", "src/server.js"]
+CMD ["node", "server/index.js"]
