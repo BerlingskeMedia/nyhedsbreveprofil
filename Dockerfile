@@ -19,7 +19,7 @@ WORKDIR /app
 # Copying the code into image. Be aware no config files are including.
 COPY ./assets /app/assets
 COPY ./bower_components /app/bower_components
-COPY ./client /app/client
+COPY ./nyhedsbreve /app/nyhedsbreve
 COPY ./node_modules /app/node_modules
 COPY ./server /app/server
 COPY ./opdatering /app/opdatering
