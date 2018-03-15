@@ -3,7 +3,7 @@
 
 const Hapi = require('hapi');
 const backend = require('./backend');
-const profil = require('./profil');
+const nyhedsbreve = require('./nyhedsbreve');
 const smartlinks = require('./smartlinks');
 const opdatering = require('./opdatering');
 const mineData = require('./mine-data');
@@ -43,7 +43,7 @@ server.route({
 
 server.register({register: good, options: goodOpts}, cb);
 server.register(inert, cb);
-server.register(profil, cb);
+server.register(nyhedsbreve, cb);
 server.register(opdatering, { routes: { prefix: '/opdatering' } }, cb);
 server.register(mineData, { routes: { prefix: '/mine-data' } }, cb);
 server.register(backend, { routes: { prefix: '/backend' } }, cb);

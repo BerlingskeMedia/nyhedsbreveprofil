@@ -18,7 +18,7 @@ module.exports.register = function (server, options, next) {
     path: '/assets/{param*}',
     handler: {
       directory: {
-        path: 'assets'
+        path: 'nyhedsbreve/assets'
       }
     }
   });
@@ -27,7 +27,7 @@ module.exports.register = function (server, options, next) {
     method: 'get',
     path: '/{param*}',
     handler: {
-      file: 'client/index.html'
+      file: 'nyhedsbreve/index.html'
     }
   });
 
@@ -35,6 +35,6 @@ module.exports.register = function (server, options, next) {
 };
 
 module.exports.register.attributes = {
-  name: 'profil',
+  name: 'nyhedsbreve',
   version: '1.0.0'
 };
