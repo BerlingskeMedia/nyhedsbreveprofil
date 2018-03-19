@@ -1,7 +1,12 @@
-var React = require('react');
+const React = require('react');
 
-module.exports = React.createClass({
-  render: function() {
+module.exports = class extends React.Component {
+  
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
     return (
       <div className="mdbCheckbox mdbGreenCheckbox">
         <div className="checkbox">
@@ -21,4 +26,4 @@ module.exports = React.createClass({
       </div>
     );
   }
-});
+}

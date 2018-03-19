@@ -1,25 +1,33 @@
-var $ = require('jquery');
-var React = require('react');
-var NewsletterList = require('./checkbox_list');
+const $ = require('jquery');
+const React = require('react');
+const NewsletterList = require('./checkbox_list');
 
-module.exports = React.createClass({
-  getInitialState: function() {
-    return {
+module.exports = class extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.sortByAbonnement = this.sortByAbonnement.bind(this);
+    this.toggleNyhedsbrev = this.toggleNyhedsbrev.bind(this);
+    this.completeStepFunc = this.completeStepFunc.bind(this);
+    this.call_backend = this.call_backend.bind(this);
+    this.state = {
       new_signups: [],
       new_signouts: [],
       nyhedsbreve_already: [],
       nyhedsbreve_not_yet: []
     };
-  },
-  componentDidMount: function() {
+  }
+
+  componentDidMount() {
 
     if (window.location.host.indexOf('profil.berlingskemedia.dk') > -1) {
       ga('set', 'page', 'opdateringskampagne/step_nyhedsbreve_redaktionelle');
       ga('send', 'pageview');
     }
 
-  },
-  sortByAbonnement: function (nyhedsbrev_a, nyhedsbrev_b) {
+  }
+
+  sortByAbonnement(nyhedsbrev_a, nyhedsbrev_b) {
     if (nyhedsbrev_a.publisher === nyhedsbrev_b.publisher) {
         return 0;
     }
@@ -45,8 +53,9 @@ module.exports = React.createClass({
         return publisherOrder([1,2,4,3]);
         break;
     }
-  },
-  toggleNyhedsbrev: function (subscribe, nyhedsbrev) {
+  }
+
+  toggleNyhedsbrev(subscribe, nyhedsbrev) {
     var new_signups = this.state.new_signups;
     var new_signouts = this.state.new_signouts;
 
@@ -67,45 +76,55 @@ module.exports = React.createClass({
     }
     this.setState({new_signups: new_signups});
     this.setState({new_signouts: new_signouts});
-  },
-  completeStepFunc: function(callback) {
+  }
+
+  completeStepFunc() {
+
+    var dfd = $.Deferred();
 
     var count = this.state.new_signups.length + this.state.new_signouts.length,
         done = 0;
 
     if (count === 0) {
-      return callback();
+
+      dfd.resolve();
+
+    } else {
+
+      var successCallback = (function(done, count) {
+        return function() {
+          if (++done === count) {
+            dfd.resolve();
+          }
+        };
+      }(done, count));
+
+      this.state.new_signups.forEach(function(id) {
+        this.call_backend('POST', id)
+        .done(successCallback);
+      }.bind(this));
+
+      this.state.new_signouts.forEach(function(id) {
+        this.call_backend('DELETE', id)
+        .done(successCallback);
+      }.bind(this));
     }
 
-    var successCallback = (function(done, count, callback) {
-      return function() {
-        if (++done === count) {
-          callback();
-        }
-      };
-    }(done, count, callback));
+    return dfd.promise();
+  }
 
-    this.state.new_signups.forEach(function(id) {
-      this.call_backend('POST', id)
-      .done(successCallback);
-    }.bind(this));
-
-    this.state.new_signouts.forEach(function(id) {
-      this.call_backend('DELETE', id)
-      .done(successCallback);
-    }.bind(this));
-  },
-  call_backend: function(type, id) {
+  call_backend(type, id) {
     return $.ajax({
       type: type,
       url: '/backend/users/'.concat(this.props.data.ekstern_id, '/nyhedsbreve/', id, '?location_id=2635'),
-      dataType: 'json',
-      error: function(xhr, status, err) {
-        console.error(status, err.toString());
-      }.bind(this)
+      dataType: 'json'
+    })
+    .fail((xhr, status, err) => {
+      console.error(status, err.toString());
     });
-  },
-  render: function() {
+  }
+
+  render() {
     var aok_nyhedsbreve = [
           { id: 17, navn: 'AOK Ugen og Weekend', description: '', publisher: 3,
             logo_src: 'https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/opdateringskampagne/aok.png'}
@@ -186,4 +205,4 @@ module.exports = React.createClass({
       </div>
     );
   }
-});
+}

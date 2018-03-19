@@ -1,13 +1,20 @@
-var $ = require('jquery');
-var React = require('react');
-var ReactDOM = require('react-dom');
-var InteresseList = require('./checkbox_list');
+const $ = require('jquery');
+const React = require('react');
+const ReactDOM = require('react-dom');
+const InteresseList = require('./checkbox_list');
 
-module.exports = React.createClass({
-  getInitialState: function() {
-    return {showOffers: false};
-  },
-  componentDidMount: function() {
+module.exports = class extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.sendCampaignSignup = this.sendCampaignSignup.bind(this);
+    this.sendReceiptEmail = this.sendReceiptEmail.bind(this);
+    this.state = {
+      showOffers: false
+    };
+  }
+
+  componentDidMount() {
 
     if (window.location.host.indexOf('profil.berlingskemedia.dk') > -1) {
       ga('set', 'page', 'opdateringskampagne/step_finished');
@@ -18,8 +25,9 @@ module.exports = React.createClass({
     this.sendReceiptEmail();
 
     ReactDOM.findDOMNode(this).scrollIntoView();
-  },
-  sendCampaignSignup: function() {
+  }
+
+  sendCampaignSignup() {
 
     var payload = {
       kampagne_id: 3713,
@@ -30,27 +38,29 @@ module.exports = React.createClass({
       type: 'POST',
       url: '/backend/kampagner/kampagnelinie',
       data: JSON.stringify(payload),
-      contentType: "application/json; charset=utf-8",
-      error: function(xhr, status, err) {
-        console.error(this.props.url, status, err.toString());
-      }.bind(this)
+      contentType: "application/json; charset=utf-8"
+    })
+    .fail((xhr, status, err) => {
+      console.error(this.props.url, status, err.toString());
     });
-  },
-  sendReceiptEmail: function() {
+  }
+
+  sendReceiptEmail() {
     return $.ajax({
       type: 'POST',
       url: '/opdatering/finished',
       data: JSON.stringify(this.props.data),
-      contentType: "application/json; charset=utf-8",
-      success: function(xhr, status, err) {
-        console.log('Email sent', xhr);
-      },
-      error: function(xhr, status, err) {
-        console.error(this.props.url, status, err.toString());
-      }.bind(this)
+      contentType: "application/json; charset=utf-8"
+    })
+    .done(data => {
+      console.log('Email sent', data);
+    })
+    .fail((xhr, status, err) => {
+      console.error(this.props.url, status, err.toString());
     });
-  },
-  render: function() {
+  }
+
+  render() {
 
     var showOffers = this.props.data.permissions.some(function(permission_id) {
       return [66,108,283,300].indexOf(permission_id) > -1;
@@ -79,10 +89,15 @@ module.exports = React.createClass({
       </div>
     );
   }
-});
+}
 
-var NewspaperOffers = React.createClass({
-  render: function() {
+class NewspaperOffers extends React.Component {
+
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
     return (
       <div className="newspaperOffers">
         { this.props.abo === null ?
@@ -116,10 +131,15 @@ var NewspaperOffers = React.createClass({
       </div>
     );
   }
-});
+}
 
-var NewspaperOffer = React.createClass({
-  render: function() {
+class NewspaperOffer extends React.Component {
+
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
     return (
       <div className="newspaperOffer">
         <a className="nodecor" target="_blank" href={this.props.click_href}>
@@ -135,4 +155,4 @@ var NewspaperOffer = React.createClass({
       </div>
     );
   }
-});
+}

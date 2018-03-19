@@ -1,7 +1,12 @@
-var React = require('react');
+const React = require('react');
 
-module.exports = React.createClass({
-  render: function() {
+module.exports = class extends React.Component {
+
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
     var label = '';
 
     if (this.props.steps && this.props.steps.length > 0 && this.props.steps[this.props.step].props) {
@@ -25,4 +30,4 @@ module.exports = React.createClass({
       </div>
     );
   }
-});
+}

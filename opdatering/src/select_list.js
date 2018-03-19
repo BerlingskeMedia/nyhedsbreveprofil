@@ -1,7 +1,12 @@
-var React = require('react');
+const React = require('react');
 
-module.exports = React.createClass({
-  render: function() {
+module.exports = class extends React.Component {
+
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
 
     var items = this.props.data.map(function(item) {
       return (
@@ -15,26 +20,32 @@ module.exports = React.createClass({
       </div>
     );
   }
-});
+}
 
-var Select = React.createClass({
-  getInitialState: function() {
-    return {
+class Select extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.onChange = this.onChange.bind(this);
+    this.state = {
       value: ''
     };
-  },
-  componentWillReceiveProps: function() {
+  }
+
+  componentWillReceiveProps() {
     if (this.props.data.initialValue && this.state.value === '') {
       this.setState({value: this.props.data.initialValue});
     }
-  },
-  onChange: function(e) {
+  }
+
+  onChange(e) {
     var v = e.target.value;
     this.setState({value: v}, function() {
       this.props.toggle(v, this.props.data.id);
     }.bind(this));
-  },
-  render: function() {
+  }
+
+  render() {
     var classes = "form-group".concat(this.props.data.hasError ? ' has-error' : '');
 
     var options = this.props.data.options.map(function (option, index) {
@@ -60,4 +71,4 @@ var Select = React.createClass({
       </div>
     );
   }
-});
+}

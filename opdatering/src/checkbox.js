@@ -1,16 +1,25 @@
-var React = require('react');
+const React = require('react');
 
-module.exports = React.createClass({
-  getInitialState: function() {
-    return {checked: this.props.data.preselect ? true : false};
-  },
-  onChange: function() {
+module.exports = class extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.onChange = this.onChange.bind(this);
+    this.state = {
+      checked: this.props.data.preselect ? true : false
+    };
+  }
+
+
+  onChange() {
     this.setState({checked: !this.state.checked}, function (previousState, currentProps) {
       // Sending info to parent that the user has toggled the subscription
       this.props.toggle(this.state.checked, this.props.data);
     }.bind(this));
-  },
-  render: function() {
+  }
+
+  render() {
+
     var majorClassName = this.props.data.logo_src !== undefined ? 'mdbCheckbox mdbLogoCheckbox' : 'mdbCheckbox mdbGreenCheckbox';
 
     return (
@@ -35,10 +44,15 @@ module.exports = React.createClass({
       </div>
     );
   }
-});
+}
 
-var LogoCheckbox = React.createClass({
-  render: function() {
+class LogoCheckbox extends React.Component {
+
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
 
     var logo_style = Object.assign({width: '100%', height: '100%', border: '#C3C3C3 1px solid'}, this.props.logo_style);
 
@@ -50,7 +64,7 @@ var LogoCheckbox = React.createClass({
       </div>
     );
   }
-});
+}
 
 
 if (typeof Object.assign != 'function') {

@@ -1,27 +1,31 @@
-var $ = require('jquery');
-var React = require('react');
-var ReactDOM = require('react-dom');
+const $ = require('jquery');
+const React = require('react');
+const ReactDOM = require('react-dom');
 
 var CheckboxList = require('./checkbox_list');
 
-module.exports = React.createClass({
-  getInitialState: function() {
-    return {
+module.exports = class extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.toggleInteresse = this.toggleInteresse.bind(this);
+    this.completeStepFunc = this.completeStepFunc.bind(this);
+    this.state = {
       new_signups: [],
       new_signouts: [],
       interesser_already: [],
       interesser_not_yet: []
     };
-  },
-  componentDidMount: function() {
+  }
 
+  componentDidMount() {
     if (window.location.host.indexOf('profil.berlingskemedia.dk') > -1) {
       ga('set', 'page', 'opdateringskampagne/step_interesser');
       ga('send', 'pageview');
     }
+  }
 
-  },
-  toggleInteresse: function (subscribe, interesse) {
+  toggleInteresse (subscribe, interesse) {
     var new_signups = this.state.new_signups;
     var new_signouts = this.state.new_signouts;
 
@@ -43,45 +47,55 @@ module.exports = React.createClass({
 
     this.setState({new_signups: new_signups});
     this.setState({new_signouts: new_signouts});
-  },
-  completeStepFunc: function(callback) {
+  }
+
+  completeStepFunc() {
+
+    var dfd = $.Deferred();
 
     var count = this.state.new_signups.length + this.state.new_signouts.length,
         done = 0;
 
     if (count === 0) {
-      return callback();
+
+      dfd.resolve();
+
+    } else {
+
+      var successCallback = (function(done, count) {
+        return function() {
+          if (++done === count) {
+            dfd.resolve();
+          }
+        };
+      }(done, count));
+
+      this.state.new_signups.forEach(function(id) {
+        this.call_backend('POST', id)
+        .done(successCallback);
+      }.bind(this));
+
+      this.state.new_signouts.forEach(function(id) {
+        this.call_backend('DELETE', id)
+        .done(successCallback);
+      }.bind(this));
     }
 
-    var successCallback = (function(done, count, callback) {
-      return function() {
-        if (++done === count) {
-          callback();
-        }
-      };
-    }(done, count, callback));
+    return dfd.promise();
+  }
 
-    this.state.new_signups.forEach(function(id) {
-      this.call_backend('POST', id)
-      .done(successCallback);
-    }.bind(this));
-
-    this.state.new_signouts.forEach(function(id) {
-      this.call_backend('DELETE', id)
-      .done(successCallback);
-    }.bind(this));
-  },
-  call_backend: function(type, id) {
+  call_backend(type, id) {
     return $.ajax({
       type: type,
       url: '/backend/users/'.concat(this.props.data.ekstern_id, '/interesser/', id, '?location_id=2635'),
-      dataType: 'json',
-      error: function(xhr, status, err) {
-        console.error(status, err.toString());
-      }.bind(this)
+      dataType: 'json'
+    })
+    .fail((xhr, status, err) => {
+      console.error(status, err.toString());
     });
-  },
-  render: function() {
+  }
+
+  render() {
     var interesser = [
       {id: 25, navn: 'Bil & Motor'},
       {id: 23, navn: 'Bolig & Design'},
@@ -130,4 +144,4 @@ module.exports = React.createClass({
       </div>
     );
   }
-});
+}

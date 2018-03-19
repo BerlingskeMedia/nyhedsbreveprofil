@@ -1,11 +1,18 @@
-var $ = require('jquery');
-var React = require('react');
-var ReactDOM = require('react-dom');
-var SelectList = require('./select_list');
+const $ = require('jquery');
+const React = require('react');
+const ReactDOM = require('react-dom');
+const SelectList = require('./select_list');
 
-module.exports = React.createClass({
-  getInitialState: function() {
-    return {
+module.exports = class extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.createSelectOptions = this.createSelectOptions.bind(this);
+    this.mapExistingUserSignups = this.mapExistingUserSignups.bind(this);
+    this.toggleInteresseBusinessTarget = this.toggleInteresseBusinessTarget.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.state = {
       new_signups: {},
       new_signouts: {},
       existing_signups: {},
@@ -13,9 +20,10 @@ module.exports = React.createClass({
         {id: 310, navn: 'Branche', initialValue: '', options: []},
         {id: 343, navn: 'Stillingsbetegnelse', initialValue: '', options: []},
       ]
-    }
-  },
-  componentDidMount: function() {
+    };
+  }
+
+  componentDidMount() {
     this.loadingThebusinesstargetInterests = $.ajax({
       url: '/backend/interesser/full?displayTypeId=6',
       dataType: 'json',
@@ -28,16 +36,19 @@ module.exports = React.createClass({
         console.error(this.props.url, status, err.toString());
       }.bind(this)
     });
-  },
-  componentWillUnmount: function() {
+  }
+
+  componentWillUnmount() {
     this.loadingThebusinesstargetInterests.abort();
-  },
-  componentWillReceiveProps: function (nextProp) {
+  }
+
+  componentWillReceiveProps(nextProp) {
     if (this.props.hasError === true) {
       // ReactDOM.findDOMNode(this).scrollIntoView();
     }
-  },
-  createSelectOptions: function(data) {
+  }
+
+  createSelectOptions(data) {
 
     var user = this.props.data;
     var temp = this.state.thebusinesstargetInterests;
@@ -93,8 +104,9 @@ module.exports = React.createClass({
     function hasAnInitalValue(selectControl) {
       return selectControl.initialValue !== undefined && selectControl.initialValue !== null && selectControl.initialValue !== '';
     }
-  },
-  mapExistingUserSignups: function(data) {
+  }
+
+  mapExistingUserSignups(data) {
     var existing_signups = {};
 
     var user_interesser = this.props.data.interesser;
@@ -119,8 +131,9 @@ module.exports = React.createClass({
     });
 
     this.setState({existing_signups: existing_signups});
-  },
-  toggleInteresseBusinessTarget: function(interesse_id_str, parent_id) {
+  }
+
+  toggleInteresseBusinessTarget(interesse_id_str, parent_id) {
     var interesse_id = parseInt(interesse_id_str);
     var new_signups = this.state.new_signups,
         new_signouts = this.state.new_signouts,
@@ -149,8 +162,9 @@ module.exports = React.createClass({
       }
 
     }.bind(this));
-  },
-  render: function() {
+  }
+
+  render() {
     return(
       <div>
         <SelectList data={this.state.thebusinesstargetInterests} toggle={this.toggleInteresseBusinessTarget} />
@@ -161,7 +175,8 @@ module.exports = React.createClass({
       </div>
     );
   }
-});
+}
+
 
 if (!Array.prototype.find) {
   Array.prototype.find = function(predicate) {

@@ -1,7 +1,12 @@
-var React = require('react');
+const React = require('react');
 
-module.exports = React.createClass({
-  render: function() {
+module.exports = class extends React.Component {
+
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
     var labels = this.props.steps.map(function(s,i) {
       if (i === this.props.step) {
         return <div key={i} className="item activeSidebarStep" style={{fontWeight: 'bold'}}>{s.props.sidebar_label}</div>
@@ -21,4 +26,4 @@ module.exports = React.createClass({
       </div>
     );
   }
-});
+}

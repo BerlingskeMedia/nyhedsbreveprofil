@@ -1,22 +1,32 @@
-var $ = require('jquery');
-var React = require('react');
-var ReactDOM = require('react-dom');
-var StepStamdata = require('./step_stamdata');
-var StepInteresser = require('./step_interesser');
-var StepNyhedsbreveRed = require('./step_nyhedsbreve_redaktionelle');
-var StepNyhedsbreveKom = require('./step_nyhedsbreve_kommercielle');
-var StepFinished = require('./step_finished');
-var Sidebar = require('./sidebar');
-var TopNavbar = require('./topnavbar');
-var BottomNavbarDesktop = require('./bottomnavbar_desktop');
-var BottomNavbar = require('./bottomnavbar_mobile');
+const $ = require('jquery');
+const React = require('react');
+const ReactDOM = require('react-dom');
+const StepStamdata = require('./step_stamdata');
+const StepInteresser = require('./step_interesser');
+const StepNyhedsbreveRed = require('./step_nyhedsbreve_redaktionelle');
+const StepNyhedsbreveKom = require('./step_nyhedsbreve_kommercielle');
+const StepFinished = require('./step_finished');
+const Sidebar = require('./sidebar');
+const TopNavbar = require('./topnavbar');
+const BottomNavbarDesktop = require('./bottomnavbar_desktop');
+const BottomNavbar = require('./bottomnavbar_mobile');
 
-var Opdateringskampagne = React.createClass({
-  getInitialState: function() {
+class Opdateringskampagne extends React.Component {
 
-    var runningInProduction = window.location.host.indexOf('profil.berlingskemedia.dk') > -1;
+  constructor(props) {
 
-    return {
+    const runningInProduction = window.location.host.indexOf('profil.berlingskemedia.dk') > -1;
+
+    super(props);
+    this.loadUserData = this.loadUserData.bind(this);
+    this.determinShowCheckbox300Perm = this.determinShowCheckbox300Perm.bind(this);
+    this.determinShowStepNyhedsbreveKommmercial = this.determinShowStepNyhedsbreveKommmercial.bind(this);
+    this.setHideStepNyhKom = this.setHideStepNyhKom.bind(this);
+    this.setStepsState = this.setStepsState.bind(this);
+    this.getCompleteStepFunc = this.getCompleteStepFunc.bind(this);
+    this.stepForward = this.stepForward.bind(this);
+    this.stepBackward = this.stepBackward.bind(this);
+    this.state = {
       userData: {
         nyhedsbreve: [],
         interesser: []
@@ -32,8 +42,9 @@ var Opdateringskampagne = React.createClass({
       hideStepNyhKom: false,
       hideStepNyhKom_dirty: false
     };
-  },
-  componentDidMount: function() {
+  }
+
+  componentDidMount() {
 
     if (window.location.host.indexOf('profil.berlingskemedia.dk') > -1) {
       ga('set', 'page', 'opdateringskampagne/start');
@@ -56,11 +67,13 @@ var Opdateringskampagne = React.createClass({
       this.setState({user_error: true});
     }
 
-  },
-  componentWillUnmount: function() {
+  }
+
+  componentWillUnmount() {
     this.loadingUserData.abort();
-  },
-  getSearchParameter: function(name, url) {
+  }
+
+  getSearchParameter(name, url) {
       if (!url) url = window.location.href;
       name = name.replace(/[\[\]]/g, "\\$&");
       var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
@@ -68,8 +81,9 @@ var Opdateringskampagne = React.createClass({
       if (!results) return null;
       if (!results[2]) return '';
       return decodeURIComponent(results[2].replace(/\+/g, " "));
-  },
-  setSearchParameter: function (key, value) {
+  }
+
+  setSearchParameter(key, value) {
     // remove the hash part before operating on the uri
     var uri = window.location.href;
     var i = uri.indexOf('#');
@@ -92,36 +106,36 @@ var Opdateringskampagne = React.createClass({
     if (window.history.pushState) {
       window.history.pushState({path:href},'',href)
     }
-  },
-  loadUserData: function() {
+  }
+
+  loadUserData() {
     this.loadingUserData = $.ajax({
       url: '/backend/users/'.concat(this.state.ekstern_id),
       dataType: 'json',
-      cache: true,
-      success: [
-        this.setUserState,
-        this.determinShowCheckbox300Perm,
-        this.determinShowStepNyhedsbreveKommmercial,
-        this.setStepsState
-      ],
-      error: function(xhr, status, err) {
-        this.setState({user_error: true});
-        console.error(xhr, status, err.toString());
-      }.bind(this)
+      cache: true
+    })
+    .done(data => {
+      this.setState({userData: data});
+      this.determinShowCheckbox300Perm(data);
+      this.determinShowStepNyhedsbreveKommmercial(data);
+      this.setStepsState();
+    })
+    .fail((jqXHR, textStatus, errorThrown) => {
+      this.setState({user_error: true});
+      console.error(jqXHR.responseText);
     });
 
     return this.loadingUserData;
-  },
-  setUserState: function (data) {
-    this.setState({userData: data});
-  },
-  determinShowCheckbox300Perm: function (data) {
+  }
+
+  determinShowCheckbox300Perm(data) {
     // We should still show the 300-perm checkbox is the user didn't have the perm to begin with, accepted the perm and comes back to step 1 later.
     if (this.state.showCheckbox300Perm === false) {
       this.setState({showCheckbox300Perm: data.permissions.indexOf(300) === -1});
     }
-  },
-  determinShowStepNyhedsbreveKommmercial: function(data) {
+  }
+
+  determinShowStepNyhedsbreveKommmercial(data) {
     if (!this.state.hideStepNyhKom_dirty) {
       var hideStepNyhKom = !data.permissions.some(function(permission_id) {
         return [66,108,300].indexOf(permission_id) > -1;
@@ -129,27 +143,66 @@ var Opdateringskampagne = React.createClass({
 
       this.setState({hideStepNyhKom: hideStepNyhKom});
     }
-  },
+  }
+
   setHideStepNyhKom(hide) {
     this.setState({hideStepNyhKom: hide, hideStepNyhKom_dirty: true});
-  },
-  setStepsState: function () {
+  }
+
+  setStepsState() {
     // The reason why steps are in the state in not just in render(), is because of data={this.state.userData}
     // Since userData is fetched aync, during the first render userData will be an empty object.
     // And after receiving userData and setting the state, the data={this.state.userData} won't get triggered.
     // So this workaround puts the steps in the state after the userData is received.
 
     var steps = [
-      <StepStamdata ref={this.getCompleteStepFunc} sidebar_label="Dine kontaktoplysninger" stepForward={this.stepForward} showCheckbox300Perm={this.state.showCheckbox300Perm} data={this.state.userData} setHideStepNyhKom={this.setHideStepNyhKom} />,
-      <StepInteresser ref={this.getCompleteStepFunc} sidebar_label="Dine interesser" stepForward={this.stepForward} stepBackwards={this.stepBackwards} data={this.state.userData} />,
-      <StepNyhedsbreveRed ref={this.getCompleteStepFunc} sidebar_label="Dine nyhedsbreve" stepForward={this.stepForward} stepBackwards={this.stepBackwards} data={this.state.userData} abo={this.state.abo} />,
-      <StepNyhedsbreveKom ref={this.getCompleteStepFunc} sidebar_label="Dine øvrige nyhedsbreve" stepForward={this.stepForward} stepBackwards={this.stepBackwards} data={this.state.userData} abo={this.state.abo} />,
-      <StepFinished sidebar_label="Tak for din hjælp" stepBackwards={this.stepBackwards} data={this.state.userData} abo={this.state.abo} />
+
+      <StepStamdata
+        sidebar_label="Dine kontaktoplysninger"
+        ref={this.getCompleteStepFunc}
+        stepForward={this.stepForward}
+        showCheckbox300Perm={this.state.showCheckbox300Perm}
+        data={this.state.userData}
+        setHideStepNyhKom={this.setHideStepNyhKom} />,
+
+      <StepInteresser
+        sidebar_label="Dine interesser"
+        ref={this.getCompleteStepFunc}
+        stepForward={this.stepForward}
+        stepBackward={this.stepBackward}
+        data={this.state.userData} />,
+
+      <StepNyhedsbreveRed
+        sidebar_label="Dine nyhedsbreve"
+        ref={this.getCompleteStepFunc}
+        stepForward={this.stepForward}
+        stepBackward={this.stepBackward}
+        data={this.state.userData}
+        abo={this.state.abo} />,
+
+      <StepNyhedsbreveKom
+        sidebar_label="Dine øvrige nyhedsbreve"
+        ref={this.getCompleteStepFunc}
+        stepForward={this.stepForward}
+        stepBackward={this.stepBackward}
+        data={this.state.userData}
+        abo={this.state.abo} />,
+
+      <StepFinished
+        sidebar_label="Tak for din hjælp"
+        stepBackward={this.stepBackward}
+        data={this.state.userData}
+        abo={this.state.abo} />
     ];
 
     this.setState({steps: steps});
-  },
-  getCompleteStepFunc: function (step) {
+
+    function hoc(WrappedComponent) {
+
+    }
+  }
+
+  getCompleteStepFunc(step) {
     if (step && step.completeStepFunc) {
       var stepForwardFunc = this.stepForward.bind(this, step.completeStepFunc);
       var stepBackwardFunc = this.stepBackward.bind(this, step.completeStepFunc);
@@ -158,64 +211,69 @@ var Opdateringskampagne = React.createClass({
       // Just to be safe.
       this.setState({stepForwardFunc: null, stepBackwardFunc: null})
     }
-  },
-  stepForward: function (completeStepFunc) {
+  }
+
+  stepForward(completeStepFunc) {
     if (this.state.stepping === true) {
       return;
     }
 
     this.setState({stepping: true});
 
-    completeStepFunc(function(err, ekstern_id) {
-      if (err) {
-        console.error(err);
-        this.setState({stepping: false});
-        return;
-      }
+    completeStepFunc()
+    .done((new_ekstern_id) => {
 
-      if (ekstern_id !== undefined) {
-        this.setState({ekstern_id:ekstern_id}, function() {
-          this.setSearchParameter('ekstern_id', ekstern_id);
+      if (new_ekstern_id !== undefined) {
+        this.setState({ekstern_id: new_ekstern_id}, function() {
+          this.setSearchParameter('ekstern_id', new_ekstern_id);
         });
       }
 
-      this.loadUserData().done(function() {
-        var step = this.state.step;
+      this.loadUserData()
+      .done(() => {
+        const step = this.state.step;
         if (step < this.state.steps.length) {
-          this.setState({step: ++step});
+          this.setState({step: step + 1});
         }
 
         ReactDOM.findDOMNode(this).scrollIntoView();
         this.setState({stepping: false});
-      }.bind(this));
-    }.bind(this));
-  },
-  stepBackward: function (completeStepFunc) {
+      });
+    })
+    .fail(err => {
+      console.error(err);
+      this.setState({stepping: false});
+    });
+  }
+
+  stepBackward(completeStepFunc) {
     if (this.state.stepping === true) {
       return;
     }
 
     this.setState({stepping: true});
 
-    completeStepFunc(function(err) {
-      if (err) {
-        console.error(err);
-        this.setState({stepping: false});
-        return;
-      }
+    completeStepFunc()
+    .done(()=> {
 
-      this.loadUserData().done(function() {
-        var step = this.state.step;
+      this.loadUserData()
+      .done(function() {
+        const step = this.state.step;
         if (step > 0) {
-          this.setState({step: --step});
+          this.setState({step: step - 1});
         }
 
         ReactDOM.findDOMNode(this).scrollIntoView();
         this.setState({stepping: false});
-      }.bind(this));
-    }.bind(this));
-  },
-  render: function() {
+      });
+    })
+    .fail(err => {
+      console.error(err);
+      this.setState({stepping: false});
+    });
+  }
+
+  render() {
 
     // var steps = [];
     // Object.assign(steps, this.state.steps);
@@ -264,28 +322,28 @@ var Opdateringskampagne = React.createClass({
       </div>
     );
   }
-});
+}
 
-var UserMissing = React.createClass({
-  componentDidMount: function() {
+class UserMissing extends React.Component {
 
+  componentDidMount() {
     if (window.location.host.indexOf('profil.berlingskemedia.dk') > -1) {
       ga('set', 'page', 'opdateringskampagne/user-missing');
       ga('send', 'pageview');
     }
+  }
 
-  },
-  render: function() {
+  render() {
     return(
       <div className="userMissing">
-        <p className="text-center" style={{marginTop: '50px', fontSize: '20px'}}>
+        <div className="text-center" style={{marginTop: '50px', fontSize: '20px'}}>
           <p>Vi kunne desværre ikke finde din profil.</p>
           <p>Videresend den mail, som du har modtaget til <a href="mailto:nyhedsbreve@berlingske.dk">nyhedsbreve@berlingske.dk</a>, så svarer vi dig hurtigst muligt.</p>
-        </p>
+        </div>
       </div>
     );
   }
-})
+}
 
 ReactDOM.render(
   <Opdateringskampagne />,

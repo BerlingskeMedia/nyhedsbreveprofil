@@ -1,7 +1,12 @@
-var React = require('react');
+const React = require('react');
 
-module.exports = React.createClass({
-  render: function() {
+module.exports = class extends React.Component {
+
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
     var userIsOnFirstStep = this.props.step === 0,
         userIsOnLastStep = this.props.step + 1 === this.props.steps.length;
 
@@ -20,4 +25,4 @@ module.exports = React.createClass({
       </div>
     );
   }
-});
+}

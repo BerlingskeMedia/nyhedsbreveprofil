@@ -1,9 +1,13 @@
-var React = require('react');
-var Checkbox = require('./checkbox');
+const React = require('react');
+const Checkbox = require('./checkbox');
 
-module.exports = React.createClass({
-  render: function() {
+module.exports = class extends React.Component {
 
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
     var items = this.props.data.map(function(item) {
       return (
         <Checkbox key={item.id} data={item} toggle={this.props.toggle} />
@@ -16,4 +20,4 @@ module.exports = React.createClass({
       </div>
     );
   }
-});
+}

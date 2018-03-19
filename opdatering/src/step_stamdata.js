@@ -1,12 +1,23 @@
-var $ = require('jquery');
-var React = require('react');
-var Checkbox = require('./checkbox__controlled');
-var CountrySelector = require('./country_selector');
-var KidsSelector = require('./kids_selector');
+const $ = require('jquery');
+const React = require('react');
+const Checkbox = require('./checkbox__controlled');
+const CountrySelector = require('./country_selector');
+const KidsSelector = require('./kids_selector');
 
-module.exports = React.createClass({
-  getInitialState: function() {
-    return {
+module.exports = class extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleDateChange = this.handleDateChange.bind(this);
+    this.handleEmailChange = this.handleEmailChange.bind(this);
+    this.handle300PermChange = this.handle300PermChange.bind(this);
+    this.completeStepFunc = this.completeStepFunc.bind(this);
+    this.add300 = this.add300.bind(this);
+    this.delete300 = this.delete300.bind(this);
+    this.addKid = this.addKid.bind(this);
+    this.removeKid = this.removeKid.bind(this);
+    this.state = {
       data_dirty: false,
       email_error: false,
       email_conflict: false,
@@ -14,8 +25,9 @@ module.exports = React.createClass({
       has300: false,
       has300_dirty: false
     };
-  },
-  filterAllowesUserFields: function(key) {
+  }
+
+  filterAllowesUserFields(key) {
     return [
       'ekstern_id',
       'email',
@@ -36,8 +48,9 @@ module.exports = React.createClass({
       'foedselsdato',
       'kids'
     ].indexOf(key) > -1;
-  },
-  componentDidMount: function() {
+  }
+
+  componentDidMount() {
 
     if (window.location.host.indexOf('profil.berlingskemedia.dk') > -1) {
       ga('set', 'page', 'opdateringskampagne/step-stamdata');
@@ -52,13 +65,15 @@ module.exports = React.createClass({
     }.bind(this));
     this.setState(userDataState);
     this.setState({has300: this.props.data.permissions.indexOf(300) > -1});
-  },
-  handleInputChange: function(e) {
+  }
+
+  handleInputChange(e) {
     var temp = {data_dirty: true};
     temp[e.target.id] = e.target.value;
     this.setState(temp);
-  },
-  handleDateChange: function(e) {
+  }
+
+  handleDateChange(e) {
     var eventdata = e;
     if (validateDate(e.target.value)) {
       this.setState({birthdate_error: false});
@@ -83,8 +98,9 @@ module.exports = React.createClass({
         return true;
       }
     }
-  },
-  handleEmailChange: function (e) {
+  }
+
+  handleEmailChange(e) {
     var eventdata = e;
     if (validateEmail(e.target.value)) {
       this.setState({email_error: false});
@@ -97,16 +113,22 @@ module.exports = React.createClass({
       var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       return re.test(email);
     }
-  },
-  handle300PermChange: function (e) {
+  }
+
+  handle300PermChange(e) {
     this.setState({has300: !this.state.has300}, function() {
       this.props.setHideStepNyhKom(!this.state.has300);
     });
     this.setState({has300_dirty: true});
-  },
-  completeStepFunc: function(callback) {
+  }
+
+  completeStepFunc() {
+
+    var dfd = $.Deferred();
+
     if (this.state.email_error) {
-      return callback('Email error.');
+      dfd.reject(new Error('Email error'));
+      return dfd.promise();
     }
 
     // Tilmeld og afmeld perm 300
@@ -134,58 +156,59 @@ module.exports = React.createClass({
         payload.foedselsdato = null;
       }
 
-      return $.ajax({
+      $.ajax({
         type: 'POST',
         url: '/backend/users/'.concat(this.props.data.ekstern_id),
         data: JSON.stringify(payload),
         contentType: "application/json; charset=utf-8",
-        dataType: 'json',
-        success: function (data) {
-          console.log('user updated', data);
-          this.setState({email_conflict: false});
-          callback(null, data.ekstern_id);
-        }.bind(this),
-        error: function(xhr, status, err) {
-          if (xhr.status === 409) {
-            this.setState({email_conflict: true});
-            callback('Email conflict');
-          } else {
-            console.error(xhr, status, payload);
-            callback(err);
-          }
-        }.bind(this),
+        dataType: 'json'
+      })
+      .done(data => {
+        console.log('user updated', data);
+        this.setState({email_conflict: false});
+        dfd.resolve(data.ekstern_id);
+      })
+      .fail((xhr, status, err) => {
+        if (xhr.status === 409) {
+          this.setState({email_conflict: true});
+          dfd.reject(new Error('Email conflict'));
+        } else {
+          console.error(xhr, status, payload);
+          dfd.reject(err);
+        }
       });
     } else {
-      callback();
+      dfd.resolve();
     }
-  },
-  add300: function() {
+
+    return dfd.promise();
+  }
+
+  add300() {
     return $.ajax({
       type: 'POST',
       url: '/backend/users/'.concat(this.props.data.ekstern_id, '/permissions/300?location_id=2635'),
       contentType: "application/json; charset=utf-8",
-      dataType: 'json',
-      success: function (data) {
-      }.bind(this),
-      error: function(xhr, status, err) {
-        console.error(this.props.url, status, err.toString());
-      }.bind(this)
+      dataType: 'json'
+    })
+    .fail((xhr, status, err) => {
+      console.error(this.props.url, status, err.toString());
     });
-  },
-  delete300: function() {
+  }
+
+  delete300() {
     return $.ajax({
       type: 'DELETE',
       url: '/backend/users/'.concat(this.props.data.ekstern_id, '/permissions/300?location_id=2635'),
       contentType: "application/json; charset=utf-8",
-      dataType: 'json',
-      success: function (data) {
-      }.bind(this),
-      error: function(xhr, status, err) {
-        console.error(this.props.url, status, err.toString());
-      }.bind(this)
+      dataType: 'json'
+    })
+    .fail((xhr, status, err) => {
+      console.error(this.props.url, status, err.toString());
     });
-  },
-  addKid: function(birthyear, index) {
+  }
+
+  addKid(birthyear, index) {
     var kids = this.state.kids;
 
     birthyear = birthyear !== undefined ? birthyear : '';
@@ -198,13 +221,15 @@ module.exports = React.createClass({
     }
 
     this.setState({kids: kids, data_dirty: true});
-  },
-  removeKid: function(index) {
+  }
+
+  removeKid(index) {
     var kids = this.state.kids;
     kids.splice(index, 1);
     this.setState({kids: kids, data_dirty: true});
-  },
-  render: function() {
+  }
+
+  render() {
 
     var p300data = {
       id: '300',
@@ -290,24 +315,30 @@ module.exports = React.createClass({
       </div>
     );
   }
-});
+}
 
 
-var TextInput = React.createClass({
-  getDateFormat: function(value) {
+class TextInput extends React.Component {
+  constructor(props) {
+    super(props);
+    this.getDateFormat = this.getDateFormat.bind(this);
+  }
+
+  getDateFormat(value) {
     var temp = new Date(value),
         month = this.numberToTwoString(temp.getMonth() + 1),
         date = this.numberToTwoString(temp.getDate());
     return temp.getFullYear().toString().concat('-', month, '-', date);
-  },
-  numberToTwoString: function(number) {
+  }
+
+  numberToTwoString(number) {
     var temp = number.toString();
     return  temp.length === 1 ? '0'.concat(number) :
             temp.length === 2 ? temp :
             '';
-  },
-  render: function() {
+  }
 
+  render() {
     var placeholder = this.props.placeholder !== undefined ? this.props.placeholder : this.props.label;
     var classes = "form-group".concat(this.props.hasError ? ' has-error' : '');
     var type = this.props.type !== undefined ? this.props.type : 'text';
@@ -328,20 +359,25 @@ var TextInput = React.createClass({
       </div>
     );
   }
-});
+}
 
 
-var T300PermText = React.createClass({
-  render: function() {
+class T300PermText extends React.Component {
+  render() {
     return(
       <div>Berlingske Media-koncernen (<a href="http://www.berlingskemedia.dk/?p=8231" target="_blank">se udgivelser og forretningsenheder her</a>) må gerne gøre mig opmærksom på nyheder, tilbud og konkurrencer via brev og elektroniske medier (herunder e-mail, sms, mms, videobeskeder og pop-ups), når Berlingske Media-koncernen og vores samarbejdspartnere (<a href="http://www.berlingskemedia.dk/?p=8233" target="_blank">se samarbejdspartnere her</a>) har nyheder, tilbud og konkurrencer inden for forskellige interesseområder (<a href="http://www.berlingskemedia.dk/?p=8235" target="_blank">se hvilke her</a>).</div>
     );
   }
-});
+}
 
 
-var KoenSelect = React.createClass({
-  render: function() {
+class KoenSelect extends React.Component {
+
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
     return (
       <div key={this.props.id} className="form-group">
         <label className="control-label" htmlFor={this.props.id}>{this.props.label}</label>
@@ -357,4 +393,4 @@ var KoenSelect = React.createClass({
       </div>
     );
   }
-});
+}

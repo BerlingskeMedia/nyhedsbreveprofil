@@ -1,11 +1,19 @@
-var $ = require('jquery');
-var React = require('react');
-var NewsletterList = require('./checkbox_list');
-var TheBusinessTargetInterests = require('./the_business_target_interests');
+const $ = require('jquery');
+const React = require('react');
+const NewsletterList = require('./checkbox_list');
+const TheBusinessTargetInterests = require('./the_business_target_interests');
 
-module.exports = React.createClass({
-  getInitialState: function() {
-    return {
+module.exports = class extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.sortByAbonnement = this.sortByAbonnement.bind(this);
+    this.toggleNyhedsbrev = this.toggleNyhedsbrev.bind(this);
+    this.setBusinessTargetInteresserSignUps = this.setBusinessTargetInteresserSignUps.bind(this);
+    this.setBusinessTargetIntestSelectionCompleted = this.setBusinessTargetIntestSelectionCompleted.bind(this);
+    this.completeStepFunc = this.completeStepFunc.bind(this);
+    this.call_backend = this.call_backend.bind(this);
+    this.state = {
       new_signups_businesstarget_interesser: {},
       new_signouts_businesstarget_interesser: {},
       business_target_interests_completed: false,
@@ -16,16 +24,18 @@ module.exports = React.createClass({
       nyhedsbreve_not_yet: [],
       show_sweetdeal: false
     };
-  },
-  componentDidMount: function() {
+  }
+
+  componentDidMount() {
 
     if (window.location.host.indexOf('profil.berlingskemedia.dk') > -1) {
       ga('set', 'page', 'opdateringskampagne/step_nyhedsbreve_kommercielle');
       ga('send', 'pageview');
     }
 
-  },
-  sortByAbonnement: function (nyhedsbrev_a, nyhedsbrev_b) {
+  }
+
+  sortByAbonnement(nyhedsbrev_a, nyhedsbrev_b) {
     if (nyhedsbrev_a.publisher === nyhedsbrev_b.publisher) {
         return 0;
     }
@@ -51,8 +61,9 @@ module.exports = React.createClass({
         return publisherOrder([1,4,32,34,51]);
         break;
     }
-  },
-  toggleNyhedsbrev: function (subscribe, nyhedsbrev) {
+  }
+
+  toggleNyhedsbrev(subscribe, nyhedsbrev) {
     var new_signups = this.state.new_signups;
     var new_signouts = this.state.new_signouts;
 
@@ -74,32 +85,38 @@ module.exports = React.createClass({
 
     this.setState({new_signups: new_signups});
     this.setState({new_signouts: new_signouts});
-  },
-  setBusinessTargetInteresserSignUps: function(new_signups_businesstarget_interesser, new_signouts_businesstarget_interesser) {
+  }
+
+  setBusinessTargetInteresserSignUps(new_signups_businesstarget_interesser, new_signouts_businesstarget_interesser) {
     this.setState({
       new_signups_businesstarget_interesser: new_signups_businesstarget_interesser,
       new_signouts_businesstarget_interesser: new_signouts_businesstarget_interesser
     });
-  },
-  setBusinessTargetIntestSelectionCompleted: function (completed) {
+  }
+
+  setBusinessTargetIntestSelectionCompleted(completed) {
     this.setState({business_target_interests_completed: true});
-  },
-  hasBusinessTargetNewsletter: function(nyhedsbrev_id) {
+  }
+
+  hasBusinessTargetNewsletter(nyhedsbrev_id) {
     // var tbt_ids = this.state.tbt_nyhedsbreve.map(function(n) {
     //   return n.id;
     // });
     // return tbt_ids.indexOf(nyhedsbrev_id) > -1;
     return nyhedsbrev_id === 844;
-  },
-  completeStepFunc: function(callback) {
+  }
+
+  completeStepFunc() {
+
+    var dfd = $.Deferred();
 
     // If the user has signed up for The Business Target, or already subscribed and not signed out.
     if (this.state.new_signups.some(this.hasBusinessTargetNewsletter) || (this.props.data.nyhedsbreve.some(this.hasBusinessTargetNewsletter) && !this.state.new_signouts.some(this.hasBusinessTargetNewsletter))) {
       // Now we need to check if theres interests in both controls
       if (!this.state.business_target_interests_completed) {
         this.setState({business_target_interests_error: true});
-        callback('Business Target interests missing.');
-        return;
+        dfd.reject(new Error('Business Target interests missing'));
+        return dfd.promise();
       }
     }
 
@@ -115,48 +132,55 @@ module.exports = React.createClass({
         done = 0;
 
     if (count === 0) {
-      return callback();
+
+      dfd.resolve();
+
+    } else {
+
+      var successCallback = (function(done, count) {
+        return function() {
+          if (++done === count) {
+            dfd.resolve();
+          }
+        };
+      }(done, count));
+
+      this.state.new_signups.forEach(function(id) {
+        this.call_backend('POST', 'nyhedsbreve', id)
+        .done(successCallback);
+      }.bind(this));
+
+      this.state.new_signouts.forEach(function(id) {
+        this.call_backend('DELETE', 'nyhedsbreve', id)
+        .done(successCallback);
+      }.bind(this));
+
+      new_business_signups.forEach(function(id) {
+        this.call_backend('POST', 'interesser', id)
+        .done(successCallback);
+      }.bind(this));
+
+      new_business_signouts.forEach(function(id) {
+        this.call_backend('DELETE', 'interesser', id)
+        .done(successCallback);
+      }.bind(this));
     }
 
-    var successCallback = (function(done, count, callback) {
-      return function() {
-        if (++done === count) {
-          callback();
-        }
-      };
-    }(done, count, callback));
+    return dfd.promise();
+  }
 
-    this.state.new_signups.forEach(function(id) {
-      this.call_backend('POST', 'nyhedsbreve', id)
-      .done(successCallback);
-    }.bind(this));
-
-    this.state.new_signouts.forEach(function(id) {
-      this.call_backend('DELETE', 'nyhedsbreve', id)
-      .done(successCallback);
-    }.bind(this));
-
-    new_business_signups.forEach(function(id) {
-      this.call_backend('POST', 'interesser', id)
-      .done(successCallback);
-    }.bind(this));
-
-    new_business_signouts.forEach(function(id) {
-      this.call_backend('DELETE', 'interesser', id)
-      .done(successCallback);
-    }.bind(this));
-  },
-  call_backend: function(type, domain, id) {
+  call_backend(type, domain, id) {
     return $.ajax({
       type: type,
       url: '/backend/users/'.concat(this.props.data.ekstern_id, '/', domain, '/', id, '?location_id=2635'),
-      dataType: 'json',
-      error: function(xhr, status, err) {
-        console.error(status, err.toString());
-      }.bind(this)
+      dataType: 'json'
+    })
+    .fail((xhr, status, err) => {
+      console.error(status, err.toString());
     });
-  },
-  render: function() {
+  }
+
+  render() {
     var sweetdeal_logo_src = 'https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/opdateringskampagne/Sweetdeal.png';
     var godttip_nyhedsbreve = [
           {
@@ -311,22 +335,22 @@ module.exports = React.createClass({
       </div>
     );
   }
-});
+}
 
 
-var GodtTipPermText = React.createClass({
-  render: function() {
+class GodtTipPermText extends React.Component {
+  render() {
     return(
       <div>GodtTip og Berlingske Media-koncernen (<a href="http://www.berlingskemedia.dk/berlingske-medias-selskaber-og-forretningsenheder" target="_blank">se udgivelser og forretningsenheder her</a>) må gerne gøre mig opmærksom på nyheder, tilbud og konkurrencer via brev og elektroniske medier (herunder e-mail, sms, mms, videobeskeder og pop-ups), når Berlingske Media-koncernen og vores samarbejdspartnere (<a href="http://www.berlingskemedia.dk/berlingske-medias-samarbejdspartnere/" target="_blank">se samarbejdspartnere her</a>) har nyheder, tilbud og konkurrencer inden for forskellige interesseområder (<a href="http://www.berlingskemedia.dk/liste-over-interesseomraader/" target="_blank">se hvilke her</a>).</div>
     );
   }
-});
+}
 
 
-var TheBusinessTargetPermText = React.createClass({
-  render: function() {
+class TheBusinessTargetPermText extends React.Component {
+  render() {
     return(
       <div>The Business Target og Berlingske Media-koncernen (<a href="http://www.berlingskemedia.dk/berlingske-medias-selskaber-og-forretningsenheder/" target="_blank">se udgivelser og forretningsenheder her</a>) må gerne gøre mig opmærksom på nyheder, tilbud og konkurrencer via brev og elektroniske medier (herunder e-mail, sms, mms, videobeskeder og pop-ups), når Berlingske Media-koncernen og vores samarbejdspartnere (<a href="http://www.berlingskemedia.dk/berlingske-medias-samarbejdspartnere/" target="_blank">se samarbejdspartnere her</a>) har nyheder, tilbud og konkurrencer inden for forskellige interesseområder (<a href="http://www.berlingskemedia.dk/liste-over-interesseomraader/" target="_blank">se hvilke her</a>).</div>
     );
   }
-});
+}

@@ -1,14 +1,23 @@
-var React = require('react');
+const React = require('react');
 
-module.exports = React.createClass({
-  removeKid: function(i) {
+module.exports = class extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.removeKid = this.removeKid.bind(this);
+    this.addNew = this.addNew.bind(this);
+  }
+
+  removeKid(i) {
     this.props.removeKid(i);
-  },
-  addNew: function() {
+  }
+
+  addNew() {
     var temp = new Date();
     this.props.addKid(1900 + temp.getYear());
-  },
-  render: function () {
+  }
+
+  render () {
     var kids = [];
 
     if (this.props.kids) {
@@ -40,14 +49,21 @@ module.exports = React.createClass({
       </div>
     );
   }
-});
+}
 
 
-var KidBirthyearSelector = React.createClass({
-  onChange: function(e) {
+class KidBirthyearSelector extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.onChange = this.onChange.bind(this);
+  }
+
+  onChange(e) {
     this.props.addKid(e.target.value, this.props.id);
-  },
-  render: function () {
+  }
+
+  render () {
     var label =
       this.props.id === 0  ? 'Første' :
       this.props.id === 1  ? 'Andet' :
@@ -90,4 +106,4 @@ var KidBirthyearSelector = React.createClass({
       </div>
     );
   }
-});
+}

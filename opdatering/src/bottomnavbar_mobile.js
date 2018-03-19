@@ -1,7 +1,12 @@
-var React = require('react');
+const React = require('react');
 
-module.exports = React.createClass({
-  render: function() {
+module.exports = class extends React.Component {
+
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
     var dots = this.props.steps.map(function(s,i) {
       return <Dot key={i} active={i === this.props.step ? true : false} />
     }.bind(this));
@@ -33,10 +38,15 @@ module.exports = React.createClass({
       </footer>
     );
   }
-});
+}
 
-var Dot = React.createClass({
-  render: function() {
+class Dot extends React.Component {
+  
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
     var size = 12,
         sizePx = size.toString().concat('px'),
         borderSizePx = (size / 2).toString().concat('px'),
@@ -57,4 +67,4 @@ var Dot = React.createClass({
       <div style={styleObj}></div>
     );
   }
-});
+}

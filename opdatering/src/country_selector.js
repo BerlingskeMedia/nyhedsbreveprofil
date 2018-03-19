@@ -1,7 +1,12 @@
-var React = require('react');
+const React = require('react');
 
-module.exports = React.createClass({
-  render: function() {
+module.exports = class extends React.Component {
+
+  constructor(props) {
+    super(props);
+  }
+  
+  render() {
 
     var options = countries.map(function(country, index) {
       return <option key={index} value={country.code}>{country.name}</option>
@@ -25,7 +30,7 @@ module.exports = React.createClass({
       </div>
     );
   }
-});
+}
 
 var countries = [
   {name: 'Afghanistan', code: 'AF'},
