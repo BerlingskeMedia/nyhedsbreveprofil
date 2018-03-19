@@ -9,8 +9,8 @@ module.exports = class extends React.Component {
   render() {
     var label = '';
 
-    if (this.props.steps && this.props.steps.length > 0 && this.props.steps[this.props.step].props) {
-      label = this.props.steps[this.props.step].props.sidebar_label;
+    if (this.props.steps && this.props.steps.length > 0 && this.props.steps[this.props.activeStep].props) {
+      label = this.props.steps[this.props.activeStep].props.sidebar_label;
     }
 
     return (

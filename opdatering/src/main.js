@@ -36,7 +36,7 @@ class Opdateringskampagne extends React.Component {
       ekstern_id: null,
       abo: null,
       steps: [],
-      step: runningInProduction ? 0 : 0, // You can override the starting step. But we  make sure the flow starts at first step in procution
+      activeStep: runningInProduction ? 0 : 0, // You can override the starting step. But we  make sure the flow starts at first step in procution
       stepping: false,
       showCheckbox300Perm: false,
       hideStepNyhKom: false,
@@ -160,7 +160,6 @@ class Opdateringskampagne extends React.Component {
       <StepStamdata
         sidebar_label="Dine kontaktoplysninger"
         ref={this.getCompleteStepFunc}
-        stepForward={this.stepForward}
         showCheckbox300Perm={this.state.showCheckbox300Perm}
         data={this.state.userData}
         setHideStepNyhKom={this.setHideStepNyhKom} />,
@@ -168,38 +167,27 @@ class Opdateringskampagne extends React.Component {
       <StepInteresser
         sidebar_label="Dine interesser"
         ref={this.getCompleteStepFunc}
-        stepForward={this.stepForward}
-        stepBackward={this.stepBackward}
         data={this.state.userData} />,
 
       <StepNyhedsbreveRed
         sidebar_label="Dine nyhedsbreve"
         ref={this.getCompleteStepFunc}
-        stepForward={this.stepForward}
-        stepBackward={this.stepBackward}
         data={this.state.userData}
         abo={this.state.abo} />,
 
       <StepNyhedsbreveKom
         sidebar_label="Dine øvrige nyhedsbreve"
         ref={this.getCompleteStepFunc}
-        stepForward={this.stepForward}
-        stepBackward={this.stepBackward}
         data={this.state.userData}
         abo={this.state.abo} />,
 
       <StepFinished
         sidebar_label="Tak for din hjælp"
-        stepBackward={this.stepBackward}
         data={this.state.userData}
         abo={this.state.abo} />
     ];
 
     this.setState({steps: steps});
-
-    function hoc(WrappedComponent) {
-
-    }
   }
 
   getCompleteStepFunc(step) {
@@ -231,9 +219,9 @@ class Opdateringskampagne extends React.Component {
 
       this.loadUserData()
       .done(() => {
-        const step = this.state.step;
+        const step = this.state.activeStep;
         if (step < this.state.steps.length) {
-          this.setState({step: step + 1});
+          this.setState({activeStep: step + 1});
         }
 
         ReactDOM.findDOMNode(this).scrollIntoView();
@@ -257,10 +245,10 @@ class Opdateringskampagne extends React.Component {
     .done(()=> {
 
       this.loadUserData()
-      .done(function() {
-        const step = this.state.step;
+      .done(() => {
+        const step = this.state.activeStep;
         if (step > 0) {
-          this.setState({step: step - 1});
+          this.setState({activeStep: step - 1});
         }
 
         ReactDOM.findDOMNode(this).scrollIntoView();
@@ -286,21 +274,21 @@ class Opdateringskampagne extends React.Component {
     return (
       <div id="opdateringskampagne" className="opdateringskampagne">
         <div className="hidden-sm hidden-md hidden-lg topnav">
-          <TopNavbar steps={this.state.steps} step={this.state.step} />
+          <TopNavbar steps={this.state.steps} activeStep={this.state.activeStep} />
         </div>
         <div className="steppage container-fluid">
           <div className="row">
             <div className="hidden-xs col-sm-3 col-md-2 col-lg-2 sidebar">
-              <Sidebar step={this.state.step} steps={steps} />
+              <Sidebar activeStep={this.state.activeStep} steps={steps} />
             </div>
             <div className="col-sm-7 col-sm-offset-4 col-md-6 col-md-offset-4 col-lg-5 col-lg-offset-4 main">
               {this.state.user_error === false ?
                 <div>
-                  {steps[this.state.step]}
+                  {steps[this.state.activeStep]}
                   <div className="hidden-xs">
                     <BottomNavbarDesktop
                       steps={steps}
-                      step={this.state.step}
+                      activeStep={this.state.activeStep}
                       stepping={this.state.stepping}
                       nextFunc={this.state.stepForwardFunc}
                       prevFunc={this.state.stepBackwardFunc} />
@@ -314,7 +302,7 @@ class Opdateringskampagne extends React.Component {
         <div className="hidden-sm hidden-md hidden-lg bottomnav">
           <BottomNavbar
             steps={steps}
-            step={this.state.step}
+            activeStep={this.state.activeStep}
             stepping={this.state.stepping}
             nextFunc={this.state.stepForwardFunc}
             prevFunc={this.state.stepBackwardFunc} />

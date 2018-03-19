@@ -8,7 +8,7 @@ module.exports = class extends React.Component {
 
   render() {
     var labels = this.props.steps.map(function(s,i) {
-      if (i === this.props.step) {
+      if (i === this.props.activeStep) {
         return <div key={i} className="item activeSidebarStep" style={{fontWeight: 'bold'}}>{s.props.sidebar_label}</div>
       } else {
         return <div key={i} className="item">{s.props.sidebar_label}</div>

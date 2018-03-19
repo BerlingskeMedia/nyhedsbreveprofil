@@ -7,8 +7,8 @@ module.exports = class extends React.Component {
   }
 
   render() {
-    var userIsOnFirstStep = this.props.step === 0,
-        userIsOnLastStep = this.props.step + 1 === this.props.steps.length;
+    var userIsOnFirstStep = this.props.activeStep === 0,
+        userIsOnLastStep = this.props.activeStep + 1 === this.props.steps.length;
 
     return (
       <div className="navButtons">

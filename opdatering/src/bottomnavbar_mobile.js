@@ -8,11 +8,11 @@ module.exports = class extends React.Component {
 
   render() {
     var dots = this.props.steps.map(function(s,i) {
-      return <Dot key={i} active={i === this.props.step ? true : false} />
+      return <Dot key={i} active={i === this.props.activeStep ? true : false} />
     }.bind(this));
 
-    var userIsOnFirstStep = this.props.step === 0,
-        userIsOnLastStep = this.props.step + 1 === this.props.steps.length;
+    var userIsOnFirstStep = this.props.activeStep === 0,
+        userIsOnLastStep = this.props.activeStep + 1 === this.props.steps.length;
 
     return (
       <footer className="bottomnavbar">
@@ -41,7 +41,7 @@ module.exports = class extends React.Component {
 }
 
 class Dot extends React.Component {
-  
+
   constructor(props) {
     super(props);
   }
