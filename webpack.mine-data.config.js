@@ -1,18 +1,54 @@
-var path = require('path');
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
+
+const HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
+  template: './mine-data/index.html',
+  filename: 'index.html',
+  inject: 'body'
+});
+const ScriptExtHtmlWebpackPluginConfig = new ScriptExtHtmlWebpackPlugin({
+  defaultAttribute: 'defer'
+});
+
+const entry = 'index.js';
 
 module.exports = {
-    target: 'web',
-    entry: path.join(__dirname, 'mine-data/src/main.js'),
-    // entry: ['babel-core', path.join(__dirname, 'opdatering/src/main.js')],
-    output: {
-        path: path.join(__dirname, 'mine-data/build'),
-        filename: "bundle.js"
-    },
-    module: {
-        loaders: [
-            { test: /\.css$/, loader: 'style!css' },
-            { test: /\.json$/, loader: 'json-loader' },
-            { test: path.join(__dirname, 'mine-data/src'), loader: 'babel-loader', query: { presets: ['react', 'es2015'] } }
-        ]
+  entry: [
+    'babel-polyfill',
+    `./mine-data/${entry}`
+  ],
+  output: {
+    path: path.resolve('./mine-data/build'),
+    filename: 'bundle-[hash].js',
+    publicPath: '/mine-data'
+  },
+  module: {
+    loaders: [
+      {
+        test: /\.js(x)?$/, loader: 'babel-loader', exclude: /node_modules/
+      },
+      {
+        test: /\.(svg|jpg|png|mp4|webm|ico)$/i, loader: 'file-loader', exclude: /node_modules/,
+        options: {name: '[name].[ext]'}
+      },
+      {
+        test: /\.(s)?css$/,
+        use: [{loader: 'style-loader'}, {loader: 'css-loader'}, {loader: 'sass-loader'}]
+      }
+    ]
+  },
+  plugins: [
+    HtmlWebpackPluginConfig,
+    ScriptExtHtmlWebpackPluginConfig
+  ],
+  devtool: 'source-map',
+  devServer: {
+    historyApiFallback: {
+      rewrites: [
+        {from: /\/mine-data\/.*$/, to: '/mine-data'},
+        {from: /^\/?$/, to: '/mine-data'}
+      ]
     }
+  }
 };

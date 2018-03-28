@@ -7,29 +7,11 @@ module.exports.register = function (server, options, next) {
 
   server.route({
     method: 'get',
-    path: '/build/{param*}',
+    path: '/{param*}',
     handler: {
       directory: {
         path: 'mine-data/build'
       }
-    }
-  });
-
-  server.route({
-    method: 'get',
-    path: '/assets/{param*}',
-    handler: {
-      directory: {
-        path: 'mine-data/assets'
-      }
-    }
-  });
-
-  server.route({
-    method: 'get',
-    path: '/{param*}',
-    handler: {
-      file: 'mine-data/index.html'
     }
   });
 
