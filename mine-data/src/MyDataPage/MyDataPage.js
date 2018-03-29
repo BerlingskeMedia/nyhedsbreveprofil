@@ -1,8 +1,12 @@
 import React, { Fragment } from 'react';
 import { Link, Route } from 'react-router-dom';
+import { Login } from '../login/Login';
+import { withUserData } from '../login/withLogin';
 
-export const MyDataPage = ({match}) => {
-  return (
+export const MyDataPage = withUserData(
+  Login,
+  () => <div>Loading...</div>,
+  ({match}) => (
     <Fragment>
       <h1>Mine data</h1>
       <h2>
@@ -18,5 +22,5 @@ export const MyDataPage = ({match}) => {
 
       <Route path={`${match.url}/home`} render={() => <div>foo bar!</div>}/>
     </Fragment>
-  );
-};
+  )
+);
