@@ -2,6 +2,7 @@ import React, { Fragment } from 'react';
 import { Link, Route } from 'react-router-dom';
 import { Login } from '../login/Login';
 import { withUserData } from '../login/withLogin';
+import { LogoutLink } from '../logout/LogoutLink';
 
 export const MyDataPage = withUserData(
   Login,
@@ -19,6 +20,7 @@ export const MyDataPage = withUserData(
       <h2>Marketingsregister til markedsundersøgelser</h2>
       <h2>Marketingsregister til salg og marketing</h2>
       <h2>Marketingsregister til telemarketing</h2>
+      <LogoutLink>Logout</LogoutLink>
 
       <Route path={`${match.url}/home`} render={() => <div>foo bar!</div>}/>
     </Fragment>

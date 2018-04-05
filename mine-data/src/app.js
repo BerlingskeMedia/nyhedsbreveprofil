@@ -3,7 +3,7 @@ import { BrowserRouter, Route } from 'react-router-dom';
 import { MyDataPage } from './MyDataPage/MyDataPage';
 import { Provider } from 'react-redux';
 import reducers from './reducers';
-import { applyMiddleware, createStore } from 'redux';
+import { applyMiddleware, compose, createStore } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 
 import '../assets/styles.scss';
@@ -22,7 +22,8 @@ class HomePage extends React.Component {
   }
 }
 
-const store = createStore(reducers, applyMiddleware(thunkMiddleware));
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const store = createStore(reducers, composeEnhancers(applyMiddleware(thunkMiddleware)));
 
 export const App = () => (
   <Provider store={store}>
