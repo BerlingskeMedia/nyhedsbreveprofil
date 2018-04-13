@@ -9,6 +9,7 @@ const opdatering = require('./opdatering');
 const mineData = require('./mine-data');
 const inert = require('inert');
 const good = require('good');
+const Tickets = require('./tickets');
 const goodConsole = require('good-console');
 
 var server = new Hapi.Server({
@@ -48,6 +49,7 @@ server.register(opdatering, { routes: { prefix: '/opdatering' } }, cb);
 server.register(mineData, { routes: { prefix: '/mine-data' } }, cb);
 server.register(backend, { routes: { prefix: '/backend' } }, cb);
 server.register(smartlinks, { routes: { prefix: '/smartlinks' } }, cb);
+server.register(Tickets, { routes: { prefix: '/tickets' } }, cb);
 
 if (!module.parent) {
   server.start(function() {
