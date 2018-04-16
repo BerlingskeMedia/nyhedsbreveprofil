@@ -39,7 +39,7 @@ export const login = ({username, password, rememberMe}) => {
   return (dispatch) => {
     dispatch(requestLogin());
 
-    return new Promise((fulfill, reject) => {
+    return new Promise(fulfill => {
       gigya.accounts.login({
         loginID: username,
         password: password,
@@ -51,7 +51,7 @@ export const login = ({username, password, rememberMe}) => {
             dispatch(receiveUserInfo(response));
           } else {
             dispatch(receiveLogin(response));
-            reject(response);
+            fulfill(response);
           }
         }
       });
