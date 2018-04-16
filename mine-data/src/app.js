@@ -2,11 +2,13 @@ import React from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
 import { MyDataPage } from './MyDataPage/MyDataPage';
 import { Provider } from 'react-redux';
-import reducers from './reducers';
 import { applyMiddleware, compose, createStore } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 
 import '../assets/styles.scss';
+import { userInfo } from './common/userInfo.reducers';
+import { combineReducers } from 'redux';
+import { login } from './login/login.reducers';
 
 class HomePage extends React.Component {
   componentWillMount() {
@@ -23,7 +25,10 @@ class HomePage extends React.Component {
 }
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-const store = createStore(reducers, composeEnhancers(applyMiddleware(thunkMiddleware)));
+const store = createStore(combineReducers({
+  userInfo,
+  login
+}), composeEnhancers(applyMiddleware(thunkMiddleware)));
 
 export const App = () => (
   <Provider store={store}>

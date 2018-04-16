@@ -1,6 +1,6 @@
-export const REQUEST_USER_INFO = 'REQUEST_USER_INFO';
-export const RECEIVE_USER_INFO = 'RECEIVE_USER_INFO';
-export const RESET_USER_INFO = 'RESET_USER_INFO';
+export const REQUEST_USER_INFO = '[user info] request';
+export const RECEIVE_USER_INFO = '[user info] receive';
+export const RESET_USER_INFO = '[user info] reset';
 
 export const requestUserInfo = () => ({type: REQUEST_USER_INFO});
 export const receiveUserInfo = (userInfo) => ({type: RECEIVE_USER_INFO, userInfo});

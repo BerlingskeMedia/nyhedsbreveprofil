@@ -1,19 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { fetchUserInfo } from '../actions/userInfo';
+import { fetchUserInfo } from '../common/userInfo.actions';
 
 const switcher = (LoginComponent, PendingComponent, LoggedComponent) => {
-  class comp extends React.Component {
+  class LoadingSwitcher extends React.Component {
     componentWillMount() {
-      this.fetchUserIfNeeded(this.props);
+      LoadingSwitcher.fetchUserIfNeeded(this.props);
     }
 
     componentWillReceiveProps(props) {
-      this.fetchUserIfNeeded(props);
+      LoadingSwitcher.fetchUserIfNeeded(props);
     }
 
-    fetchUserIfNeeded({userInfo: {isPending, isFetched}, fetchUserInfo}) {
+    static fetchUserIfNeeded({userInfo: {isPending, isFetched}, fetchUserInfo}) {
       if (!isPending && !isFetched) {
         fetchUserInfo();
       }
@@ -38,12 +38,12 @@ const switcher = (LoginComponent, PendingComponent, LoggedComponent) => {
     }
   }
 
-  comp.propTypes = {
+  LoadingSwitcher.propTypes = {
     userInfo: PropTypes.any,
     fetchUserInfo: PropTypes.func
   };
 
-  return comp;
+  return LoadingSwitcher;
 };
 
 const mapStateToProps = ({userInfo}) => ({

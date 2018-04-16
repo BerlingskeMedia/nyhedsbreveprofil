@@ -1,4 +1,4 @@
-import { resetUserInfo } from './userInfo';
+import { resetUserInfo } from '../common/userInfo.actions';
 
 export const logOut = () => {
   return dispatch => {
