@@ -1,0 +1,30 @@
+.form-group {
+  margin-bottom: 28px;
+  font-size: 18px;
+}
+
+.control-label {
+  font-weight: 400;
+  margin-bottom: 5px;
+}
+
+.form-control {
+  padding: 9px 12px;
+  border-radius: 2px;
+  color: #555;
+
+  &:focus {
+    border-color: #66afe9;
+    box-shadow: inset 0 1px 1px rgba(#000, 0.075), 0 0 8px rgba(102,175,233,.6);
+  }
+}
+
+.nav-buttons {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.form-error {
+  margin-top: 28px;
+  color: #f00;
+}
