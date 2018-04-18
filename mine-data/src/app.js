@@ -8,7 +8,7 @@ import thunkMiddleware from 'redux-thunk';
 import '../assets/styles.scss';
 import { userInfo } from './common/userInfo.reducers';
 import { combineReducers } from 'redux';
-import { login } from './login/login.reducers';
+import { login } from './LoginForm/login.reducers';
 
 class HomePage extends React.Component {
   componentWillMount() {

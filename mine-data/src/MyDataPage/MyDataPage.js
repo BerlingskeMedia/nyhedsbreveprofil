@@ -1,11 +1,11 @@
 import React, { Fragment } from 'react';
 import { Link, Route } from 'react-router-dom';
-import { Login } from '../login/Login';
-import { withUserData } from '../login/withLogin';
+import { withUserData } from '../LoginForm/withUserData';
 import { LogoutLink } from '../logout/LogoutLink';
+import { LoginPage } from '../LoginPage/LoginPage';
 
-export const MyDataPage = withUserData(
-  Login,
+const WithUserData = withUserData(
+  LoginPage,
   () => <div>Loading...</div>,
   ({match}) => (
     <Fragment>
@@ -25,4 +25,14 @@ export const MyDataPage = withUserData(
       <Route path={`${match.url}/home`} render={() => <div>foo bar!</div>}/>
     </Fragment>
   )
+);
+
+export const MyDataPage = (props) => (
+  <div className="container">
+    <div className="row justify-content-center">
+      <div className="col-sm-8">
+        <WithUserData {...props}/>
+      </div>
+    </div>
+  </div>
 );

@@ -1,0 +1,39 @@
+.InsightTable {
+  margin-bottom: 30px;
+
+  .collapse {
+    overflow: hidden;
+  }
+
+  .InsightTable-link:not([href]) {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}
+
+.InsightTable-caption {
+  text-align: center;
+  font-size: 18px;
+}
+
+.InsightTable-category {
+  background-color: #fff;
+  border-bottom: 1px solid #efefef;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.24);
+}
+
+.InsightTable-category-title {
+  display: block;
+  cursor: pointer;
+  padding: 20px;
+
+  &:hover {
+    background-color: #fbfbfb;
+  }
+}
+
+.InsightTable-details {
+  padding: 20px;
+  background-color: #e6e6e6;
+  box-shadow: 0 4px 3px -2px rgba(#000, 0.15) inset;
+}
