@@ -9,7 +9,12 @@ button.SubmitButton {
     background-color: #E53935;
     border-color: #E53935;
 
-    &:hover {
+    &:disabled {
+      background-color: #F69393;
+      border-color: #F69393;
+    }
+
+    &:not(:disabled):hover {
       background-color: #ef5e5b;
       border-color: #ef5e5b;
     }
