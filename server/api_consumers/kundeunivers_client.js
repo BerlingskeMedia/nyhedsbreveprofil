@@ -1,7 +1,7 @@
 /*jshint node: true */
 'use strict';
 
-const tickets = require('../tickets');
+const BPC = require('../bpc_client');
 const Handlers = require('../lib/response_handlers');
 const Url = require('url');
 const https = require('https');
@@ -17,7 +17,7 @@ try {
 }
 
 module.exports.getUserProfileData = function (gigya_uid) {
-  var path = KUNDEUNIVERS_URL + '/my/account/' + gigya_uid + '.json';
+  var path = KUNDEUNIVERS_URL.href + '/my/account/' + gigya_uid + '.json';
   callKundeunivers({path: path, method: 'GET'}, function(err, result){
     if (err){
       console.error('call kundeunivers:', err);
@@ -29,7 +29,7 @@ module.exports.getUserProfileData = function (gigya_uid) {
 }
 
 module.exports.getUserTransactionData = function (gigya_uid) {
-  var path = KUNDEUNIVERS_URL + '/my/account/' + gigya_uid + '/orders.json?extended=1&transactions=1';
+  var path = KUNDEUNIVERS_URL.href + '/my/account/' + gigya_uid + '/orders.json?extended=1&transactions=1';
   callKundeunivers({path: path, method: 'GET'}, function(err, result){
     if (err){
       console.error('call kundeunivers:', err);
@@ -42,11 +42,13 @@ module.exports.getUserTransactionData = function (gigya_uid) {
 
 function prettifyTransactionOutput(result) {
   //<TODO> talk with mateusz what data from confluence: userprofile we would like to present
+  console.log(result);
   return result;
 }
 
 function prettifyProfileOutput(result) {
   //<TODO> talk with mateusz what data we would like to present
+  console.log(result);
   return result;
 }
 
@@ -55,7 +57,7 @@ function callKundeunivers(options, callback) {
     protocol: KUNDEUNIVERS_URL.protocol,
     hostname: KUNDEUNIVERS_URL.hostname
   });
-  var credentials = tickets.readTicket();
+  var credentials =BPC.readAppTicket(); //tickets.readTicket();
 
   if (credentials !== undefined && credentials !== null && Object.keys(credentials).length > 1){
     var requestHref = Url.resolve(KUNDEUNIVERS_URL.href, options.path);
@@ -64,7 +66,7 @@ function callKundeunivers(options, callback) {
       console.error(hawkHeader.err);
       return callback(new Error('Hawk header: ' + hawkHeader.err));
     }
-    hawkHeader.field = hawkHeader.field.replace(/\r?\n|\r/g, '');
+
     options.headers = {
       'Authorization': hawkHeader.field
     };

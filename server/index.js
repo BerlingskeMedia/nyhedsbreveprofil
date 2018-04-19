@@ -2,6 +2,7 @@
 'use strict';
 
 const Hapi = require('hapi');
+const BPC = require('./bpc_client');
 const backend = require('./backend');
 const nyhedsbreve = require('./nyhedsbreve');
 const smartlinks = require('./smartlinks');
@@ -9,8 +10,8 @@ const opdatering = require('./opdatering');
 const mineData = require('./mine-data');
 const inert = require('inert');
 const good = require('good');
-const Tickets = require('./tickets');
 const goodConsole = require('good-console');
+// const KU_client = require('./api_consumers/kundeunivers_client');
 
 var server = new Hapi.Server({
   connections: {
@@ -49,11 +50,15 @@ server.register(opdatering, { routes: { prefix: '/opdatering' } }, cb);
 server.register(mineData, { routes: { prefix: '/mine-data' } }, cb);
 server.register(backend, { routes: { prefix: '/backend' } }, cb);
 server.register(smartlinks, { routes: { prefix: '/smartlinks' } }, cb);
-server.register(Tickets, { routes: { prefix: '/tickets' } }, cb);
 
 if (!module.parent) {
-  server.start(function() {
-    console.log('Server started on ' + server.info.uri + '.');
+  server.start((err) => {
+    if (err) {
+      throw err;
+    }
+
+    console.log(`Server running at: ${server.info.uri}`);
+    BPC.getAppTicket();
   });
 }
 
