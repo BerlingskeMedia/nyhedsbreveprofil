@@ -24,7 +24,8 @@ class List extends React.Component {
     super(props);
 
     this.isSelected = this.isSelected.bind(this);
-    this.submitManualList = this.submitManualList.bind(this);
+    this.requestDelete = this.requestDelete.bind(this);
+    this.requestInsight = this.requestInsight.bind(this);
     this.toggle = this.toggle.bind(this);
   }
 
@@ -32,7 +33,11 @@ class List extends React.Component {
     return this.props.list.includes(category.name);
   }
 
-  submitManualList() {
+  requestDelete() {
+    // TODO: blocked by ZenDesk integration
+  }
+
+  requestInsight() {
     // TODO: blocked by ZenDesk integration
   }
 
@@ -60,9 +65,8 @@ class List extends React.Component {
                     toggle={() => this.toggle(category)}/>
         )}
         <div className="nav-buttons">
-          <form onSubmit={this.submitManualList()}>
-            <SubmitButton disabled={!list || !list.length}>Submit</SubmitButton>
-          </form>
+          <SubmitButton onClick={this.requestInsight} disabled={!list || !list.length}>Request insights</SubmitButton>
+          <SubmitButton onClick={this.requestDelete} warn disabled={!list || !list.length}>Request delete</SubmitButton>
         </div>
       </Fragment>
     );

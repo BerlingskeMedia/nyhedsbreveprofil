@@ -5,8 +5,8 @@ import classNames from 'classnames';
 
 import './SubmitButton.scss';
 
-const SubmitButton = ({children, loading, disabled}) => (
-  <Button type="submit" className={classNames('SubmitButton', {loading})}
+const SubmitButton = ({children, loading, disabled, warn}) => (
+  <Button type="submit" className={classNames('SubmitButton', {loading, warn})}
           disabled={loading || disabled}>
     <div className="content">
       {children}
@@ -16,12 +16,15 @@ const SubmitButton = ({children, loading, disabled}) => (
 
 SubmitButton.propTypes = {
   disabled: PropTypes.bool,
-  loading: PropTypes.bool
+  loading: PropTypes.bool,
+  warn: PropTypes.bool,
+  onClick: PropTypes.func
 };
 
 SubmitButton.defaultProps = {
   disabled: false,
-  loading: false
+  loading: false,
+  onClick: () => {}
 };
 
 export default SubmitButton;
