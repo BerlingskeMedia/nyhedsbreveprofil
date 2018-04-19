@@ -5,9 +5,9 @@ import classNames from 'classnames';
 
 import './SubmitButton.scss';
 
-const SubmitButton = ({children, loading}) => (
+const SubmitButton = ({children, loading, disabled}) => (
   <Button type="submit" className={classNames('SubmitButton', {loading})}
-          disabled={loading}>
+          disabled={loading || disabled}>
     <div className="content">
       {children}
     </div>
@@ -15,10 +15,12 @@ const SubmitButton = ({children, loading}) => (
 );
 
 SubmitButton.propTypes = {
+  disabled: PropTypes.bool,
   loading: PropTypes.bool
 };
 
 SubmitButton.defaultProps = {
+  disabled: false,
   loading: false
 };
 
