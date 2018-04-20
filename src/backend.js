@@ -55,10 +55,12 @@ function updateUser (request, reply) {
     }
 
     // We send a reciept for all updateUser request thats
-    // a) not from our site and
-    // b) not from opdateringskampagnen
+    // a) not from our site (usually a smartlink) and
+    // b) not from a silenced location eg. opdateringskampagnen
     // TODO: This should be done using cookies or OAuth to be secure
-    if (request.headers.referer.indexOf('profil.berlingskemedia.dk') > -1 && [2059, 2077, 2635].indexOf(request.payload.location_id) > -1) {
+    const requestIsFromTheMainSite = request.headers.referer.indexOf('profil.berlingskemedia.dk') > -1;
+    const silencedLocation = [2059, 2077, 2635, 2768].indexOf(request.payload.location_id) > -1;
+    if (requestIsFromTheMainSite && silencedLocation) {
       reply(response);
     } else {
       proxy({
