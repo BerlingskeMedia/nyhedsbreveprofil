@@ -10,8 +10,6 @@ const opdatering = require('./opdatering');
 const mineData = require('./mine-data');
 const inert = require('inert');
 const good = require('good');
-const goodConsole = require('good-console');
-// const KU_client = require('./api_consumers/kundeunivers_client');
 
 var server = new Hapi.Server({
   connections: {

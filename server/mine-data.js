@@ -1,7 +1,5 @@
-/*jshint node: true */
-'use strict';
-
-var backend = require('./backend');
+const KU = require('./api_consumers/kundeunivers_client');
+const {wrap} = require('boom');
 
 module.exports.register = function (server, options, next) {
 
@@ -11,6 +9,19 @@ module.exports.register = function (server, options, next) {
     handler: {
       directory: {
         path: 'mine-data/build'
+      }
+    }
+  });
+
+  server.route({
+    method: 'get',
+    path: '/{userId}/category/{categoryName}',
+    handler: (req, reply) => {
+      switch (req.params.categoryName) {
+        case 'kundeunivers':
+          KU.fetchAllData(req.params.userId, req.params.categoryName)
+            .then(allData => reply(allData))
+            .catch(err => reply(wrap(err)));
       }
     }
   });
