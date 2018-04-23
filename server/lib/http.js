@@ -11,8 +11,6 @@ class Http {
   }
 
   static request(method, uri, credentials, payload = null) {
-    const credentials = BPC.appTicket;
-
     return new Promise((fulfill, reject) => {
       request({
         uri,
