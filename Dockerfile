@@ -14,18 +14,19 @@ RUN wget -O - https://nodejs.org/dist/$NODE_VERSION/node-$NODE_VERSION-linux-x64
     --exclude="ChangeLog" -C "/usr/local"
 
 # Set the working directory.
-WORKDIR /nyhedsbreve
+WORKDIR /app
 
 # Copying the code into image. Be aware no config files are including.
-COPY ./assets /nyhedsbreve/assets
-COPY ./bower_components /nyhedsbreve/bower_components
-COPY ./client /nyhedsbreve/client
-COPY ./node_modules /nyhedsbreve/node_modules
-COPY ./src /nyhedsbreve/src
-COPY ./opdatering /nyhedsbreve/opdatering
+COPY ./assets /app/assets
+COPY ./bower_components /app/bower_components
+COPY ./nyhedsbreve /app/nyhedsbreve
+COPY ./node_modules /app/node_modules
+COPY ./server /app/server
+COPY ./opdatering /app/opdatering
+COPY ./mine-data /app/mine-data
 
 # Exposing our endpoint to Docker.
 EXPOSE  8000
 
 # When starting a container with our image, this command will be run.
-CMD ["node", "src/server.js"]
+CMD ["node", "server/index.js"]

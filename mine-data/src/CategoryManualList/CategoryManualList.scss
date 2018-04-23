@@ -1,0 +1,19 @@
+.Category-card-label {
+  display: block;
+  margin-bottom: 3px;
+}
+
+.Category-card {
+  .card-body {
+    display: flex;
+    align-items: center;
+  }
+
+  .Category-title {
+    flex-grow: 1;
+  }
+
+  .Checkbox {
+    flex-shrink: 0;
+  }
+}
