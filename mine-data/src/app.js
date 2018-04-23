@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { applyMiddleware, compose, createStore } from 'redux';
@@ -8,25 +8,18 @@ import { combineReducers } from 'redux';
 import { login } from './LoginForm/login.reducers';
 import { withUserData } from './LoginForm/withUserData';
 import { LoginPage } from './LoginPage/LoginPage';
-import { LogoutLink } from './logout/LogoutLink';
-import { CategoryManualList } from './CategoryManualList/CategoryManualList';
 import { categoryManualList } from './CategoryManualList/categoryManualList.reducers';
 
 import '../assets/styles.scss';
+import { HomePage } from './HomePage/HomePage';
 
 const WithUserData = withUserData(
   LoginPage,
   () => <div>Loading...</div>,
-  () => (
-    <Fragment>
-      <h1>GSP</h1>
-      <CategoryManualList/>
-      <LogoutLink>Logout</LogoutLink>
-    </Fragment>
-  )
+  HomePage
 );
 
-class HomePage extends React.Component {
+class WrapperPage extends React.Component {
   componentWillMount() {
     if (this.props.match.isExact) {
       this.props.history.push('/mine-data');
@@ -60,7 +53,7 @@ const store = createStore(combineReducers({
 export const App = () => (
   <Provider store={store}>
     <BrowserRouter>
-      <Route path="/" component={HomePage}/>
+      <Route path="/" component={WrapperPage}/>
     </BrowserRouter>
   </Provider>
 );
