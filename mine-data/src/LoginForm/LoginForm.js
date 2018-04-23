@@ -1,17 +1,13 @@
 import React from 'react';
 import { FormGroup, Input, Label } from 'reactstrap';
 import { connect } from 'react-redux';
-import {
-  login, setPassword, setRememberMe, setUsername
-} from './login.actions';
-import Checkbox from '../Checkbox/Checkbox';
+import { login, setPassword, setUsername } from './login.actions';
 import SubmitButton from '../SubmitButton/SubmitButton';
 
 export class LoginDisconnected extends React.Component {
   constructor(props) {
     super(props);
     this.setPassword = this.setPassword.bind(this);
-    this.setRememberMe = this.setRememberMe.bind(this);
     this.setUsername = this.setUsername.bind(this);
     this.submit = this.submit.bind(this);
   }
@@ -29,13 +25,8 @@ export class LoginDisconnected extends React.Component {
 
     this.props.login({
       username: this.props.username,
-      password: this.props.password,
-      rememberMe: this.props.rememberMe
+      password: this.props.password
     });
-  }
-
-  setRememberMe() {
-    this.props.setRememberMe(this.props.rememberMe);
   }
 
   render() {
@@ -67,18 +58,6 @@ export class LoginDisconnected extends React.Component {
           </div>
         </div>
         <div className="row justify-content-center">
-          <div className="col-sm-6">
-            <FormGroup>
-              <Label className="control-label">
-                <Checkbox checked={this.props.rememberMe}
-                          onChange={this.setRememberMe}
-                          disabled={this.props.pending}/>
-                remember me
-              </Label>
-            </FormGroup>
-          </div>
-        </div>
-        <div className="row justify-content-center">
           <div className="col-sm-6 nav-buttons">
             <SubmitButton loading={this.props.pending}>Login</SubmitButton>
           </div>
@@ -95,12 +74,10 @@ const mapDispatchToProps = (dispatch) => ({
   login: (payload) => dispatch(login(payload)),
   setUsername: (username) => dispatch(setUsername(username)),
   setPassword: (password) => dispatch(setPassword(password)),
-  setRememberMe: (rememberMe) => dispatch(setRememberMe(rememberMe)),
 });
 
 const mapStateToProps = ({login}) => ({
   pending: login.pending,
-  rememberMe: login.rememberMe,
   response: login.response,
   username: login.username,
   password: login.password

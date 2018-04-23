@@ -1,16 +1,10 @@
 import { receiveUserInfo } from '../common/userInfo.actions';
 
-export const SET_REMEMBER_ME = '[login] set remember me';
 export const REQUEST_LOGIN = '[login] request';
 export const RECEIVE_LOGIN = '[login] receive';
 export const RESET_LOGIN = '[login] reset';
 export const SET_USERNAME = '[login] set username';
 export const SET_PASSWORD = '[login] set password';
-
-export const setRememberMe = (rememberMe) => ({
-  type: SET_REMEMBER_ME,
-  rememberMe
-});
 
 export const setUsername = (username) => ({
   type: SET_USERNAME,
