@@ -15,8 +15,22 @@ const createTicketSchema = Joi.object().keys({
   custom_fields: Joi.array().items(Joi.object().keys({
     id: Joi.number().required(),
     value: Joi.string().required()
-  }))
+  })),
+  requester: Joi.object().keys({
+    locale_id: Joi.number().default(1000), // dansk
+    name: Joi.string(),
+    email: Joi.string().email()
+  })
 });
+
+const stdTicketFieldValues = {
+  ticket_form_id: 360000056974,       // GDPR Formular
+  brand_id: 114094395074,              // Berlingske Media
+  // organization_id: 116145165994    // Berlingske Media
+  organization_id: 360014896433       // Berlingskemedia
+};
+
+const stdTicketCustomFieldsContactReason = { id: 114101503914, value: 'gdpr' };
 
 
 try {
@@ -54,19 +68,21 @@ module.exports = {
       return Promise.reject({error: validate_result.error});
     }
 
+    // Setting standard values
+    Object.assign(ticket, stdTicketFieldValues);
+
     // Making sure the contact reason ("Kontakt årsag") is standard GDRP.
-    const std_contact_reason = { id: 114101503914, value: 'GPPR' };
     if (ticket.custom_fields) {
       const temp = ticket.custom_fields.findIndex((item) => {
-        return item.id = std_contact_reason.id;
-      };
+        return item.id = stdTicketCustomFieldsContactReason.id;
+      });
       if (temp > -1) {
-        ticket.custom_fields[temp] = std_contact_reason;
+        ticket.custom_fields[temp] = stdTicketCustomFieldsContactReason;
       } else {
-        ticket.custom_fields.push(std_contact_reason);
+        ticket.custom_fields.push(stdTicketCustomFieldsContactReason);
       }
     } else {
-      ticket.custom_fields = [std_contact_reason];
+      ticket.custom_fields = [stdTicketCustomFieldsContactReason];
     }
 
     return callZenDesk({ method: 'POST', path: '/api/v2/tickets.json', payload: { ticket: ticket }})
