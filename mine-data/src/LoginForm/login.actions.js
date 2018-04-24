@@ -1,4 +1,5 @@
-import { receiveUserInfo } from '../common/userInfo.actions';
+import { receiveUserInfo, verifyUser } from '../common/userInfo.actions';
+import { receiveVerifyUser } from '../VerifyUserPage/verifyUser.actions';
 
 export const REQUEST_LOGIN = '[login] request';
 export const RECEIVE_LOGIN = '[login] receive';
@@ -29,7 +30,7 @@ export const resetLogin = () => ({
   type: RESET_LOGIN
 });
 
-export const login = ({username, password, rememberMe}) => {
+export const login = ({username, password}) => {
   return (dispatch) => {
     dispatch(requestLogin());
 
@@ -37,12 +38,12 @@ export const login = ({username, password, rememberMe}) => {
       gigya.accounts.login({
         loginID: username,
         password: password,
-        sessionExpiration: rememberMe ? -2 : 0,
         callback: response => {
           if (response.errorCode === 0) {
             fulfill(response);
             dispatch(resetLogin());
             dispatch(receiveUserInfo(response));
+            dispatch(verifyUser());
           } else {
             dispatch(receiveLogin(response));
             fulfill(response);

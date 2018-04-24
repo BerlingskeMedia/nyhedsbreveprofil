@@ -2,8 +2,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { logOut } from './logOut.actions';
 
+import './LogoutLink.scss';
+
 const StaticLogoutLink = ({children, onClick}) => (
-  <a onClick={onClick}>{children}</a>
+  <a className="LogoutLink" onClick={onClick}>{children}</a>
 );
 
 const mapDispatchToProps = (dispatch) => ({
