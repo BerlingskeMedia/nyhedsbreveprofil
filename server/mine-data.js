@@ -1,4 +1,5 @@
 const KU = require('./api_consumers/kundeunivers_client');
+const MDB = require('./api_consumers/mdb_client');
 const {wrap} = require('boom');
 
 module.exports.register = function (server, options, next) {
@@ -15,14 +16,24 @@ module.exports.register = function (server, options, next) {
 
   server.route({
     method: 'get',
-    path: '/{userId}/category/{categoryName}',
+    path: '/category/kundeunivers/{gigyaUID}',
     handler: (req, reply) => {
-      switch (req.params.categoryName) {
-        case 'kundeunivers':
-          KU.fetchAllData(req.params.userId, req.params.categoryName)
-            .then(allData => reply(allData))
-            .catch(err => reply(wrap(err)));
-      }
+      KU.fetchAllData(req.params.gigyaUID)
+        .then(allData => reply(allData))
+        .catch(err => reply(wrap(err)));
+    }
+  });
+
+  server.route({
+    method: 'get',
+    path: '/category/mdb/{email}',
+    handler: (req, reply) => {
+      MDB.getData(req.params.email)
+        .then(allData => reply(allData))
+        .catch((err) => {
+          console.error('MDB error:', err);
+          reply(wrap(err))
+        });
     }
   });
 

@@ -1,1 +1,67 @@
-// backend has mdb client so this class is redundant/ or perhaps can serve as a bridge between gigya uid and mdb extern_it?
+const Http = require('../lib/http');
+
+const MDBAPI_ADDRESS = `http://${process.env.MDBAPI_ADDRESS}`;
+
+class MDB {
+
+  static getData(email) {
+    const interests = MDB.getInterests();
+    const newsletters = MDB.getNewsletters();
+    const profile = MDB.findUserId(email).then(
+      result => MDB.getUserProfile(result)
+    );
+    return Promise.all([interests, newsletters, profile])
+      .then(([interests, newsletters, profile]) => MDB.mapper(interests, newsletters, profile));
+  }
+
+  static mapper(interests, newsletters, profile) {
+    const allData = {profile};
+
+    allData.nyhedsbreve_list = newsletters
+      .filter(newsletter => profile.nyhedsbreve.includes(newsletter.nyhedsbrev_id))
+      .map(newsletter => ({
+        name: newsletter.nyhedsbrev_navn,
+        time: newsletter.tidspunkt,
+        description: newsletter.indhold
+      }));
+
+    allData.permission_list = interests
+      .filter(permission => profile.permissions.includes(permission.interesse_id))
+      .map(permission => ({
+        name: permission.nyhedsbrev_navn,
+        time: permission.tidspunkt,
+        description: permission.indhold
+      }));
+
+    allData.interesser_list = interests
+      .filter(permission => profile.interesser.includes(permission.interesse_id))
+      .map(permission => ({
+        name: permission.nyhedsbrev_navn,
+        time: permission.tidspunkt,
+        description: permission.indhold
+      }));
+
+    return allData;
+  }
+
+  static findUserId(email) {
+    return Http.request('GET', `${MDBAPI_ADDRESS}/users?email=${email}`, null)
+      .then(result => result[0].ekstern_id);
+  };
+
+  static getUserProfile(eksternId) {
+    return Http.request('GET', `${MDBAPI_ADDRESS}/users/${eksternId}`, null);
+  }
+
+  static getInterests() {
+    return Http.request('GET', `${MDBAPI_ADDRESS}/interesser/full`, null);
+
+  }
+
+  static getNewsletters() {
+    return Http.request('GET', `${MDBAPI_ADDRESS}/nyhedsbreve`, null);
+  }
+
+}
+
+module.exports = MDB;
