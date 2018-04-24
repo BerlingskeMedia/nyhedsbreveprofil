@@ -31,7 +31,7 @@ export class LoginDisconnected extends React.Component {
 
   render() {
     return (
-      <form className="form" onSubmit={this.submit}>
+      <form className="form" onSubmit={this.submit} autoComplete="off">
         <div className="row justify-content-center">
           <div className="col-sm-9">
             <div className="form-group">Log in to get insight into the data that we store on you</div>
@@ -41,7 +41,7 @@ export class LoginDisconnected extends React.Component {
           <div className="col-sm-6">
             <FormGroup>
               <Label for="email" className="control-label">email</Label>
-              <Input type="email" id="email" name="email"
+              <Input type="email" id="email" name="email" autoComplete="off"
                      value={this.props.username} onChange={this.setUsername}
                      readOnly={this.props.pending}/>
             </FormGroup>
@@ -51,9 +51,9 @@ export class LoginDisconnected extends React.Component {
           <div className="col-sm-6">
             <FormGroup>
               <Label className="control-label">password</Label>
-              <Input type="password" id="password" name="password"
+              <Input type="password" id="password" name="password" autoComplete="off"
                      value={this.props.password} onChange={this.setPassword}
-                     readOnly={this.props.pending} autoComplete="login-password"/>
+                     readOnly={this.props.pending} />
             </FormGroup>
           </div>
         </div>
