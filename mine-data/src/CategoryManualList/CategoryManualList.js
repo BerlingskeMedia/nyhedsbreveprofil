@@ -52,12 +52,8 @@ class List extends React.Component {
 
     return (
       <Fragment>
-        <p>
-          Below you can see a list of services that you can request the data
-          insights for. Select the desired services from the list and submit the
-          request.
-        </p>
-        <CollapsibleList isChecked={this.isSelected} onCheck={this.toggle}>
+        <CollapsibleList isChecked={this.isSelected} onCheck={this.toggle}
+                         getId={({category}) => category.name}>
           {data.categories.map(category => <ManualCard key={category.name} category={category} />)}
         </CollapsibleList>
         <div className="nav-buttons">

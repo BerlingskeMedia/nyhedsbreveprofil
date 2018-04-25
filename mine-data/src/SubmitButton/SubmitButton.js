@@ -4,10 +4,14 @@ import { Button } from 'reactstrap';
 import classNames from 'classnames';
 
 import './SubmitButton.scss';
+import { Loading } from '../Loading/Loading';
 
 const SubmitButton = ({children, loading, disabled, warn}) => (
   <Button type="submit" className={classNames('SubmitButton', {loading, warn})}
           disabled={loading || disabled}>
+    <div className="loader">
+      <Loading/>
+    </div>
     <div className="content">
       {children}
     </div>

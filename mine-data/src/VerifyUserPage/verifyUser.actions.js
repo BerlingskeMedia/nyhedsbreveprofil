@@ -21,8 +21,8 @@ export const fetchVerifyUser = (password) => {
         loginMode: 'reAuth',
         callback: response => {
           if (response.errorCode === 0) {
-            dispatch(verifyUser());
             dispatch(resetVerifyUser());
+            dispatch(verifyUser());
           } else {
             dispatch(receiveVerifyUser(response));
           }

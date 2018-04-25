@@ -31,7 +31,12 @@ var goodOpts = {
   }
 };
 
-server.connection({ port: process.env.PORT ? process.env.PORT : 8000 });
+server.connection({
+  port: process.env.PORT ? process.env.PORT : 8000,
+  routes: {
+    cors: true
+  }
+});
 
 server.route({
   method: 'GET',

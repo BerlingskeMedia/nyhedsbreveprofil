@@ -24,11 +24,15 @@ it communicates with MDBAPI via a basic proxy middleware written in `Hapi.js`.
 You'll need a recent version of node.js, _v4.2.2 or newer_. You'll need to setup
 the following environment variables before you start;
 
-```
+```bash
 export NODE_ENV="development"
 export TZ="Europe/Copenhagen"
 export MDBAPI_ADDRESS=mdbapi.bemit.dk
 export MDBAPI_PORT=80
+  
+# variables consumed by mine-data web application
+export API_URL=http://localhost:8082
+export GIGYA_API_KEY=5__cAWpT5nWdkxSuly0T2OJd2svumYf1dvKWweeUeUddlIrbgnoZLzxxtky7eQasdASDAsd
 ```
 
 These can of course be reconfigured as required. You'll also need `bower.js`, if
