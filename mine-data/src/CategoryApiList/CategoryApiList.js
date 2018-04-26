@@ -17,15 +17,7 @@ export const List = ({userInfo}) => (
         fetchData={() => Api.get(`/mine-data/category/kundeunivers/${userInfo.userInfo.UID}`)}
         render={(data) => (
            <Fragment>
-             <DetailsTitle>Personal data</DetailsTitle>
-             <DetailsItem value={data.name}>name</DetailsItem>
-             <DetailsItem value={data.mail}>email</DetailsItem>
-             <DetailsItem value={data.address}>address</DetailsItem>
-             <DetailsItem value={data.zipcode}>zip code</DetailsItem>
-             <DetailsItem value={data.city}>city</DetailsItem>
-             <DetailsItem value={data.phone}>phone</DetailsItem>
-
-             <DetailsTitle>Orders</DetailsTitle>
+             <DetailsTitle>Orders:</DetailsTitle>
              {data.orders.map(order => order.items.map(item => (
                <Fragment key={item.sap_order_id}>
                  <DetailsItem className="mt-4" value={item.product_family}>product</DetailsItem>
