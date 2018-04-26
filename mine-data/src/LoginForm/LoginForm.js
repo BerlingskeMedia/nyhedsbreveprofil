@@ -1,8 +1,9 @@
 import React from 'react';
 import { FormGroup, Input, Label } from 'reactstrap';
 import { connect } from 'react-redux';
-import { login, setPassword, setUsername } from './login.actions';
+import { login, resetLogin, setPassword, setUsername } from './login.actions';
 import SubmitButton from '../SubmitButton/SubmitButton';
+import { Link } from 'react-router-dom';
 
 export class LoginDisconnected extends React.Component {
   constructor(props) {
@@ -10,6 +11,10 @@ export class LoginDisconnected extends React.Component {
     this.setPassword = this.setPassword.bind(this);
     this.setUsername = this.setUsername.bind(this);
     this.submit = this.submit.bind(this);
+  }
+
+  componentWillUnmount() {
+    this.props.resetLogin();
   }
 
   setPassword(e) {
@@ -59,6 +64,7 @@ export class LoginDisconnected extends React.Component {
         </div>
         <div className="row justify-content-center">
           <div className="col-sm-6 nav-buttons">
+            <Link to="/mine-data/register">create account</Link>
             <SubmitButton loading={this.props.pending}>Login</SubmitButton>
           </div>
         </div>
@@ -70,17 +76,18 @@ export class LoginDisconnected extends React.Component {
   }
 }
 
-const mapDispatchToProps = (dispatch) => ({
-  login: (payload) => dispatch(login(payload)),
-  setUsername: (username) => dispatch(setUsername(username)),
-  setPassword: (password) => dispatch(setPassword(password)),
-});
-
 const mapStateToProps = ({login}) => ({
   pending: login.pending,
   response: login.response,
   username: login.username,
   password: login.password
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  login: (payload) => dispatch(login(payload)),
+  setUsername: (username) => dispatch(setUsername(username)),
+  setPassword: (password) => dispatch(setPassword(password)),
+  resetLogin: () => dispatch(resetLogin())
 });
 
 export const LoginForm = connect(mapStateToProps, mapDispatchToProps)(LoginDisconnected);

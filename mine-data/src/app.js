@@ -9,6 +9,8 @@ import { login } from './LoginForm/login.reducers';
 import { WithUserData } from './LoginForm/withUserData';
 import { categoryManualList } from './CategoryManualList/categoryManualList.reducers';
 import { verifyUser } from './VerifyUserPage/verifyUser.reducers';
+import { RegisterPage } from './RegisterPage/RegisterPage';
+import { register } from './RegisterPage/register.reducers';
 
 import '../assets/styles.scss';
 
@@ -26,7 +28,8 @@ class WrapperPage extends React.Component {
           <div className="container">
             <div className="row justify-content-center">
               <div className="col-sm-8">
-                <WithUserData {...props}/>
+                {props.match.isExact ? <WithUserData {...props}/> : null}
+                <Route path={`${props.match.url}/register`} component={RegisterPage}/>
               </div>
             </div>
           </div>
@@ -41,7 +44,8 @@ const store = createStore(combineReducers({
   userInfo,
   login,
   categoryManualList,
-  verifyUser
+  verifyUser,
+  register
 }), composeEnhancers(applyMiddleware(thunkMiddleware)));
 
 export const App = () => (
