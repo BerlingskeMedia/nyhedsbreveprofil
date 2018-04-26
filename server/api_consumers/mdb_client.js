@@ -4,12 +4,11 @@ const MDBAPI_ADDRESS = `http://${process.env.MDBAPI_ADDRESS}`;
 
 class MDB {
 
-  static getData(email) {
+  static getData(eksternId) {
     const interests = MDB.getInterests();
     const newsletters = MDB.getNewsletters();
-    const profile = MDB.findUserId(email).then(
-      result => MDB.getUserProfile(result)
-    );
+    const profile = MDB.getUserProfile(eksternId);
+
     return Promise.all([interests, newsletters, profile])
       .then(([interests, newsletters, profile]) => MDB.mapper(interests, newsletters, profile));
   }
@@ -44,9 +43,9 @@ class MDB {
     return allData;
   }
 
-  static findUserId(email) {
+  static findUser(email) {
     return Http.request('GET', `${MDBAPI_ADDRESS}/users?email=${email}`, null)
-      .then(result => result[0].ekstern_id);
+      .then(result => result[0]);
   };
 
   static getUserProfile(eksternId) {
