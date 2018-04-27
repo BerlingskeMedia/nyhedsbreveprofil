@@ -1,6 +1,7 @@
 const KU = require('./api_consumers/kundeunivers_client');
 const MDB = require('./api_consumers/mdb_client');
-const {badImplementation, notFound} = require('boom');
+const Http = require('./lib/http');
+const {notFound} = require('boom');
 
 module.exports.register = function (server, options, next) {
 
@@ -20,7 +21,7 @@ module.exports.register = function (server, options, next) {
     handler: (req, reply) => {
       KU.fetchAllData(req.params.gigyaUID)
         .then(allData => reply(allData))
-        .catch(err => reply(badImplementation(err)));
+        .catch(err => reply(Http.wrapError(err)));
     }
   });
 
@@ -36,10 +37,7 @@ module.exports.register = function (server, options, next) {
             reply(notFound());
           }
         })
-        .catch(err => {
-          console.error('MDB error:', err);
-          reply(badImplementation(err));
-        });
+        .catch(err => reply(Http.wrapError(err)));
     }
   });
 

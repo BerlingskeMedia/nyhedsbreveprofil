@@ -8,6 +8,12 @@ export class Api {
   static get(path) {
     return fetch(Api.getUrl(path), {
       method: 'GET'
+    }).then(response => {
+      if (!response.ok) {
+        return Promise.reject(response);
+      }
+
+      return response;
     });
   }
 }

@@ -7,10 +7,12 @@ export class CategoryApiCard extends React.Component {
   constructor(props) {
     super(props);
 
+    this.renderDetails = this.renderDetails.bind(this);
     this.toggle = this.toggle.bind(this);
 
     this.state = {
       data: null,
+      error: null,
       pending: false
     };
   }
@@ -19,12 +21,28 @@ export class CategoryApiCard extends React.Component {
     this.setState({pending: true});
     this.props.fetchData()
       .then(response => response.json())
-      .then(data => {
-        this.setState({
-          data,
-          pending: false
-        });
-      });
+      .then(data => this.setState({
+        data,
+        pending: false
+      }))
+      .catch(response => this.setState({
+        pending: false,
+        error: response
+      }));
+  }
+
+  renderDetails() {
+    if (!this.state.pending) {
+      if (this.state.data) {
+        return this.props.render(this.state.data);
+      }
+
+      if (this.state.error && this.props.renderError) {
+        return this.props.renderError(this.state.error);
+      }
+    }
+
+    return null;
   }
 
   toggle() {
@@ -32,13 +50,12 @@ export class CategoryApiCard extends React.Component {
   }
 
   render() {
-    const {title, render, ...rest} = this.props;
-    const {pending, data} = this.state;
+    const {title, ...rest} = this.props;
+    const {pending} = this.state;
 
     return (
       <CategoryCard title={title} sideNav={() => pending ? <Loading/> : null}
-                    details={() => data && !pending ? render(data) : null}
-                    {...rest}/>
+                    details={this.renderDetails} {...rest}/>
     );
   }
 }
@@ -46,5 +63,6 @@ export class CategoryApiCard extends React.Component {
 CategoryApiCard.propTypes = {
   fetchData: PropTypes.func.isRequired,
   title: PropTypes.string,
-  render: PropTypes.func.isRequired
+  render: PropTypes.func.isRequired,
+  renderError: PropTypes.func
 };

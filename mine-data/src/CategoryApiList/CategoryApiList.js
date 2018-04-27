@@ -8,6 +8,7 @@ import { DetailsItem } from '../Details/DetailsItem';
 import { DetailsTitle } from '../Details/DetailsTitle';
 
 const CategoriesList = withCollapse(CategoryList);
+const Error = error => <div>An error occurred during data fetch: {error.statusText}</div>;
 
 export const List = ({userInfo}) => (
   <Fragment>
@@ -15,6 +16,7 @@ export const List = ({userInfo}) => (
       <CategoryApiCard
         title="Kundeunivers"
         fetchData={() => Api.get(`/mine-data/category/kundeunivers/${userInfo.userInfo.UID}`)}
+        renderError={Error}
         render={(data) => (
            <Fragment>
              <DetailsTitle>Orders:</DetailsTitle>
@@ -32,6 +34,7 @@ export const List = ({userInfo}) => (
          )}/>
       <CategoryApiCard title="MDB"
                        fetchData={() => Api.get(`/mine-data/category/mdb/${userInfo.userInfo.profile.email}`)}
+                       renderError={Error}
                        render={(data) => {
 
                        }}/>
