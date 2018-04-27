@@ -31,8 +31,8 @@ module.exports.register = function (server, options, next) {
     handler: (req, reply) => {
       MDB.findUser(req.params.email)
         .then(user => {
-          if (user && user.eksternId) {
-            return MDB.getData(user.eksternId).then(allData => reply(allData));
+          if (user && user.ekstern_id) {
+            return MDB.getData(user.ekstern_id).then(allData => reply(allData));
           } else {
             reply(notFound());
           }

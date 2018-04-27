@@ -16,6 +16,6 @@ export const DetailsItem = ({value, children, className}) => {
 };
 
 DetailsItem.propTypes = {
-  value: PropTypes.string,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]),
   className: PropTypes.string
 };
