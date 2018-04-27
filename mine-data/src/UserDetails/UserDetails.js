@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Card, CardBody, CardSubtitle, CardTitle } from 'reactstrap';
+import { DetailsItem } from '../Details/DetailsItem';
 
 import './UserDetails.scss';
 
@@ -11,17 +12,19 @@ const DetailsCard = ({user}) => (
       <CardSubtitle>{user.email}</CardSubtitle>
       <div className="UserDetails-info">
         <div className="UserDetails-info-row">
-          {user.nickname ? <div>nick name: {user.nickname}</div> : null}
-          {user.age ? <div>age: {user.age}</div> : null}
-          {(user.birthDay && user.birthMonth && user.birthYear) ?
-            <div>date of birth: {`${user.birthYear}-${user.birthMonth}-${user.birthDay}`}</div> : null}
+          <DetailsItem value={user.nickname}>nick name</DetailsItem>
+          <DetailsItem value={user.age}>age</DetailsItem>
+          <DetailsItem
+            value={user.birthDay && user.birthMonth && user.birthYear && `${user.birthYear}-${user.birthMonth}-${user.birthDay}`}>
+            date of birth
+          </DetailsItem>
         </div>
         <div className="UserDetails-info-row">
-          {user.address ? <div>address: {user.address}</div> : null}
-          {user.city ? <div>city: {user.city}</div> : null}
-          {user.country ? <div>country: {user.country}</div> : null}
+          <DetailsItem value={user.address}>address</DetailsItem>
+          <DetailsItem value={user.city}>city</DetailsItem>
+          <DetailsItem value={user.country}>country</DetailsItem>
         </div>
-        {user.bio ? <div>bio: {user.bio}</div> : null}
+        <DetailsItem value={user.bio}>bio</DetailsItem>
       </div>
     </CardBody>
     <div className="UserDetails-avatar">
