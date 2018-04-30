@@ -7,32 +7,6 @@ const ZENDESK_API_EMAIL = process.env.ZENDESK_API_EMAIL;
 const ZENDESK_API_TOKEN = process.env.ZENDESK_API_TOKEN;
 
 
-const createTicketSchema = Joi.object().keys({
-  subject: Joi.string().required(),
-  comment: Joi.object().keys({
-    body: Joi.string().required()
-  }).required(),
-  custom_fields: Joi.array().items(Joi.object().keys({
-    id: Joi.number().required(),
-    value: Joi.string().required()
-  })),
-  requester: Joi.object().keys({
-    locale_id: Joi.number().default(1000), // dansk
-    name: Joi.string(),
-    email: Joi.string().email()
-  })
-});
-
-const stdTicketFieldValues = {
-  ticket_form_id: 360000056974,       // GDPR Formular
-  brand_id: 114094395074,              // Berlingske Media
-  // organization_id: 116145165994    // Berlingske Media
-  organization_id: 360014896433       // Berlingskemedia
-};
-
-const stdTicketCustomFieldsContactReason = { id: 114101503914, value: 'gdpr' };
-
-
 try {
   ZENDESK_URL = Url.parse(process.env.ZENDESK_URL);
 } catch (ex) {
@@ -50,7 +24,41 @@ if (!ZENDESK_API_TOKEN || ZENDESK_API_TOKEN.length === 0) {
   process.exit(1);
 }
 
-const authorization = 'Basic ' + new Buffer(ZENDESK_API_EMAIL + '/token:' + ZENDESK_API_TOKEN).toString('base64');
+
+const createTicketSchema = Joi.object().keys({
+  subject: Joi.string().required(),
+  comment: Joi.object().keys({
+    body: Joi.string().required()
+  }).required(),
+  custom_fields: Joi.array().items(Joi.object().keys({
+    id: Joi.number().required(),
+    value: [Joi.string(), Joi.array().items(Joi.string())]
+  })),
+  requester: Joi.object().keys({
+    locale_id: Joi.number().default(1000), // dansk
+    name: Joi.string(),
+    email: Joi.string().email()
+  }),
+  tags: Joi.array().items(Joi.string())
+});
+
+
+const stdTicketFieldValues = {
+  ticket_form_id: 360000056974,       // Ticket form: GDPR Formular
+  brand_id: 114094395074,             // Brand: Berlingske Media
+  // organization_id: 116145165994    // Berlingske Media
+  organization_id: 360014896433,      // Berlingskemedia,
+  type: 'task',                       // Allowed values are problem, incident, question, or task
+  type: 'normal',                     // Allowed values are urgent, high, normal, or low
+  status: 'open'                      // Allowed values are open, pending, hold, solved or closed
+};
+
+
+const stdTicketCustomFieldsContactReason = { id: 114101503914, value: 'gdpr' };
+
+
+const authorizationHeader = 'Basic ' + new Buffer(ZENDESK_API_EMAIL + '/token:' + ZENDESK_API_TOKEN).toString('base64');
+
 
 module.exports = {
 
@@ -58,9 +66,11 @@ module.exports = {
     return callZenDesk({ path: '/api/v2/tickets.json' })
   },
 
+
   getTicket: function({id}) {
     return callZenDesk({ path: `/api/v2/tickets/${id}.json` })
   },
+
 
   createTicket: function(ticket) {
     const validate_result = Joi.validate(ticket, createTicketSchema, { convert: false });
@@ -73,11 +83,11 @@ module.exports = {
 
     // Making sure the contact reason ("Kontakt årsag") is standard GDRP.
     if (ticket.custom_fields) {
-      const temp = ticket.custom_fields.findIndex((item) => {
+      const indexOfContactReasonCustomField = ticket.custom_fields.findIndex((item) => {
         return item.id = stdTicketCustomFieldsContactReason.id;
       });
-      if (temp > -1) {
-        ticket.custom_fields[temp] = stdTicketCustomFieldsContactReason;
+      if (indexOfContactReasonCustomField > -1) {
+        ticket.custom_fields[indexOfContactReasonCustomField] = stdTicketCustomFieldsContactReason;
       } else {
         ticket.custom_fields.push(stdTicketCustomFieldsContactReason);
       }
@@ -88,7 +98,8 @@ module.exports = {
     return callZenDesk({ method: 'POST', path: '/api/v2/tickets.json', payload: { ticket: ticket }})
   },
 
-  // TODO: Add more helper functions
+
+  // TODO: Add more helper functions if needed
 
   request: callZenDesk
 };
@@ -101,7 +112,7 @@ function callZenDesk({method = 'GET', path, payload}){
     path: path,
     method: method,
     headers: {
-      'Authorization': authorization,
+      'Authorization': authorizationHeader,
       'Content-Type': 'application/json'
     }
   };
