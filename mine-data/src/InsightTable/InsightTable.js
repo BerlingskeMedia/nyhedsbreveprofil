@@ -36,7 +36,7 @@ export class InsightTable extends React.Component {
           which data
           we store on you and why we do so.</p>
         <Collapse isOpen={this.state.isOpen}>
-          <List >
+          <List getId={({category}) => category.name}>
             {data.categories.map(category => <ManualCategoryCard key={category.name} category={category} />)}
           </List>
         </Collapse>

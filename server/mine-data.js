@@ -1,5 +1,7 @@
 const KU = require('./api_consumers/kundeunivers_client');
-const {wrap} = require('boom');
+const MDB = require('./api_consumers/mdb_client');
+const Http = require('./lib/http');
+const {notFound} = require('boom');
 
 module.exports.register = function (server, options, next) {
 
@@ -15,14 +17,27 @@ module.exports.register = function (server, options, next) {
 
   server.route({
     method: 'get',
-    path: '/{userId}/category/{categoryName}',
+    path: '/category/kundeunivers/{gigyaUID}',
     handler: (req, reply) => {
-      switch (req.params.categoryName) {
-        case 'kundeunivers':
-          KU.fetchAllData(req.params.userId, req.params.categoryName)
-            .then(allData => reply(allData))
-            .catch(err => reply(wrap(err)));
-      }
+      KU.fetchAllData(req.params.gigyaUID)
+        .then(allData => reply(allData))
+        .catch(err => reply(Http.wrapError(err)));
+    }
+  });
+
+  server.route({
+    method: 'get',
+    path: '/category/mdb/{email}',
+    handler: (req, reply) => {
+      MDB.findUser(req.params.email)
+        .then(user => {
+          if (user && user.ekstern_id) {
+            return MDB.getData(user.ekstern_id).then(allData => reply(allData));
+          } else {
+            reply(notFound());
+          }
+        })
+        .catch(err => reply(Http.wrapError(err)));
     }
   });
 

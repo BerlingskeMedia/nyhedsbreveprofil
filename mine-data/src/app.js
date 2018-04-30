@@ -6,18 +6,13 @@ import thunkMiddleware from 'redux-thunk';
 import { userInfo } from './common/userInfo.reducers';
 import { combineReducers } from 'redux';
 import { login } from './LoginForm/login.reducers';
-import { withUserData } from './LoginForm/withUserData';
-import { LoginPage } from './LoginPage/LoginPage';
+import { WithUserData } from './LoginForm/withUserData';
 import { categoryManualList } from './CategoryManualList/categoryManualList.reducers';
+import { verifyUser } from './VerifyUserPage/verifyUser.reducers';
+import { RegisterPage } from './RegisterPage/RegisterPage';
+import { register } from './RegisterPage/register.reducers';
 
 import '../assets/styles.scss';
-import { HomePage } from './HomePage/HomePage';
-
-const WithUserData = withUserData(
-  LoginPage,
-  () => <div>Loading...</div>,
-  HomePage
-);
 
 class WrapperPage extends React.Component {
   componentWillMount() {
@@ -33,7 +28,8 @@ class WrapperPage extends React.Component {
           <div className="container">
             <div className="row justify-content-center">
               <div className="col-sm-8">
-                <WithUserData {...props}/>
+                {props.match.isExact ? <WithUserData {...props}/> : null}
+                <Route path={`${props.match.url}/register`} component={RegisterPage}/>
               </div>
             </div>
           </div>
@@ -47,7 +43,9 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(combineReducers({
   userInfo,
   login,
-  categoryManualList
+  categoryManualList,
+  verifyUser,
+  register
 }), composeEnhancers(applyMiddleware(thunkMiddleware)));
 
 export const App = () => (

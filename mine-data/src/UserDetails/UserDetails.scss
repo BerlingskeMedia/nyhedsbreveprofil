@@ -1,6 +1,13 @@
 .UserDetails {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+  align-items: stretch;
   margin-bottom: 20px;
+}
+
+.UserDetails-info {
+  display: flex;
+}
+
+.UserDetails-info-row {
+  width: 50%;
 }

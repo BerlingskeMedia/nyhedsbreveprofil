@@ -4,14 +4,14 @@
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.24);
 
   .Checkbox {
-    padding-right: 20px;
+    margin-right: 0;
   }
 }
 
 .CategoryCard-title-wrapper {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: stretch;
 
   &:hover {
     background-color: #fbfbfb;
@@ -23,6 +23,12 @@
   cursor: pointer;
   padding: 20px 0 20px 20px;
   flex-grow: 1;
+}
+
+.CategoryCard-title-side {
+  display: flex;
+  align-items: center;
+  padding: 20px 20px 20px 0;
 }
 
 .CategoryCard-details {

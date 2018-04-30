@@ -1,0 +1,6 @@
+.LogoutLink {
+  &, &:not([href]):not([tabindex]) {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}

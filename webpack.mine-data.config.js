@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 
@@ -9,6 +10,10 @@ const HtmlWebpackPluginConfig = new HtmlWebpackPlugin({
 });
 const ScriptExtHtmlWebpackPluginConfig = new ScriptExtHtmlWebpackPlugin({
   defaultAttribute: 'defer'
+});
+const EnvVariablesPlugin = new webpack.DefinePlugin({
+  'process.env.API_URL': JSON.stringify(process.env.API_URL || ''),
+  'process.env.GIGYA_API_KEY': JSON.stringify(process.env.GIGYA_API_KEY || '')
 });
 
 const entry = 'index.js';
@@ -40,7 +45,8 @@ module.exports = {
   },
   plugins: [
     HtmlWebpackPluginConfig,
-    ScriptExtHtmlWebpackPluginConfig
+    ScriptExtHtmlWebpackPluginConfig,
+    EnvVariablesPlugin
   ],
   devtool: 'source-map',
   devServer: {

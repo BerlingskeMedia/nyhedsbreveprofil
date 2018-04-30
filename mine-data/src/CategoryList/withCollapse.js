@@ -5,33 +5,35 @@ export const withCollapse = (WrapperComponent) => {
     constructor(props) {
       super(props);
 
-      this.isCurrentCategory = this.isCurrentCategory.bind(this);
-      this.toggleCategory = this.toggleCategory.bind(this);
+      this.isCurrentElement = this.isCurrentElement.bind(this);
+      this.toggleElement = this.toggleElement.bind(this);
 
       this.state = {
-        currentCategory: null
+        currentElementId: null
       };
     }
 
-    isCurrentCategory(category) {
-      return this.state.currentCategory === category.name;
+    isCurrentElement(elementId) {
+      return this.state.currentElementId === elementId;
     }
 
-    toggleCategory(category) {
-      if (this.isCurrentCategory(category)) {
-        this.setState({currentCategory: null});
+    toggleElement(elementId) {
+      if (this.isCurrentElement(elementId)) {
+        this.setState({currentElementId: null});
       } else {
-        this.setState({currentCategory: category.name});
+        this.setState({currentElementId: elementId});
       }
     }
 
     render() {
+      const {getId, children, ...otherProps} = this.props;
+
       return (
-        <WrapperComponent {...this.props}>
-          {React.Children.map(this.props.children, element => React.cloneElement(element, {
+        <WrapperComponent {...otherProps}>
+          {React.Children.map(children, element => React.cloneElement(element, {
             ...element.props,
-            onToggle: () => this.toggleCategory(element.props.category),
-            isOpen: this.isCurrentCategory(element.props.category)
+            onToggle: () => this.toggleElement(getId(element.props)),
+            isOpen: this.isCurrentElement(getId(element.props))
           }))}
       </WrapperComponent>
       );

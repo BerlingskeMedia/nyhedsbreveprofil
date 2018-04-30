@@ -1,0 +1,14 @@
+.DetailsTitle {
+  margin: {
+    top: 45px;
+    bottom: 10px;
+  }
+  font: {
+    weight: bold;
+    size: 1.1em;
+  }
+
+  &:first-child {
+    margin-top: 15px;
+  }
+}

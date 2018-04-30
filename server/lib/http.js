@@ -1,5 +1,6 @@
 const request = require('request');
 const BPC = require('../bpc_client');
+const {boomify, badImplementation} = require('boom');
 
 class Http {
   static get(url) {
@@ -23,6 +24,8 @@ class Http {
       }, (err, response, body) => {
         if (err) {
           reject(err);
+        } else if (response.statusCode > 299) {
+          reject({response, body});
         } else {
           fulfill(Http.parseResponse(body));
         }
@@ -40,6 +43,16 @@ class Http {
     }
 
     return response;
+  }
+
+  static wrapError(err) {
+    if (err.response && err.body) {
+      return boomify(new Error(err.body), {
+        statusCode: err.response.statusCode
+      });
+    } else {
+      return badImplementation(err);
+    }
   }
 }
 

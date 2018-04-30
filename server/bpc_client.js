@@ -34,7 +34,7 @@ class BPC {
   static callSsoServer(path, credentials) {
     return Http.request('post', `${process.env.BPC_URL}${path}`, credentials)
       .catch(err => {
-        console.error('refreshAppTicket:', err);
+        console.error('callSsoServer:', err);
         setTimeout(BPC.getAppTicket(), 1000 * 60 * 5);
       });
   }

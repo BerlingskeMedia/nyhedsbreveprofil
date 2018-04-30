@@ -1,10 +1,9 @@
 import {
-  SET_REMEMBER_ME, REQUEST_LOGIN, SET_PASSWORD, SET_USERNAME,
+  REQUEST_LOGIN, SET_PASSWORD, SET_USERNAME,
   RESET_LOGIN, RECEIVE_LOGIN
 } from './login.actions';
 
 export const defaultLoginState = () => ({
-  rememberMe: false,
   pending: false,
   username: '',
   password: '',
@@ -19,8 +18,6 @@ export const login = (state = defaultLoginState(), action) => {
       return {...state, pending: false, response: action.response};
     case RESET_LOGIN:
       return defaultLoginState();
-    case SET_REMEMBER_ME:
-      return {...state, rememberMe: action.rememberMe};
     case SET_USERNAME:
       return {...state, username: action.username};
     case SET_PASSWORD:

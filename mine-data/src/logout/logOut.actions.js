@@ -5,7 +5,7 @@ export const logOut = () => {
     return new Promise((fulfill, reject) => {
       gigya.accounts.logout({
         callback: response => {
-          if (!response.errorCode) {
+          if (!response.errorCode || response.errorCode === 403013) {
             dispatch(resetUserInfo());
             fulfill(response);
           } else {
