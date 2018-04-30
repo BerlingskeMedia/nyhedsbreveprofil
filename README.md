@@ -153,44 +153,13 @@ Zendesk.createTicket(newTicket)
 
 #### Ticket custom fields
 
-ID: 114101503914
-Name: Kontakt årsag (Contact reason)
-Type: Drop-down
-
-ID: 114102932874
-Name: Regning (Payment)
-Type: Drop-down
-
-ID: 360000605233
-Name: Ordrenummer (Order number)
-Type: Numeric
-
-ID: 360003795594
-Name: Navn (Name)
-Type: Text
-
-ID: 360003795614
-Name: E-mail
-Type: Text
-
-ID: 360003718633
-Name: Telefonnummer (Telephone number)
-Type: Text
-
-ID: 360003774853
-Name: Adresse (Address)
-Type: Multi-line
-
-ID: 360003718813
-Name: System
-Type: Multi-select
-Possible values:
-
-# Abonnement (abonnement)
-# Telemarketing (abonnementssytem)
-# Annoncering (annoncering)
-# Rapportering (e-mail)
-# Tracking (hr)
-# Kundeservice (kundeservice)
-# Sweetdeal og Shops (sweetdeal_og_shops)
-# Markedsundersøgelse (telefon)
+| ID | Name | Type | Comment |
+| --- | --- | --- | --- |
+| 114101503914 | Kontakt årsag (Contact reason) | Drop-down | |
+| 114102932874 | Regning (Payment) | Drop-down | |
+| 360000605233 | Ordrenummer (Order number) | Numeric | |
+| 360003795594 | Navn (Name) | Text | |
+| 360003795614 | E-mail | Text | |
+| 360003718633 | Telefonnummer (Telephone number) | Text | |
+| 360003774853 | Adresse (Address) | Multi-line | |
+| 360003718813 | System | Multi-select |  Possible values: *Abonnement* (abonnement), *Telemarketing* (abonnementssytem), *Annoncering* (annoncering), *Rapportering* (e-mail), *Tracking* (hr), *Kundeservice* (kundeservice), *Sweetdeal og Shops* (sweetdeal_og_shops), *Markedsundersøgelse* (telefon) |
