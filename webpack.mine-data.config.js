@@ -12,8 +12,7 @@ const ScriptExtHtmlWebpackPluginConfig = new ScriptExtHtmlWebpackPlugin({
   defaultAttribute: 'defer'
 });
 const EnvVariablesPlugin = new webpack.DefinePlugin({
-  'process.env.API_URL': JSON.stringify(process.env.API_URL || ''),
-  'process.env.GIGYA_API_KEY': JSON.stringify(process.env.GIGYA_API_KEY || '')
+  'process.env.API_URL': JSON.stringify(process.env.API_URL || '')
 });
 
 const entry = 'index.js';

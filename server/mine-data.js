@@ -17,6 +17,16 @@ module.exports.register = function (server, options, next) {
 
   server.route({
     method: 'get',
+    path: '/config',
+    handler: (req, reply) => {
+      reply({
+        gigyaApiKey: process.env.GIGYA_API_KEY || ''
+      });
+    }
+  });
+
+  server.route({
+    method: 'get',
     path: '/category/kundeunivers/{gigyaUID}',
     handler: (req, reply) => {
       KU.fetchAllData(req.params.gigyaUID)
