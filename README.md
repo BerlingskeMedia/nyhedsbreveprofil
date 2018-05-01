@@ -123,15 +123,18 @@ const newTicket = {
       "value": "12345678"
     },
     {
+      "id": 360004449334,
+      "value": "17e3f9338f42ed83785b9549f68148d7"
+    },
+    {
       "id": 360003718813,
       "value": [
         "abonnement",
-        "abonnementssytem",
         "annoncering",
-        "e-mail",
-        "hr",
+        "markedsundersogelse",
         "kundeservice",
-        "telefon"
+        "rapportering",
+        "tracking"
       ]
     }
   ],
@@ -162,4 +165,5 @@ Zendesk.createTicket(newTicket)
 | 360003795614 | E-mail | Text | |
 | 360003718633 | Telefonnummer (Telephone number) | Text | |
 | 360003774853 | Adresse (Address) | Multi-line | |
-| 360003718813 | System | Multi-select |  Possible values: *Abonnement* (abonnement), *Telemarketing* (abonnementssytem), *Annoncering* (annoncering), *Rapportering* (e-mail), *Tracking* (hr), *Kundeservice* (kundeservice), *Sweetdeal og Shops* (sweetdeal_og_shops), *Markedsundersøgelse* (telefon) |
+| 360004449334 | Ekstern ID | Text | |
+| 360003718813 | System | Multi-select |  Possible values: *Abonnement* (abonnement), *Annoncering* (annoncering), *Kundeservice* (kundeservice), *Markedsundersøgelse* (markedsundersogelse), *Rapportering* (rapportering), *Sweetdeal og Shops* (sweetdeal_og_shops), *Telemarketing* (telemarketing), *Tracking* (tracking) |

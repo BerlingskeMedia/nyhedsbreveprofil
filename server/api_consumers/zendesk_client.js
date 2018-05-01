@@ -50,11 +50,12 @@ const stdTicketFieldValues = {
   organization_id: 360014896433,      // Berlingskemedia,
   type: 'task',                       // Allowed values are problem, incident, question, or task
   type: 'normal',                     // Allowed values are urgent, high, normal, or low
-  status: 'open'                      // Allowed values are open, pending, hold, solved or closed
+  status: 'new'                      // Allowed values are new, open, pending, hold, solved or closed
 };
 
 
-const stdTicketCustomFieldsContactReason = { id: 114101503914, value: 'gdpr' };
+const customFieldsContactReason = { id: 114101503914, value: 'gdpr' };
+const stdTicketCustomFields = [customFieldsContactReason];
 
 
 const authorizationHeader = 'Basic ' + new Buffer(ZENDESK_API_EMAIL + '/token:' + ZENDESK_API_TOKEN).toString('base64');
@@ -81,18 +82,24 @@ module.exports = {
     // Setting standard values
     Object.assign(ticket, stdTicketFieldValues);
 
-    // Making sure the contact reason ("Kontakt årsag") is standard GDRP.
+    // Setting standard custom fields
     if (ticket.custom_fields) {
-      const indexOfContactReasonCustomField = ticket.custom_fields.findIndex((item) => {
-        return item.id = stdTicketCustomFieldsContactReason.id;
+
+      stdTicketCustomFields.forEach(stdTicketCustomField => {
+
+        const indexOfContactReasonCustomField = ticket.custom_fields.findIndex((item) => {
+          return item.id === stdTicketCustomField.id;
+        });
+
+        if (indexOfContactReasonCustomField > -1) {
+          ticket.custom_fields[indexOfContactReasonCustomField] = stdTicketCustomField;
+        } else {
+          ticket.custom_fields.push(stdTicketCustomField);
+        }
+
       });
-      if (indexOfContactReasonCustomField > -1) {
-        ticket.custom_fields[indexOfContactReasonCustomField] = stdTicketCustomFieldsContactReason;
-      } else {
-        ticket.custom_fields.push(stdTicketCustomFieldsContactReason);
-      }
     } else {
-      ticket.custom_fields = [stdTicketCustomFieldsContactReason];
+      ticket.custom_fields = stdTicketCustomFields;
     }
 
     return callZenDesk({ method: 'POST', path: '/api/v2/tickets.json', payload: { ticket: ticket }})
