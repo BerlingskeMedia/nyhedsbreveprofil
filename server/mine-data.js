@@ -1,5 +1,6 @@
 const KU = require('./api_consumers/kundeunivers_client');
 const MDB = require('./api_consumers/mdb_client');
+const MailChimp = require('./api_consumers/mailchimp_client');
 const Http = require('./lib/http');
 const {notFound} = require('boom');
 
@@ -48,6 +49,19 @@ module.exports.register = function (server, options, next) {
           }
         })
         .catch(err => reply(Http.wrapError(err)));
+    }
+  });
+
+  server.route({
+    method: 'get',
+    path: '/category/mailchimp/{email}',
+    handler: (req, reply) => {
+      MailChimp.getData(req.params.email)
+        .then(allData => reply(allData))
+        .catch((err) => {
+          console.error('MailChimp error:', err);
+          reply(Http.wrapError(err))
+        });
     }
   });
 
