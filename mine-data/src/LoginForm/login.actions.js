@@ -1,5 +1,4 @@
 import { receiveUserInfo, verifyUser } from '../common/userInfo.actions';
-import { receiveVerifyUser } from '../VerifyUserPage/verifyUser.actions';
 
 export const REQUEST_LOGIN = '[login] request';
 export const RECEIVE_LOGIN = '[login] receive';
@@ -40,14 +39,14 @@ export const login = ({username, password}) => {
         password: password,
         callback: response => {
           if (response.errorCode === 0) {
-            fulfill(response);
             dispatch(resetLogin());
             dispatch(receiveUserInfo(response));
             dispatch(verifyUser());
           } else {
             dispatch(receiveLogin(response));
-            fulfill(response);
           }
+
+          fulfill(response);
         }
       });
     });

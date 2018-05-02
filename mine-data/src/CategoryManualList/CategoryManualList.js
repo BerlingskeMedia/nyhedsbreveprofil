@@ -52,14 +52,14 @@ class List extends React.Component {
 
     return (
       <Fragment>
+        <div className="nav-buttons justify-content-start">
+          <SubmitButton onClick={this.requestInsight} disabled={!list || !list.length}>Request insights</SubmitButton>
+          <SubmitButton onClick={this.requestDelete} warn disabled={!list || !list.length}>Request delete</SubmitButton>
+        </div>
         <CollapsibleList isChecked={this.isSelected} onCheck={this.toggle}
                          getId={({category}) => category.name}>
           {data.categories.map(category => <ManualCard key={category.name} category={category} />)}
         </CollapsibleList>
-        <div className="nav-buttons">
-          <SubmitButton onClick={this.requestInsight} disabled={!list || !list.length}>Request insights</SubmitButton>
-          <SubmitButton onClick={this.requestDelete} warn disabled={!list || !list.length}>Request delete</SubmitButton>
-        </div>
       </Fragment>
     );
   }

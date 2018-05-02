@@ -5,6 +5,10 @@ button.SubmitButton {
   position: relative;
   margin-left: 10px;
 
+  &:first-child {
+    margin-left: 0;
+  }
+
   &.warn {
     background-color: #E53935;
     border-color: #E53935;

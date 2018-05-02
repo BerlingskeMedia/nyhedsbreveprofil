@@ -4,10 +4,12 @@ import SubmitButton from '../SubmitButton/SubmitButton';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
+  receiveRegister,
   register, resetRegister,
   setAddress, setCity, setEmail, setFirstName, setLastName, setPassword,
   setPhone, setZipCode
 } from './register.actions';
+import { logOut } from '../logout/logOut.actions';
 
 const FormField = ({name, label = name, type = 'text', value, onChange, pending}) => (
   <div className="row justify-content-center">
@@ -74,10 +76,24 @@ class Register extends React.Component {
   }
 
   submit(e) {
-    const {submit, firstName, lastName, email, password, address, zipCode, city, phone} = this.props;
-
     e.preventDefault();
-    submit({firstName, lastName, email, password, address, zipCode, city, phone});
+    this.props.submit({
+      firstName: this.props.firstName,
+      lastName: this.props.lastName,
+      email: this.props.email,
+      password: this.props.password,
+      address: this.props.address,
+      zipCode: this.props.zipCode,
+      city: this.props.city,
+      phone: this.props.phone
+    })
+      .then(() => {
+        this.props.logout();
+        this.props.history.push('/mine-data');
+      })
+      .catch(response => {
+        this.props.receiveRegister(response);
+      });
   }
 
   render() {
@@ -143,7 +159,9 @@ const mapDispatchToProps = (dispatch) => ({
   setZipCode: (zipCode) => dispatch(setZipCode(zipCode)),
   setPhone: (phone) => dispatch(setPhone(phone)),
   submit: (payload) => dispatch(register(payload)),
-  resetRegister: () => dispatch(resetRegister())
+  receiveRegister: (response) => dispatch(receiveRegister(response)),
+  resetRegister: () => dispatch(resetRegister()),
+  logout: () => dispatch(logOut())
 });
 
 export const RegisterPage = connect(mapStateToProps, mapDispatchToProps)(Register);

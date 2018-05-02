@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Loading } from '../Loading/Loading';
-import { CategoryCard } from '../CategoryCard/CategoryCard';
 
-export class CategoryApiCard extends React.Component {
+export class CategoryApiCardItem extends React.Component {
   constructor(props) {
     super(props);
 
@@ -50,19 +49,18 @@ export class CategoryApiCard extends React.Component {
   }
 
   render() {
-    const {title, ...rest} = this.props;
     const {pending} = this.state;
 
-    return (
-      <CategoryCard title={title} sideNav={() => pending ? <Loading/> : null}
-                    details={this.renderDetails} {...rest}/>
-    );
+    if (pending) {
+      return <Loading/>;
+    }
+
+    return this.renderDetails();
   }
 }
 
-CategoryApiCard.propTypes = {
+CategoryApiCardItem.propTypes = {
   fetchData: PropTypes.func.isRequired,
-  title: PropTypes.string,
   render: PropTypes.func.isRequired,
   renderError: PropTypes.func
 };
