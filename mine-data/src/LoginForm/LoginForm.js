@@ -38,11 +38,6 @@ export class LoginDisconnected extends React.Component {
     return (
       <form className="form" onSubmit={this.submit} autoComplete="off">
         <div className="row justify-content-center">
-          <div className="col-sm-9">
-            <div className="form-group">Log in to get insight into the data that we store on you</div>
-          </div>
-        </div>
-        <div className="row justify-content-center">
           <div className="col-sm-6">
             <FormGroup>
               <Label for="email" className="control-label">email</Label>
