@@ -40,7 +40,7 @@ export class LoginDisconnected extends React.Component {
         <div className="row justify-content-center">
           <div className="col-sm-6">
             <FormGroup>
-              <Label for="email" className="control-label">email</Label>
+              <Label for="email" className="control-label login-control-label">E-mailadresse</Label>
               <Input type="email" id="email" name="email" autoComplete="off"
                      value={this.props.username} onChange={this.setUsername}
                      readOnly={this.props.pending}/>
@@ -50,7 +50,7 @@ export class LoginDisconnected extends React.Component {
         <div className="row justify-content-center">
           <div className="col-sm-6">
             <FormGroup>
-              <Label className="control-label">password</Label>
+              <Label className="control-label login-control-label">Adgangskode</Label>
               <Input type="password" id="password" name="password" autoComplete="off"
                      value={this.props.password} onChange={this.setPassword}
                      readOnly={this.props.pending} />
@@ -59,8 +59,8 @@ export class LoginDisconnected extends React.Component {
         </div>
         <div className="row justify-content-center">
           <div className="col-sm-6 nav-buttons">
-            <Link to="/mine-data/register">create account</Link>
-            <SubmitButton loading={this.props.pending}>Login</SubmitButton>
+            <Link to="/mine-data/register">Opret konto</Link>
+            <SubmitButton loading={this.props.pending}>Log ind</SubmitButton>
           </div>
         </div>
         {this.props.response ? <div className="row justify-content-center">
