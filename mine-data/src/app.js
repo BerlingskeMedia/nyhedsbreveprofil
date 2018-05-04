@@ -25,12 +25,18 @@ class WrapperPage extends React.Component {
     return (
       <Route path="/mine-data" render={(props) => {
         return (
-          <div className="container">
-            <div className="row justify-content-center">
-              <div className="col-sm-8">
-                {props.match.isExact ? <WithUserData {...props}/> : null}
-                <Route path={`${props.match.url}/register`} component={RegisterPage}/>
+          <div className="Page">
+            <div className="container Page-content">
+              <div className="row justify-content-center">
+                <div className="col-sm-8">
+                  {props.match.isExact ? <WithUserData {...props}/> : null}
+                  <Route path={`${props.match.url}/register`} component={RegisterPage}/>
+                </div>
               </div>
+            </div>
+            <div className="Page-footer">
+              Har du spørgsmål eller problemer med denne side, så send en mail
+              til <a href="mailto:persondata@berlingskemedia.dk">persondata@berlingskemedia.dk</a>
             </div>
           </div>
         );

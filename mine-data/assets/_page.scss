@@ -1,0 +1,16 @@
+.Page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.Page-content {
+  flex-grow: 1;
+}
+
+.Page-footer {
+  flex-shrink: 0;
+  align-self: center;
+  margin: 25px 0 10px;
+}

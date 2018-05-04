@@ -3,9 +3,13 @@ import PropTypes from 'prop-types';
 import Checkbox from '../Checkbox/Checkbox';
 
 export const withCheckbox = (WrapperCategoryCard) => {
-  const Wrapped = ({onCheck, checked, ...otherProps}) => (
+  const Wrapped = ({onCheck, checked, enabled, ...otherProps}) => (
     <WrapperCategoryCard {...otherProps} sideNav={() => {
-      return <Checkbox checked={checked} onChange={() => onCheck(otherProps.category)}/>;
+      if (enabled) {
+        return <Checkbox checked={checked} onChange={() => onCheck(otherProps.category)}/>;
+      }
+
+      return null;
     }}/>
   );
 

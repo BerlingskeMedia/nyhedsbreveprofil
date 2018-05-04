@@ -1,5 +1,4 @@
 import React from 'react';
-import { FormGroup, Input, Label } from 'reactstrap';
 import SubmitButton from '../SubmitButton/SubmitButton';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -10,19 +9,7 @@ import {
   setPhone, setZipCode
 } from './register.actions';
 import { logOut } from '../logout/logOut.actions';
-
-const FormField = ({name, label = name, type = 'text', value, onChange, pending}) => (
-  <div className="row justify-content-center">
-    <div className="col-sm-6">
-      <FormGroup>
-        <Label for={name} className="control-label">{label}</Label>
-        <Input type={type} id={name} name={name} autoComplete="off"
-               value={value} onChange={onChange}
-               readOnly={pending}/>
-      </FormGroup>
-    </div>
-  </div>
-);
+import { FormInput } from '../Form/FormInput';
 
 class Register extends React.Component {
   constructor(props) {
@@ -103,24 +90,26 @@ class Register extends React.Component {
       <form className="form" onSubmit={this.submit} autoComplete="off">
         <div className="row justify-content-center">
           <div className="col-sm-9">
-            <div className="form-group">Create an account to get insight into data we store on you</div>
+            <div className="form-group">For at vi kan behandle din anmodning har vi behov for nogle basale oplysninger om dig. Indtast dem venligst i nedenstående felter og klik på “Registrer”. Herefter bliver du sendt tilbage til login siden, hvor du skal logge på med din nye Berlingske Media konto.</div>
+            <div className="form-group">Vi kan kun give dig indsigt baseret på de oplysninger du giver os i forbindelse med oprettelsen af din konto. Derfor er det vigtigt at du angiver tilstrækkelig oplysninger til at vi kan give dig den fornødne indsigt.</div>
+            <div className="form-group"><strong>Berlingske Media forbeholder sig ret til at foretage nødvendig kontrol af de anførte oplysninger for at sikre at data ikke bliver udleveret til de forkerte.</strong></div>
           </div>
         </div>
-        <FormField name="firstName" label="first name" value={firstName}
+        <FormInput name="firstName" label="first name" value={firstName}
                    onChange={this.setFirstName} pending={pending}/>
-        <FormField name="lastName" label="last name" value={lastName}
+        <FormInput name="lastName" label="last name" value={lastName}
                    onChange={this.setLastName} pending={pending}/>
-        <FormField name="email" type="email" value={email}
+        <FormInput name="email" type="email" value={email}
                    onChange={this.setEmail} pending={pending}/>
-        <FormField name="password" type="password" value={password}
+        <FormInput name="password" type="password" value={password}
                    onChange={this.setPassword} pending={pending}/>
-        <FormField name="address" value={address}
+        <FormInput name="address" value={address}
                    onChange={this.setAddress} pending={pending}/>
-        <FormField name="zipCode" value={zipCode}
+        <FormInput name="zipCode" value={zipCode}
                    onChange={this.setZipCode} pending={pending}/>
-        <FormField name="city" value={city}
+        <FormInput name="city" value={city}
                    onChange={this.setCity} pending={pending}/>
-        <FormField name="phone" value={phone}
+        <FormInput name="phone" value={phone}
                    onChange={this.setPhone} pending={pending}/>
         <div className="row justify-content-center">
           <div className="col-sm-6 nav-buttons">

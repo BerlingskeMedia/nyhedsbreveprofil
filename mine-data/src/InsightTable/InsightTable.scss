@@ -5,13 +5,7 @@
   }
 
   .InsightTable-link:not([href]) {
-    text-decoration: none;
     cursor: pointer;
     color: #007bff
   }
-}
-
-.InsightTable-caption {
-  text-align: left;
-  font-size: 16px;
 }

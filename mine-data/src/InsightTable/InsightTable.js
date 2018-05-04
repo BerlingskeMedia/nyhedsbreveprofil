@@ -31,8 +31,7 @@ export class InsightTable extends React.Component {
   render() {
     return (
       <div className="InsightTable">
-        <p className="InsightTable-caption">Klik <a
-          className="InsightTable-link" onClick={this.toggle}>her</a> for at se, hvilke typer af persondata vi gemmer, og hvorfor vi gemmer dem.</p>
+        <p>Klik <a className="InsightTable-link" onClick={this.toggle}>her</a> for at se, hvilke typer af persondata vi gemmer, og hvorfor vi gemmer dem.</p>
         <Collapse isOpen={this.state.isOpen}>
           <List getId={({category}) => category.name}>
             {data.categories.map(category => <ManualCategoryCard key={category.name} category={category} />)}
