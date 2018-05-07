@@ -6,8 +6,23 @@ export class Api {
   }
 
   static get(path) {
+    return Api.request(path, 'GET');
+  }
+
+  static post(path, payload) {
+    return Api.request(path, 'POST', payload);
+  }
+
+  static request(path, method, body) {
+    const isPost = /^post$/i.test(method);
+
     return fetch(Api.getUrl(path), {
-      method: 'GET'
+      method,
+      body: isPost ? JSON.stringify(body) : body,
+      headers: body && isPost ? {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json'
+      } : {}
     }).then(response => {
       if (!response.ok) {
         return Promise.reject(response);

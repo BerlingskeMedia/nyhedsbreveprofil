@@ -3,6 +3,7 @@ const MDB = require('./api_consumers/mdb_client');
 const MailChimp = require('./api_consumers/mailchimp_client');
 const Http = require('./lib/http');
 const {notFound} = require('boom');
+const ZenDesk = require('./api_consumers/zendesk_client');
 
 module.exports.register = function (server, options, next) {
 
@@ -62,6 +63,25 @@ module.exports.register = function (server, options, next) {
           console.error('MailChimp error:', err);
           reply(Http.wrapError(err))
         });
+    }
+  });
+
+  server.route({
+    method: 'POST',
+    path: '/zendesk/request',
+    handler: (req, reply) => {
+      ZenDesk.createTicket({
+        subject: 'Request insight/delete',
+        comment: {
+          body: `Jeg ønsker indsigt/sletning af følgende data:\n\n${req.params.categories.map(c => '- '.concat(c)).join('\n')}`
+        },
+        requester: {
+          name: req.params.name,
+          email: req.params.email
+        }
+      }).then(() => {
+        reply().status(200);
+      }).catch(err => reply(Http.wrapError(err)));
     }
   });
 

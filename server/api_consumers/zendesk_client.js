@@ -49,8 +49,8 @@ const stdTicketFieldValues = {
   // organization_id: 116145165994    // Berlingske Media
   organization_id: 360014896433,      // Berlingskemedia,
   type: 'task',                       // Allowed values are problem, incident, question, or task
-  type: 'normal',                     // Allowed values are urgent, high, normal, or low
-  status: 'new'                      // Allowed values are new, open, pending, hold, solved or closed
+  priority: 'normal',                 // Allowed values are urgent, high, normal, or low
+  status: 'new'                       // Allowed values are new, open, pending, hold, solved or closed
 };
 
 

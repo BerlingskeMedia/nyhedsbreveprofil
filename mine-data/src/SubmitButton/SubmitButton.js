@@ -20,6 +20,7 @@ const SubmitButton = ({className, children, loading, disabled, warn, ...rest}) =
 );
 
 SubmitButton.propTypes = {
+  ...Button.propTypes,
   className: PropTypes.string,
   disabled: PropTypes.bool,
   loading: PropTypes.bool,

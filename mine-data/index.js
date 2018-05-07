@@ -10,6 +10,6 @@ Api.get('/mine-data/config')
   .then(() => {
     ReactDOM.render(<App/>, document.getElementById('content'));
   })
-  .catch(() => {
-    console.error('Error loading Gigya script');
+  .catch(err => {
+    console.error('Error loading Gigya script', err);
   });
