@@ -48,8 +48,7 @@ class List extends React.Component {
   submitTicket() {
     this.props.submitTicket({
       categories: this.props.list,
-      name: `${this.props.userInfo.userInfo.profile.firstName || ''} ${this.props.userInfo.userInfo.profile.lastName || ''}`.trim(),
-      email: this.props.userInfo.userInfo.profile.email,
+      user: this.props.userInfo.userInfo.profile,
       mode: this.props.mode
     });
   }

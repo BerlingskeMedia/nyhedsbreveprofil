@@ -105,6 +105,39 @@ module.exports = {
     return callZenDesk({ method: 'POST', path: '/api/v2/tickets.json', payload: { ticket: ticket }})
   },
 
+  mapPayloadToTicket: (payload) => {
+    const modeText = payload.mode === 'insight' ? 'indsigt' : 'sletning';
+    const {email, firstName, lastName, phones, address, city, zip} = payload.user;
+    const name = `${firstName || ''} ${lastName || ''}`.trim();
+    const custom_fields = [
+      {id: 360003795594, value: name},
+      {id: 360003795614, value: email}
+    ];
+
+    if (phones.length) {
+      custom_fields.push({
+        id: 360003718633,
+        value: phones[0].number
+      });
+    }
+
+    if (address || city || zip) {
+      custom_fields.push({
+        id: 360003774853,
+        value: `${address || ''} ${zip || ''} ${city || ''}`.trim()
+      });
+    }
+
+    return {
+      subject: `TEST - Request ${modeText}`,
+      comment: {
+        body: `TEST - Jeg ønsker ${modeText} af følgende data:\n\n${payload.categories.map(c => '- '.concat(c)).join('\n')}`
+      },
+      requester: {name, email},
+      custom_fields
+    };
+  },
+
 
   // TODO: Add more helper functions if needed
 
