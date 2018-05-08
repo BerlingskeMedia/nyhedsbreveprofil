@@ -46,10 +46,11 @@ class List extends React.Component {
   }
 
   submitTicket() {
-    this.props.submitTicket(this.props.mode, {
+    this.props.submitTicket({
       categories: this.props.list,
       name: `${this.props.userInfo.userInfo.profile.firstName || ''} ${this.props.userInfo.userInfo.profile.lastName || ''}`.trim(),
-      email: this.props.userInfo.userInfo.profile.email
+      email: this.props.userInfo.userInfo.profile.email,
+      mode: this.props.mode
     });
   }
 
@@ -128,7 +129,7 @@ const mapDispatchToProps = (dispatch) => ({
   resetCategories: () => dispatch(resetCategories()),
   setNoneMode: () => dispatch(setNoneMode()),
   setMode: (newMode) => dispatch(setMode(newMode)),
-  submitTicket: (mode, payload) => dispatch(submitTicket(mode, payload)),
+  submitTicket: (payload) => dispatch(submitTicket(payload)),
   resetTicket: () => dispatch(resetSubmit())
 });
 

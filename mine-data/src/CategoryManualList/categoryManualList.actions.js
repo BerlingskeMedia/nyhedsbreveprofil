@@ -64,11 +64,11 @@ export const failedSubmit = () => ({
   type: SUBMIT_FAILED
 });
 
-export const submitTicket = (mode, payload) => {
+export const submitTicket = (payload) => {
   return dispatch => {
-    dispatch(requestSubmit(mode));
+    dispatch(requestSubmit(payload.mode));
 
-    return Api.post('/zendesk/request', payload)
+    return Api.post('/mine-data/zendesk/request', payload)
       .then(() => {
         dispatch(receiveSubmit());
         dispatch(setNoneMode());

@@ -70,17 +70,19 @@ module.exports.register = function (server, options, next) {
     method: 'POST',
     path: '/zendesk/request',
     handler: (req, reply) => {
+      const modeText = req.payload.mode === 'insight' ? 'indsigt' : 'sletning';
+
       ZenDesk.createTicket({
-        subject: 'Request insight/delete',
+        subject: `TEST - Request ${modeText}`,
         comment: {
-          body: `Jeg ønsker indsigt/sletning af følgende data:\n\n${req.params.categories.map(c => '- '.concat(c)).join('\n')}`
+          body: `TEST - Jeg ønsker ${modeText} af følgende data:\n\n${req.payload.categories.map(c => '- '.concat(c)).join('\n')}`
         },
         requester: {
-          name: req.params.name,
-          email: req.params.email
+          name: req.payload.name + 'Test User',
+          email: req.payload.email
         }
       }).then(() => {
-        reply().status(200);
+        reply(null, '');
       }).catch(err => reply(Http.wrapError(err)));
     }
   });

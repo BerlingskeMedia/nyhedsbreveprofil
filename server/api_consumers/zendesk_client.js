@@ -76,7 +76,7 @@ module.exports = {
   createTicket: function(ticket) {
     const validate_result = Joi.validate(ticket, createTicketSchema, { convert: false });
     if(validate_result.error) {
-      return Promise.reject({error: validate_result.error});
+      return Promise.reject(validate_result.error);
     }
 
     // Setting standard values
