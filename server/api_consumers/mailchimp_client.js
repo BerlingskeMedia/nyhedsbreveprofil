@@ -19,8 +19,7 @@ class MailChimp {
 
   static getData(email) {
     return Http.request('GET',
-      `${MAILCHIMP_URI}/search-members?query=${email}&exclude_fields=_links,full_search,exact_matches.members._links`,
-      null)
+      `${MAILCHIMP_URI}/search-members?query=${email}&exclude_fields=_links,full_search,exact_matches.members._links`)
       .then(results => MailChimp.getDetails(results.exact_matches.members))
       .then(results => MailChimp.getActivity(results));
   }

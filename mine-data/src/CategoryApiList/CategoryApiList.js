@@ -12,6 +12,41 @@ import { CategoryCard } from '../CategoryCard/CategoryCard';
 const CategoriesList = withCollapse(CategoryList);
 const Error = () => <div>Data unavailable</div>;
 
+const ObjectToDetails = ({fields}) => {
+  if (!fields) {
+    return null;
+  }
+
+  return Object.keys(fields).map(fieldName => {
+    const field = fields[fieldName];
+
+    if (Array.isArray(field)) {
+      return <DetailsItem key={fieldName} value={`[ ${field.join(', ')} ]`} allowEmpty>{fieldName}</DetailsItem>;
+    }
+
+    if (field !== null && typeof field === 'object') {
+      return (
+        <Fragment key={fieldName}>
+          <DetailsItem allowEmpty>{fieldName}</DetailsItem>
+          <div className="ml-2">
+            <ObjectToDetails fields={field}/>
+          </div>
+        </Fragment>
+      );
+    }
+
+    if (typeof field === 'boolean') {
+      return <DetailsItem key={fieldName} value={field ? 'yes' : 'no'}>{fieldName}</DetailsItem>
+    }
+
+    if (['string', 'number'].includes(typeof field)) {
+      return <DetailsItem key={fieldName} value={field} allowEmpty>{fieldName}</DetailsItem>;
+    }
+
+    return null;
+  });
+};
+
 export const List = ({userInfo: {userInfo}}) => (
   <Fragment>
     <CategoriesList getId={({title}) => title}>
@@ -133,6 +168,19 @@ export const List = ({userInfo: {userInfo}}) => (
                   )) : <div>No results</div>}
                 </Fragment>
               )}/>
+
+            <DetailsSeparator/>
+
+            <DetailsTitle>MailChimp</DetailsTitle>
+            <CategoryApiCardItem
+              fetchData={() => Api.get(`/mine-data/category/mailchimp/${userInfo.profile.email}`)}
+              renderError={Error}
+              render={(data) => data.map(({list_title, ...fields}) => (
+                <Fragment key={list_title}>
+                  <DetailsTitle>{list_title}</DetailsTitle>
+                  <ObjectToDetails fields={fields}/>
+                </Fragment>
+              ))}/>
           </Fragment>
         )}/>
     </CategoriesList>

@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-export const DetailsItem = ({value, children, className}) => {
-  if (value) {
+export const DetailsItem = ({value, children, className, allowEmpty}) => {
+  if (value || allowEmpty) {
     return (
       <div className={classNames('DetailsItem', className)}>
         <strong>{children}: </strong>
@@ -17,5 +17,6 @@ export const DetailsItem = ({value, children, className}) => {
 
 DetailsItem.propTypes = {
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]),
-  className: PropTypes.string
+  className: PropTypes.string,
+  allowEmpty: PropTypes.bool
 };

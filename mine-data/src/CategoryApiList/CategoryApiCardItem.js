@@ -31,14 +31,12 @@ export class CategoryApiCardItem extends React.Component {
   }
 
   renderDetails() {
-    if (!this.state.pending) {
-      if (this.state.data) {
-        return this.props.render(this.state.data);
-      }
+    if (this.state.data) {
+      return this.props.render(this.state.data);
+    }
 
-      if (this.state.error && this.props.renderError) {
-        return this.props.renderError(this.state.error);
-      }
+    if (this.state.error && this.props.renderError) {
+      return this.props.renderError(this.state.error);
     }
 
     return null;
