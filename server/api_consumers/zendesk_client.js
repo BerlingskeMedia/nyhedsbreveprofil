@@ -1,6 +1,8 @@
 const Https = require('https');
 const Url = require('url');
 const Joi = require('joi');
+const MDB = require('./mdb_client');
+const {categories} = require('./categories_client');
 
 var ZENDESK_URL;
 const ZENDESK_API_EMAIL = process.env.ZENDESK_API_EMAIL;
@@ -114,6 +116,9 @@ module.exports = {
       {id: 360003795614, value: email},
       {id: 360003718813, value: payload.categories}
     ];
+    const payloadCategories = payload.categories
+      .map(c => categories.find(category => category.name === c))
+      .filter(c => !!c);
 
     if (phones.length) {
       custom_fields.push({
@@ -129,14 +134,22 @@ module.exports = {
       });
     }
 
-    return {
-      subject: `TEST - Request ${modeText}`,
-      comment: {
-        body: `TEST - Jeg ønsker ${modeText} af følgende data:\n\n${payload.categories.map(c => '- '.concat(c)).join('\n')}`
-      },
-      requester: {name, email},
-      custom_fields
-    };
+    return MDB.findUser(email).then(user => {
+      if (user && user.ekstern_id) {
+        custom_fields.push({
+          id: 360004449334, value: user.ekstern_id
+        });
+      }
+
+      return {
+        subject: `TEST - Request ${modeText}`,
+        comment: {
+          body: `TEST - Jeg ønsker ${modeText} af følgende data:\n\n${payloadCategories.map(c => '- '.concat(c.title)).join('\n')}`
+        },
+        requester: {name, email},
+        custom_fields
+      };
+    });
   },
 
 

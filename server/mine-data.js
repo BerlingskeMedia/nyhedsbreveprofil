@@ -4,6 +4,7 @@ const MailChimp = require('./api_consumers/mailchimp_client');
 const Http = require('./lib/http');
 const {notFound} = require('boom');
 const ZenDesk = require('./api_consumers/zendesk_client');
+const {categories} = require('./api_consumers/categories_client');
 
 module.exports.register = function (server, options, next) {
 
@@ -70,11 +71,20 @@ module.exports.register = function (server, options, next) {
     method: 'POST',
     path: '/zendesk/request',
     handler: (req, reply) => {
-      ZenDesk.createTicket(
-        ZenDesk.mapPayloadToTicket(req.payload)
-      ).then(() => {
-        reply(null, '');
-      }).catch(err => reply(Http.wrapError(err)));
+      ZenDesk.mapPayloadToTicket(req.payload)
+        .then(payload => ZenDesk.createTicket(payload))
+        .then(() => {
+          reply(null, '');
+        })
+        .catch(err => reply(Http.wrapError(err)));
+    }
+  });
+
+  server.route({
+    method: 'GET',
+    path: '/categories',
+    handler: (req, reply) => {
+      reply({categories});
     }
   });
 

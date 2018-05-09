@@ -1,8 +1,9 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-import data from '../../data';
 import {
-  addCategory, removeCategory, resetCategories, resetSubmit, setMode,
+  addCategory, fetchCategories, removeCategory, resetCategories,
+  resetCategoryList, resetSubmit,
+  setMode,
   setNoneMode, submitTicket
 } from './categoryManualList.actions';
 import classNames from 'classnames';
@@ -18,6 +19,7 @@ import { withCheckboxList } from '../CategoryList/withCheckboxList';
 import { Alert } from 'reactstrap';
 
 import './CategoryManualList.scss';
+import { Loading } from '../Loading/Loading';
 
 const ManualCard = compose(withCheckbox, withManualDetails, withTitle)(CategoryCard);
 const CollapsibleList = compose(withCheckboxList, withCollapse)(CategoryList);
@@ -27,6 +29,16 @@ const ModeButton = ({active, className, ...rest}) => (
 );
 
 class List extends React.Component {
+  static fetchCategoriesIfNeeded({categories: {pending, categories}, fetchCategories}) {
+    if (!pending && !categories) {
+      fetchCategories();
+    }
+  }
+
+  static getCategoryId({category}) {
+    return category.name;
+  }
+
   constructor(props) {
     super(props);
 
@@ -36,9 +48,19 @@ class List extends React.Component {
     this.toggleMode = this.toggleMode.bind(this);
   }
 
+  componentWillMount() {
+    List.fetchCategoriesIfNeeded(this.props);
+  }
+
+  componentWillReceiveProps(props) {
+    List.fetchCategoriesIfNeeded(props);
+  }
+
   componentWillUnmount() {
     this.props.resetCategories();
+    this.props.resetCategoryList();
     this.props.setNoneMode();
+    this.props.resetTicket();
   }
 
   isSelected(category) {
@@ -65,66 +87,77 @@ class List extends React.Component {
     if (this.props.mode === newMode) {
       this.props.setNoneMode();
     } else {
-      this.props.resetCategories();
+      this.props.resetCategoryList();
       this.props.setMode(newMode);
     }
   }
 
   render() {
-    const {list, mode, submit} = this.props;
+    const {list, mode, submit, categories} = this.props;
     const isModeInsight = mode === 'insight';
     const isTicketModeInsight = submit.mode === 'insight';
     const isModeDelete = mode === 'delete';
 
-    return (
-      <Fragment>
-        <div className="nav-buttons justify-content-start">
-          <ModeButton onClick={() => this.toggleMode('insight')} active={isModeInsight}>Request insights</ModeButton>
-          <ModeButton onClick={() => this.toggleMode('delete')} color="danger" active={isModeDelete}>Request delete</ModeButton>
-        </div>
-        <CollapsibleList isChecked={this.isSelected} onCheck={this.toggle}
-                         getId={({category}) => category.name}>
-          {data.categories.map(category => <ManualCard key={category.name} category={category} enabled={mode} />)}
-        </CollapsibleList>
-        {mode ? (
-          <Fragment>
-            <p>Hvis du er er uenig i vores behandling af din indsigts- eller sletteanmodning, har du mulighed for at klage til Datatilsynet. Læs nærmere <a href="https://www.datatilsynet.dk/borger/klage-til-datatilsynet" target="_blank">her</a>.</p>
-            <div className="nav-buttons justify-content-start">
-              <SubmitButton disabled={!list.length} onClick={this.submitTicket}>Submit</SubmitButton>
-            </div>
-          </Fragment>
-        ) : null}
-        <Alert className="message" color="success" isOpen={submit.fetched && !submit.failed} toggle={this.props.resetTicket}>
-          <p>Tak for din henvendelse.</p>
-          {isTicketModeInsight ?
-            <p>Din indsigtsanmodning vil blive besvaret og sendt til dig på mail inden for 30 dage.</p> :
-            <p>
-              Du vil inden for 30 dage modtage bekræftelse på, at dine data er blevet slettet.<br/>
-              Bemærk, at hvis du har data i kategorierne x, y, og z vil disse ikke blive slettet. Dette skyldes at Berlingske Media f.eks. har en retslig forpligtelse til at gemme disse oplysninger.
-            </p>}
-          <p>Hvis du er er uenig i vores behandling af din {isTicketModeInsight ? 'indsigtsanmodning' : 'sletteanmodning'}, har du mulighed for at klage til Datatilsynet. Læs nærmere <a href="https://www.datatilsynet.dk/borger/klage-til-datatilsynet" target="_blank">her</a>.</p>
+    if (categories.pending) {
+      return <Loading />;
+    }
+
+    if (categories.categories) {
+      return (
+        <Fragment>
           <div className="nav-buttons justify-content-start">
-            <SubmitButton onClick={this.props.resetTicket}>Close</SubmitButton>
+            <ModeButton onClick={() => this.toggleMode('insight')} active={isModeInsight}>Request insights</ModeButton>
+            <ModeButton onClick={() => this.toggleMode('delete')} color="danger" active={isModeDelete}>Request delete</ModeButton>
           </div>
-        </Alert>
-        <Alert className="message" color="danger" isOpen={submit.fetched && submit.failed} toggle={this.props.resetTicket}>
-          Your request has not been sent
-        </Alert>
-      </Fragment>
-    );
+          <CollapsibleList isChecked={this.isSelected} onCheck={this.toggle}
+                           getId={List.getCategoryId}>
+            {categories.categories.map(category => <ManualCard key={category.name} category={category} enabled={mode} />)}
+          </CollapsibleList>
+          {mode ? (
+            <Fragment>
+              <p>Hvis du er er uenig i vores behandling af din indsigts- eller sletteanmodning, har du mulighed for at klage til Datatilsynet. Læs nærmere <a href="https://www.datatilsynet.dk/borger/klage-til-datatilsynet" target="_blank">her</a>.</p>
+              <div className="nav-buttons justify-content-start">
+                <SubmitButton disabled={!list.length} loading={submit.pending} onClick={this.submitTicket}>Submit</SubmitButton>
+              </div>
+            </Fragment>
+          ) : null}
+          <Alert className="message" color="success" isOpen={submit.fetched && !submit.failed} toggle={this.props.resetTicket}>
+            <p>Tak for din henvendelse.</p>
+            {isTicketModeInsight ?
+              <p>Din indsigtsanmodning vil blive besvaret og sendt til dig på mail inden for 30 dage.</p> :
+              <p>
+                Du vil inden for 30 dage modtage bekræftelse på, at dine data er blevet slettet.<br/>
+                Bemærk, at hvis du har data i kategorierne x, y, og z vil disse ikke blive slettet. Dette skyldes at Berlingske Media f.eks. har en retslig forpligtelse til at gemme disse oplysninger.
+              </p>}
+            <p>Hvis du er er uenig i vores behandling af din {isTicketModeInsight ? 'indsigtsanmodning' : 'sletteanmodning'}, har du mulighed for at klage til Datatilsynet. Læs nærmere <a href="https://www.datatilsynet.dk/borger/klage-til-datatilsynet" target="_blank">her</a>.</p>
+            <div className="nav-buttons justify-content-start">
+              <SubmitButton onClick={this.props.resetTicket}>Close</SubmitButton>
+            </div>
+          </Alert>
+          <Alert className="message" color="danger" isOpen={submit.fetched && submit.failed} toggle={this.props.resetTicket}>
+            Your request has not been sent
+          </Alert>
+        </Fragment>
+      );
+    }
+
+    return null;
   }
 }
 
-const mapStateToProps = ({userInfo, categoryManualList: {list, mode, submit}}) => ({
+const mapStateToProps = ({userInfo, categoryManualList: {list, mode, submit, categories}}) => ({
   list,
   mode,
   submit,
-  userInfo
+  userInfo,
+  categories
 });
 
 const mapDispatchToProps = (dispatch) => ({
   onAddCategory: (category) => dispatch(addCategory(category.name)),
   onRemoveCategory: (category) => dispatch(removeCategory(category.name)),
+  fetchCategories: () => dispatch(fetchCategories()),
+  resetCategoryList: () => dispatch(resetCategoryList()),
   resetCategories: () => dispatch(resetCategories()),
   setNoneMode: () => dispatch(setNoneMode()),
   setMode: (newMode) => dispatch(setMode(newMode)),

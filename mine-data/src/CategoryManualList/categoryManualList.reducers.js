@@ -1,9 +1,30 @@
 import {
-  ADD_CATEGORY, REMOVE_CATEGORY, RESET_CATEGORIES, SET_MODE_DELETE,
+  ADD_CATEGORY, RECEIVE_CATEGORIES, REMOVE_CATEGORY, REQUEST_CATEGORIES,
+  RESET_CATEGORIES,
+  RESET_CATEGORY_LIST,
+  SET_MODE_DELETE,
   SET_MODE_INSIGHT, SET_MODE_NONE, SUBMIT_FAILED, SUBMIT_RECEIVE,
   SUBMIT_REQUEST, SUBMIT_RESET
 } from './categoryManualList.actions';
 import { combineReducers } from 'redux';
+
+export const getCategoriesDefaultState = () => ({
+  pending: false,
+  categories: null
+});
+
+export const categories = (state = getCategoriesDefaultState(), action) => {
+  switch (action.type) {
+    case REQUEST_CATEGORIES:
+      return {...state, pending: true, categories: null};
+    case RECEIVE_CATEGORIES:
+      return {...state, pending: false, categories: action.categories};
+    case RESET_CATEGORIES:
+      return getCategoriesDefaultState();
+    default:
+      return state;
+  }
+};
 
 export const list = (state = [], action) => {
   switch (action.type) {
@@ -12,7 +33,7 @@ export const list = (state = [], action) => {
     case REMOVE_CATEGORY:
       const categoryAt = state.indexOf(action.category);
       return [...state.slice(0, categoryAt), ...state.slice(categoryAt + 1)];
-    case RESET_CATEGORIES:
+    case RESET_CATEGORY_LIST:
       return [];
     default:
       return state;
@@ -57,5 +78,6 @@ export const submit = (state = getSubmitDefaultState(), action) => {
 export const categoryManualList = combineReducers({
   list,
   mode,
-  submit
+  submit,
+  categories
 });
