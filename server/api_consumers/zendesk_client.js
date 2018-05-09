@@ -141,6 +141,7 @@ module.exports = {
         });
       }
 
+      // TODO: remove "TEST" from the subject and message body
       return {
         subject: `TEST - Request ${modeText}`,
         comment: {
