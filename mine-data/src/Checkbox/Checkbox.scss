@@ -18,10 +18,10 @@
   .fake-input {
     width: 23px;
     height: 23px;
-    background: url(../../../opdatering/assets/unchecked.svg) no-repeat 0 0;
+    background: url(./unchecked.svg) no-repeat 0 0;
   }
 
   input:checked + .fake-input {
-    background-image: url(../../../opdatering/assets/checked.svg);
+    background-image: url(./checked.svg);
   }
 }
