@@ -1,7 +1,9 @@
 {
   "categories": [
     {
-      "name": "Abonnementsregister",
+      "description": "Abonnementsregister",
+      "title": "Abonnement",
+      "name": "abonnement",
       "informationType": "navn, efternavn, adresse, email, telefon, cpr nr., konto oplysninger, betalinger,  ordrehistorik, transaktionsdata",
       "purpose": "At servicere kundens abonnementer",
       "authority": "Kontrakt. Databehandling foretages af hensyn til opfyldelse af en kontrakt, som kunden er part i.",
@@ -11,7 +13,9 @@
       "storeLongevity": "2-5 år efter brug"
     },
     {
-      "name": "Internt produktionsregister til rapportering mv.",
+      "description": "Internt produktionsregister til rapportering mv.",
+      "title": "Rapportering",
+      "name": "rapportering",
       "informationType": "Navn, adresse, email, telefon, ordrenummer, kundenummer, beskrivelse af kundeinteraktioner",
       "purpose": "At understøtte Berlingske Media's interne produktionsstyring og ledelsesrapportering.",
       "authority": "Legitime interesser. Databehandling foretages af hensyn til Berlingske Media's produktionsstyring og ledelsesrapportering.",
@@ -21,27 +25,9 @@
       "storeLongevity": "2-5 år efter brug"
     },
     {
-      "name": "Register for Kundeoplysninger, Marketing og nyhedsbreve",
-      "informationType": "Navn, email, adresse, fødselsdag, telefon, børn, interesser, nyhedsbreve, samtykker", 
-      "purpose": "At administrere stamoplysninger, interesser, nyhedsbreve, samtykker på Berlingske Media's kunder. At understøtte Berlingske Media's marketing. At servicere kundens abonnementer på nyhedsbreve",
-      "authority": "Læserens samtykke. Desuden kontrakt. Databehandling foretages af hensyn til opfyldelse af aftaler, som kunden er part i.", 
-      "access": "Relevante medarbejdere i Berlingske Media's afdeling for salg og marketing.",
-      "origin": "Sweetdeal, kundeunivers, Abonnementsregister, manuelle indtastninger og Oplysninger afgivet af Kunden online",
-      "registrer": "Alle kunder i Berlingske Media",
-      "storeLongevity": "0-5 år efter brug"
-    },
-    {
-      "name": "Register for log-in oplysninger",
-      "informationType": "Navn, adresse, ordrenumre, abonnementer",
-      "purpose": "At give kunden single-sign-on på Berlingske Media's systemer", 
-      "authority": "Kontrakt. Databehandling foretages af hensyn til opfyldelse af en aftale om kontooprettelse, som kunden er part i.",
-      "access": "Kun maskinel adgang fra Berlingske Media's IT-systemer og relevante medarbejdere hos Berlingske Media's kundeservice",
-      "origin": "Abonnementsregister, Kundeunivers",
-      "registrer": "Abonnenter og tidligere abonnenter",
-      "storeLongevity": "Umiddelbart efter nedlæggelse af konto"
-    },
-    {
-      "name": "Register for markedsundersøgelser, quizzer, spørgeundersøgelser og konkurrencer",
+      "description": "Register for markedsundersøgelser, quizzer, spørgeundersøgelser og konkurrencer",
+      "title": "Markedsundersøgelse",
+      "name": "markedsundersogelse",
       "informationType": "Navn, email, adresse, køn, alder, beskæftigelse, uddannelse, husstandsindkomst, børn, postnummer",
       "purpose": "At gennemføre quizzer, tilfredshedsundersøgelser mv.",
       "authority": "Læserens samtykke.",
@@ -51,7 +37,9 @@
       "storeLongevity": "3-5 år efter brug"
     },
     {
-      "name": "Register for online-trafik",
+      "description": "Register for online-trafik",
+      "title": "Tracking",
+      "name": "tracking",
       "informationType": "Log-in navn, viste annoncer, Oplysninger om klik på annoncer og artikler, tekniske oplysninger om kundens device",
       "purpose": "At tilbyde den digitale læser en god brugeroplevelse med relevant sideorganisering, indhold og annoncering", 
       "authority": "Læserens samtykke.",
@@ -61,7 +49,9 @@
       "storeLongevity": "6 mnd-5 år"
     },
     {
-      "name": "Register for telemarketing",
+      "description": "Register for telemarketing",
+      "title": "Telemarketing",
+      "name": "telemarketing",
       "informationType": "Navn, adresse, telefon, lydfiler med foretagede opkald",
       "purpose": "At understøtte Berlingske Media's afdeling for salg og marketing.",
       "authority": "Legitime interesser. Databehandling foretages af hensyn til Berlingske Media's salg og marketing.",
@@ -71,7 +61,9 @@
       "storeLongevity": "5 år efter brug"
     },
     {
-      "name": "Register over henvendelser til kundeservice",
+      "description": "Register over henvendelser til kundeservice",
+      "title": "Kundeservice",
+      "name": "kundeservice",
       "informationType": "Navn, efternavn, adresse, email, telefon og evt andre afgivne oplysninger",
       "purpose": "At servicere kundens henvendelse",
       "authority": "Kontrakt. Databehandling foretages af hensyn til opfyldelse af en kontrakt, som kunden er part i.",
@@ -81,7 +73,9 @@
       "storeLongevity": "5 år efter brug"
     },
     {
-      "name": "Register over indrykkede annoncer",
+      "description": "Register over indrykkede annoncer",
+      "title": "Annoncering",
+      "name": "annoncering",
       "informationType": "Navn, email, telefon, adresse, ordrehistorik",
       "purpose": "At understøtte kundens ordrebestilling",
       "authority": "Kontrakt. Databehandling foretages af hensyn til opfyldelse af aftalte handler, som kunden er part i.",
@@ -91,7 +85,9 @@
       "storeLongevity": "2-5 år efter brug"
     },
     {
-      "name": "Sweetdeal & Shops",
+      "description": "Sweetdeal & Shops",
+      "title": "Sweetdeal og Shops",
+      "name": "sweetdeal_og_shops",
       "informationType": "Navn, adresse, email, Sweetdeal city",
       "purpose": "At understøtte kundens handler i shops på Berlingske Media's platforme",
       "authority": "Kontrakt. Databehandling foretages af hensyn til opfyldelse af aftalte handler, som kunden er part i.",

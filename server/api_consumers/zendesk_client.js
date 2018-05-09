@@ -111,7 +111,8 @@ module.exports = {
     const name = `${firstName || ''} ${lastName || ''}`.trim();
     const custom_fields = [
       {id: 360003795594, value: name},
-      {id: 360003795614, value: email}
+      {id: 360003795614, value: email},
+      {id: 360003718813, value: payload.categories}
     ];
 
     if (phones.length) {
