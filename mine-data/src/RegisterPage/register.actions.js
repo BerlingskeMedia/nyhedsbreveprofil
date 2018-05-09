@@ -37,6 +37,9 @@ export const register = ({firstName, lastName, email, password, address, zipCode
               password,
               regToken,
               finalizeRegistration: true,
+              data: {
+                terms: true
+              },
               profile: {
                 firstName,
                 lastName,
@@ -47,16 +50,14 @@ export const register = ({firstName, lastName, email, password, address, zipCode
               },
               callback: (response) => {
                 if (response.errorCode) {
-                  dispatch(receiveRegister(response));
+                  reject(response);
                 } else {
-                  dispatch(resetRegister());
-                  // redirect to login?
+                  fulfill(response);
                 }
               }
             });
           } else {
-            dispatch(receiveRegister(initResponse));
-            fulfill(initResponse);
+            reject(initResponse);
           }
         }
       });

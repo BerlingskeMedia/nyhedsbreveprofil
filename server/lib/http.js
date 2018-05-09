@@ -1,6 +1,6 @@
 const request = require('request');
 const BPC = require('../bpc_client');
-const {boomify, badImplementation} = require('boom');
+const {boomify, badImplementation, badRequest} = require('boom');
 
 class Http {
   static get(url) {
@@ -47,10 +47,15 @@ class Http {
 
   static wrapError(err) {
     if (err.response && err.body) {
+      console.log('[response error]', err.response.statusCode, err.response.statusMessage, err.body);
       return boomify(new Error(err.body), {
         statusCode: err.response.statusCode
       });
+    } else if (err && err.isJoi && err.name === 'ValidationError') {
+      console.log('[validation error]', err.details);
+      return badRequest(err.details.map(detail => `${detail.path.join('.')}: ${detail.message}`).join('; '));
     } else {
+      console.log('[internal error]', err);
       return badImplementation(err);
     }
   }

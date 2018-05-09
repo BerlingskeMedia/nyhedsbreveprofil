@@ -1,7 +1,10 @@
 const KU = require('./api_consumers/kundeunivers_client');
 const MDB = require('./api_consumers/mdb_client');
+const MailChimp = require('./api_consumers/mailchimp_client');
 const Http = require('./lib/http');
 const {notFound} = require('boom');
+const ZenDesk = require('./api_consumers/zendesk_client');
+const {categories} = require('./api_consumers/categories_client');
 
 module.exports.register = function (server, options, next) {
 
@@ -12,6 +15,16 @@ module.exports.register = function (server, options, next) {
       directory: {
         path: 'mine-data/build'
       }
+    }
+  });
+
+  server.route({
+    method: 'get',
+    path: '/config',
+    handler: (req, reply) => {
+      reply({
+        gigyaApiKey: process.env.GIGYA_API_KEY || ''
+      });
     }
   });
 
@@ -38,6 +51,40 @@ module.exports.register = function (server, options, next) {
           }
         })
         .catch(err => reply(Http.wrapError(err)));
+    }
+  });
+
+  server.route({
+    method: 'get',
+    path: '/category/mailchimp/{email}',
+    handler: (req, reply) => {
+      MailChimp.getData(req.params.email)
+        .then(allData => reply(allData))
+        .catch((err) => {
+          console.error('MailChimp error:', err);
+          reply(Http.wrapError(err))
+        });
+    }
+  });
+
+  server.route({
+    method: 'POST',
+    path: '/zendesk/request',
+    handler: (req, reply) => {
+      ZenDesk.mapPayloadToTicket(req.payload)
+        .then(payload => ZenDesk.createTicket(payload))
+        .then(() => {
+          reply(null, '');
+        })
+        .catch(err => reply(Http.wrapError(err)));
+    }
+  });
+
+  server.route({
+    method: 'GET',
+    path: '/categories',
+    handler: (req, reply) => {
+      reply({categories});
     }
   });
 

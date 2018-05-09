@@ -1,17 +1,11 @@
 .InsightTable {
-  margin-bottom: 30px;
 
   .collapse {
     overflow: hidden;
   }
 
   .InsightTable-link:not([href]) {
-    text-decoration: underline;
     cursor: pointer;
+    color: #007bff
   }
-}
-
-.InsightTable-caption {
-  text-align: center;
-  font-size: 18px;
 }

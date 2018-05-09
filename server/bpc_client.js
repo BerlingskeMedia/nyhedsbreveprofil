@@ -8,6 +8,19 @@ const NYHEDSBREVEPROFIL_APP_SECRET = process.env.NYHEDSBREVEPROFIL_APP_SECRET;
 class BPC {
   constructor() {
     BPC.appTicket = null;
+    BPC.timeoutId = null;
+  }
+
+  static fetchAndSaveAppTicket() {
+    this.getAppTicket().then(ticket => {
+      BPC.saveAppTicket(ticket);
+
+      if (BPC.timeoutId) {
+        clearTimeout(BPC.timeoutId);
+      }
+
+      BPC.timeoutId = setTimeout(() => BPC.fetchAndSaveAppTicket(), ticket.exp - Date.now());
+    });
   }
 
   static getAppTicket() {
@@ -17,25 +30,21 @@ class BPC {
       algorithm: 'sha256'
     };
 
-    BPC.callSsoServer('/ticket/app', app)
-      .then(result => BPC.persistAppTicket(result));
+    return BPC.callSsoServer('/ticket/app', app);
   };
 
-  static refreshAppTicket() {
-    BPC.callSsoServer('/ticket/reissue', BPC.appTicket)
-      .then(result => BPC.persistAppTicket(result));
-  };
-
-  static persistAppTicket(ticket) {
+  static saveAppTicket(ticket) {
     BPC.appTicket = ticket;
-    setTimeout(() => BPC.refreshAppTicket(), ticket.exp - Date.now());
   }
 
   static callSsoServer(path, credentials) {
     return Http.request('post', `${process.env.BPC_URL}${path}`, credentials)
       .catch(err => {
-        console.error('callSsoServer:', err);
-        setTimeout(BPC.getAppTicket(), 1000 * 60 * 5);
+        if (err.response) {
+          console.error('callSsoServer:', err.response.statusCode, err.response.statusMessage);
+        } else {
+          console.error('callSsoServer:', err);
+        }
       });
   }
 }

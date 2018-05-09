@@ -12,3 +12,12 @@
     flex-shrink: 0;
   }
 }
+
+button.SubmitButton.ModeButton {
+  border-width: 2px;
+  color: #000;
+
+  &:not(.active) {
+    background: transparent;
+  }
+}

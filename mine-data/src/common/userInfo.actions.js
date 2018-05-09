@@ -4,7 +4,10 @@ export const RESET_USER_INFO = '[user info] reset';
 export const VERIFY_USER = '[user info] verify';
 
 export const requestUserInfo = () => ({type: REQUEST_USER_INFO});
-export const receiveUserInfo = (userInfo) => ({type: RECEIVE_USER_INFO, userInfo});
+export const receiveUserInfo = ({UID, profile, errorCode}) => ({
+  type: RECEIVE_USER_INFO,
+  userInfo: {UID, profile, errorCode}
+});
 export const resetUserInfo = () => ({type: RESET_USER_INFO});
 export const verifyUser = () => ({type: VERIFY_USER});
 
@@ -14,6 +17,8 @@ export const fetchUserInfo = () => {
 
     return new Promise(fulfill => {
       gigya.accounts.getAccountInfo({
+        include: 'profile',
+        extraProfileFields: 'address,phones',
         callback: response => {
           dispatch(receiveUserInfo(response));
           fulfill(response);

@@ -1,9 +1,43 @@
 /*jshint node: true */
 'use strict';
 
-var http = require('http');
+const Http = require('http');
+const Url = require('url');
 
-console.log('Connecting to MDBAPI on host', process.env.MDBAPI_ADDRESS, 'and port', process.env.MDBAPI_PORT);
+
+var MDBAPI_PROTOCOL;
+var MDBAPI_HOSTNAME;
+var MDBAPI_PORT;
+
+if (process.env.MDBAPI_PORT) {
+
+  MDBAPI_PROTOCOL = 'http:';
+  MDBAPI_HOSTNAME = process.env.MDBAPI_ADDRESS;
+  MDBAPI_PORT = process.env.MDBAPI_PORT;
+
+} else {
+
+  try {
+    var temp = Url.parse(process.env.MDBAPI_ADDRESS);
+
+    if(['http:', 'https:'].indexOf(temp.protocol) === -1) {
+      throw new Error();
+    }
+
+    MDBAPI_PROTOCOL = temp.protocol;
+    MDBAPI_HOSTNAME = temp.hostname;
+    MDBAPI_PORT = temp.port;
+
+  } catch (ex) {
+    console.error('Env var MDBAPI_ADDRESS missing or invalid.');
+    process.exit(1);
+  }
+
+}
+
+
+console.log('Connecting to MDBAPI on hostname', MDBAPI_HOSTNAME, 'and port', MDBAPI_PORT);
+
 
 function proxy (request, reply) {
 
@@ -12,9 +46,10 @@ function proxy (request, reply) {
   }
 
   var options = {
+    protocol: MDBAPI_PROTOCOL,
+    hostname: MDBAPI_HOSTNAME,
+    port: MDBAPI_PORT,
     method: request.method,
-    hostname: process.env.MDBAPI_ADDRESS,
-    port: process.env.MDBAPI_PORT,
     path: request.url.path.replace('/backend', ''),
     headers: {}
   };
@@ -31,7 +66,7 @@ function proxy (request, reply) {
     options.headers['user-agent'] = request.headers['user-agent'];
   }
 
-  var req = http.request(options, function( res ) {
+  var req = Http.request(options, function( res ) {
     reply(null, res);
 
   }).on('error', function(e) {

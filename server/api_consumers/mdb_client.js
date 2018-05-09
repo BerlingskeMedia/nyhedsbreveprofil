@@ -27,17 +27,17 @@ class MDB {
     allData.permission_list = interests
       .filter(permission => profile.permissions.includes(permission.interesse_id))
       .map(permission => ({
-        name: permission.nyhedsbrev_navn,
-        time: permission.tidspunkt,
-        description: permission.indhold
+        name: permission.interesse_navn,
+        time: permission.oprettet,
+        description: permission.beskrivelse
       }));
 
     allData.interesser_list = interests
       .filter(permission => profile.interesser.includes(permission.interesse_id))
       .map(permission => ({
-        name: permission.nyhedsbrev_navn,
-        time: permission.tidspunkt,
-        description: permission.indhold
+        name: permission.interesse_navn,
+        time: permission.oprettet,
+        description: permission.beskrivelse
       }));
 
     return allData;

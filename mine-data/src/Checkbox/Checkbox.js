@@ -6,7 +6,7 @@ import { Input } from 'reactstrap';
 
 const Checkbox = ({checked, onChange, disabled}) => (
   <div className="Checkbox">
-    <Input type="checkbox" value={checked} onChange={onChange} disabled={disabled}/>
+    <Input type="checkbox" checked={checked} onChange={onChange} disabled={disabled}/>
     <div className="fake-input"/>
   </div>
 );

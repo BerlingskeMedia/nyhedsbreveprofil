@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { login, resetLogin, setPassword, setUsername } from './login.actions';
 import SubmitButton from '../SubmitButton/SubmitButton';
 import { Link } from 'react-router-dom';
+import { FormInput } from '../Form/FormInput';
 
 export class LoginDisconnected extends React.Component {
   constructor(props) {
@@ -37,35 +38,16 @@ export class LoginDisconnected extends React.Component {
   render() {
     return (
       <form className="form" onSubmit={this.submit} autoComplete="off">
-        <div className="row justify-content-center">
-          <div className="col-sm-9">
-            <div className="form-group">Log in to get insight into the data that we store on you</div>
-          </div>
-        </div>
-        <div className="row justify-content-center">
-          <div className="col-sm-6">
-            <FormGroup>
-              <Label for="email" className="control-label">email</Label>
-              <Input type="email" id="email" name="email" autoComplete="off"
-                     value={this.props.username} onChange={this.setUsername}
-                     readOnly={this.props.pending}/>
-            </FormGroup>
-          </div>
-        </div>
-        <div className="row justify-content-center">
-          <div className="col-sm-6">
-            <FormGroup>
-              <Label className="control-label">password</Label>
-              <Input type="password" id="password" name="password" autoComplete="off"
-                     value={this.props.password} onChange={this.setPassword}
-                     readOnly={this.props.pending} />
-            </FormGroup>
-          </div>
-        </div>
+        <FormInput name="email" type="email" label="E-mailadresse"
+                   value={this.props.username} pending={this.props.pending}
+                   onChange={this.setUsername}/>
+        <FormInput name="password" type="password" value={this.props.password}
+                   onChange={this.setPassword} pending={this.props.pending}
+                   autoComplete="off"/>
         <div className="row justify-content-center">
           <div className="col-sm-6 nav-buttons">
-            <Link to="/mine-data/register">create account</Link>
-            <SubmitButton loading={this.props.pending}>Login</SubmitButton>
+            <Link to="/mine-data/register">Opret konto</Link>
+            <SubmitButton loading={this.props.pending}>Log ind</SubmitButton>
           </div>
         </div>
         {this.props.response ? <div className="row justify-content-center">

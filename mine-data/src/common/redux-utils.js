@@ -1,0 +1,1 @@
+export const actionBuilder = (type) => () => ({type});

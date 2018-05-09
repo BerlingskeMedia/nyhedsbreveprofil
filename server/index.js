@@ -61,7 +61,7 @@ if (!module.parent) {
     }
 
     console.log(`Server running at: ${server.info.uri}`);
-    BPC.getAppTicket();
+    BPC.fetchAndSaveAppTicket();
   });
 }
 
