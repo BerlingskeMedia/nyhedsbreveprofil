@@ -25,7 +25,7 @@ module.exports = {
   output: {
     path: path.resolve('./mine-data/build'),
     filename: 'bundle-[hash].js',
-    publicPath: '/mine-data'
+    publicPath: '/mine-data/'
   },
   module: {
     loaders: [

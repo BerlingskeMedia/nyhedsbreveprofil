@@ -120,7 +120,7 @@ module.exports = {
       .map(c => categories.find(category => category.name === c))
       .filter(c => !!c);
 
-    if (phones.length) {
+    if (phones && phones.length) {
       custom_fields.push({
         id: 360003718633,
         value: phones[0].number
