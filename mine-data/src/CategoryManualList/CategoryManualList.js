@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import {
-  addCategory, fetchCategories, removeCategory, resetCategories,
+  addCategory, fetchCategories, removeCategory,
   resetCategoryList, resetSubmit,
   setMode,
   setNoneMode, submitTicket
@@ -57,7 +57,6 @@ class List extends React.Component {
   }
 
   componentWillUnmount() {
-    this.props.resetCategories();
     this.props.resetCategoryList();
     this.props.setNoneMode();
     this.props.resetTicket();
@@ -111,7 +110,9 @@ class List extends React.Component {
           </div>
           <CollapsibleList isChecked={this.isSelected} onCheck={this.toggle}
                            getId={List.getCategoryId}>
-            {categories.categories.map(category => <ManualCard key={category.name} category={category} enabled={mode} />)}
+            {categories.categories
+              .filter(category => category.manual)
+              .map(category => <ManualCard key={category.name} category={category} enabled={mode} />)}
           </CollapsibleList>
           {mode ? (
             <Fragment>
@@ -158,7 +159,6 @@ const mapDispatchToProps = (dispatch) => ({
   onRemoveCategory: (category) => dispatch(removeCategory(category.name)),
   fetchCategories: () => dispatch(fetchCategories()),
   resetCategoryList: () => dispatch(resetCategoryList()),
-  resetCategories: () => dispatch(resetCategories()),
   setNoneMode: () => dispatch(setNoneMode()),
   setMode: (newMode) => dispatch(setMode(newMode)),
   submitTicket: (payload) => dispatch(submitTicket(payload)),
