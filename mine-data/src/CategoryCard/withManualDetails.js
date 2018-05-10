@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 
 export const withManualDetails = (WrapperComponent) => {
   return (props) => (
-    <WrapperComponent {...props} details={(category => (
+    <WrapperComponent {...props} details={category => (
       <Fragment>
         <strong>Hvilke oplysninger?</strong>
         <p>{category.informationType}</p>
@@ -19,7 +19,7 @@ export const withManualDetails = (WrapperComponent) => {
         <strong>Hvor længe opbevares data?</strong>
         <p>{category.storeLongevity}</p>
       </Fragment>
-    ))}/>
+    )}/>
   );
 };
 
