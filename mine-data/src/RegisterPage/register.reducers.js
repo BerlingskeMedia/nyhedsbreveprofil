@@ -1,6 +1,7 @@
 import {
   RECEIVE_REGISTER, REQUEST_REGISTER, RESET_REGISTER, SET_ADDRESS, SET_CITY,
-  SET_EMAIL, SET_FIRST_NAME, SET_LAST_NAME, SET_PASSWORD, SET_PHONE,
+  SET_EMAIL, SET_FIRST_NAME, SET_LAST_NAME, SET_PASSWORD, SET_PASSWORD_REPEAT,
+  SET_PHONE,
   SET_ZIP_CODE
 } from './register.actions';
 
@@ -9,6 +10,7 @@ export const getDefaultState = () => ({
   lastName: '',
   email: '',
   password: '',
+  passwordRepeat: '',
   address: '',
   city: '',
   zipCode: '',
@@ -33,6 +35,8 @@ export const register = (state = getDefaultState(), action) => {
       return {...state, email: action.email};
     case SET_PASSWORD:
       return {...state, password: action.password};
+    case SET_PASSWORD_REPEAT:
+      return {...state, passwordRepeat: action.passwordRepeat};
     case SET_ADDRESS:
       return {...state, address: action.address};
     case SET_CITY:
