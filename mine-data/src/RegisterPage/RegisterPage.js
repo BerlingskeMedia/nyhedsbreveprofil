@@ -6,6 +6,7 @@ import {
   receiveRegister,
   register, resetRegister,
   setAddress, setCity, setEmail, setFirstName, setLastName, setPassword,
+  setPasswordRepeat,
   setPhone, setZipCode
 } from './register.actions';
 import { logOut } from '../logout/logOut.actions';
@@ -22,6 +23,7 @@ class Register extends React.Component {
     this.setLastName = this.setLastName.bind(this);
     this.setPhone = this.setPhone.bind(this);
     this.setPassword = this.setPassword.bind(this);
+    this.setPasswordRepeat = this.setPasswordRepeat.bind(this);
     this.setZipCode = this.setZipCode.bind(this);
     this.submit = this.submit.bind(this);
   }
@@ -58,6 +60,10 @@ class Register extends React.Component {
     this.props.setPassword(e.target.value);
   }
 
+  setPasswordRepeat(e) {
+    this.props.setPasswordRepeat(e.target.value);
+  }
+
   setZipCode(e) {
     this.props.setZipCode(e.target.value);
   }
@@ -69,6 +75,7 @@ class Register extends React.Component {
       lastName: this.props.lastName,
       email: this.props.email,
       password: this.props.password,
+      passwordRepeat: this.props.passwordRepeat,
       address: this.props.address,
       zipCode: this.props.zipCode,
       city: this.props.city,
@@ -84,7 +91,10 @@ class Register extends React.Component {
   }
 
   render() {
-    const {pending, firstName, lastName, email, password, address, zipCode, city, phone, response} = this.props;
+    const {
+      pending, firstName, lastName, email, password, passwordRepeat, address,
+      zipCode, city, phone, response
+    } = this.props;
 
     return (
       <form className="form" onSubmit={this.submit} autoComplete="off">
@@ -95,14 +105,17 @@ class Register extends React.Component {
             <div className="form-group"><strong>Berlingske Media forbeholder sig ret til at foretage nødvendig kontrol af de anførte oplysninger for at sikre at data ikke bliver udleveret til de forkerte.</strong></div>
           </div>
         </div>
-        <FormInput name="firstName" label="first name" value={firstName}
-                   onChange={this.setFirstName} pending={pending}/>
-        <FormInput name="lastName" label="last name" value={lastName}
-                   onChange={this.setLastName} pending={pending}/>
         <FormInput name="email" type="email" value={email}
                    onChange={this.setEmail} pending={pending}/>
         <FormInput name="password" type="password" value={password}
                    onChange={this.setPassword} pending={pending}/>
+        <FormInput name="password-repeat" label="repeat password"
+                   type="password" value={passwordRepeat}
+                   onChange={this.setPasswordRepeat} pending={pending}/>
+        <FormInput name="firstName" label="first name" value={firstName}
+                   onChange={this.setFirstName} pending={pending}/>
+        <FormInput name="lastName" label="last name" value={lastName}
+                   onChange={this.setLastName} pending={pending}/>
         <FormInput name="address" value={address}
                    onChange={this.setAddress} pending={pending}/>
         <FormInput name="zipCode" value={zipCode}
@@ -117,19 +130,23 @@ class Register extends React.Component {
             <SubmitButton loading={pending}>Register</SubmitButton>
           </div>
         </div>
-        {response ? <div className="row justify-content-center">
-          <div className="col-sm-6 form-error">{response.errorDetails}</div>
+        {response ? <div className="row ">
+          <div className="offset-sm-3 col-sm-6 form-error mb-1">{response.errorDetails}</div>
+          {response.validationErrors ? response.validationErrors.map(error => (
+            <div key={error.message} className="offset-sm-3 col-sm-6 form-error">{error.message}</div>
+          )) : null}
         </div> : null}
       </form>
     );
   }
 }
 
-const mapStateToProps = ({register: {firstName, lastName, email, password, address, zipCode, city, phone, pending, response}}) => ({
+const mapStateToProps = ({register: {firstName, lastName, email, password, passwordRepeat, address, zipCode, city, phone, pending, response}}) => ({
   firstName,
   lastName,
   email,
   password,
+  passwordRepeat,
   address,
   zipCode,
   city,
@@ -143,6 +160,7 @@ const mapDispatchToProps = (dispatch) => ({
   setLastName: (lastName) => dispatch(setLastName(lastName)),
   setEmail: (email) => dispatch(setEmail(email)),
   setPassword: (password) => dispatch(setPassword(password)),
+  setPasswordRepeat: (passwordRepeat) => dispatch(setPasswordRepeat(passwordRepeat)),
   setAddress: (address) => dispatch(setAddress(address)),
   setCity: (city) => dispatch(setCity(city)),
   setZipCode: (zipCode) => dispatch(setZipCode(zipCode)),

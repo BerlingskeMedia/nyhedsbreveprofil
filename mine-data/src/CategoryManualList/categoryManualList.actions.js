@@ -3,7 +3,6 @@ import { actionBuilder } from '../common/redux-utils';
 
 export const REQUEST_CATEGORIES = '[category manual list] request categories';
 export const RECEIVE_CATEGORIES = '[category manual list] receive categories';
-export const RESET_CATEGORIES = '[category manual list] reset categories';
 
 export const ADD_CATEGORY = '[category manual list] add';
 export const REMOVE_CATEGORY = '[category manual list] remove';
@@ -19,7 +18,6 @@ export const SUBMIT_RESET = '[category manual list] reset submit';
 export const SUBMIT_FAILED = '[category manual list] failed submit';
 
 export const requestCategories = actionBuilder(REQUEST_CATEGORIES);
-export const resetCategories = actionBuilder(RESET_CATEGORIES);
 export const receiveCategories = (categories) => ({
   type: RECEIVE_CATEGORIES,
   categories

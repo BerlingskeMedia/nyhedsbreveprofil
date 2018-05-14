@@ -1,6 +1,5 @@
 import {
   ADD_CATEGORY, RECEIVE_CATEGORIES, REMOVE_CATEGORY, REQUEST_CATEGORIES,
-  RESET_CATEGORIES,
   RESET_CATEGORY_LIST,
   SET_MODE_DELETE,
   SET_MODE_INSIGHT, SET_MODE_NONE, SUBMIT_FAILED, SUBMIT_RECEIVE,
@@ -19,8 +18,6 @@ export const categories = (state = getCategoriesDefaultState(), action) => {
       return {...state, pending: true, categories: null};
     case RECEIVE_CATEGORIES:
       return {...state, pending: false, categories: action.categories};
-    case RESET_CATEGORIES:
-      return getCategoriesDefaultState();
     default:
       return state;
   }

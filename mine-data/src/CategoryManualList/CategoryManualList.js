@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import {
-  addCategory, fetchCategories, removeCategory, resetCategories,
+  addCategory, fetchCategories, removeCategory,
   resetCategoryList, resetSubmit,
   setMode,
   setNoneMode, submitTicket
@@ -14,15 +14,15 @@ import { compose } from 'redux';
 import { withTitle } from '../CategoryCard/withTitle';
 import { withCollapse } from '../CategoryList/withCollapse';
 import { CategoryList } from '../CategoryList/CategoryList';
-import { withCheckbox } from '../CategoryCard/withCheckbox';
-import { withCheckboxList } from '../CategoryList/withCheckboxList';
 import { Alert } from 'reactstrap';
+import { Loading } from '../Loading/Loading';
+import Checkbox from '../Checkbox/Checkbox';
+import { Info } from '../Info/Info';
 
 import './CategoryManualList.scss';
-import { Loading } from '../Loading/Loading';
 
-const ManualCard = compose(withCheckbox, withManualDetails, withTitle)(CategoryCard);
-const CollapsibleList = compose(withCheckboxList, withCollapse)(CategoryList);
+const ManualCard = compose(withManualDetails, withTitle)(CategoryCard);
+const CollapsibleList = compose(withCollapse)(CategoryList);
 
 const ModeButton = ({active, className, ...rest}) => (
   <SubmitButton {...rest} className={classNames(className, 'ModeButton', {active})}/>
@@ -57,7 +57,6 @@ class List extends React.Component {
   }
 
   componentWillUnmount() {
-    this.props.resetCategories();
     this.props.resetCategoryList();
     this.props.setNoneMode();
     this.props.resetTicket();
@@ -109,9 +108,23 @@ class List extends React.Component {
             <ModeButton onClick={() => this.toggleMode('insight')} active={isModeInsight}>Request insights</ModeButton>
             <ModeButton onClick={() => this.toggleMode('delete')} color="danger" active={isModeDelete}>Request delete</ModeButton>
           </div>
-          <CollapsibleList isChecked={this.isSelected} onCheck={this.toggle}
-                           getId={List.getCategoryId}>
-            {categories.categories.map(category => <ManualCard key={category.name} category={category} enabled={mode} />)}
+          <CollapsibleList getId={List.getCategoryId}>
+            {categories.categories
+              .filter(category => category.manual)
+              .map(category =>
+                <ManualCard key={category.name} category={category}
+                            sideNav={() => {
+                  if (!!mode) {
+                    if (mode === 'insight' || category.deleteAllowed) {
+                      return <Checkbox checked={this.isSelected(category)}
+                                       onChange={() => this.toggle(category)}/>;
+                    }
+
+                    return <Info id={category.name}>You cannot delete data for this category</Info>;
+                  }
+
+                  return null;
+                }}/>)}
           </CollapsibleList>
           {mode ? (
             <Fragment>
@@ -158,7 +171,6 @@ const mapDispatchToProps = (dispatch) => ({
   onRemoveCategory: (category) => dispatch(removeCategory(category.name)),
   fetchCategories: () => dispatch(fetchCategories()),
   resetCategoryList: () => dispatch(resetCategoryList()),
-  resetCategories: () => dispatch(resetCategories()),
   setNoneMode: () => dispatch(setNoneMode()),
   setMode: (newMode) => dispatch(setMode(newMode)),
   submitTicket: (payload) => dispatch(submitTicket(payload)),
