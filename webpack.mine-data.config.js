@@ -34,7 +34,7 @@ module.exports = {
       },
       {
         test: /\.(svg|jpg|png|mp4|webm|ico)$/i, loader: 'file-loader', exclude: /node_modules/,
-        options: {name: '[name].[ext]'}
+        options: {name: '/[name].[ext]'}
       },
       {
         test: /\.(s)?css$/,
