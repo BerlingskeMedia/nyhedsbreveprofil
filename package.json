@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server/index.js",
     "build": "gulp build",
-    "mine-data:dev": "webpack-dev-server --config webpack.mine-data.config.js",
+    "mine-data:dev": "webpack-dev-server --config webpack.mine-data.dev.config.js",
     "mine-data:build": "rm -rf ./mine-data/build && webpack --config webpack.mine-data.config.js"
   },
   "repository": {
