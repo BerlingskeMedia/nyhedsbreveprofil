@@ -17,6 +17,9 @@ export const SUBMIT_RECEIVE = '[category manual list] receive submit';
 export const SUBMIT_RESET = '[category manual list] reset submit';
 export const SUBMIT_FAILED = '[category manual list] failed submit';
 
+export const CONFIRM_SHOW = '[category manual list] show confirmation';
+export const CONFIRM_HIDE = '[category manual list] hide confirmation';
+
 export const requestCategories = actionBuilder(REQUEST_CATEGORIES);
 export const receiveCategories = (categories) => ({
   type: RECEIVE_CATEGORIES,
@@ -81,3 +84,6 @@ export const submitTicket = (payload) => {
       });
   }
 };
+
+export const showConfirmation = actionBuilder(CONFIRM_SHOW);
+export const hideConfirmation = actionBuilder(CONFIRM_HIDE);

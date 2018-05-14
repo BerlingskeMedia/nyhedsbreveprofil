@@ -46,7 +46,7 @@ class Http {
   }
 
   static wrapError(err) {
-    if (err.response && err.body) {
+    if (err.response) {
       console.log('[response error]', err.response.statusCode, err.response.statusMessage, err.body);
       return boomify(new Error(err.body), {
         statusCode: err.response.statusCode
@@ -55,7 +55,7 @@ class Http {
       console.log('[validation error]', err.details);
       return badRequest(err.details.map(detail => `${detail.path.join('.')}: ${detail.message}`).join('; '));
     } else {
-      console.log('[internal error]', err);
+      console.log('[internal error]', JSON.stringify(err, null, 2));
       return badImplementation(err);
     }
   }

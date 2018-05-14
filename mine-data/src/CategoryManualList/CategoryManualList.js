@@ -2,9 +2,9 @@ import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import {
   addCategory, fetchCategories, removeCategory,
-  resetCategoryList, resetSubmit,
+  resetCategoryList, hideConfirmation, resetSubmit,
   setMode,
-  setNoneMode, submitTicket
+  setNoneMode, showConfirmation, submitTicket
 } from './categoryManualList.actions';
 import classNames from 'classnames';
 import SubmitButton from '../SubmitButton/SubmitButton';
@@ -14,7 +14,7 @@ import { compose } from 'redux';
 import { withTitle } from '../CategoryCard/withTitle';
 import { withCollapse } from '../CategoryList/withCollapse';
 import { CategoryList } from '../CategoryList/CategoryList';
-import { Alert } from 'reactstrap';
+import { Alert, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { Loading } from '../Loading/Loading';
 import Checkbox from '../Checkbox/Checkbox';
 import { Info } from '../Info/Info';
@@ -71,6 +71,8 @@ class List extends React.Component {
       categories: this.props.list,
       user: this.props.userInfo.userInfo.profile,
       mode: this.props.mode
+    }).then(() => {
+      this.props.hideConfirmation();
     });
   }
 
@@ -92,7 +94,7 @@ class List extends React.Component {
   }
 
   render() {
-    const {list, mode, submit, categories} = this.props;
+    const {list, mode, submit, categories, confirm} = this.props;
     const isModeInsight = mode === 'insight';
     const isTicketModeInsight = submit.mode === 'insight';
     const isModeDelete = mode === 'delete';
@@ -130,23 +132,33 @@ class List extends React.Component {
             <Fragment>
               <p>Hvis du er er uenig i vores behandling af din indsigts- eller sletteanmodning, har du mulighed for at klage til Datatilsynet. Læs nærmere <a href="https://www.datatilsynet.dk/borger/klage-til-datatilsynet" target="_blank">her</a>.</p>
               <div className="nav-buttons justify-content-start">
-                <SubmitButton disabled={!list.length} loading={submit.pending} onClick={this.submitTicket}>Submit</SubmitButton>
+                <SubmitButton disabled={!list.length} loading={confirm} onClick={this.props.showConfirmation}>Submit</SubmitButton>
               </div>
             </Fragment>
           ) : null}
-          <Alert className="message" color="success" isOpen={submit.fetched && !submit.failed} toggle={this.props.resetTicket}>
-            <p>Tak for din henvendelse.</p>
-            {isTicketModeInsight ?
-              <p>Din indsigtsanmodning vil blive besvaret og sendt til dig på mail inden for 30 dage.</p> :
-              <p>
-                Du vil inden for 30 dage modtage bekræftelse på, at dine data er blevet slettet.<br/>
-                Bemærk, at hvis du har data i kategorierne x, y, og z vil disse ikke blive slettet. Dette skyldes at Berlingske Media f.eks. har en retslig forpligtelse til at gemme disse oplysninger.
-              </p>}
-            <p>Hvis du er er uenig i vores behandling af din {isTicketModeInsight ? 'indsigtsanmodning' : 'sletteanmodning'}, har du mulighed for at klage til Datatilsynet. Læs nærmere <a href="https://www.datatilsynet.dk/borger/klage-til-datatilsynet" target="_blank">her</a>.</p>
-            <div className="nav-buttons justify-content-start">
-              <SubmitButton onClick={this.props.resetTicket}>Close</SubmitButton>
-            </div>
-          </Alert>
+          <Modal centered isOpen={confirm} toggle={this.props.hideConfirmation}>
+            <ModalHeader>Confirmation</ModalHeader>
+            <ModalBody>Are you sure?</ModalBody>
+            <ModalFooter>
+              <SubmitButton loading={submit.pending} onClick={this.submitTicket}>Confirm</SubmitButton>
+              <SubmitButton color="link" onClick={this.props.hideConfirmation}>Cancel</SubmitButton>
+            </ModalFooter>
+          </Modal>
+          <Modal centered isOpen={submit.fetched && !submit.failed} toggle={this.props.resetTicket}>
+            <ModalBody>
+              <p>Tak for din henvendelse.</p>
+              {isTicketModeInsight ?
+                <p>Din indsigtsanmodning vil blive besvaret og sendt til dig på mail inden for 30 dage.</p> :
+                <p>
+                  Du vil inden for 30 dage modtage bekræftelse på, at dine data er blevet slettet.<br/>
+                  Bemærk, at hvis du har data i kategorierne x, y, og z vil disse ikke blive slettet. Dette skyldes at Berlingske Media f.eks. har en retslig forpligtelse til at gemme disse oplysninger.
+                </p>}
+              <p>Hvis du er er uenig i vores behandling af din {isTicketModeInsight ? 'indsigtsanmodning' : 'sletteanmodning'}, har du mulighed for at klage til Datatilsynet. Læs nærmere <a href="https://www.datatilsynet.dk/borger/klage-til-datatilsynet" target="_blank">her</a>.</p>
+              <div className="nav-buttons justify-content-start">
+                <SubmitButton onClick={this.props.resetTicket}>Close</SubmitButton>
+              </div>
+            </ModalBody>
+          </Modal>
           <Alert className="message" color="danger" isOpen={submit.fetched && submit.failed} toggle={this.props.resetTicket}>
             Your request has not been sent
           </Alert>
@@ -158,12 +170,13 @@ class List extends React.Component {
   }
 }
 
-const mapStateToProps = ({userInfo, categoryManualList: {list, mode, submit, categories}}) => ({
+const mapStateToProps = ({userInfo, categoryManualList: {list, mode, submit, categories, confirm}}) => ({
   list,
   mode,
   submit,
   userInfo,
-  categories
+  categories,
+  confirm
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -173,8 +186,10 @@ const mapDispatchToProps = (dispatch) => ({
   resetCategoryList: () => dispatch(resetCategoryList()),
   setNoneMode: () => dispatch(setNoneMode()),
   setMode: (newMode) => dispatch(setMode(newMode)),
+  showConfirmation: () => dispatch(showConfirmation()),
   submitTicket: (payload) => dispatch(submitTicket(payload)),
-  resetTicket: () => dispatch(resetSubmit())
+  resetTicket: () => dispatch(resetSubmit()),
+  hideConfirmation: () => dispatch(hideConfirmation())
 });
 
 export const CategoryManualList = connect(mapStateToProps, mapDispatchToProps)(List);

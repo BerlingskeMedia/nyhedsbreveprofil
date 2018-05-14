@@ -1,5 +1,7 @@
 import {
-  ADD_CATEGORY, RECEIVE_CATEGORIES, REMOVE_CATEGORY, REQUEST_CATEGORIES,
+  ADD_CATEGORY, CONFIRM_HIDE, CONFIRM_SHOW, RECEIVE_CATEGORIES,
+  REMOVE_CATEGORY,
+  REQUEST_CATEGORIES,
   RESET_CATEGORY_LIST,
   SET_MODE_DELETE,
   SET_MODE_INSIGHT, SET_MODE_NONE, SUBMIT_FAILED, SUBMIT_RECEIVE,
@@ -72,9 +74,21 @@ export const submit = (state = getSubmitDefaultState(), action) => {
   }
 };
 
+export const confirm = (state = false, action) => {
+  switch (action.type) {
+    case CONFIRM_SHOW:
+      return true;
+    case CONFIRM_HIDE:
+      return false;
+    default:
+      return state;
+  }
+};
+
 export const categoryManualList = combineReducers({
   list,
   mode,
   submit,
-  categories
+  categories,
+  confirm
 });
