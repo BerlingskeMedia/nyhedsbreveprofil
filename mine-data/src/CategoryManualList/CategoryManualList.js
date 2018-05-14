@@ -136,27 +136,29 @@ class List extends React.Component {
               </div>
             </Fragment>
           ) : null}
-          <Modal isOpen={confirm} toggle={this.props.hideConfirmation}>
+          <Modal centered isOpen={confirm} toggle={this.props.hideConfirmation}>
             <ModalHeader>Confirmation</ModalHeader>
             <ModalBody>Are you sure?</ModalBody>
             <ModalFooter>
               <SubmitButton loading={submit.pending} onClick={this.submitTicket}>Confirm</SubmitButton>
-              <SubmitButton onClick={this.props.hideConfirmation}>Cancel</SubmitButton>
+              <SubmitButton color="link" onClick={this.props.hideConfirmation}>Cancel</SubmitButton>
             </ModalFooter>
           </Modal>
-          <Alert className="message" color="success" isOpen={submit.fetched && !submit.failed} toggle={this.props.resetTicket}>
-            <p>Tak for din henvendelse.</p>
-            {isTicketModeInsight ?
-              <p>Din indsigtsanmodning vil blive besvaret og sendt til dig på mail inden for 30 dage.</p> :
-              <p>
-                Du vil inden for 30 dage modtage bekræftelse på, at dine data er blevet slettet.<br/>
-                Bemærk, at hvis du har data i kategorierne x, y, og z vil disse ikke blive slettet. Dette skyldes at Berlingske Media f.eks. har en retslig forpligtelse til at gemme disse oplysninger.
-              </p>}
-            <p>Hvis du er er uenig i vores behandling af din {isTicketModeInsight ? 'indsigtsanmodning' : 'sletteanmodning'}, har du mulighed for at klage til Datatilsynet. Læs nærmere <a href="https://www.datatilsynet.dk/borger/klage-til-datatilsynet" target="_blank">her</a>.</p>
-            <div className="nav-buttons justify-content-start">
-              <SubmitButton onClick={this.props.resetTicket}>Close</SubmitButton>
-            </div>
-          </Alert>
+          <Modal centered isOpen={submit.fetched && !submit.failed} toggle={this.props.resetTicket}>
+            <ModalBody>
+              <p>Tak for din henvendelse.</p>
+              {isTicketModeInsight ?
+                <p>Din indsigtsanmodning vil blive besvaret og sendt til dig på mail inden for 30 dage.</p> :
+                <p>
+                  Du vil inden for 30 dage modtage bekræftelse på, at dine data er blevet slettet.<br/>
+                  Bemærk, at hvis du har data i kategorierne x, y, og z vil disse ikke blive slettet. Dette skyldes at Berlingske Media f.eks. har en retslig forpligtelse til at gemme disse oplysninger.
+                </p>}
+              <p>Hvis du er er uenig i vores behandling af din {isTicketModeInsight ? 'indsigtsanmodning' : 'sletteanmodning'}, har du mulighed for at klage til Datatilsynet. Læs nærmere <a href="https://www.datatilsynet.dk/borger/klage-til-datatilsynet" target="_blank">her</a>.</p>
+              <div className="nav-buttons justify-content-start">
+                <SubmitButton onClick={this.props.resetTicket}>Close</SubmitButton>
+              </div>
+            </ModalBody>
+          </Modal>
           <Alert className="message" color="danger" isOpen={submit.fetched && submit.failed} toggle={this.props.resetTicket}>
             Your request has not been sent
           </Alert>
