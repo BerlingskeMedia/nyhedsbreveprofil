@@ -48,6 +48,10 @@ class MDB {
       .then(result => result[0]);
   };
 
+  static findSurveyGizmoUser(email) {
+    return Http.request('GET', `${MDBAPI_ADDRESS}/surveys?email=${email}`, null);
+  };
+
   static getUserProfile(eksternId) {
     return Http.request('GET', `${MDBAPI_ADDRESS}/users/${eksternId}`, null);
   }
