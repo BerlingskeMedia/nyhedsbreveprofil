@@ -43,6 +43,7 @@ class List extends React.Component {
     super(props);
 
     this.isSelected = this.isSelected.bind(this);
+    this.showConfirmationIfNeeded = this.showConfirmationIfNeeded.bind(this);
     this.submitTicket = this.submitTicket.bind(this);
     this.toggle = this.toggle.bind(this);
     this.toggleMode = this.toggleMode.bind(this);
@@ -64,6 +65,14 @@ class List extends React.Component {
 
   isSelected(category) {
     return this.props.list.includes(category.name);
+  }
+
+  showConfirmationIfNeeded() {
+    if (this.props.mode === 'delete') {
+      this.props.showConfirmation();
+    } else {
+      this.submitTicket();
+    }
   }
 
   submitTicket() {
@@ -132,7 +141,7 @@ class List extends React.Component {
             <Fragment>
               <p>Hvis du er er uenig i vores behandling af din indsigts- eller sletteanmodning, har du mulighed for at klage til Datatilsynet. Læs nærmere <a href="https://www.datatilsynet.dk/borger/klage-til-datatilsynet" target="_blank">her</a>.</p>
               <div className="nav-buttons justify-content-start">
-                <SubmitButton disabled={!list.length} loading={confirm} onClick={this.props.showConfirmation}>Submit</SubmitButton>
+                <SubmitButton disabled={!list.length} loading={confirm || submit.pending} onClick={this.showConfirmationIfNeeded}>Submit</SubmitButton>
               </div>
             </Fragment>
           ) : null}
