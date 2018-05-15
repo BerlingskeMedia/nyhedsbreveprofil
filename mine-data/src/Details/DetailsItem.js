@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-export const DetailsItem = ({value, children, className, allowEmpty}) => {
+export const DetailsItem = ({value, label, className, allowEmpty}) => {
   if (value || allowEmpty) {
     return (
       <div className={classNames('DetailsItem', className)}>
-        <strong>{children}: </strong>
+        <strong>{label}: </strong>
         {value}
       </div>
     );
