@@ -56,6 +56,16 @@ module.exports.register = function (server, options, next) {
 
   server.route({
     method: 'get',
+    path: '/category/surveygizmo/{email}',
+    handler: (req, reply) => {
+      MDB.findSurveyGizmoUser(req.params.email)
+        .then(allData => reply(allData))
+        .catch(err => reply(Http.wrapError(err)));
+    }
+  });
+
+  server.route({
+    method: 'get',
     path: '/category/mailchimp/{email}',
     handler: (req, reply) => {
       MailChimp.getData(req.params.email)
