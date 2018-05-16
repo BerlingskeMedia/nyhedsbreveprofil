@@ -42,6 +42,15 @@ class MailChimp {
     ));
   }
 
+  /**
+   * We will delete user subscriptions one by one/list by list
+   * @param listId
+   * @param userId
+   */
+  static delete(listId, userId) {
+    return Http.request('DELETE', `${MAILCHIMP_URI}/lists/${listId}/members/${userId}`);
+  }
+
 }
 
 module.exports = MailChimp;

@@ -92,6 +92,30 @@ class MDB {
     return Http.request('GET', `${MDBAPI_ADDRESS}/nyhedsbreve`, null);
   }
 
+  /**
+   *
+   * @param surveyId
+   * @param email - is to validate record with our database
+   * @param responseId
+   */
+  static deleteSurveyGizmoResponse(surveyId, email, responseId) {
+    return MDB.findSurveyGizmoUser(email).then(items => {
+      const surveyIdNumber = parseInt(surveyId,10);
+      const item = items.find(item => {
+        return item.response_id === responseId && item.survey_id === surveyIdNumber
+      });
+      if (item) {
+        return Http.request('GET', MDB.surveyGizmoDeletePath(surveyId, responseId), null);
+      }
+    });
+  }
+
+  static surveyGizmoDeletePath(surveyId, responseId) {
+    const credentials = `api_token=${process.env.SURVEYGIZMO_REST_API_AUTH_KEY}&api_token_secret=${process.env.SURVEYGIZMO_REST_API_AUTH_SECRET_KEY}`;
+    const path = `${process.env.SURVEYGIZMO_REST_API_URL}/survey/${surveyId}/surveyresponse/${responseId}?_method=DELETE&${credentials}`;
+    return path;
+  }
+
 }
 
 module.exports = MDB;
