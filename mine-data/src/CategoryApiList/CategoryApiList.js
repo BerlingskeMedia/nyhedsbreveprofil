@@ -8,6 +8,7 @@ import { DetailsItem } from '../Details/DetailsItem';
 import { DetailsTitle } from '../Details/DetailsTitle';
 import { DetailsSeparator } from '../Details/DetailsSeparator';
 import { CategoryCard } from '../CategoryCard/CategoryCard';
+import SubmitButton from '../SubmitButton/SubmitButton';
 
 const CategoriesList = withCollapse(CategoryList);
 const Error = () => <div>Data unavailable</div>;
@@ -50,29 +51,30 @@ const ObjectToDetails = ({fields}) => {
 export const List = ({userInfo: {userInfo}}) => (
   <Fragment>
     <CategoriesList getId={({title}) => title}>
-      <CategoryCard title="Register for log-in oplysninger (Login)" details={() => (
+      <CategoryCard title="Register for log-in oplysninger" details={() => (
         <Fragment>
           <DetailsItem
-            label="name"
+            label="Navn"
             value={userInfo.profile.firstName && userInfo.profile.lastName && `${userInfo.profile.firstName} ${userInfo.profile.lastName}`}/>
-          <DetailsItem label="email" value={userInfo.profile.email}/>
+          <DetailsItem label="E-mail" value={userInfo.profile.email}/>
           <DetailsItem
-            label="date of birth"
+            label="Fødselsdag"
             value={userInfo.profile.birthDay && userInfo.profile.birthMonth && userInfo.profile.birthYear && `${userInfo.profile.birthYear}-${userInfo.profile.birthMonth}-${userInfo.profile.birthDay}`}/>
-          <DetailsItem label="address" value={userInfo.profile.address}/>
-          <DetailsItem label="zip code" value={userInfo.profile.zip}/>
-          <DetailsItem label="city" value={userInfo.profile.city}/>
+          <DetailsItem label="Adresse" value={userInfo.profile.address}/>
+          <DetailsItem label="Post nr." value={userInfo.profile.zip}/>
+          <DetailsItem label="By" value={userInfo.profile.city}/>
         </Fragment>
       )}/>
 
       <CategoryCard
-        title="Register for Kundeoplysninger, Marketing og nyhedsbreve (Kundeoplysninger)"
+        title="Register for Kundeoplysninger, Marketing og nyhedsbreve"
         details={() => (
           <Fragment>
-            <DetailsTitle>Kundeunivers</DetailsTitle>
             <CategoryApiCardItem
+              title="Kundeunivers"
               fetchData={() => Api.get(`/mine-data/category/kundeunivers/${userInfo.UID}`)}
               renderError={Error}
+              sideNav={() => <a className="btn btn-secondary">Delete data</a>}
               render={(data) => (
                 <Fragment>
                   <DetailsTitle>Orders:</DetailsTitle>
@@ -92,8 +94,8 @@ export const List = ({userInfo: {userInfo}}) => (
 
             <DetailsSeparator/>
 
-            <DetailsTitle>MDB</DetailsTitle>
             <CategoryApiCardItem
+              title="MDB"
               fetchData={() => Api.get(`/mine-data/category/mdb/${userInfo.profile.email}`)}
               renderError={Error}
               render={(data) => (
@@ -168,8 +170,8 @@ export const List = ({userInfo: {userInfo}}) => (
 
             <DetailsSeparator/>
 
-            <DetailsTitle>MailChimp</DetailsTitle>
             <CategoryApiCardItem
+              title="MailChimp"
               fetchData={() => Api.get(`/mine-data/category/mailchimp/${userInfo.profile.email}`)}
               renderError={Error}
               render={(data) => data.map(({list_title, ...fields}) => (
@@ -181,8 +183,8 @@ export const List = ({userInfo: {userInfo}}) => (
 
             <DetailsSeparator/>
 
-            <DetailsTitle>Survey Gizmo</DetailsTitle>
             <CategoryApiCardItem
+              title="Survey Gizmo"
               fetchData={() => Api.get(`/mine-data/category/surveygizmo/${userInfo.profile.email}`)}
               renderError={Error}
               render={data => {
