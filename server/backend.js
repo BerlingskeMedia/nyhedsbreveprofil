@@ -9,34 +9,35 @@ var MDBAPI_PROTOCOL;
 var MDBAPI_HOSTNAME;
 var MDBAPI_PORT;
 
-if (process.env.MDBAPI_PORT) {
 
-  MDBAPI_PROTOCOL = 'http:';
-  MDBAPI_HOSTNAME = process.env.MDBAPI_ADDRESS;
-  MDBAPI_PORT = process.env.MDBAPI_PORT;
+try {
+  var temp = Url.parse(process.env.MDBAPI_ADDRESS);
 
-} else {
-
-  try {
-    var temp = Url.parse(process.env.MDBAPI_ADDRESS);
-
-    if(['http:', 'https:'].indexOf(temp.protocol) === -1) {
-      throw new Error();
-    }
+  if(['http:', 'https:'].indexOf(temp.protocol) > -1) {
 
     MDBAPI_PROTOCOL = temp.protocol;
     MDBAPI_HOSTNAME = temp.hostname;
     MDBAPI_PORT = temp.port;
 
-  } catch (ex) {
-    console.error('Env var MDBAPI_ADDRESS missing or invalid.');
-    process.exit(1);
+  } else if (process.env.MDBAPI_PORT) {
+
+    MDBAPI_PROTOCOL = 'http:';
+    MDBAPI_HOSTNAME = process.env.MDBAPI_ADDRESS;
+    MDBAPI_PORT = process.env.MDBAPI_PORT;
+  
+  } else {
+
+    throw new Error();
+
   }
 
+} catch (ex) {
+  console.error('Env var MDBAPI_ADDRESS missing or invalid.');
+  process.exit(1);
 }
 
 
-console.log('Connecting to MDBAPI on hostname', MDBAPI_HOSTNAME, 'and port', MDBAPI_PORT);
+console.log('Connecting backend to MDBAPI on hostname', MDBAPI_HOSTNAME, 'and port', MDBAPI_PORT);
 
 
 function proxy (request, reply) {
