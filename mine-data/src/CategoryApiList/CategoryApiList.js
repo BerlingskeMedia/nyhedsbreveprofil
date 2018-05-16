@@ -198,15 +198,15 @@ export const List = ({userInfo: {userInfo}}) => (
                   <DetailsItem value={fields.location.dstoff} label="DST off"/>
                   <DetailsItem value={fields.location.country_code} label="Country code"/>
                   <DetailsItem value={fields.location.timezone} label="Timezone"/>
-                  <DetailsItem label="Aktiviteter" allowEmpty/>
+                  <DetailsItem label="Aktiviteter" className="mt-2" allowEmpty/>
                   {fields.activity.map(activityItem => (
-                    <Fragment>
+                    <div className="mt-2 ml-2" key={activityItem.timestamp}>
                       <DetailsItem value={activityItem.bounce} label="Bounce"/>
                       <DetailsItem value={activityItem.campaign_id} label="Campaign ID"/>
                       <DetailsItem value={activityItem.timestamp} label="Tidsstempel"/>
                       <DetailsItem value={activityItem.title} label="Titel"/>
                       <DetailsItem value={activityItem.type} label="Type"/>
-                    </Fragment>
+                    </div>
                   ))}
                 </Fragment>
               ))}/>
