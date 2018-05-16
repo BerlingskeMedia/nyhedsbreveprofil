@@ -1,6 +1,33 @@
 const Http = require('../lib/http');
+const Url = require('url');
 
-const MDBAPI_ADDRESS = process.env.MDBAPI_ADDRESS;
+var MDBAPI_ADDRESS;
+
+try {
+
+  var temp = Url.parse(process.env.MDBAPI_ADDRESS);
+
+  if(['http:', 'https:'].indexOf(temp.protocol) > -1) {
+
+    MDBAPI_ADDRESS = process.env.MDBAPI_ADDRESS;
+
+  } else if (process.env.MDBAPI_PORT) {
+
+      MDBAPI_ADDRESS = `http://${process.env.MDBAPI_ADDRESS}:${process.env.MDBAPI_PORT}`
+    
+  } else {
+
+    throw new Error();
+  
+  }
+
+} catch (ex) {
+  console.error('Env var MDBAPI_ADDRESS missing or invalid.');
+  process.exit(1);
+}
+
+console.log('Connecting mdb_client to MDBAPI on', MDBAPI_ADDRESS);
+
 
 class MDB {
 
