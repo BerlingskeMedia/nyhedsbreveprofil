@@ -116,8 +116,8 @@ class List extends React.Component {
       return (
         <Fragment>
           <div className="nav-buttons justify-content-start">
-            <ModeButton onClick={() => this.toggleMode('insight')} active={isModeInsight}>Request insights</ModeButton>
-            <ModeButton onClick={() => this.toggleMode('delete')} color="danger" active={isModeDelete}>Request delete</ModeButton>
+            <ModeButton onClick={() => this.toggleMode('insight')} active={isModeInsight}>Indsigt</ModeButton>
+            <ModeButton onClick={() => this.toggleMode('delete')} color="danger" active={isModeDelete}>Sletning</ModeButton>
           </div>
           <CollapsibleList getId={List.getCategoryId}>
             {categories.categories
@@ -139,9 +139,8 @@ class List extends React.Component {
           </CollapsibleList>
           {mode ? (
             <Fragment>
-              <p>Hvis du er er uenig i vores behandling af din indsigts- eller sletteanmodning, har du mulighed for at klage til Datatilsynet. Læs nærmere <a href="https://www.datatilsynet.dk/borger/klage-til-datatilsynet" target="_blank">her</a>.</p>
               <div className="nav-buttons justify-content-start">
-                <SubmitButton disabled={!list.length} loading={confirm || submit.pending} onClick={this.showConfirmationIfNeeded}>Submit</SubmitButton>
+                <SubmitButton disabled={!list.length} loading={confirm || submit.pending} onClick={this.showConfirmationIfNeeded}>Send anmodning</SubmitButton>
               </div>
             </Fragment>
           ) : null}

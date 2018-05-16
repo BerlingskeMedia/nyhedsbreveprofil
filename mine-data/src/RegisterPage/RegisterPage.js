@@ -105,29 +105,30 @@ class Register extends React.Component {
             <div className="form-group"><strong>Berlingske Media forbeholder sig ret til at foretage nødvendig kontrol af de anførte oplysninger for at sikre at data ikke bliver udleveret til de forkerte.</strong></div>
           </div>
         </div>
-        <FormInput name="email" type="email" value={email}
+        <FormInput name="email" type="email" label="E-mail" value={email}
                    onChange={this.setEmail} pending={pending}/>
-        <FormInput name="password" type="password" value={password}
-                   onChange={this.setPassword} pending={pending}/>
-        <FormInput name="password-repeat" label="repeat password"
+        <FormInput name="password" type="password" label="Kodeord"
+                   value={password} onChange={this.setPassword}
+                   pending={pending}/>
+        <FormInput name="password-repeat" label="Gentag kodeord"
                    type="password" value={passwordRepeat}
                    onChange={this.setPasswordRepeat} pending={pending}/>
-        <FormInput name="firstName" label="first name" value={firstName}
+        <FormInput name="firstName" label="Fornavn" value={firstName}
                    onChange={this.setFirstName} pending={pending}/>
-        <FormInput name="lastName" label="last name" value={lastName}
+        <FormInput name="lastName" label="Efternavn" value={lastName}
                    onChange={this.setLastName} pending={pending}/>
-        <FormInput name="address" value={address}
+        <FormInput name="address" label="Adresse" value={address}
                    onChange={this.setAddress} pending={pending}/>
-        <FormInput name="zipCode" value={zipCode}
+        <FormInput name="zipCode" label="Post nr." value={zipCode}
                    onChange={this.setZipCode} pending={pending}/>
-        <FormInput name="city" value={city}
+        <FormInput name="city" label="By" value={city}
                    onChange={this.setCity} pending={pending}/>
-        <FormInput name="phone" value={phone}
+        <FormInput name="phone" label="Telefon" value={phone}
                    onChange={this.setPhone} pending={pending}/>
         <div className="row justify-content-center">
           <div className="col-sm-6 nav-buttons">
-            <Link to="/mine-data">back to login</Link>
-            <SubmitButton loading={pending}>Register</SubmitButton>
+            <Link to="/mine-data">Tilbage til login</Link>
+            <SubmitButton loading={pending}>Opret</SubmitButton>
           </div>
         </div>
         {response ? <div className="row ">

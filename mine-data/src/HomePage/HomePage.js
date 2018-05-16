@@ -6,7 +6,7 @@ import { CategoryApiList } from '../CategoryApiList/CategoryApiList';
 export const HomePage = () => (
   <Fragment>
     <div className="d-flex justify-content-between">
-      <h1>Se dine persondata hos Berlingske Media</h1>
+      <h1>Dine persondata hos Berlingske Media</h1>
       <LogoutLink>Logout</LogoutLink>
     </div>
     <p>
