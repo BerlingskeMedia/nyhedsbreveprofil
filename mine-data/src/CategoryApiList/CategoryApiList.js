@@ -74,7 +74,6 @@ export const List = ({userInfo: {userInfo}}) => (
               title="Kundeunivers"
               fetchData={() => Api.get(`/mine-data/category/kundeunivers/${userInfo.UID}`)}
               renderError={Error}
-              sideNav={() => <a className="btn btn-secondary">Delete data</a>}
               render={(data) => (
                 <Fragment>
                   <DetailsTitle>Orders:</DetailsTitle>
