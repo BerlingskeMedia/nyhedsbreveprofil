@@ -1,6 +1,6 @@
 const Http = require('../lib/http');
 
-const MDBAPI_ADDRESS = `http://${process.env.MDBAPI_ADDRESS}`;
+const MDBAPI_ADDRESS = process.env.MDBAPI_ADDRESS;
 
 class MDB {
 
