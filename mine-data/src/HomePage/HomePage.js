@@ -15,7 +15,7 @@ export const HomePage = () => (
     <p>Ved at klikke på nedenstående kategorier kan du se de persondata, som vi gemmer om dig.</p>
     <CategoryApiList/>
     <p>
-      Det kan forekomme at vi har data på dig i nedenstående kategorier. Dem kan vi dog ikke præsentere automatisk. Du har derfor mulighed for at anmode om manuel indsigt eller sletning i disse kategorier, som vi herefter vil levere til dig på mail inden for 30 dage.
+      Det kan forekomme at vi har data på dig i nedenstående kategorier. Du har derfor mulighed for at anmode om manuel indsigt eller sletning i disse kategorier, som vi herefter vil levere til dig på mail inden for 30 dage.
     </p>
     <CategoryManualList/>
   </Fragment>
