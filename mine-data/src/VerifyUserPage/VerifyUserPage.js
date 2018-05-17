@@ -28,7 +28,7 @@ class VerifyUser extends React.Component {
       <form className="form" onSubmit={this.submit} autoComplete="off">
         <div className="row justify-content-center">
           <div className="col-sm-9">
-            <div className="form-group">You're currently logged in as:</div>
+            <div className="form-group">Du er logget ind som:</div>
           </div>
         </div>
         <div className="row justify-content-center">
@@ -38,12 +38,12 @@ class VerifyUser extends React.Component {
         </div>
         <div className="row justify-content-center">
           <div className="col-sm-9 form-group font-italic">
-            Not you? <LogoutLink>Logout</LogoutLink> and sign in with another account.
+            Ikke dig? <LogoutLink>Log ind med en anden konto.</LogoutLink>
           </div>
         </div>
         <div className="row justify-content-center">
           <div className="col-sm-9">
-            <div className="form-group">Enter your password to get access to GSP:</div>
+            <div className="form-group">Bekræft din adgangskode for at logge ind</div>
           </div>
         </div>
         <div className="row justify-content-center">
@@ -51,13 +51,13 @@ class VerifyUser extends React.Component {
             <FormGroup>
               <Input type="password" id="password" name="password" autoComplete="off"
                      value={this.props.password} onChange={this.setPassword}
-                     readOnly={this.props.isPending} placeholder="password" />
+                     readOnly={this.props.isPending} placeholder="kodeord" />
             </FormGroup>
           </div>
         </div>
         <div className="row justify-content-center">
           <div className="col-sm-6 nav-buttons">
-            <SubmitButton loading={this.props.isPending}>Login</SubmitButton>
+            <SubmitButton loading={this.props.isPending}>Log ind</SubmitButton>
           </div>
         </div>
         {this.props.response ? <div className="row justify-content-center">
