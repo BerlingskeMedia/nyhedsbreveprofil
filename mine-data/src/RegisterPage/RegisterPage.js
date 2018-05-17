@@ -106,24 +106,24 @@ class Register extends React.Component {
           </div>
         </div>
         <FormInput name="email" type="email" label="E-mail" value={email}
-                   onChange={this.setEmail} pending={pending}/>
-        <FormInput name="password" type="password" label="Kodeord"
+                   required onChange={this.setEmail} pending={pending}/>
+        <FormInput name="password" type="password" label="Kodeord" required
                    value={password} onChange={this.setPassword}
                    pending={pending}/>
-        <FormInput name="password-repeat" label="Gentag kodeord"
+        <FormInput name="password-repeat" label="Gentag kodeord" required
                    type="password" value={passwordRepeat}
                    onChange={this.setPasswordRepeat} pending={pending}/>
-        <FormInput name="firstName" label="Fornavn" value={firstName}
+        <FormInput name="firstName" label="Fornavn" value={firstName} required
                    onChange={this.setFirstName} pending={pending}/>
-        <FormInput name="lastName" label="Efternavn" value={lastName}
+        <FormInput name="lastName" label="Efternavn" value={lastName} required
                    onChange={this.setLastName} pending={pending}/>
-        <FormInput name="address" label="Adresse" value={address}
+        <FormInput name="address" label="Adresse" value={address} required
                    onChange={this.setAddress} pending={pending}/>
-        <FormInput name="zipCode" label="Post nr." value={zipCode}
+        <FormInput name="zipCode" label="Post nr." value={zipCode} required
                    onChange={this.setZipCode} pending={pending}/>
-        <FormInput name="city" label="By" value={city}
+        <FormInput name="city" label="By" value={city} required
                    onChange={this.setCity} pending={pending}/>
-        <FormInput name="phone" label="Telefon" value={phone}
+        <FormInput name="phone" label="Telefon" value={phone} required
                    onChange={this.setPhone} pending={pending}/>
         <div className="row justify-content-center">
           <div className="col-sm-6 nav-buttons">

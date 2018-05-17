@@ -122,7 +122,7 @@ class List extends React.Component {
                                        onChange={() => this.toggle(category)}/>;
                     }
 
-                    return <Info id={category.name}>You cannot delete data for this category</Info>;
+                    return <Info id={category.name}>Vi kan ikke imødekomme sletning i denne kategori, da vi er retsligt forpligtet til at gemme disse data.</Info>;
                   }
 
                   return null;
@@ -136,8 +136,14 @@ class List extends React.Component {
             </Fragment>
           ) : null}
           <Modal centered isOpen={confirm} toggle={this.props.hideConfirmation}>
-            <ModalHeader>Confirmation</ModalHeader>
-            <ModalBody>Are you sure?</ModalBody>
+            <ModalHeader>ADVARSEL!</ModalHeader>
+            <ModalBody>
+              <p>
+                Du er ved at slette alle dine personoplysninger i de angivne kategorier.
+                <br/>Dette kan medføre en forringet brugeoplevelse ved brug af vores tjenester.
+              </p>
+              <p>Er du sikker på du vil slette dine data?</p>
+            </ModalBody>
             <ModalFooter>
               <SubmitButton loading={submit.pending} onClick={this.submitTicket}>Confirm</SubmitButton>
               <SubmitButton color="link" onClick={this.props.hideConfirmation}>Cancel</SubmitButton>
