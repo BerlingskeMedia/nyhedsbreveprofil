@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { applyMiddleware, compose, createStore } from 'redux';
@@ -11,6 +11,7 @@ import { categoryManualList } from './CategoryManualList/categoryManualList.redu
 import { verifyUser } from './VerifyUserPage/verifyUser.reducers';
 import { RegisterPage } from './RegisterPage/RegisterPage';
 import { register } from './RegisterPage/register.reducers';
+import VerifyEmail from './VerifyEmail/VerifyEmail';
 
 import '../assets/styles.scss';
 
@@ -23,24 +24,27 @@ class WrapperPage extends React.Component {
 
   render() {
     return (
-      <Route path="/mine-data" render={(props) => {
-        return (
-          <div className="Page">
-            <div className="container Page-content">
-              <div className="row justify-content-center">
-                <div className="col-sm-8">
-                  {props.match.isExact ? <WithUserData {...props}/> : null}
-                  <Route path={`${props.match.url}/register`} component={RegisterPage}/>
+      <Fragment>
+        <Route path="/mine-data" exact render={(props) => {
+          return (
+            <div className="Page">
+              <div className="container Page-content">
+                <div className="row justify-content-center">
+                  <div className="col-sm-8">
+                    {props.match.isExact ? <WithUserData {...props}/> : null}
+                    <Route path={`${props.match.url}/register`} component={RegisterPage}/>
+                  </div>
                 </div>
               </div>
+              <div className="Page-footer">
+                Har du spørgsmål eller problemer med denne side, så send en mail
+                til <a href="mailto:persondata@berlingskemedia.dk">persondata@berlingskemedia.dk</a>
+              </div>
             </div>
-            <div className="Page-footer">
-              Har du spørgsmål eller problemer med denne side, så send en mail
-              til <a href="mailto:persondata@berlingskemedia.dk">persondata@berlingskemedia.dk</a>
-            </div>
-          </div>
-        );
-      }}/>
+          );
+        }}/>
+        <Route path="/mine-data/valider-email" component={VerifyEmail}/>
+      </Fragment>
     );
   }
 }
