@@ -31,7 +31,6 @@ export const fetchCategories = () => {
     dispatch(requestCategories());
 
     Api.get('/mine-data/categories')
-      .then(response => response.json())
       .then(response => {
         dispatch(receiveCategories(response.categories));
       });

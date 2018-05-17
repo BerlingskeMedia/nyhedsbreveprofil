@@ -43,7 +43,6 @@ class List extends React.Component {
     super(props);
 
     this.isSelected = this.isSelected.bind(this);
-    this.showConfirmationIfNeeded = this.showConfirmationIfNeeded.bind(this);
     this.submitTicket = this.submitTicket.bind(this);
     this.toggle = this.toggle.bind(this);
     this.toggleMode = this.toggleMode.bind(this);
@@ -65,14 +64,6 @@ class List extends React.Component {
 
   isSelected(category) {
     return this.props.list.includes(category.name);
-  }
-
-  showConfirmationIfNeeded() {
-    if (this.props.mode === 'delete') {
-      this.props.showConfirmation();
-    } else {
-      this.submitTicket();
-    }
   }
 
   submitTicket() {
@@ -131,7 +122,7 @@ class List extends React.Component {
                                        onChange={() => this.toggle(category)}/>;
                     }
 
-                    return <Info id={category.name}>You cannot delete data for this category</Info>;
+                    return <Info id={category.name}>Vi kan ikke imødekomme sletning i denne kategori, da vi er retsligt forpligtet til at gemme disse data.</Info>;
                   }
 
                   return null;
@@ -140,13 +131,19 @@ class List extends React.Component {
           {mode ? (
             <Fragment>
               <div className="nav-buttons justify-content-start">
-                <SubmitButton disabled={!list.length} loading={confirm || submit.pending} onClick={this.showConfirmationIfNeeded}>Send anmodning</SubmitButton>
+                <SubmitButton disabled={!list.length} loading={confirm || submit.pending} onClick={this.props.showConfirmation}>Send anmodning</SubmitButton>
               </div>
             </Fragment>
           ) : null}
           <Modal centered isOpen={confirm} toggle={this.props.hideConfirmation}>
-            <ModalHeader>Confirmation</ModalHeader>
-            <ModalBody>Are you sure?</ModalBody>
+            <ModalHeader>ADVARSEL!</ModalHeader>
+            <ModalBody>
+              <p>
+                Du er ved at slette alle dine personoplysninger i de angivne kategorier.
+                <br/>Dette kan medføre en forringet brugeoplevelse ved brug af vores tjenester.
+              </p>
+              <p>Er du sikker på du vil slette dine data?</p>
+            </ModalBody>
             <ModalFooter>
               <SubmitButton loading={submit.pending} onClick={this.submitTicket}>Confirm</SubmitButton>
               <SubmitButton color="link" onClick={this.props.hideConfirmation}>Cancel</SubmitButton>

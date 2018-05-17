@@ -16,7 +16,7 @@ export const DetailsItem = ({value, label, className, allowEmpty}) => {
 };
 
 DetailsItem.propTypes = {
-  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]),
+  value: PropTypes.any,
   className: PropTypes.string,
   allowEmpty: PropTypes.bool
 };

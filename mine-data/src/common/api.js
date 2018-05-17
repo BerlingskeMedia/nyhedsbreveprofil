@@ -1,8 +1,23 @@
 import 'whatwg-fetch';
 
+const littleCache = [];
+
 export class Api {
   static getUrl(path) {
     return `${process.env.API_URL}${path}`;
+  }
+
+  static getCached(path) {
+    const fromCache = littleCache.find((item) => item.path === path);
+
+    if (fromCache) {
+      return fromCache.promise;
+    }
+
+    const promise = Api.get(path);
+    littleCache.push({path, promise});
+
+    return promise;
   }
 
   static get(path) {
@@ -28,7 +43,7 @@ export class Api {
         return Promise.reject(response);
       }
 
-      return response;
+      return response.json();
     });
   }
 }

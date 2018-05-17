@@ -29,11 +29,11 @@ export const register = ({firstName, lastName, email, password, passwordRepeat, 
     dispatch(requestRegister());
 
     if ([firstName, lastName, email, password, passwordRepeat, address, zipCode, city, phone].some(item => !item || !item.trim())) {
-     return Promise.reject({errorDetails: 'All fields are required'});
+     return Promise.reject({errorDetails: 'Alle felter er påkrævet'});
     }
 
     if (password !== passwordRepeat) {
-      return Promise.reject({errorDetails: 'Passwords must be the same'})
+      return Promise.reject({errorDetails: 'Kodeordet skal være ens i begge felter'})
     }
 
     return new Promise((fulfill, reject) => {

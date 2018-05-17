@@ -78,6 +78,29 @@ module.exports.register = function (server, options, next) {
   });
 
   server.route({
+    method: 'delete',
+    path: '/category/surveygizmo/{surveyId}/{email}/{responseId}',
+    handler: (req, reply) => {
+      MDB.deleteSurveyGizmoResponse(req.params.surveyId, req.params.email, req.params.responseId)
+        .then(response => reply(response))
+        .catch(err => reply(Http.wrapError(err)));
+    }
+  });
+
+  server.route({
+    method: 'delete',
+    path: '/category/mailchimp/{listId}/{userId}',
+    handler: (req, reply) => {
+      MailChimp.delete(req.params.listId, req.params.userId)
+        .then(response => reply(response))
+        .catch((err) => {
+          console.error('MailChimp error:', err);
+          reply(Http.wrapError(err))
+        });
+    }
+  });
+
+  server.route({
     method: 'POST',
     path: '/zendesk/request',
     handler: (req, reply) => {
