@@ -19,7 +19,6 @@ export class CategoryApiCardItem extends React.Component {
   componentWillMount() {
     this.setState({pending: true});
     this.props.fetchData()
-      .then(response => response.json())
       .then(data => this.setState({
         data,
         pending: false
@@ -32,7 +31,11 @@ export class CategoryApiCardItem extends React.Component {
 
   renderDetails() {
     if (this.state.data) {
-      return this.props.render(this.state.data);
+      if (!this.props.hasData || this.props.hasData(this.state.data)) {
+        return this.props.render(this.state.data);
+      }
+
+      return null;
     }
 
     if (this.state.error && this.props.renderError) {
@@ -58,6 +61,7 @@ export class CategoryApiCardItem extends React.Component {
 CategoryApiCardItem.propTypes = {
   fetchData: PropTypes.func.isRequired,
   render: PropTypes.func.isRequired,
+  hasData: PropTypes.func,
   renderError: PropTypes.func,
   sideNav: PropTypes.func,
   title: PropTypes.string

@@ -8,6 +8,7 @@ import { CategoryList } from '../CategoryList/CategoryList';
 import { DetailsItem } from '../Details/DetailsItem';
 import { DetailsTitle } from '../Details/DetailsTitle';
 import { CategoryCard } from '../CategoryCard/CategoryCard';
+import { DetailsGroup } from '../Details/DetailsGroup';
 
 const CategoriesList = withCollapse(CategoryList);
 const SubCategoriesList = withCollapse(({children}) => <div className="SubCategoryList">{children}</div>);
@@ -71,34 +72,118 @@ export const List = ({userInfo: {userInfo}}) => (
         title="Register for Kundeoplysninger, Marketing og nyhedsbreve"
         details={() => (
           <SubCategoriesList getId={({title}) => title}>
-            <SubCategoryCard title="Kundeunivers">
+            <SubCategoryCard title="Abonnementsoplysninger">
               <CategoryApiCardItem
                 fetchData={() => Api.get(`/mine-data/category/kundeunivers/${userInfo.UID}`)}
                 renderError={Error}
-                render={(data) => (
+                hasData={data => data.orders && data.orders.length > 0}
+                render={data => data.orders.map(order => order.items.map(item => (
+                  <DetailsGroup key={item.sap_order_id}>
+                    <DetailsItem value={item.product_family} label="Produkt"/>
+                    <DetailsItem value={item.delivery_address} label="Leveringsadresse"/>
+                    <DetailsItem value={item.subscription_type} label="Abonnementstype"/>
+                    <DetailsItem value={item.status} label="Status"/>
+                    <DetailsItem value={item.expiration_date} label="Udløbsdato"/>
+                    <DetailsItem value={item.billing_frequency} label="Betalingsfrekvens"/>
+                  </DetailsGroup>
+                )))}/>
+            </SubCategoryCard>
+
+            <SubCategoryCard title="Samtykker">
+              <CategoryApiCardItem
+                fetchData={() => Api.getCached(`/mine-data/category/mdb/${userInfo.profile.email}`)}
+                renderError={Error}
+                hasData={data => data.permission_list && data.permission_list.length > 0}
+                render={data => data.permission_list.map(permission => (
+                  <DetailsGroup key={permission.name}>
+                    <DetailsTitle>{permission.name}</DetailsTitle>
+                    <DetailsItem value={permission.time} label="Tid"/>
+                    <DetailsItem value={permission.description} label="Beskrivelse"/>
+                  </DetailsGroup>
+                ))}/>
+            </SubCategoryCard>
+
+            <SubCategoryCard title="Nyhedsbreve">
+              <CategoryApiCardItem
+                fetchData={() => Promise.all([
+                  Api.getCached(`/mine-data/category/mdb/${userInfo.profile.email}`),
+                  Api.get(`/mine-data/category/mailchimp/${userInfo.profile.email}`)
+                ])}
+                hasData={([mdb, mailChimp]) => (mdb.nyhedsbreve_list && mdb.nyhedsbreve_list.length > 0) || (mailChimp && mailChimp.length > 0)}
+                render={([mdb, mailChimp]) => (
                   <Fragment>
-                    <DetailsTitle>Orders:</DetailsTitle>
-                    {data.orders.map(order => order.items.map(item => (
-                      <Fragment key={item.sap_order_id}>
-                        <DetailsItem className="mt-4" value={item.product_family} label="Produkt"/>
-                        <DetailsItem value={item.delivery_address} label="Leveringsadresse"/>
-                        <DetailsItem value={item.subscription_type} label="Abonnementstype"/>
-                        <DetailsItem value={item.status} label="Status"/>
-                        <DetailsItem value={item.expiration_date} label="Udløbsdato"/>
-                        <DetailsItem value={item.billing_frequency} label="Betalingsfrekvens"/>
-                      </Fragment>
-                    )))}
+                    {mdb.nyhedsbreve_list.map(newsletter => (
+                      <DetailsGroup key={newsletter.name}>
+                        <DetailsTitle>{newsletter.name}</DetailsTitle>
+                        <DetailsItem value={newsletter.time} label="Tid"/>
+                        <DetailsItem value={newsletter.description} label="Beskrivelse"/>
+                      </DetailsGroup>
+                    ))}
+
+                    {mailChimp.map(({list_title, ...fields}) => (
+                      <DetailsGroup key={list_title}>
+                        <DetailsTitle>{list_title}</DetailsTitle>
+                        <DetailsItem value={fields.email_address} label="E-mail"/>
+                        <DetailsItem value={fields.unique_email_id} label="Unique email ID"/>
+                        <DetailsItem value={fields.email_type} label="Email type"/>
+                        <DetailsItem value={fields.status} label="Satus"/>
+                        <DetailsItem value={fields.merge_fields.FNAME} label="Fornavn"/>
+                        <DetailsItem value={fields.merge_fields.LNAME} label="Efternavn"/>
+                        <DetailsItem value={fields.stats.avg_open_rate} label="Avg open rate"/>
+                        <DetailsItem value={fields.stats.avg_click_rate} label="Avg click rate"/>
+                        <DetailsItem value={fields.ip_signup} label="IP adresse"/>
+                        <DetailsItem value={fields.timestamp_signup} label="Tidsstempel signup"/>
+                        <DetailsItem value={fields.ip_opt} label="IP opt"/>
+                        <DetailsItem value={fields.timestamp_opt} label="Tidsstempel opt"/>
+                        <DetailsItem value={fields.member_rating} label="Rangering"/>
+                        <DetailsItem value={fields.last_changed} label="Sidste ændring"/>
+                        <DetailsItem value={fields.language} label="Sprog"/>
+                        <DetailsItem value={fields.vip} label="VIP"/>
+                        <DetailsItem value={fields.email_client} label="Email client"/>
+                        <DetailsItem label="Lokation" allowEmpty/>
+                        <DetailsItem value={fields.location.latitude} label="Latitude"/>
+                        <DetailsItem value={fields.location.longitude} label="Longitude"/>
+                        <DetailsItem value={fields.location.gmtoff} label="GMT off"/>
+                        <DetailsItem value={fields.location.dstoff} label="DST off"/>
+                        <DetailsItem value={fields.location.country_code} label="Country code"/>
+                        <DetailsItem value={fields.location.timezone} label="Timezone"/>
+                        <DetailsItem label="Aktiviteter" className="mt-2" allowEmpty/>
+                        {fields.activity.map(activityItem => (
+                          <div className="mt-2 ml-2" key={activityItem.timestamp}>
+                            <DetailsItem value={activityItem.bounce} label="Bounce"/>
+                            <DetailsItem value={activityItem.campaign_id} label="Campaign ID"/>
+                            <DetailsItem value={activityItem.timestamp} label="Tidsstempel"/>
+                            <DetailsItem value={activityItem.title} label="Titel"/>
+                            <DetailsItem value={activityItem.type} label="Type"/>
+                          </div>
+                        ))}
+                      </DetailsGroup>
+                    ))}
                   </Fragment>
                 )}/>
-              </SubCategoryCard>
+            </SubCategoryCard>
 
-            <SubCategoryCard title="MDB">
+            <SubCategoryCard title="Interesser">
               <CategoryApiCardItem
-                fetchData={() => Api.get(`/mine-data/category/mdb/${userInfo.profile.email}`)}
+                fetchData={() => Api.getCached(`/mine-data/category/mdb/${userInfo.profile.email}`)}
                 renderError={Error}
-                render={(data) => (
-                  <Fragment>
-                    <DetailsTitle>Personlig information</DetailsTitle>
+                hasData={data => data.interesser_list && data.interesser_list.length > 0}
+                render={data => data.interesser_list.map(interrest => (
+                  <DetailsGroup key={interrest.name}>
+                    <DetailsTitle>{interrest.name}</DetailsTitle>
+                    <DetailsItem value={interrest.time} label="Tid"/>
+                    <DetailsItem value={interrest.description} label="Beskrivelse"/>
+                  </DetailsGroup>
+                ))}/>
+            </SubCategoryCard>
+
+            <SubCategoryCard title="Marketing information">
+              <CategoryApiCardItem
+                fetchData={() => Api.getCached(`/mine-data/category/mdb/${userInfo.profile.email}`)}
+                renderError={Error}
+                hasData={data => data.profile && Object.keys(data.profile).length > 0}
+                render={data => (
+                  <DetailsGroup>
                     <DetailsItem value={data.profile.fornavn} label="Fornavn"/>
                     <DetailsItem value={data.profile.efternavn} label="Efternavn"/>
                     <DetailsItem value={data.profile.co_navn} label="CO navn"/>
@@ -133,91 +218,17 @@ export const List = ({userInfo: {userInfo}}) => (
                     <DetailsItem value={data.profile.insert_dato} label="Insert dato"/>
                     <DetailsItem value={data.profile.activate_dato} label="Activate dato"/>
                     <DetailsItem value={data.profile.opdatering_dato} label="Opdatering dato"/>
-
-                    <DetailsTitle>Nyhedsbreve</DetailsTitle>
-
-                    {data.nyhedsbreve_list.length ? data.nyhedsbreve_list.map(newsletter => (
-                      <Fragment key={newsletter.name}>
-                        <div className="mt-4"><strong>{newsletter.name}</strong></div>
-                        <DetailsItem value={newsletter.time} label="Tid"/>
-                        <DetailsItem value={newsletter.description} label="Beskrivelse"/>
-                      </Fragment>
-                    )) : <div>Ingen data registreret</div>}
-
-                    <DetailsTitle>Samtykker</DetailsTitle>
-
-                    {data.permission_list.length ? data.permission_list.map(permission => (
-                      <Fragment key={permission.name}>
-                        <div className="mt-4"><strong>{permission.name}</strong></div>
-                        <DetailsItem value={permission.time} label="Tid"/>
-                        <DetailsItem value={permission.description} label="Beskrivelse"/>
-                      </Fragment>
-                    )) : <div>Ingen data registreret</div>}
-
-                    <DetailsTitle>Interesser</DetailsTitle>
-
-                    {data.interesser_list.length ? data.interesser_list.map(interrest => (
-                      <Fragment key={interrest.name}>
-                        <div className="mt-4"><strong>{interrest.name}</strong></div>
-                        <DetailsItem value={interrest.time} label="Tid"/>
-                        <DetailsItem value={interrest.description} label="Beskrivelse"/>
-                      </Fragment>
-                    )) : <div>Ingen data registreret</div>}
-                  </Fragment>
-                )}/>
+                  </DetailsGroup>
+                  )}/>
             </SubCategoryCard>
 
-            <SubCategoryCard title="MailChimp">
-              <CategoryApiCardItem
-                fetchData={() => Api.get(`/mine-data/category/mailchimp/${userInfo.profile.email}`)}
-                renderError={Error}
-                render={(data) => data.map(({list_title, ...fields}) => (
-                  <Fragment key={list_title}>
-                    <DetailsTitle>{list_title}</DetailsTitle>
-                    <DetailsItem value={fields.email_address} label="E-mail"/>
-                    <DetailsItem value={fields.unique_email_id} label="Unique email ID"/>
-                    <DetailsItem value={fields.email_type} label="Email type"/>
-                    <DetailsItem value={fields.status} label="Satus"/>
-                    <DetailsItem value={fields.merge_fields.FNAME} label="Fornavn"/>
-                    <DetailsItem value={fields.merge_fields.LNAME} label="Efternavn"/>
-                    <DetailsItem value={fields.stats.avg_open_rate} label="Avg open rate"/>
-                    <DetailsItem value={fields.stats.avg_click_rate} label="Avg click rate"/>
-                    <DetailsItem value={fields.ip_signup} label="IP adresse"/>
-                    <DetailsItem value={fields.timestamp_signup} label="Tidsstempel signup"/>
-                    <DetailsItem value={fields.ip_opt} label="IP opt"/>
-                    <DetailsItem value={fields.timestamp_opt} label="Tidsstempel opt"/>
-                    <DetailsItem value={fields.member_rating} label="Rangering"/>
-                    <DetailsItem value={fields.last_changed} label="Sidste ændring"/>
-                    <DetailsItem value={fields.language} label="Sprog"/>
-                    <DetailsItem value={fields.vip} label="VIP"/>
-                    <DetailsItem value={fields.email_client} label="Email client"/>
-                    <DetailsItem label="Lokation" allowEmpty/>
-                    <DetailsItem value={fields.location.latitude} label="Latitude"/>
-                    <DetailsItem value={fields.location.longitude} label="Longitude"/>
-                    <DetailsItem value={fields.location.gmtoff} label="GMT off"/>
-                    <DetailsItem value={fields.location.dstoff} label="DST off"/>
-                    <DetailsItem value={fields.location.country_code} label="Country code"/>
-                    <DetailsItem value={fields.location.timezone} label="Timezone"/>
-                    <DetailsItem label="Aktiviteter" className="mt-2" allowEmpty/>
-                    {fields.activity.map(activityItem => (
-                      <div className="mt-2 ml-2" key={activityItem.timestamp}>
-                        <DetailsItem value={activityItem.bounce} label="Bounce"/>
-                        <DetailsItem value={activityItem.campaign_id} label="Campaign ID"/>
-                        <DetailsItem value={activityItem.timestamp} label="Tidsstempel"/>
-                        <DetailsItem value={activityItem.title} label="Titel"/>
-                        <DetailsItem value={activityItem.type} label="Type"/>
-                      </div>
-                    ))}
-                  </Fragment>
-                ))}/>
-            </SubCategoryCard>
-
-            <SubCategoryCard title="Survey Gizmo">
+            <SubCategoryCard title="Spørgeskemaer/konkurrencer">
               <CategoryApiCardItem
                 fetchData={() => Api.get(`/mine-data/category/surveygizmo/${userInfo.profile.email}`)}
                 renderError={Error}
+                hasData={surveys => surveys.length > 0}
                 render={surveys => surveys.map(survey => (
-                  <Fragment key={`${survey.response_id}${survey.survey_id}`}>
+                  <DetailsGroup key={`${survey.response_id}${survey.survey_id}`}>
                     <DetailsItem value={survey.city} label="By"/>
                     <DetailsItem value={survey.country} label="Country"/>
                     <DetailsItem value={survey.date} label="Dato"/>
@@ -236,9 +247,9 @@ export const List = ({userInfo: {userInfo}}) => (
                     <DetailsItem value={survey.survey_name} label="Navn på survey"/>
                     <DetailsItem value={survey.user_agent} label="User agent"/>
 
-                    <DetailsItem label="Dine svar"
+                    <DetailsItem label="Dine svar" className="mt-2"
                                  value={survey.survey_data.map(qa => <DetailsItem key={qa.q} label={qa.q} value={qa.a}/>)}/>
-                  </Fragment>
+                  </DetailsGroup>
                 ))}/>
             </SubCategoryCard>
           </SubCategoriesList>
