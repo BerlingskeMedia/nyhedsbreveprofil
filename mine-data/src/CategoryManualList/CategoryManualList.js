@@ -43,7 +43,6 @@ class List extends React.Component {
     super(props);
 
     this.isSelected = this.isSelected.bind(this);
-    this.showConfirmationIfNeeded = this.showConfirmationIfNeeded.bind(this);
     this.submitTicket = this.submitTicket.bind(this);
     this.toggle = this.toggle.bind(this);
     this.toggleMode = this.toggleMode.bind(this);
@@ -65,14 +64,6 @@ class List extends React.Component {
 
   isSelected(category) {
     return this.props.list.includes(category.name);
-  }
-
-  showConfirmationIfNeeded() {
-    if (this.props.mode === 'delete') {
-      this.props.showConfirmation();
-    } else {
-      this.submitTicket();
-    }
   }
 
   submitTicket() {
@@ -140,7 +131,7 @@ class List extends React.Component {
           {mode ? (
             <Fragment>
               <div className="nav-buttons justify-content-start">
-                <SubmitButton disabled={!list.length} loading={confirm || submit.pending} onClick={this.showConfirmationIfNeeded}>Send anmodning</SubmitButton>
+                <SubmitButton disabled={!list.length} loading={confirm || submit.pending} onClick={this.props.showConfirmation}>Send anmodning</SubmitButton>
               </div>
             </Fragment>
           ) : null}
