@@ -98,7 +98,7 @@ export const List = ({userInfo: {userInfo}}) => (
                 renderError={Error}
                 render={(data) => (
                   <Fragment>
-                    <DetailsTitle>Personal information</DetailsTitle>
+                    <DetailsTitle>Personlig information</DetailsTitle>
                     <DetailsItem value={data.profile.fornavn} label="Fornavn"/>
                     <DetailsItem value={data.profile.efternavn} label="Efternavn"/>
                     <DetailsItem value={data.profile.co_navn} label="CO navn"/>
@@ -216,9 +216,30 @@ export const List = ({userInfo: {userInfo}}) => (
               <CategoryApiCardItem
                 fetchData={() => Api.get(`/mine-data/category/surveygizmo/${userInfo.profile.email}`)}
                 renderError={Error}
-                render={data => {
-                  <div/>
-                }}/>
+                render={surveys => surveys.map(survey => (
+                  <Fragment key={`${survey.response_id}${survey.survey_id}`}>
+                    <DetailsItem value={survey.city} label="By"/>
+                    <DetailsItem value={survey.country} label="Country"/>
+                    <DetailsItem value={survey.date} label="Dato"/>
+                    <DetailsItem value={survey.date_submitted} label="indsendelsesdato"/>
+                    <DetailsItem value={survey.dma} label="Udbyder"/>
+                    <DetailsItem value={survey.email} label="E-mail"/>
+                    <DetailsItem value={survey.ip_address} label="IP adresse"/>
+                    <DetailsItem value={survey.language} label="Sprog"/>
+                    <DetailsItem value={survey.latitude} label="breddegrad"/>
+                    <DetailsItem value={survey.longitude} label="Længdegrad"/>
+                    <DetailsItem value={survey.postal} label="Post nr."/>
+                    <DetailsItem value={survey.referer} label="Url"/>
+                    <DetailsItem value={survey.region} label="Region"/>
+                    <DetailsItem value={survey.response_id} label="Response_id"/>
+                    <DetailsItem value={survey.survey_id} label="Survey_id"/>
+                    <DetailsItem value={survey.survey_name} label="Navn på survey"/>
+                    <DetailsItem value={survey.user_agent} label="User agent"/>
+
+                    <DetailsItem label="Dine svar"
+                                 value={survey.survey_data.map(qa => <DetailsItem key={qa.q} label={qa.q} value={qa.a}/>)}/>
+                  </Fragment>
+                ))}/>
             </SubCategoryCard>
           </SubCategoriesList>
         )}/>
