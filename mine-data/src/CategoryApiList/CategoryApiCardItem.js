@@ -1,12 +1,16 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import PropTypes from 'prop-types';
 import { Loading } from '../Loading/Loading';
+import { DetailsTitle } from '../Details/DetailsTitle';
+
+import './CategoryApiCardItem.scss';
 
 export class CategoryApiCardItem extends React.Component {
   constructor(props) {
     super(props);
 
     this.renderDetails = this.renderDetails.bind(this);
+    this.renderSideNav = this.renderSideNav.bind(this);
     this.toggle = this.toggle.bind(this);
 
     this.state = {
@@ -40,6 +44,14 @@ export class CategoryApiCardItem extends React.Component {
 
     if (this.state.error && this.props.renderError) {
       return this.props.renderError(this.state.error);
+    }
+
+    return null;
+  }
+
+  renderSideNav() {
+    if (this.props.sideNav) {
+      return this.props.sideNav();
     }
 
     return null;
