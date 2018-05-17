@@ -46,6 +46,7 @@ class MDB {
     allData.nyhedsbreve_list = newsletters
       .filter(newsletter => profile.nyhedsbreve.includes(newsletter.nyhedsbrev_id))
       .map(newsletter => ({
+        id: newsletter.nyhedsbrev_id,
         name: newsletter.nyhedsbrev_navn,
         time: newsletter.tidspunkt,
         description: newsletter.indhold
@@ -54,6 +55,7 @@ class MDB {
     allData.permission_list = interests
       .filter(permission => profile.permissions.includes(permission.interesse_id))
       .map(permission => ({
+        id: permission.interesse_id,
         name: permission.interesse_navn,
         time: permission.oprettet,
         description: permission.beskrivelse
@@ -62,6 +64,7 @@ class MDB {
     allData.interesser_list = interests
       .filter(permission => profile.interesser.includes(permission.interesse_id))
       .map(permission => ({
+        id: permission.interesse_id,
         name: permission.interesse_navn,
         time: permission.oprettet,
         description: permission.beskrivelse
