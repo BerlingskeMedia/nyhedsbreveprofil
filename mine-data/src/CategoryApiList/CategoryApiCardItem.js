@@ -64,7 +64,7 @@ export class CategoryApiCardItem extends React.Component {
     if (content) {
       return (
         <SubCategoryCard title={title} {...otherProps}>
-          {this.renderDetails()}
+          {content}
         </SubCategoryCard>
       );
     }
