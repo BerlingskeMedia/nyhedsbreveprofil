@@ -136,7 +136,7 @@ class List extends React.Component {
           </CollapsibleList>
           {mode ? (
             <Fragment>
-              <div className="nav-buttons justify-content-start">
+              <div className="nav-buttons justify-content-end">
                 <SubmitButton disabled={!list.length} loading={showConfirm || submit.pending} onClick={this.showConfirmation}>Send anmodning</SubmitButton>
               </div>
             </Fragment>
