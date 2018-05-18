@@ -108,7 +108,7 @@ module.exports = {
   },
 
   mapPayloadToTicket: (payload) => {
-    const modeText = payload.mode === 'insight' ? 'indsigt' : 'sletning';
+    const modeText = payload.mode === 'insight' ? 'INDSIGT' : 'SLET';
     const {email, firstName, lastName, phones, address, city, zip} = payload.user;
     const name = `${firstName || ''} ${lastName || ''}`.trim();
     const custom_fields = [
@@ -143,7 +143,7 @@ module.exports = {
 
       // TODO: remove "TEST" from the subject and message body
       return {
-        subject: `TEST - Request ${modeText}`,
+        subject: `TEST - ${modeText}: ${name}`,
         comment: {
           body: `TEST - Jeg ønsker ${modeText} af følgende data:\n\n${payloadCategories.map(c => '- '.concat(c.title)).join('\n')}`
         },
