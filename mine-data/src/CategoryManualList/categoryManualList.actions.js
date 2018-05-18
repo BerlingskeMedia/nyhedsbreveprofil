@@ -60,18 +60,14 @@ export const setMode = (mode) => {
   return setDeleteMode();
 };
 
-export const requestSubmit = (mode) => ({
-  type: SUBMIT_REQUEST,
-  mode
-});
-
+export const requestSubmit = actionBuilder(SUBMIT_REQUEST);
 export const receiveSubmit = actionBuilder(SUBMIT_RECEIVE);
 export const resetSubmit = actionBuilder(SUBMIT_RESET);
 export const failedSubmit = actionBuilder(SUBMIT_FAILED);
 
-export const submitTicket = (payload) => {
+export const submitTicket = payload => {
   return dispatch => {
-    dispatch(requestSubmit(payload.mode));
+    dispatch(requestSubmit());
 
     return Api.post('/mine-data/zendesk/request', payload)
       .then(() => {
@@ -84,5 +80,8 @@ export const submitTicket = (payload) => {
   }
 };
 
-export const showConfirmation = actionBuilder(CONFIRM_SHOW);
+export const showConfirmation = (mode) => ({
+  type: CONFIRM_SHOW,
+  mode
+});
 export const hideConfirmation = actionBuilder(CONFIRM_HIDE);

@@ -55,14 +55,13 @@ export const mode = (state = null, action) => {
 export const getSubmitDefaultState = () => ({
   pending: false,
   fetched: false,
-  failed: false,
-  mode: null
+  failed: false
 });
 
 export const submit = (state = getSubmitDefaultState(), action) => {
   switch (action.type) {
     case SUBMIT_REQUEST:
-      return {...state, pending: true, fetched: false, failed: false, mode: action.mode};
+      return {...state, pending: true, fetched: false, failed: false};
     case SUBMIT_RECEIVE:
       return {...state, pending: false, fetched: true, failed: false};
     case SUBMIT_FAILED:
@@ -74,12 +73,12 @@ export const submit = (state = getSubmitDefaultState(), action) => {
   }
 };
 
-export const confirm = (state = false, action) => {
+export const confirmMode = (state = null, action) => {
   switch (action.type) {
     case CONFIRM_SHOW:
-      return true;
+      return action.mode;
     case CONFIRM_HIDE:
-      return false;
+      return null;
     default:
       return state;
   }
@@ -90,5 +89,5 @@ export const categoryManualList = combineReducers({
   mode,
   submit,
   categories,
-  confirm
+  confirmMode
 });

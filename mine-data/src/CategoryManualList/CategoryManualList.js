@@ -14,7 +14,7 @@ import { compose } from 'redux';
 import { withTitle } from '../CategoryCard/withTitle';
 import { withCollapse } from '../CategoryList/withCollapse';
 import { CategoryList } from '../CategoryList/CategoryList';
-import { Alert, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import { Loading } from '../Loading/Loading';
 import Checkbox from '../Checkbox/Checkbox';
 import { Info } from '../Info/Info';
@@ -43,6 +43,7 @@ class List extends React.Component {
     super(props);
 
     this.isSelected = this.isSelected.bind(this);
+    this.showConfirmation = this.showConfirmation.bind(this);
     this.submitTicket = this.submitTicket.bind(this);
     this.toggle = this.toggle.bind(this);
     this.toggleMode = this.toggleMode.bind(this);
@@ -64,6 +65,10 @@ class List extends React.Component {
 
   isSelected(category) {
     return this.props.list.includes(category.name);
+  }
+
+  showConfirmation() {
+    this.props.showConfirmation(this.props.mode);
   }
 
   submitTicket() {
@@ -94,10 +99,11 @@ class List extends React.Component {
   }
 
   render() {
-    const {list, mode, submit, categories, confirm} = this.props;
+    const {list, mode, submit, categories, confirmMode} = this.props;
     const isModeInsight = mode === 'insight';
-    const isTicketModeInsight = submit.mode === 'insight';
+    const isConfirmModeInsight = confirmMode === 'insight';
     const isModeDelete = mode === 'delete';
+    const showConfirm = confirmMode !== null;
 
     if (categories.pending) {
       return <Loading />;
@@ -107,8 +113,8 @@ class List extends React.Component {
       return (
         <Fragment>
           <div className="nav-buttons justify-content-start">
-            <ModeButton onClick={() => this.toggleMode('insight')} active={isModeInsight}>Indsigt</ModeButton>
-            <ModeButton onClick={() => this.toggleMode('delete')} color="danger" active={isModeDelete}>Sletning</ModeButton>
+            <ModeButton onClick={() => this.toggleMode('insight')} active={isModeInsight}>Se data</ModeButton>
+            <ModeButton onClick={() => this.toggleMode('delete')} color="danger" active={isModeDelete}>Slet data</ModeButton>
           </div>
           <CollapsibleList getId={List.getCategoryId}>
             {categories.categories
@@ -131,42 +137,55 @@ class List extends React.Component {
           {mode ? (
             <Fragment>
               <div className="nav-buttons justify-content-start">
-                <SubmitButton disabled={!list.length} loading={confirm || submit.pending} onClick={this.props.showConfirmation}>Send anmodning</SubmitButton>
+                <SubmitButton disabled={!list.length} loading={showConfirm || submit.pending} onClick={this.showConfirmation}>Send anmodning</SubmitButton>
               </div>
             </Fragment>
           ) : null}
-          <Modal centered isOpen={confirm} toggle={this.props.hideConfirmation}>
-            <ModalHeader>ADVARSEL!</ModalHeader>
+          <Modal centered isOpen={showConfirm} toggle={this.props.hideConfirmation}>
+            {isConfirmModeInsight ? null : <ModalHeader>ADVARSEL!</ModalHeader>}
             <ModalBody>
-              <p>
-                Du er ved at slette alle dine personoplysninger i de angivne kategorier.
-                <br/>Dette kan medføre en forringet brugeoplevelse ved brug af vores tjenester.
-              </p>
-              <p>Er du sikker på du vil slette dine data?</p>
+              {
+                isConfirmModeInsight ?
+                  <p>Bekræft venligst at du ønsker dine data tilsendt på mail inden for 30 dage.</p>
+                :
+                  <p>
+                    Du er ved at slette alle dine personoplysninger i de angivne kategorier.
+                    <br/>Dette kan medføre en forringet brugeoplevelse ved brug af vores tjenester.
+                    <br/>
+                    <br/>Er du sikker på du vil slette dine data?
+                  </p>
+              }
             </ModalBody>
             <ModalFooter>
-              <SubmitButton loading={submit.pending} onClick={this.submitTicket}>Confirm</SubmitButton>
-              <SubmitButton color="link" onClick={this.props.hideConfirmation}>Cancel</SubmitButton>
+              <SubmitButton loading={submit.pending} onClick={this.submitTicket}>Bekræft</SubmitButton>
+              <SubmitButton color="link" onClick={this.props.hideConfirmation}>Afbryd</SubmitButton>
             </ModalFooter>
           </Modal>
           <Modal centered isOpen={submit.fetched && !submit.failed} toggle={this.props.resetTicket}>
             <ModalBody>
-              <p>Tak for din henvendelse.</p>
-              {isTicketModeInsight ?
-                <p>Din indsigtsanmodning vil blive besvaret og sendt til dig på mail inden for 30 dage.</p> :
-                <p>
-                  Du vil inden for 30 dage modtage bekræftelse på, at dine data er blevet slettet.<br/>
-                  Bemærk, at hvis du har data i kategorierne x, y, og z vil disse ikke blive slettet. Dette skyldes at Berlingske Media f.eks. har en retslig forpligtelse til at gemme disse oplysninger.
-                </p>}
-              <p>Hvis du er er uenig i vores behandling af din {isTicketModeInsight ? 'indsigtsanmodning' : 'sletteanmodning'}, har du mulighed for at klage til Datatilsynet. Læs nærmere <a href="https://www.datatilsynet.dk/borger/klage-til-datatilsynet" target="_blank">her</a>.</p>
-              <div className="nav-buttons justify-content-start">
-                <SubmitButton onClick={this.props.resetTicket}>Close</SubmitButton>
-              </div>
+              {
+                !submit.failed ? (
+                  <Fragment>
+                    <p>Tak for din henvendelse.</p>
+                    {
+                      isConfirmModeInsight ?
+                        <p>Din indsigtsanmodning vil blive besvaret og sendt til dig på mail inden for 30 dage.</p>
+                      :
+                        <p>
+                          Du vil inden for 30 dage modtage bekræftelse på, at dine data er blevet slettet.<br/>
+                          Bemærk, at hvis du har data i kategorierne x, y, og z vil disse ikke blive slettet. Dette skyldes at Berlingske Media f.eks. har en retslig forpligtelse til at gemme disse oplysninger.
+                        </p>
+                    }
+                    <p>Hvis du er er uenig i vores behandling af din {isConfirmModeInsight ? 'indsigtsanmodning' : 'sletteanmodning'}, har du mulighed for at klage til Datatilsynet. Læs nærmere <a href="https://www.datatilsynet.dk/borger/klage-til-datatilsynet" target="_blank">her</a>.</p>
+                  </Fragment>
+                ) :
+                  <p>Your request has not been sent</p>
+              }
             </ModalBody>
+            <ModalFooter>
+              <SubmitButton onClick={this.props.resetTicket}>OK</SubmitButton>
+            </ModalFooter>
           </Modal>
-          <Alert className="message" color="danger" isOpen={submit.fetched && submit.failed} toggle={this.props.resetTicket}>
-            Your request has not been sent
-          </Alert>
         </Fragment>
       );
     }
@@ -175,13 +194,13 @@ class List extends React.Component {
   }
 }
 
-const mapStateToProps = ({userInfo, categoryManualList: {list, mode, submit, categories, confirm}}) => ({
+const mapStateToProps = ({userInfo, categoryManualList: {list, mode, submit, categories, confirmMode}}) => ({
   list,
   mode,
   submit,
   userInfo,
   categories,
-  confirm
+  confirmMode
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -191,7 +210,7 @@ const mapDispatchToProps = (dispatch) => ({
   resetCategoryList: () => dispatch(resetCategoryList()),
   setNoneMode: () => dispatch(setNoneMode()),
   setMode: (newMode) => dispatch(setMode(newMode)),
-  showConfirmation: () => dispatch(showConfirmation()),
+  showConfirmation: (mode) => dispatch(showConfirmation(mode)),
   submitTicket: (payload) => dispatch(submitTicket(payload)),
   resetTicket: () => dispatch(resetSubmit()),
   hideConfirmation: () => dispatch(hideConfirmation())

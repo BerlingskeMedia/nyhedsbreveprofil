@@ -21,7 +21,7 @@ export class Api {
   }
 
   static get(path) {
-    return Api.request(path, 'GET');
+    return Api.request(path, 'GET').then(r => r.json());
   }
 
   static post(path, payload) {
@@ -43,7 +43,7 @@ export class Api {
         return Promise.reject(response);
       }
 
-      return response.json();
+      return response;
     });
   }
 }
