@@ -12,6 +12,7 @@ import { verifyUser } from './VerifyUserPage/verifyUser.reducers';
 import { RegisterPage } from './RegisterPage/RegisterPage';
 import { register } from './RegisterPage/register.reducers';
 import VerifyEmail from './VerifyEmail/VerifyEmail';
+import VerifyPending from "./VerifyEmail/VerifyPending";
 
 import '../assets/styles.scss';
 
@@ -32,6 +33,7 @@ class WrapperPage extends React.Component {
                 {props.match.isExact ? <WithUserData {...props}/> : null}
                 <Route path={`${props.match.url}/register`} component={RegisterPage}/>
                 <Route path={`${props.match.url}/valider-email`} component={VerifyEmail}/>
+                <Route path={`${props.match.url}/verserende-email`} component={VerifyPending}/>
               </div>
             </div>
           </div>

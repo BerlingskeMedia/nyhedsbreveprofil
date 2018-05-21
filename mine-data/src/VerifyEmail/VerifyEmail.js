@@ -3,10 +3,10 @@ import { Link } from 'react-router-dom';
 
 export default () => (
   <Fragment>
-    <h1>Email Verification</h1>
+    <h1>E-mail bekræftelse</h1>
     <p>
-      Thank you, your email address is now verified on our system.
+      Tak! Din e-mail adresse er nu bekræftet i vores system.
     </p>
-    <Link to="/mine-data">Login here</Link>
+    <Link to="/mine-data">Log ind her</Link>
   </Fragment>
 );
