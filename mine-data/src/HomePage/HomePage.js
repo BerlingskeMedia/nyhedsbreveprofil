@@ -5,10 +5,6 @@ import { CategoryApiList } from '../CategoryApiList/CategoryApiList';
 
 export const HomePage = () => (
   <Fragment>
-    <div className="d-flex justify-content-between">
-      <h1>Dine persondata hos Berlingske Media</h1>
-      <LogoutLink>Logout</LogoutLink>
-    </div>
     <p>
       Vi kan kun finde frem til dine data på baggrund af de oplysninger vi har på dig. Dem kan du se herunder. Hvis du ønsker at tilføje yderligere oplysninger til din Berlingske Media konto kan du gøre dette på vore selvbetjeningssider på de forskellige sites.
     </p>

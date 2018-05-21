@@ -16,6 +16,7 @@ import VerifyEmail from './VerifyEmail/VerifyEmail';
 import VerifyPending from "./VerifyEmail/VerifyPending";
 import { withTracking } from './common/withTracking';
 import { initialize } from 'react-ga';
+import { Header } from './Header/Header';
 
 import '../assets/styles.scss';
 
@@ -32,6 +33,7 @@ class WrapperPage extends React.Component {
     return (
       <Route path="/mine-data" render={props => (
         <div className="Page">
+          <Header/>
           <div className="container Page-content">
             <div className="row justify-content-center">
               <div className="col-sm-8">
