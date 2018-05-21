@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { BrowserRouter, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { applyMiddleware, compose, createStore } from 'redux';
@@ -13,8 +14,12 @@ import { RegisterPage } from './RegisterPage/RegisterPage';
 import { register } from './RegisterPage/register.reducers';
 import VerifyEmail from './VerifyEmail/VerifyEmail';
 import VerifyPending from "./VerifyEmail/VerifyPending";
+import { withTracking } from './common/withTracking';
+import { initialize } from 'react-ga';
 
 import '../assets/styles.scss';
+
+const UserDataWithTracking = withTracking(WithUserData);
 
 class WrapperPage extends React.Component {
   componentWillMount() {
@@ -25,15 +30,15 @@ class WrapperPage extends React.Component {
 
   render() {
     return (
-      <Route path="/mine-data" render={(props) => (
+      <Route path="/mine-data" render={props => (
         <div className="Page">
           <div className="container Page-content">
             <div className="row justify-content-center">
               <div className="col-sm-8">
-                {props.match.isExact ? <WithUserData {...props}/> : null}
-                <Route path={`${props.match.url}/register`} component={RegisterPage}/>
-                <Route path={`${props.match.url}/valider-email`} component={VerifyEmail}/>
-                <Route path={`${props.match.url}/verserende-email`} component={VerifyPending}/>
+                {props.match.isExact ? <UserDataWithTracking {...props}/> : null}
+                <Route path={`${props.match.url}/register`} component={withTracking(RegisterPage)}/>
+                <Route path={`${props.match.url}/valider-email`} component={withTracking(VerifyEmail)}/>
+                <Route path={`${props.match.url}/verserende-email`} component={withTracking(VerifyPending)}/>
               </div>
             </div>
           </div>
@@ -56,10 +61,21 @@ const store = createStore(combineReducers({
   register
 }), composeEnhancers(applyMiddleware(thunkMiddleware)));
 
-export const App = () => (
-  <Provider store={store}>
-    <BrowserRouter>
-      <Route path="/" component={WrapperPage}/>
-    </BrowserRouter>
-  </Provider>
-);
+export const App = ({config: {trackingId}}) => {
+  initialize(trackingId);
+
+  return (
+    <Provider store={store}>
+      <BrowserRouter>
+        <Route path="/" component={WrapperPage}/>
+      </BrowserRouter>
+    </Provider>
+  );
+};
+
+App.propTypes = {
+  config: PropTypes.shape({
+    gigyaApiKey: PropTypes.string,
+    trackingId: PropTypes.string
+  })
+};

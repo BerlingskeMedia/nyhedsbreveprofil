@@ -5,9 +5,11 @@ import { scriptLoader } from './src/common/scriptLoader';
 import { Api } from './src/common/api';
 
 Api.get('/mine-data/config')
-  .then(config => scriptLoader(`https://cdns.gigya.com/js/gigya.js?apikey=${config.gigyaApiKey}`, true))
-  .then(() => {
-    ReactDOM.render(<App/>, document.getElementById('content'));
+  .then(config => {
+    return scriptLoader(`https://cdns.gigya.com/js/gigya.js?apikey=${config.gigyaApiKey}`, true)
+      .then(() => {
+        ReactDOM.render(<App config={config}/>, document.getElementById('content'));
+      });
   })
   .catch(err => {
     console.error('Error loading Gigya script', err);

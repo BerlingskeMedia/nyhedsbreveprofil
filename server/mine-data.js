@@ -23,7 +23,8 @@ module.exports.register = function (server, options, next) {
     path: '/config',
     handler: (req, reply) => {
       reply({
-        gigyaApiKey: process.env.GIGYA_API_KEY || ''
+        gigyaApiKey: process.env.GIGYA_API_KEY || '',
+        trackingId: process.env.GA_TRACKING_ID || ''
       });
     }
   });
