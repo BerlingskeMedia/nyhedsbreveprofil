@@ -93,10 +93,7 @@ module.exports.register = function (server, options, next) {
     handler: (req, reply) => {
       MailChimp.delete(req.params.listId, req.params.userId)
         .then(response => reply(response))
-        .catch((err) => {
-          console.error('MailChimp error:', err);
-          reply(Http.wrapError(err))
-        });
+        .catch((err) => reply(Http.wrapError(err)));
     }
   });
 

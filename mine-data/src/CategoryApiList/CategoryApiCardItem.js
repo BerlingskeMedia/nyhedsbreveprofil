@@ -12,7 +12,9 @@ export class CategoryApiCardItem extends React.Component {
   constructor(props) {
     super(props);
 
+    this.fetchData = this.fetchData.bind(this);
     this.toggle = this.toggle.bind(this);
+    this.resetData = this.resetData.bind(this);
 
     this.state = {
       data: null,
@@ -23,6 +25,10 @@ export class CategoryApiCardItem extends React.Component {
 
   componentWillMount() {
     this.setState({pending: true});
+    this.fetchData();
+  }
+
+  fetchData() {
     this.props.fetchData()
       .then(data => this.setState({
         data,
@@ -43,7 +49,7 @@ export class CategoryApiCardItem extends React.Component {
     }
 
     if (data && (!hasData || hasData(data))) {
-      return render(data);
+      return render({data, resetData: this.resetData});
     }
 
     if (error && renderError) {
@@ -55,6 +61,15 @@ export class CategoryApiCardItem extends React.Component {
 
   toggle() {
     this.setState({isOpen: !this.state.isOpen});
+  }
+
+  resetData() {
+    this.setState({
+      pending: true,
+      data: null,
+      error: null
+    });
+    this.fetchData();
   }
 
   render() {
