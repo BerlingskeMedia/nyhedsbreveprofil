@@ -166,4 +166,7 @@ Zendesk.createTicket(newTicket)
 | 360003718633 | Telefonnummer (Telephone number) | Text | |
 | 360003774853 | Adresse (Address) | Multi-line | |
 | 360004449334 | Ekstern ID | Text | |
+| 360005004613 | SSO-ID | Text | |
+| 360005127574 | Ordrenummer | Multi-line | |
+| 360005127594 | Kundenummer | Multi-line | |
 | 360003718813 | System | Multi-select |  Possible values: *Abonnement* (abonnement), *Annoncering* (annoncering), *Kundeservice* (kundeservice), *Markedsundersøgelse* (markedsundersogelse), *Rapportering* (rapportering), *Sweetdeal og Shops* (sweetdeal_og_shops), *Telemarketing* (telemarketing), *Tracking* (tracking) |
