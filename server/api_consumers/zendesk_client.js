@@ -113,7 +113,7 @@ module.exports = {
     const {email, firstName, lastName, phones, address, city, zip} = payload.user;
     const name = `${firstName || ''} ${lastName || ''}`.trim();
     const custom_fields = [
-      {id: 111111111111, value: payload.uid},
+      {id: 360005004613, value: payload.uid},
       {id: 360003795594, value: name},
       {id: 360003795614, value: email},
       {id: 360003718813, value: payload.categories}
@@ -145,16 +145,19 @@ module.exports = {
 
       return KU.fetchAllDataSimple(payload.uid).then(orders => {
         if (orders.orders.length > 0) {
-          const [orderNumbers, businessPartnerIds] = orders.orders.map(order => {
-            return [order.sap_order_id, order.items.map(item => item.business_partner_id)];
-          });
+          const [orderNumbers, businessPartnerIds] = orders.orders.reduce(([orderIds, partnerIds], order) => {
+            return [
+              [...orderIds, order.sap_order_id],
+              [...partnerIds, ...order.items.map(item => item.business_partner_id)]
+            ];
+          }, [[], []]);
 
           if (orderNumbers.length) {
             custom_fields.push({
-              id: 111111111111, value: orderNumbers.join(',')
+              id: 360005127574, value: orderNumbers
             });
             custom_fields.push({
-              id: 111111111111, value: businessPartnerIds.join(',')
+              id: 360005127594, value: businessPartnerIds
             });
           }
           // TODO: remove "TEST" from the subject and message body

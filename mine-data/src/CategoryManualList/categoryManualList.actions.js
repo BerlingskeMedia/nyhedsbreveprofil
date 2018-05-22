@@ -66,10 +66,10 @@ export const resetSubmit = actionBuilder(SUBMIT_RESET);
 export const failedSubmit = actionBuilder(SUBMIT_FAILED);
 
 export const submitTicket = payload => {
-  return dispatch => {
+  return (dispatch, getState) => {
     dispatch(requestSubmit());
 
-    return Api.post('/mine-data/zendesk/request', payload)
+    return Api.post('/mine-data/zendesk/request', payload, getState().userInfo.jwt)
       .then(() => {
         dispatch(receiveSubmit());
         dispatch(setNoneMode());
