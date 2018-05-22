@@ -20,6 +20,19 @@ module.exports.register = function (server, options, next) {
     }
   });
 
+  ['/register', '/valider-email', '/verserende-email'].forEach(route => {
+    server.route({
+      method: 'get',
+      path: route,
+      config: {
+        auth: false
+      },
+      handler: (req, reply) => {
+        reply.file('mine-data/build/index.html');
+      }
+    });
+  });
+
   server.route({
     method: 'get',
     path: '/config',

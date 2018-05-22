@@ -28,6 +28,10 @@ export class CategoryApiCardItem extends React.Component {
     this.fetchData();
   }
 
+  componentWillUnmount() {
+    this.resetData = () => {};
+  }
+
   fetchData() {
     this.props.fetchData()
       .then(data => this.setState({

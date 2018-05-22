@@ -23,6 +23,13 @@ const getRsvpPayload = (userInfo, app) => ({
   email: encodeURI(userInfo.profile.email)
 });
 
+export const fetchUserToken = (config, userInfo) => {
+  return Api.request(`${config.bpcUrl}/rsvp`, {method: 'post', payload: getRsvpPayload(userInfo, config.bpcAppId)}, true)
+    .then(response => response.json())
+    .then(({rsvp}) => Api.post(`/mine-data/ticket/${rsvp}`))
+    .then(response => response.text());
+};
+
 export const fetchUserInfo = () => {
   return (dispatch, getState) => {
     dispatch(requestUserInfo());
@@ -35,14 +42,10 @@ export const fetchUserInfo = () => {
           const {config} = getState();
 
           if (userInfo.errorCode === 0) {
-            Api.request(`${config.bpcUrl}/rsvp`, {method: 'post', payload: getRsvpPayload(userInfo, config.bpcAppId)}, true)
-              .then(response => response.json())
-              .then(({rsvp}) => Api.post(`/mine-data/ticket/${rsvp}`))
-              .then(response => response.text())
-              .then(jwt => {
-                dispatch(receiveUserInfo(userInfo, jwt));
-                fulfill(userInfo);
-              });
+            fetchUserToken(config, userInfo).then(jwt => {
+              dispatch(receiveUserInfo(userInfo, jwt));
+              fulfill(userInfo);
+            });
           } else {
             dispatch(receiveUserInfo(userInfo, null));
             fulfill(userInfo);
