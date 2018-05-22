@@ -74,6 +74,7 @@ class List extends React.Component {
   submitTicket() {
     this.props.submitTicket({
       categories: this.props.list,
+      uid: this.props.userInfo.userInfo.UID,
       user: this.props.userInfo.userInfo.profile,
       mode: this.props.mode
     }).then(() => {
