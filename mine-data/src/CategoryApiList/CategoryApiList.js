@@ -62,7 +62,7 @@ export const List = ({userInfo: {userInfo}}) => (
                 <DetailsGroup
                   key={permission.name}
                   deleteAction={() => Api
-                    .delete(`/backend/users/${data.profile.user_id}/permissions/${permission.id}?location_id=5`)
+                    .delete(`/backend/users/${data.profile.ekstern_id}/permissions/${permission.id}?location_id=5`)
                     .then(() => resetData())
                   }>
                   <DetailsTitle>{permission.name}</DetailsTitle>
@@ -84,7 +84,7 @@ export const List = ({userInfo: {userInfo}}) => (
                     <DetailsGroup
                       key={newsletter.name}
                       deleteAction={() => Api
-                        .delete(`/backend/users/${mdb.profile.user_id}/nyhedsbreve/${newsletter.id}?location_id=5`)
+                        .delete(`/backend/users/${mdb.profile.ekstern_id}/nyhedsbreve/${newsletter.id}?location_id=5`)
                         .then(() => resetData())}>
                       <DetailsTitle>{newsletter.name}</DetailsTitle>
                       <DetailsItem value={newsletter.time} label="Tid"/>
@@ -147,7 +147,7 @@ export const List = ({userInfo: {userInfo}}) => (
                 <DetailsGroup
                   key={interest.name}
                   deleteAction={() => Api
-                    .delete(`/backend/users/${data.profile.user_id}/interesser/${interest.id}?location_id=5`)
+                    .delete(`/backend/users/${data.profile.ekstern_id}/interesser/${interest.id}?location_id=5`)
                     .then(() => resetData())}>
                   <DetailsTitle>{interest.name}</DetailsTitle>
                   <DetailsItem value={interest.time} label="Tid"/>

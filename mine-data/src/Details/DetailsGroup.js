@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import SubmitButton from '../SubmitButton/SubmitButton';
-import { Modal, ModalBody, ModalFooter } from 'reactstrap';
+import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 
 import './DetailsGroup.scss';
 
@@ -54,10 +54,18 @@ export class DetailsGroup extends React.Component {
           <div className="DetailsGroup-action">
             <SubmitButton onClick={this.showConfirmation}>Slet</SubmitButton>
             <Modal centered isOpen={this.state.isOpen} toggle={this.cancel}>
-              <ModalBody>Are you sure?</ModalBody>
+              <ModalHeader>ADVARSEL!</ModalHeader>
+              <ModalBody>
+                <p>
+                  Du er ved at slette alle dine personoplysninger i de angivne kategorier.
+                  <br/>Dette kan medføre en forringet brugeoplevelse ved brug af vores tjenester.
+                  <br/>
+                  <br/>Er du sikker på du vil slette dine data?
+                </p>
+              </ModalBody>
               <ModalFooter>
-                <SubmitButton onClick={this.confirm} loading={this.state.pending}>OK</SubmitButton>
-                <SubmitButton color="link" onClick={this.cancel}>Cancel</SubmitButton>
+                <SubmitButton onClick={this.confirm} loading={this.state.pending}>Bekræft</SubmitButton>
+                <SubmitButton color="link" onClick={this.cancel}>Afbryd</SubmitButton>
               </ModalFooter>
             </Modal>
           </div>
