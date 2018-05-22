@@ -54,6 +54,9 @@ module.exports.register = function (server, options, next) {
   server.route({
     method: 'get',
     path: '/category/kundeunivers/{gigyaUID}',
+    config: {
+      auth: 'jwt'
+    },
     handler: (req, reply) => {
       BPC.validateRequest(req)
         .then(() => KU.fetchAllData(req.params.gigyaUID))
@@ -65,6 +68,9 @@ module.exports.register = function (server, options, next) {
   server.route({
     method: 'get',
     path: '/category/mdb/{email}',
+    config: {
+      auth: 'jwt'
+    },
     handler: (req, reply) => {
       BPC.validateRequest(req)
         .then(() => MDB.findUser(req.params.email))
@@ -82,6 +88,9 @@ module.exports.register = function (server, options, next) {
   server.route({
     method: 'get',
     path: '/category/surveygizmo/{email}',
+    config: {
+      auth: 'jwt'
+    },
     handler: (req, reply) => {
       BPC.validateRequest(req)
         .then(() => MDB.findSurveyGizmoUser(req.params.email))
@@ -93,6 +102,9 @@ module.exports.register = function (server, options, next) {
   server.route({
     method: 'get',
     path: '/category/mailchimp/{email}',
+    config: {
+      auth: 'jwt'
+    },
     handler: (req, reply) => {
       BPC.validateRequest(req)
         .then(() => MailChimp.getData(req.params.email))
@@ -104,6 +116,9 @@ module.exports.register = function (server, options, next) {
   server.route({
     method: 'delete',
     path: '/category/surveygizmo/{surveyId}/{email}/{responseId}',
+    config: {
+      auth: 'jwt'
+    },
     handler: (req, reply) => {
       BPC.validateRequest(req)
         .then(() => MDB.deleteSurveyGizmoResponse(req.params.surveyId, req.params.email, req.params.responseId))
@@ -115,6 +130,9 @@ module.exports.register = function (server, options, next) {
   server.route({
     method: 'delete',
     path: '/category/mailchimp/{listId}/{userId}',
+    config: {
+      auth: 'jwt'
+    },
     handler: (req, reply) => {
       BPC.validateRequest(req)
         .then(() => MailChimp.delete(req.params.listId, req.params.userId))
@@ -126,6 +144,9 @@ module.exports.register = function (server, options, next) {
   server.route({
     method: 'POST',
     path: '/zendesk/request',
+    config: {
+      auth: 'jwt'
+    },
     handler: (req, reply) => {
       BPC.validateRequest(req)
         .then(() => ZenDesk.mapPayloadToTicket(req.payload))

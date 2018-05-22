@@ -45,6 +45,7 @@ server.register(hapiAuthJwt2, err => {
     console.log(err);
   }
 
+  server.auth.strategy('jwt', 'jwt', authConfig);
 
   server.route({
     method: 'GET',
@@ -59,10 +60,6 @@ server.register(hapiAuthJwt2, err => {
   server.register(opdatering, {routes: {prefix: '/opdatering'}}, cb);
   server.register(backend, {routes: {prefix: '/backend'}}, cb);
   server.register(smartlinks, {routes: {prefix: '/smartlinks'}}, cb);
-
-  // From here, JWT auth is enabled
-  server.auth.strategy('jwt', 'jwt', authConfig);
-  server.auth.default('jwt');
   server.register(mineData, {routes: {prefix: '/mine-data'}}, cb);
 
   if (!module.parent) {
