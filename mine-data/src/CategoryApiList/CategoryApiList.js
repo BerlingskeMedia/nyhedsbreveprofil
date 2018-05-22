@@ -15,7 +15,7 @@ const SubCategoriesList = withCollapse(({children}) => <div className="SubCatego
 const Error = () => <div>Data utilgængelig</div>;
 const SubCategoryCard = ({className, children, ...props}) => <CategoryCard className={classnames(className, 'SubCategoryCard')} details={() => children} {...props}/>;
 
-export const List = ({userInfo: {userInfo}}) => (
+export const List = ({userInfo: {userInfo, jwt}}) => (
   <Fragment>
     <CategoriesList getId={({title}) => title}>
       <CategoryCard title="Register for log-in oplysninger" details={() => (
@@ -39,7 +39,7 @@ export const List = ({userInfo: {userInfo}}) => (
           <SubCategoriesList getId={({title}) => title}>
             <CategoryApiCardItem
               title="Abonnementsoplysninger"
-              fetchData={() => Api.get(`/mine-data/category/kundeunivers/${userInfo.UID}`)}
+              fetchData={() => Api.get(`/mine-data/category/kundeunivers/${userInfo.UID}`, jwt)}
               renderError={Error}
               hasData={data => data.orders && data.orders.length > 0}
               render={({data}) => data.orders.map(order => order.items.map(item => (
@@ -55,14 +55,14 @@ export const List = ({userInfo: {userInfo}}) => (
 
             <CategoryApiCardItem
               title="Samtykker"
-              fetchData={() => Api.getCached(`/mine-data/category/mdb/${userInfo.profile.email}`)}
+              fetchData={() => Api.getCached(`/mine-data/category/mdb/${userInfo.profile.email}`, jwt)}
               renderError={Error}
               hasData={data => data.permission_list && data.permission_list.length > 0}
               render={({data, resetData}) => data.permission_list.map(permission => (
                 <DetailsGroup
                   key={permission.name}
                   deleteAction={() => Api
-                    .delete(`/backend/users/${data.profile.ekstern_id}/permissions/${permission.id}?location_id=5`)
+                    .delete(`/backend/users/${data.profile.ekstern_id}/permissions/${permission.id}?location_id=5`, jwt)
                     .then(() => resetData())
                   }>
                   <DetailsTitle>{permission.name}</DetailsTitle>
@@ -74,8 +74,8 @@ export const List = ({userInfo: {userInfo}}) => (
             <CategoryApiCardItem
               title="Nyhedsbreve"
               fetchData={() => Promise.all([
-                Api.getCached(`/mine-data/category/mdb/${userInfo.profile.email}`),
-                Api.get(`/mine-data/category/mailchimp/${userInfo.profile.email}`)
+                Api.getCached(`/mine-data/category/mdb/${userInfo.profile.email}`, jwt),
+                Api.get(`/mine-data/category/mailchimp/${userInfo.profile.email}`, jwt)
               ])}
               hasData={([mdb, mailChimp]) => (mdb.nyhedsbreve_list && mdb.nyhedsbreve_list.length > 0) || (mailChimp && mailChimp.length > 0)}
               render={({data: [mdb, mailChimp], resetData}) => (
@@ -84,7 +84,7 @@ export const List = ({userInfo: {userInfo}}) => (
                     <DetailsGroup
                       key={newsletter.name}
                       deleteAction={() => Api
-                        .delete(`/backend/users/${mdb.profile.ekstern_id}/nyhedsbreve/${newsletter.id}?location_id=5`)
+                        .delete(`/backend/users/${mdb.profile.ekstern_id}/nyhedsbreve/${newsletter.id}?location_id=5`, jwt)
                         .then(() => resetData())}>
                       <DetailsTitle>{newsletter.name}</DetailsTitle>
                       <DetailsItem value={newsletter.time} label="Tid"/>
@@ -96,7 +96,7 @@ export const List = ({userInfo: {userInfo}}) => (
                     <DetailsGroup
                       key={list_title}
                       deleteAction={() => Api
-                        .delete(`/mine-data/category/mailchimp/${fields.list_id}/${fields.id}`)
+                        .delete(`/mine-data/category/mailchimp/${fields.list_id}/${fields.id}`, jwt)
                         .then(() => resetData())}>
                       <DetailsTitle>{list_title}</DetailsTitle>
                       <DetailsItem value={fields.email_address} label="E-mail"/>
@@ -140,14 +140,14 @@ export const List = ({userInfo: {userInfo}}) => (
 
             <CategoryApiCardItem
               title="Interesser"
-              fetchData={() => Api.getCached(`/mine-data/category/mdb/${userInfo.profile.email}`)}
+              fetchData={() => Api.getCached(`/mine-data/category/mdb/${userInfo.profile.email}`, jwt)}
               renderError={Error}
               hasData={data => data.interesser_list && data.interesser_list.length > 0}
               render={({data, resetData}) => data.interesser_list.map(interest => (
                 <DetailsGroup
                   key={interest.name}
                   deleteAction={() => Api
-                    .delete(`/backend/users/${data.profile.ekstern_id}/interesser/${interest.id}?location_id=5`)
+                    .delete(`/backend/users/${data.profile.ekstern_id}/interesser/${interest.id}?location_id=5`, jwt)
                     .then(() => resetData())}>
                   <DetailsTitle>{interest.name}</DetailsTitle>
                   <DetailsItem value={interest.time} label="Tid"/>
@@ -157,7 +157,7 @@ export const List = ({userInfo: {userInfo}}) => (
 
             <CategoryApiCardItem
               title="Marketing information"
-              fetchData={() => Api.getCached(`/mine-data/category/mdb/${userInfo.profile.email}`)}
+              fetchData={() => Api.getCached(`/mine-data/category/mdb/${userInfo.profile.email}`, jwt)}
               renderError={Error}
               hasData={data => data.profile && Object.keys(data.profile).length > 0}
               render={({data}) => (
@@ -201,14 +201,14 @@ export const List = ({userInfo: {userInfo}}) => (
 
             <CategoryApiCardItem
               title="Spørgeskemaer/konkurrencer"
-              fetchData={() => Api.get(`/mine-data/category/surveygizmo/${userInfo.profile.email}`)}
+              fetchData={() => Api.get(`/mine-data/category/surveygizmo/${userInfo.profile.email}`, jwt)}
               renderError={Error}
               hasData={data => data.length > 0}
               render={({data, resetData}) => data.map(survey => (
                 <DetailsGroup
                   key={`${survey.response_id}${survey.survey_id}`}
                   deleteAction={() => Api
-                    .delete(`/mie-data/category/surveygizmo/${survey.survey_id}/${userInfo.profile.email}/${survey.response_id}`)
+                    .delete(`/mie-data/category/surveygizmo/${survey.survey_id}/${userInfo.profile.email}/${survey.response_id}`, jwt)
                     .then(() => resetData())}>
                   <DetailsItem value={survey.city} label="By"/>
                   <DetailsItem value={survey.country} label="Country"/>

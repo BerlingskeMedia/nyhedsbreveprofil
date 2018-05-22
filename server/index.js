@@ -10,6 +10,8 @@ const opdatering = require('./opdatering');
 const mineData = require('./mine-data');
 const inert = require('inert');
 const good = require('good');
+const hapiAuthJwt2 = require('hapi-auth-jwt2');
+const { authConfig } = require('./lib/jwt');
 
 var server = new Hapi.Server({
   connections: {
@@ -38,32 +40,42 @@ server.connection({
   }
 });
 
-server.route({
-  method: 'GET',
-  path: '/healthcheck',
-  handler: function (request, reply) {
-    return reply('OK');
+server.register(hapiAuthJwt2, err => {
+  if (err) {
+    console.log(err);
+  }
+
+
+  server.route({
+    method: 'GET',
+    path: '/healthcheck',
+    handler: function (request, reply) {
+      return reply('OK');
+    }
+  });
+  server.register({register: good, options: goodOpts}, cb);
+  server.register(inert, cb);
+  server.register(nyhedsbreve, cb);
+  server.register(opdatering, {routes: {prefix: '/opdatering'}}, cb);
+  server.register(backend, {routes: {prefix: '/backend'}}, cb);
+  server.register(smartlinks, {routes: {prefix: '/smartlinks'}}, cb);
+
+  // From here, JWT auth is enabled
+  server.auth.strategy('jwt', 'jwt', authConfig);
+  server.auth.default('jwt');
+  server.register(mineData, {routes: {prefix: '/mine-data'}}, cb);
+
+  if (!module.parent) {
+    server.start((err) => {
+      if (err) {
+        throw err;
+      }
+
+      console.log(`Server running at: ${server.info.uri}`);
+      BPC.fetchAndSaveAppTicket();
+    });
   }
 });
-
-server.register({register: good, options: goodOpts}, cb);
-server.register(inert, cb);
-server.register(nyhedsbreve, cb);
-server.register(opdatering, { routes: { prefix: '/opdatering' } }, cb);
-server.register(mineData, { routes: { prefix: '/mine-data' } }, cb);
-server.register(backend, { routes: { prefix: '/backend' } }, cb);
-server.register(smartlinks, { routes: { prefix: '/smartlinks' } }, cb);
-
-if (!module.parent) {
-  server.start((err) => {
-    if (err) {
-      throw err;
-    }
-
-    console.log(`Server running at: ${server.info.uri}`);
-    BPC.fetchAndSaveAppTicket();
-  });
-}
 
 function cb (err) {
   if (err) {

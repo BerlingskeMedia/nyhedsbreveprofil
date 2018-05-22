@@ -7,7 +7,8 @@ export const defaultUserInfoState = () => ({
   isFetched: false,
   isPending: false,
   isVerified: false,
-  userInfo: null
+  userInfo: null,
+  jwt: null
 });
 
 export function userInfo(state = defaultUserInfoState(), action) {
@@ -15,7 +16,7 @@ export function userInfo(state = defaultUserInfoState(), action) {
     case REQUEST_USER_INFO:
       return {...state, isPending: true};
     case RECEIVE_USER_INFO:
-      return {isFetched: true, isPending: false, userInfo: action.userInfo};
+      return {isFetched: true, isPending: false, userInfo: action.userInfo, jwt: action.jwt};
     case VERIFY_USER:
       return {...state, isVerified: true};
     case RESET_USER_INFO:

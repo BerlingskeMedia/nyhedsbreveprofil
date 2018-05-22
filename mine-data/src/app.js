@@ -17,6 +17,7 @@ import VerifyPending from "./VerifyEmail/VerifyPending";
 import { withTracking } from './common/withTracking';
 import { initialize } from 'react-ga';
 import { Header } from './Header/Header';
+import { createConfigReducer } from './config.reducers';
 
 import '../assets/styles.scss';
 
@@ -55,16 +56,18 @@ class WrapperPage extends React.Component {
 }
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-const store = createStore(combineReducers({
-  userInfo,
-  login,
-  categoryManualList,
-  verifyUser,
-  register
-}), composeEnhancers(applyMiddleware(thunkMiddleware)));
 
-export const App = ({config: {trackingId}}) => {
-  initialize(trackingId);
+export const App = ({config}) => {
+  initialize(config.trackingId);
+
+  const store = createStore(combineReducers({
+    userInfo,
+    login,
+    categoryManualList,
+    verifyUser,
+    register,
+    config: createConfigReducer(config)
+  }), composeEnhancers(applyMiddleware(thunkMiddleware)));
 
   return (
     <Provider store={store}>
