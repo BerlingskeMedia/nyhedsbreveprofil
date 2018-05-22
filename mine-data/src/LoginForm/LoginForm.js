@@ -1,10 +1,11 @@
 import React from 'react';
-import { FormGroup, Input, Label } from 'reactstrap';
 import { connect } from 'react-redux';
 import { login, resetLogin, setPassword, setUsername } from './login.actions';
 import SubmitButton from '../SubmitButton/SubmitButton';
 import { Link } from 'react-router-dom';
 import { FormInput } from '../Form/FormInput';
+import { LogoutLink } from '../logout/LogoutLink';
+import { fetchVerifyUser } from '../VerifyUserPage/verifyUser.actions';
 
 export class LoginDisconnected extends React.Component {
   constructor(props) {
@@ -12,6 +13,12 @@ export class LoginDisconnected extends React.Component {
     this.setPassword = this.setPassword.bind(this);
     this.setUsername = this.setUsername.bind(this);
     this.submit = this.submit.bind(this);
+  }
+
+  componentWillMount() {
+    if (this.props.userInfo.userInfo && this.props.userInfo.userInfo.profile) {
+      this.props.setUsername(this.props.userInfo.userInfo.profile.email);
+    }
   }
 
   componentWillUnmount() {
@@ -29,47 +36,62 @@ export class LoginDisconnected extends React.Component {
   submit(e) {
     e.preventDefault();
 
-    this.props.login({
-      username: this.props.username,
-      password: this.props.password
-    });
+    if (this.props.userInfo.userInfo && this.props.userInfo.userInfo.profile) {
+      this.props.fetchVerifyUser(this.props.password);
+    } else {
+      this.props.login({
+        username: this.props.username,
+        password: this.props.password
+      });
+    }
   }
 
   render() {
+    const {userInfo, username, pending, password, response, verifyUser} = this.props;
+    const isPending = pending || verifyUser.isPending;
+    const isLoggedIn = !!userInfo.userInfo && !!userInfo.userInfo.profile;
+
     return (
       <form className="form" onSubmit={this.submit} autoComplete="off">
         <FormInput name="email" type="email" label="E-mailadresse"
-                   value={this.props.username} pending={this.props.pending}
-                   onChange={this.setUsername}/>
-        <FormInput name="password" type="password" value={this.props.password}
-                   onChange={this.setPassword} pending={this.props.pending}
+                   value={username} pending={pending}
+                   onChange={this.setUsername} readOnly={isLoggedIn}
+                   hint={isLoggedIn ? <div>Ikke dig? <LogoutLink>Log ind med en anden konto.</LogoutLink></div> : null}/>
+        <FormInput name="password" type="password" value={password}
+                   onChange={this.setPassword} pending={isPending}
                    autoComplete="off"/>
         <div className="row justify-content-center">
           <div className="col-sm-6 nav-buttons">
             <Link to="/mine-data/register">Opret konto</Link>
-            <SubmitButton loading={this.props.pending}>Log ind</SubmitButton>
+            <SubmitButton loading={isPending}>Log ind</SubmitButton>
           </div>
         </div>
-        {this.props.response ? <div className="row justify-content-center">
-          <div className="col-sm-6 form-error">{this.props.response.errorDetails}</div>
+        {response ? <div className="row justify-content-center">
+          <div className="col-sm-6 form-error">{response.errorDetails}</div>
+        </div> : null}
+        {verifyUser.response ? <div className="row justify-content-center">
+          <div className="col-sm-6 form-error">{verifyUser.response.errorDetails}</div>
         </div> : null}
       </form>
     );
   }
 }
 
-const mapStateToProps = ({login}) => ({
+const mapStateToProps = ({login, userInfo, verifyUser}) => ({
   pending: login.pending,
   response: login.response,
   username: login.username,
-  password: login.password
+  password: login.password,
+  userInfo,
+  verifyUser
 });
 
 const mapDispatchToProps = (dispatch) => ({
   login: (payload) => dispatch(login(payload)),
   setUsername: (username) => dispatch(setUsername(username)),
   setPassword: (password) => dispatch(setPassword(password)),
-  resetLogin: () => dispatch(resetLogin())
+  resetLogin: () => dispatch(resetLogin()),
+  fetchVerifyUser: (password) => dispatch(fetchVerifyUser(password))
 });
 
 export const LoginForm = connect(mapStateToProps, mapDispatchToProps)(LoginDisconnected);

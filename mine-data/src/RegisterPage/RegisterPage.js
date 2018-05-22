@@ -1,6 +1,6 @@
 import React from 'react';
 import SubmitButton from '../SubmitButton/SubmitButton';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
   receiveRegister,
@@ -11,6 +11,7 @@ import {
 } from './register.actions';
 import { logOut } from '../logout/logOut.actions';
 import { FormInput } from '../Form/FormInput';
+import VerifyPending from "../VerifyEmail/VerifyPending";
 
 class Register extends React.Component {
   constructor(props) {
@@ -90,6 +91,13 @@ class Register extends React.Component {
       });
   }
 
+  renderRedirect (response) {
+    if (response.errorCode === 206002) {
+      this.props.history.push(`/mine-data/verserende-email`)
+      return <Redirect to={VerifyPending}/>;
+    }
+  }
+
   render() {
     const {
       pending, firstName, lastName, email, password, passwordRepeat, address,
@@ -131,7 +139,8 @@ class Register extends React.Component {
             <SubmitButton loading={pending}>Opret</SubmitButton>
           </div>
         </div>
-        {response ? <div className="row ">
+        {response ? <div className="row">
+          {this.renderRedirect(response)}
           <div className="offset-sm-3 col-sm-6 form-error mb-1">{response.errorDetails}</div>
           {response.validationErrors ? response.validationErrors.map(error => (
             <div key={error.message} className="offset-sm-3 col-sm-6 form-error">{error.message}</div>

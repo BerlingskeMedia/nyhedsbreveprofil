@@ -19,7 +19,7 @@ class Http {
         json: payload,
         hawk: credentials ? {
           credentials,
-          app: credentials.id
+          app: credentials.app
         } : null
       }, (err, response, body) => {
         if (err) {

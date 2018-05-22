@@ -2,6 +2,7 @@ const Https = require('https');
 const Url = require('url');
 const Joi = require('joi');
 const MDB = require('./mdb_client');
+const KU = require('./kundeunivers_client');
 const {categories} = require('./categories_client');
 
 var ZENDESK_URL;
@@ -108,10 +109,11 @@ module.exports = {
   },
 
   mapPayloadToTicket: (payload) => {
-    const modeText = payload.mode === 'insight' ? 'indsigt' : 'sletning';
+    const modeText = payload.mode === 'insight' ? 'INDSIGT' : 'SLET';
     const {email, firstName, lastName, phones, address, city, zip} = payload.user;
     const name = `${firstName || ''} ${lastName || ''}`.trim();
     const custom_fields = [
+      {id: 111111111111, value: payload.uid},
       {id: 360003795594, value: name},
       {id: 360003795614, value: email},
       {id: 360003718813, value: payload.categories}
@@ -141,15 +143,31 @@ module.exports = {
         });
       }
 
-      // TODO: remove "TEST" from the subject and message body
-      return {
-        subject: `TEST - Request ${modeText}`,
-        comment: {
-          body: `TEST - Jeg ønsker ${modeText} af følgende data:\n\n${payloadCategories.map(c => '- '.concat(c.title)).join('\n')}`
-        },
-        requester: {name, email},
-        custom_fields
-      };
+      return KU.fetchAllDataSimple(payload.uid).then(orders => {
+        if (orders.orders.length > 0) {
+          const [orderNumbers, businessPartnerIds] = orders.orders.map(order => {
+            return [order.sap_order_id, order.items.map(item => item.business_partner_id)];
+          });
+
+          if (orderNumbers.length) {
+            custom_fields.push({
+              id: 111111111111, value: orderNumbers.join(',')
+            });
+            custom_fields.push({
+              id: 111111111111, value: businessPartnerIds.join(',')
+            });
+          }
+          // TODO: remove "TEST" from the subject and message body
+          return {
+            subject: `TEST - ${modeText}: ${name}`,
+            comment: {
+              body: `TEST - Jeg ønsker ${modeText} af følgende data:\n\n${payloadCategories.map(c => '- '.concat(c.title)).join('\n')}`
+            },
+            requester: {name, email},
+            custom_fields
+          };
+        }
+      });
     });
   },
 

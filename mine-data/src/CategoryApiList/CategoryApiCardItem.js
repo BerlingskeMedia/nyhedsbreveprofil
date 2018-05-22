@@ -1,17 +1,20 @@
-import React, {Fragment} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Loading } from '../Loading/Loading';
-import { DetailsTitle } from '../Details/DetailsTitle';
 
 import './CategoryApiCardItem.scss';
+import classnames from 'classnames';
+import { CategoryCard } from '../CategoryCard/CategoryCard';
+
+const SubCategoryCard = ({className, children, ...props}) => <CategoryCard className={classnames(className, 'SubCategoryCard')} details={() => children} {...props}/>;
 
 export class CategoryApiCardItem extends React.Component {
   constructor(props) {
     super(props);
 
-    this.renderDetails = this.renderDetails.bind(this);
-    this.renderSideNav = this.renderSideNav.bind(this);
+    this.fetchData = this.fetchData.bind(this);
     this.toggle = this.toggle.bind(this);
+    this.resetData = this.resetData.bind(this);
 
     this.state = {
       data: null,
@@ -22,6 +25,10 @@ export class CategoryApiCardItem extends React.Component {
 
   componentWillMount() {
     this.setState({pending: true});
+    this.fetchData();
+  }
+
+  fetchData() {
     this.props.fetchData()
       .then(data => this.setState({
         data,
@@ -34,24 +41,19 @@ export class CategoryApiCardItem extends React.Component {
   }
 
   renderDetails() {
-    if (this.state.data) {
-      if (!this.props.hasData || this.props.hasData(this.state.data)) {
-        return this.props.render(this.state.data);
-      }
+    const {hasData, render, renderError} = this.props;
+    const {pending, data, error} = this.state;
 
-      return null;
+    if (pending) {
+      return <Loading/>;
     }
 
-    if (this.state.error && this.props.renderError) {
-      return this.props.renderError(this.state.error);
+    if (data && (!hasData || hasData(data))) {
+      return render({data, resetData: this.resetData});
     }
 
-    return null;
-  }
-
-  renderSideNav() {
-    if (this.props.sideNav) {
-      return this.props.sideNav();
+    if (error && renderError) {
+      return renderError(error);
     }
 
     return null;
@@ -61,12 +63,28 @@ export class CategoryApiCardItem extends React.Component {
     this.setState({isOpen: !this.state.isOpen});
   }
 
+  resetData() {
+    this.setState({
+      pending: true,
+      data: null,
+      error: null
+    });
+    this.fetchData();
+  }
+
   render() {
-    if (this.state.pending) {
-      return <Loading/>;
+    const {title, ...otherProps} = this.props;
+    const content = this.renderDetails();
+
+    if (content) {
+      return (
+        <SubCategoryCard title={title} {...otherProps}>
+          {content}
+        </SubCategoryCard>
+      );
     }
 
-    return this.renderDetails();
+    return null;
   }
 }
 
