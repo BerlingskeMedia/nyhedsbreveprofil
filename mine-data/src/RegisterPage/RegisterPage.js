@@ -91,10 +91,9 @@ class Register extends React.Component {
       });
   }
 
-  renderRedirect (response) {
+  renderRedirect(response) {
     if (response.errorCode === 206002) {
-      this.props.history.push(`/mine-data/verserende-email`)
-      return <Redirect to={VerifyPending}/>;
+      return <Redirect to="/mine-data/verserende-email"/>;
     }
   }
 
