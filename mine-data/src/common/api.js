@@ -1,6 +1,7 @@
 import 'whatwg-fetch';
 
 const littleCache = [];
+const cacheTime = 1000;
 
 export class Api {
   static getUrl(path) {
@@ -8,14 +9,16 @@ export class Api {
   }
 
   static getCached(path) {
-    const fromCache = littleCache.find((item) => item.path === path);
+    const now = Date.now();
+    const fromCache = littleCache.find((item) => item.path === path && now < item.expires);
 
     if (fromCache) {
       return fromCache.promise;
     }
 
     const promise = Api.get(path);
-    littleCache.push({path, promise});
+    const expires = Date.now() + cacheTime;
+    littleCache.push({path, promise, expires});
 
     return promise;
   }
@@ -26,6 +29,10 @@ export class Api {
 
   static post(path, payload) {
     return Api.request(path, 'POST', payload);
+  }
+
+  static delete(path) {
+    return Api.request(path, 'DELETE');
   }
 
   static request(path, method, body) {

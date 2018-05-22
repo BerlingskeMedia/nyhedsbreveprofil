@@ -74,6 +74,7 @@ class List extends React.Component {
   submitTicket() {
     this.props.submitTicket({
       categories: this.props.list,
+      uid: this.props.userInfo.userInfo.UID,
       user: this.props.userInfo.userInfo.profile,
       mode: this.props.mode
     }).then(() => {
@@ -111,10 +112,10 @@ class List extends React.Component {
 
     if (categories.categories) {
       return (
-        <Fragment>
+        <div className="CategoryManualList">
           <div className="nav-buttons justify-content-start">
             <ModeButton onClick={() => this.toggleMode('insight')} active={isModeInsight}>Se data</ModeButton>
-            <ModeButton onClick={() => this.toggleMode('delete')} color="danger" active={isModeDelete}>Slet data</ModeButton>
+            <ModeButton onClick={() => this.toggleMode('delete')} active={isModeDelete}>Slet data</ModeButton>
           </div>
           <CollapsibleList getId={List.getCategoryId}>
             {categories.categories
@@ -186,7 +187,7 @@ class List extends React.Component {
               <SubmitButton onClick={this.props.resetTicket}>OK</SubmitButton>
             </ModalFooter>
           </Modal>
-        </Fragment>
+        </div>
       );
     }
 

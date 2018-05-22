@@ -6,7 +6,6 @@ import './LoginPage.scss';
 
 export const LoginPage = () => (
   <div className="LoginPage">
-    <h1>Persondata hos Berlingske Media</h1>
     <LoginForm/>
     <p>Du kan få indsigt i de data, som vi har på dig, ved at logge ind med din Berlingske Media konto. Har du ikke en Berlingske Media konto, beder vi dig oprette en med de oplysninger, vi skal bruge for at kunne finde dig i vore systemer.</p>
     <p>Login er nødvendigt, fordi vi skal kunne validere, hvem du er, og at du har kontrol over den mailadresse, du har angivet.</p>

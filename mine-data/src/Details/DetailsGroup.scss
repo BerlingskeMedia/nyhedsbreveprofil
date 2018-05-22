@@ -1,4 +1,6 @@
 .DetailsGroup {
+  display: flex;
+  justify-content: space-between;
   margin-top: 14px;
   padding-top: 14px;
   border-top: 1px solid #ccc;
@@ -8,4 +10,8 @@
     padding-top: 0;
     border-top: none;
   }
+}
+
+.DetailsGroup-action {
+  margin-left: 30px;
 }

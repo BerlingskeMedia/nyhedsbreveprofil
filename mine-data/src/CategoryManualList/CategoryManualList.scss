@@ -1,3 +1,9 @@
+.CategoryManualList {
+  .CategoryList {
+    margin-top: 0;
+  }
+}
+
 .Category-card {
   .card-body {
     display: flex;
@@ -14,10 +20,27 @@
 }
 
 button.SubmitButton.ModeButton {
-  border-width: 2px;
+  border-width: 1px;
+  border-bottom: none;
+  border-color: #efefef;
   color: #000;
+  background: #efefef;
+  padding: 15px 20px;
+  box-shadow: -1px -1px 1px -1px rgba(0, 0, 0, 0.24), 1px -1px 1px -1px rgba(0, 0, 0, 0.24);
 
-  &:not(.active) {
-    background: transparent;
+  &:focus {
+    box-shadow: -1px -1px 1px -1px rgba(0, 0, 0, 0.24), 1px -1px 1px -1px rgba(0, 0, 0, 0.24);
+  }
+
+  &:not(:disabled) {
+    &.active, &:active {
+      background: #fff;
+      border-color: #fff;
+      color: #000;
+
+      &:focus {
+        box-shadow: -1px -1px 1px -1px rgba(0, 0, 0, 0.24), 1px -1px 1px -1px rgba(0, 0, 0, 0.24);
+      }
+    }
   }
 }

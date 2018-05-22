@@ -42,7 +42,7 @@ export const List = ({userInfo: {userInfo}}) => (
               fetchData={() => Api.get(`/mine-data/category/kundeunivers/${userInfo.UID}`)}
               renderError={Error}
               hasData={data => data.orders && data.orders.length > 0}
-              render={data => data.orders.map(order => order.items.map(item => (
+              render={({data}) => data.orders.map(order => order.items.map(item => (
                 <DetailsGroup key={item.sap_order_id}>
                   <DetailsItem value={item.product_family} label="Produkt"/>
                   <DetailsItem value={item.delivery_address} label="Leveringsadresse"/>
@@ -58,8 +58,13 @@ export const List = ({userInfo: {userInfo}}) => (
               fetchData={() => Api.getCached(`/mine-data/category/mdb/${userInfo.profile.email}`)}
               renderError={Error}
               hasData={data => data.permission_list && data.permission_list.length > 0}
-              render={data => data.permission_list.map(permission => (
-                <DetailsGroup key={permission.name}>
+              render={({data, resetData}) => data.permission_list.map(permission => (
+                <DetailsGroup
+                  key={permission.name}
+                  deleteAction={() => Api
+                    .delete(`/backend/users/${data.profile.ekstern_id}/permissions/${permission.id}?location_id=5`)
+                    .then(() => resetData())
+                  }>
                   <DetailsTitle>{permission.name}</DetailsTitle>
                   <DetailsItem value={permission.time} label="Tid"/>
                   <DetailsItem value={permission.description} label="Beskrivelse"/>
@@ -73,10 +78,14 @@ export const List = ({userInfo: {userInfo}}) => (
                 Api.get(`/mine-data/category/mailchimp/${userInfo.profile.email}`)
               ])}
               hasData={([mdb, mailChimp]) => (mdb.nyhedsbreve_list && mdb.nyhedsbreve_list.length > 0) || (mailChimp && mailChimp.length > 0)}
-              render={([mdb, mailChimp]) => (
+              render={({data: [mdb, mailChimp], resetData}) => (
                 <Fragment>
                   {mdb.nyhedsbreve_list.map(newsletter => (
-                    <DetailsGroup key={newsletter.name}>
+                    <DetailsGroup
+                      key={newsletter.name}
+                      deleteAction={() => Api
+                        .delete(`/backend/users/${mdb.profile.ekstern_id}/nyhedsbreve/${newsletter.id}?location_id=5`)
+                        .then(() => resetData())}>
                       <DetailsTitle>{newsletter.name}</DetailsTitle>
                       <DetailsItem value={newsletter.time} label="Tid"/>
                       <DetailsItem value={newsletter.description} label="Beskrivelse"/>
@@ -84,7 +93,11 @@ export const List = ({userInfo: {userInfo}}) => (
                   ))}
 
                   {mailChimp.map(({list_title, ...fields}) => (
-                    <DetailsGroup key={list_title}>
+                    <DetailsGroup
+                      key={list_title}
+                      deleteAction={() => Api
+                        .delete(`/mine-data/category/mailchimp/${fields.list_id}/${fields.id}`)
+                        .then(() => resetData())}>
                       <DetailsTitle>{list_title}</DetailsTitle>
                       <DetailsItem value={fields.email_address} label="E-mail"/>
                       <DetailsItem value={fields.unique_email_id} label="Unique email ID"/>
@@ -130,11 +143,15 @@ export const List = ({userInfo: {userInfo}}) => (
               fetchData={() => Api.getCached(`/mine-data/category/mdb/${userInfo.profile.email}`)}
               renderError={Error}
               hasData={data => data.interesser_list && data.interesser_list.length > 0}
-              render={data => data.interesser_list.map(interrest => (
-                <DetailsGroup key={interrest.name}>
-                  <DetailsTitle>{interrest.name}</DetailsTitle>
-                  <DetailsItem value={interrest.time} label="Tid"/>
-                  <DetailsItem value={interrest.description} label="Beskrivelse"/>
+              render={({data, resetData}) => data.interesser_list.map(interest => (
+                <DetailsGroup
+                  key={interest.name}
+                  deleteAction={() => Api
+                    .delete(`/backend/users/${data.profile.ekstern_id}/interesser/${interest.id}?location_id=5`)
+                    .then(() => resetData())}>
+                  <DetailsTitle>{interest.name}</DetailsTitle>
+                  <DetailsItem value={interest.time} label="Tid"/>
+                  <DetailsItem value={interest.description} label="Beskrivelse"/>
                 </DetailsGroup>
               ))}/>
 
@@ -143,7 +160,7 @@ export const List = ({userInfo: {userInfo}}) => (
               fetchData={() => Api.getCached(`/mine-data/category/mdb/${userInfo.profile.email}`)}
               renderError={Error}
               hasData={data => data.profile && Object.keys(data.profile).length > 0}
-              render={data => (
+              render={({data}) => (
                 <DetailsGroup>
                   <DetailsItem value={data.profile.fornavn} label="Fornavn"/>
                   <DetailsItem value={data.profile.efternavn} label="Efternavn"/>
@@ -186,9 +203,13 @@ export const List = ({userInfo: {userInfo}}) => (
               title="Spørgeskemaer/konkurrencer"
               fetchData={() => Api.get(`/mine-data/category/surveygizmo/${userInfo.profile.email}`)}
               renderError={Error}
-              hasData={surveys => surveys.length > 0}
-              render={surveys => surveys.map(survey => (
-                <DetailsGroup key={`${survey.response_id}${survey.survey_id}`}>
+              hasData={data => data.length > 0}
+              render={({data, resetData}) => data.map(survey => (
+                <DetailsGroup
+                  key={`${survey.response_id}${survey.survey_id}`}
+                  deleteAction={() => Api
+                    .delete(`/mie-data/category/surveygizmo/${survey.survey_id}/${userInfo.profile.email}/${survey.response_id}`)
+                    .then(() => resetData())}>
                   <DetailsItem value={survey.city} label="By"/>
                   <DetailsItem value={survey.country} label="Country"/>
                   <DetailsItem value={survey.date} label="Dato"/>

@@ -23,7 +23,8 @@ module.exports.register = function (server, options, next) {
     path: '/config',
     handler: (req, reply) => {
       reply({
-        gigyaApiKey: process.env.GIGYA_API_KEY || ''
+        gigyaApiKey: process.env.GIGYA_API_KEY || '',
+        trackingId: process.env.GA_TRACKING_ID || ''
       });
     }
   });
@@ -93,10 +94,7 @@ module.exports.register = function (server, options, next) {
     handler: (req, reply) => {
       MailChimp.delete(req.params.listId, req.params.userId)
         .then(response => reply(response))
-        .catch((err) => {
-          console.error('MailChimp error:', err);
-          reply(Http.wrapError(err))
-        });
+        .catch((err) => reply(Http.wrapError(err)));
     }
   });
 

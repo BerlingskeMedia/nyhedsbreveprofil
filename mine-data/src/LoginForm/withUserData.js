@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { fetchUserInfo } from '../common/userInfo.actions';
 import { HomePage } from '../HomePage/HomePage';
-import { VerifyUserPage } from '../VerifyUserPage/VerifyUserPage';
 import { LoginPage } from '../LoginPage/LoginPage';
 
 class LoadingSwitcher extends React.Component {
@@ -33,8 +32,6 @@ class LoadingSwitcher extends React.Component {
         if (userInfo.isVerified) {
           return <HomePage/>;
         }
-
-        return <VerifyUserPage/>;
       }
 
       return <LoginPage/>;
