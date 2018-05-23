@@ -79,7 +79,7 @@ class MDB {
   };
 
   static findSurveyGizmoUser(email) {
-    return Http.get(`${MDBAPI_ADDRESS}/surveys?email=${email}`);
+    return Http.get(`${MDBAPI_ADDRESS}/surveys?email=${encodeURIComponent(email)}`);
   };
 
   static getUserProfile(eksternId) {
