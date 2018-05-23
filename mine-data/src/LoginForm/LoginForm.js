@@ -1,11 +1,12 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { login, resetLogin, setPassword, setUsername } from './login.actions';
+import {connect} from 'react-redux';
+import {login, resetLogin, setPassword, setUsername} from './login.actions';
 import SubmitButton from '../SubmitButton/SubmitButton';
-import { Link } from 'react-router-dom';
-import { FormInput } from '../Form/FormInput';
-import { LogoutLink } from '../logout/LogoutLink';
-import { fetchVerifyUser } from '../VerifyUserPage/verifyUser.actions';
+import {Link} from 'react-router-dom';
+import {FormInput} from '../Form/FormInput';
+import {LogoutLink} from '../logout/LogoutLink';
+import {fetchVerifyUser} from '../VerifyUserPage/verifyUser.actions';
+import {Modal, ModalBody, ModalFooter} from "reactstrap";
 
 export class LoginDisconnected extends React.Component {
   constructor(props) {
@@ -13,6 +14,9 @@ export class LoginDisconnected extends React.Component {
     this.setPassword = this.setPassword.bind(this);
     this.setUsername = this.setUsername.bind(this);
     this.submit = this.submit.bind(this);
+    this.toggleModal = this.toggleModal.bind(this);
+    this.submitModal = this.submitModal.bind(this);
+    this.state = {showModal: false}
   }
 
   componentWillMount() {
@@ -50,23 +54,39 @@ export class LoginDisconnected extends React.Component {
       this.props.login({
         username: this.props.username,
         password: this.props.password
+      }).then(response => {
+        if (response && response.errorCode === 206002) {
+          this.setState({showModal: true});
+        }
       });
     }
+  }
+
+  submitModal() {
+    gigya.accounts.resendVerificationCode({
+      regToken: this.props.response.regToken,
+      email: this.props.username
+    });
+    this.toggleModal();
+  }
+
+  toggleModal() {
+    this.setState({ showModal: false });
   }
 
   render() {
     const {userInfo, username, pending, password, response, verifyUser} = this.props;
     const isPending = pending || verifyUser.isPending;
     const isLoggedIn = !!userInfo.userInfo && !!userInfo.userInfo.profile;
-
-    if (response) console.log(response);
+    const isMailPending = response && response.errorCode === 206002;
 
     return (
       <form className="form" onSubmit={this.submit} autoComplete="off">
         <FormInput name="email" type="email" label="E-mailadresse"
                    value={username} pending={pending}
                    onChange={this.setUsername} readOnly={isLoggedIn}
-                   hint={isLoggedIn ? <div>Ikke dig? <LogoutLink>Log ind med en anden konto.</LogoutLink></div> : null}/>
+                   hint={isLoggedIn ?
+                     <div>Ikke dig? <LogoutLink>Log ind med en anden konto.</LogoutLink></div> : null}/>
         <FormInput name="password" type="password" value={password}
                    onChange={this.setPassword} pending={isPending}
                    autoComplete="off"/>
@@ -76,9 +96,20 @@ export class LoginDisconnected extends React.Component {
             <SubmitButton loading={isPending}>Log ind</SubmitButton>
           </div>
         </div>
-        {response ? <div className="row justify-content-center">
-          <div className="col-sm-6 form-error">{this.translateError(response)}</div>
+        {response && !isMailPending ? <div className="row justify-content-center">
+            <div className="col-sm-6 form-error">{this.translateError(response)}</div>
         </div> : null}
+        <Modal isOpen={this.state.showModal} toggle={this.toggleModal}>
+          <ModalBody>
+            For din sikkerhed er der sendt en verifikations-email til dig.<br/>
+            Følg instruktionerne i e-mailen for at bekræfte din konto.<br/>
+            <strong>For at sende bekræftelses-e-mailen igen, skal du klikke på Send.</strong>
+          </ModalBody>
+          <ModalFooter>
+            <SubmitButton onClick={this.submitModal}>Send</SubmitButton>
+            <SubmitButton color="link" onClick={this.toggleModal}>Close</SubmitButton>
+          </ModalFooter>
+        </Modal>
         {verifyUser.response ? <div className="row justify-content-center">
           <div className="col-sm-6 form-error">{this.translateError(verifyUser.response)}</div>
         </div> : null}

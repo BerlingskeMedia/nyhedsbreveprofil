@@ -11,7 +11,6 @@ import {
 } from './register.actions';
 import { logOut } from '../logout/logOut.actions';
 import { FormInput } from '../Form/FormInput';
-import VerifyPending from "../VerifyEmail/VerifyPending";
 
 class Register extends React.Component {
   constructor(props) {
