@@ -150,8 +150,6 @@ export const List = ({userInfo: {userInfo, jwt}}) => (
                     .delete(`/backend/users/${data.profile.ekstern_id}/interesser/${interest.id}?location_id=5`, jwt)
                     .then(() => resetData())}>
                   <DetailsTitle>{interest.name}</DetailsTitle>
-                  <DetailsItem value={interest.time} label="Tid"/>
-                  <DetailsItem value={interest.description} label="Beskrivelse"/>
                 </DetailsGroup>
               ))}/>
 
