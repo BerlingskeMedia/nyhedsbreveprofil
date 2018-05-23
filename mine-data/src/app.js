@@ -13,7 +13,7 @@ import { verifyUser } from './VerifyUserPage/verifyUser.reducers';
 import { RegisterPage } from './RegisterPage/RegisterPage';
 import { register } from './RegisterPage/register.reducers';
 import VerifyEmail from './VerifyEmail/VerifyEmail';
-import VerifyPending from "./VerifyEmail/VerifyPending";
+import { VerifyPending } from "./VerifyEmail/VerifyPending";
 import { withTracking } from './common/withTracking';
 import { initialize } from 'react-ga';
 import { Header } from './Header/Header';
