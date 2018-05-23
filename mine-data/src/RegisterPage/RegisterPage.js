@@ -16,6 +16,7 @@ class Register extends React.Component {
   constructor(props) {
     super(props);
 
+    this.translateError = this.translateError.bind(this);
     this.setAddress = this.setAddress.bind(this);
     this.setCity = this.setCity.bind(this);
     this.setEmail = this.setEmail.bind(this);
@@ -30,6 +31,14 @@ class Register extends React.Component {
 
   componentWillUnmount() {
     this.props.resetRegister();
+  }
+
+  translateError(error) {
+    if (error.errorCode === 400003) {
+      return 'Mailadressen er allerede oprettet';
+    }
+
+    return error.message;
   }
 
   setAddress(e) {
@@ -139,9 +148,9 @@ class Register extends React.Component {
         </div>
         {response ? <div className="row">
           {this.renderRedirect(response)}
-          <div className="offset-sm-3 col-sm-6 form-error mb-1">{response.errorDetails}</div>
+          {!response.validationErrors ? <div className="offset-sm-3 col-sm-6 form-error mb-1">{response.errorDetails}</div> : null}
           {response.validationErrors ? response.validationErrors.map(error => (
-            <div key={error.message} className="offset-sm-3 col-sm-6 form-error">{error.message}</div>
+            <div key={error.message} className="offset-sm-3 col-sm-6 form-error">{this.translateError(error)}</div>
           )) : null}
         </div> : null}
       </form>

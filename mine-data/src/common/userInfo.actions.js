@@ -18,7 +18,7 @@ const getRsvpPayload = (userInfo, app) => ({
   app,
   provider: 'gigya',
   UID: userInfo.UID,
-  UIDSignature: encodeURIComponent(userInfo.UIDSignature),
+  UIDSignature: userInfo.UIDSignature,
   signatureTimestamp: userInfo.signatureTimestamp,
   email: encodeURI(userInfo.profile.email)
 });
