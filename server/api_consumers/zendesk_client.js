@@ -162,7 +162,6 @@ module.exports = {
           }
 
           const prefix = process.env.ZENDESK_SUBJECT_PREFIX || '';
-          console.log('prefix', prefix);
 
           return {
             subject: `${prefix}${modeText}: ${name}`,
