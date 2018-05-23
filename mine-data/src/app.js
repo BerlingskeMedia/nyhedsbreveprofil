@@ -18,6 +18,9 @@ import { withTracking } from './common/withTracking';
 import { initialize } from 'react-ga';
 import { Header } from './Header/Header';
 import { createConfigReducer } from './config.reducers';
+import { ResetPasswordPage } from './ResetPasswordPage/ResetPasswordPage';
+import { resetPasswordForm } from './ResetPasswordPage/resetPassword.reducers';
+import { changePasswordForm } from './ResetPasswordPage/changePassword.reducers';
 
 import '../assets/styles.scss';
 
@@ -42,6 +45,7 @@ class WrapperPage extends React.Component {
                 <Route path={`${props.match.url}/register`} component={withTracking(RegisterPage)}/>
                 <Route path={`${props.match.url}/valider-email`} component={withTracking(VerifyEmail)}/>
                 <Route path={`${props.match.url}/verserende-email`} component={withTracking(VerifyPending)}/>
+                <Route path={`${props.match.url}/reset-password`} component={withTracking(ResetPasswordPage)}/>
               </div>
             </div>
           </div>
@@ -66,7 +70,9 @@ export const App = ({config}) => {
     categoryManualList,
     verifyUser,
     register,
-    config: createConfigReducer(config)
+    config: createConfigReducer(config),
+    resetPasswordForm,
+    changePasswordForm
   }), composeEnhancers(applyMiddleware(thunkMiddleware)));
 
   return (

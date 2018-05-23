@@ -5,7 +5,10 @@ import SubmitButton from '../SubmitButton/SubmitButton';
 import {Link} from 'react-router-dom';
 import {FormInput} from '../Form/FormInput';
 import {LogoutLink} from '../logout/LogoutLink';
-import {fetchVerifyUser} from '../VerifyUserPage/verifyUser.actions';
+import {
+  fetchVerifyUser,
+  resetVerifyUser
+} from '../VerifyUserPage/verifyUser.actions';
 import {Modal, ModalBody, ModalFooter} from "reactstrap";
 
 export class LoginDisconnected extends React.Component {
@@ -27,6 +30,7 @@ export class LoginDisconnected extends React.Component {
 
   componentWillUnmount() {
     this.props.resetLogin();
+    this.props.resetVerifyUser();
   }
 
   translateError(errorResponse) {
@@ -89,7 +93,8 @@ export class LoginDisconnected extends React.Component {
                      <div>Ikke dig? <LogoutLink>Log ind med en anden konto.</LogoutLink></div> : null}/>
         <FormInput name="password" type="password" value={password}
                    onChange={this.setPassword} pending={isPending}
-                   autoComplete="off"/>
+                   autoComplete="off"
+                   hint={<Link to="/mine-data/reset-password" className="text-secondary">Forgot password?</Link>}/>
         <div className="row justify-content-center">
           <div className="col-sm-6 nav-buttons">
             <Link to="/mine-data/register">Opret konto</Link>
@@ -132,7 +137,8 @@ const mapDispatchToProps = (dispatch) => ({
   setUsername: (username) => dispatch(setUsername(username)),
   setPassword: (password) => dispatch(setPassword(password)),
   resetLogin: () => dispatch(resetLogin()),
-  fetchVerifyUser: (password) => dispatch(fetchVerifyUser(password))
+  fetchVerifyUser: (password) => dispatch(fetchVerifyUser(password)),
+  resetVerifyUser: () => dispatch(resetVerifyUser())
 });
 
 export const LoginForm = connect(mapStateToProps, mapDispatchToProps)(LoginDisconnected);

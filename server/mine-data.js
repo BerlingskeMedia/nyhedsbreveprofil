@@ -20,7 +20,7 @@ module.exports.register = function (server, options, next) {
     }
   });
 
-  ['/register', '/valider-email', '/verserende-email'].forEach(route => {
+  ['/register', '/valider-email', '/verserende-email', '/reset-password'].forEach(route => {
     server.route({
       method: 'get',
       path: route,

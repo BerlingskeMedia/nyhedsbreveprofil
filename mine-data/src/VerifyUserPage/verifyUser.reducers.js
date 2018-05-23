@@ -1,6 +1,6 @@
 import {
   RECEIVE_VERIFY, REQUEST_VERIFY,
-  RESET_VERIFY, SET_PASSWORD
+  RESET_VERIFY
 } from './verifyUser.actions';
 
 export const defaultVerifyUser = () => ({
@@ -17,8 +17,6 @@ export const verifyUser = (state = defaultVerifyUser(), action) => {
       return {...state, isPending: false, password: '', response: action.response};
     case RESET_VERIFY:
       return defaultVerifyUser();
-    case SET_PASSWORD:
-      return {...state, password: action.password};
     default:
       return state;
   }

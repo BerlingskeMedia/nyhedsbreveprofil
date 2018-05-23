@@ -1,7 +1,13 @@
 import { resetUserInfo } from '../common/userInfo.actions';
 
 export const logOut = () => {
-  return dispatch => {
+  return (dispatch, getState) => {
+    const {userInfo} = getState();
+
+    if (!userInfo.userInfo || !userInfo.userInfo.profile) {
+      return Promise.resolve();
+    }
+
     return new Promise((fulfill, reject) => {
       gigya.accounts.logout({
         callback: response => {
