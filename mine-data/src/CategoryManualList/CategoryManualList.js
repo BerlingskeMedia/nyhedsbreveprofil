@@ -102,9 +102,9 @@ class List extends React.Component {
   render() {
     const {list, mode, submit, categories, confirmMode} = this.props;
     const isModeInsight = mode === 'insight';
-    const isConfirmModeInsight = confirmMode === 'insight';
+    const isConfirmModeInsight = confirmMode.mode === 'insight';
     const isModeDelete = mode === 'delete';
-    const showConfirm = confirmMode !== null;
+    const showConfirm = confirmMode.visible;
 
     if (categories.pending) {
       return <Loading />;
@@ -162,7 +162,7 @@ class List extends React.Component {
               <SubmitButton color="link" onClick={this.props.hideConfirmation}>Afbryd</SubmitButton>
             </ModalFooter>
           </Modal>
-          <Modal centered isOpen={submit.fetched && !submit.failed} toggle={this.props.resetTicket}>
+          <Modal centered isOpen={submit.fetched} toggle={this.props.resetTicket}>
             <ModalBody>
               {
                 !submit.failed ? (
@@ -180,7 +180,9 @@ class List extends React.Component {
                     <p>Hvis du er er uenig i vores behandling af din {isConfirmModeInsight ? 'indsigtsanmodning' : 'sletteanmodning'}, har du mulighed for at klage til Datatilsynet. Læs nærmere <a href="https://www.datatilsynet.dk/borger/klage-til-datatilsynet" target="_blank">her</a>.</p>
                   </Fragment>
                 ) :
-                  <p>Your request has not been sent</p>
+                  <p>
+                    Din anmodning er ikke sendt grundet en teknisk fejl. Kontakt venligst <a href="mailto:persondata@berlingskemedia.dk">persondata@berlingskemedia.dk</a> for at få hjælp til din anmodning.
+                  </p>
               }
             </ModalBody>
             <ModalFooter>

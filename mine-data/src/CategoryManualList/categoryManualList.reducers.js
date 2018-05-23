@@ -67,18 +67,23 @@ export const submit = (state = getSubmitDefaultState(), action) => {
     case SUBMIT_FAILED:
       return {...state, pending: false, fetched: true, failed: true};
     case SUBMIT_RESET:
-      return getSubmitDefaultState();
+      return {...state, pending: false, fetched: false};
     default:
       return state;
   }
 };
 
-export const confirmMode = (state = null, action) => {
+const getConfirmModeDefaultState = () => ({
+  mode: null,
+  visible: false
+});
+
+export const confirmMode = (state = getConfirmModeDefaultState(), action) => {
   switch (action.type) {
     case CONFIRM_SHOW:
-      return action.mode;
+      return {...state, visible: true, mode: action.mode};
     case CONFIRM_HIDE:
-      return null;
+      return {...state, visible: false};
     default:
       return state;
   }
