@@ -43,11 +43,11 @@ export const login = ({username, password}) => {
         callback: userInfo => {
           if (userInfo.errorCode === 0) {
             const {config} = getState();
-            dispatch(resetLogin());
 
             fetchUserToken(config, userInfo).then(jwt => {
               dispatch(receiveUserInfo(userInfo, jwt));
               dispatch(verifyUser());
+              dispatch(resetLogin());
             });
           } else {
             dispatch(receiveLogin(userInfo));
