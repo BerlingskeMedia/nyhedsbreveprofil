@@ -25,6 +25,14 @@ export class LoginDisconnected extends React.Component {
     this.props.resetLogin();
   }
 
+  translateError(errorResponse) {
+    if (errorResponse.errorCode === 403042) {
+      return 'Forkert kodeord eller bruger';
+    }
+
+    return errorResponse.errorDetails;
+  }
+
   setPassword(e) {
     this.props.setPassword(e.target.value);
   }
@@ -51,6 +59,8 @@ export class LoginDisconnected extends React.Component {
     const isPending = pending || verifyUser.isPending;
     const isLoggedIn = !!userInfo.userInfo && !!userInfo.userInfo.profile;
 
+    if (response) console.log(response);
+
     return (
       <form className="form" onSubmit={this.submit} autoComplete="off">
         <FormInput name="email" type="email" label="E-mailadresse"
@@ -67,10 +77,10 @@ export class LoginDisconnected extends React.Component {
           </div>
         </div>
         {response ? <div className="row justify-content-center">
-          <div className="col-sm-6 form-error">{response.errorDetails}</div>
+          <div className="col-sm-6 form-error">{this.translateError(response)}</div>
         </div> : null}
         {verifyUser.response ? <div className="row justify-content-center">
-          <div className="col-sm-6 form-error">{verifyUser.response.errorDetails}</div>
+          <div className="col-sm-6 form-error">{this.translateError(verifyUser.response)}</div>
         </div> : null}
       </form>
     );
