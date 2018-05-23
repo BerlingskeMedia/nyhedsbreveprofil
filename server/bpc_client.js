@@ -1,5 +1,3 @@
-'use strict';
-
 const Http = require('./lib/http');
 const JWT = require('./lib/jwt');
 
@@ -7,13 +5,9 @@ const NYHEDSBREVEPROFIL_APP_ID = process.env.NYHEDSBREVEPROFIL_APP_ID;
 const NYHEDSBREVEPROFIL_APP_SECRET = process.env.NYHEDSBREVEPROFIL_APP_SECRET;
 
 class BPC {
-  constructor() {
-    BPC.appTicket = null;
-    BPC.timeoutId = null;
-  }
-
   static fetchAndSaveAppTicket() {
     this.getAppTicket().then(ticket => {
+      console.log('BPC ticket fetched and saved');
       BPC.saveAppTicket(ticket);
 
       if (BPC.timeoutId) {
@@ -64,5 +58,8 @@ class BPC {
       });
   }
 }
+
+// BPC.appTicket = null;
+// BPC.timeoutId = null;
 
 module.exports = BPC;

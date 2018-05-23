@@ -18,8 +18,7 @@ const MAILCHIMP_URI = `https://berlingskemedia:${process.env.MAILCHIMP_API_SECRE
 class MailChimp {
 
   static getData(email) {
-    return Http.request('GET',
-      `${MAILCHIMP_URI}/search-members?query=${email}&exclude_fields=_links,full_search,exact_matches.members._links`)
+    return Http.get(`${MAILCHIMP_URI}/search-members?query=${email}&exclude_fields=_links,full_search,exact_matches.members._links`)
       .then(results => MailChimp.getDetails(results.exact_matches.members))
       .then(results => MailChimp.getActivity(results));
   }
@@ -33,7 +32,7 @@ class MailChimp {
 
   static getActivity(members) {
     const requests = members.map((member) => {
-      return Http.request('GET', `${MAILCHIMP_URI}/lists/${member.list_id}/members/${member.id}/activity?exclude_fields=_links,total_items,list_id,email_id`);
+      return Http.get(`${MAILCHIMP_URI}/lists/${member.list_id}/members/${member.id}/activity?exclude_fields=_links,total_items,list_id,email_id`);
     });
 
     return Promise.all(requests).then((results) =>

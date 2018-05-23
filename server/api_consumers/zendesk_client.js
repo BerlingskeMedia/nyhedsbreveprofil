@@ -161,10 +161,12 @@ module.exports = {
             });
           }
 
+          const testPrefix = process.env.NODE_ENV === 'production' ? '' : 'TEST - ';
+
           return {
-            subject: `${modeText}: ${name}`,
+            subject: `${testPrefix}${modeText}: ${name}`,
             comment: {
-              body: `Jeg ønsker ${modeText} af følgende data:\n\n${payloadCategories.map(c => '- '.concat(c.title)).join('\n')}`
+              body: `${testPrefix}Jeg ønsker ${modeText} af følgende data:\n\n${payloadCategories.map(c => '- '.concat(c.title)).join('\n')}`
             },
             requester: {name, email},
             custom_fields

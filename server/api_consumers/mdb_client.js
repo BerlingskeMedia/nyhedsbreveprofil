@@ -74,25 +74,25 @@ class MDB {
   }
 
   static findUser(email) {
-    return Http.request('GET', `${MDBAPI_ADDRESS}/users?email=${email}`, null)
+    return Http.get(`${MDBAPI_ADDRESS}/users?email=${email}`)
       .then(result => result[0]);
   };
 
   static findSurveyGizmoUser(email) {
-    return Http.request('GET', `${MDBAPI_ADDRESS}/surveys?email=${email}`, null);
+    return Http.get(`${MDBAPI_ADDRESS}/surveys?email=${email}`);
   };
 
   static getUserProfile(eksternId) {
-    return Http.request('GET', `${MDBAPI_ADDRESS}/users/${eksternId}`, null);
+    return Http.get(`${MDBAPI_ADDRESS}/users/${eksternId}`);
   }
 
   static getInterests() {
-    return Http.request('GET', `${MDBAPI_ADDRESS}/interesser/full`, null);
+    return Http.get(`${MDBAPI_ADDRESS}/interesser/full`);
 
   }
 
   static getNewsletters() {
-    return Http.request('GET', `${MDBAPI_ADDRESS}/nyhedsbreve`, null);
+    return Http.get(`${MDBAPI_ADDRESS}/nyhedsbreve`);
   }
 
   /**
@@ -108,7 +108,7 @@ class MDB {
         return item.response_id === responseId && item.survey_id === surveyIdNumber
       });
       if (item) {
-        return Http.request('GET', MDB.surveyGizmoDeletePath(surveyId, responseId), null);
+        return Http.get(MDB.surveyGizmoDeletePath(surveyId, responseId));
       }
     });
   }

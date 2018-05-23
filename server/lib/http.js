@@ -1,14 +1,9 @@
 const request = require('request');
-const BPC = require('../bpc_client');
 const {boomify, badImplementation, badRequest} = require('boom');
 
 class Http {
-  static get(url) {
-    return Http.request('get', url, BPC.appTicket);
-  }
-
-  static post(url, payload) {
-    return Http.request('post', url, BPC.appTicket, payload);
+  static get(url, credentials) {
+    return Http.request('get', url, credentials);
   }
 
   static request(method, uri, credentials, payload = null) {
