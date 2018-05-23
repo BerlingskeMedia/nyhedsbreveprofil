@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { login, resetLogin, setPassword, setUsername } from './login.actions';
 import SubmitButton from '../SubmitButton/SubmitButton';
-import { Link } from 'react-router-dom';
+import {Link, Redirect} from 'react-router-dom';
 import { FormInput } from '../Form/FormInput';
 import { LogoutLink } from '../logout/LogoutLink';
 import { fetchVerifyUser } from '../VerifyUserPage/verifyUser.actions';
@@ -46,6 +46,16 @@ export class LoginDisconnected extends React.Component {
     }
   }
 
+  renderRedirect(response) {
+    if (response.errorCode === 206002) {
+
+      return <Redirect to={{
+        pathname: '/mine-data/verserende-email',
+        state: {username: response.profile.email, regToken: response.regToken}
+      }}/>;
+    }
+  }
+
   render() {
     const {userInfo, username, pending, password, response, verifyUser} = this.props;
     const isPending = pending || verifyUser.isPending;
@@ -67,6 +77,7 @@ export class LoginDisconnected extends React.Component {
           </div>
         </div>
         {response ? <div className="row justify-content-center">
+          {this.renderRedirect(response)}
           <div className="col-sm-6 form-error">{response.errorDetails}</div>
         </div> : null}
         {verifyUser.response ? <div className="row justify-content-center">
