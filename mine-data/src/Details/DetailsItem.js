@@ -7,7 +7,7 @@ export const DetailsItem = ({value, label, className, allowEmpty}) => {
     return (
       <div className={classNames('DetailsItem', className)}>
         <strong>{label}: </strong>
-        {value}
+        <span dangerouslySetInnerHTML={{ __html: value}}/>
       </div>
     );
   }
