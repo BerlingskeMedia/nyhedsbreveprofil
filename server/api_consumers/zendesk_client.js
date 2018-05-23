@@ -160,18 +160,18 @@ module.exports = {
               id: 360005127594, value: businessPartnerIds
             });
           }
-
-          const prefix = process.env.ZENDESK_SUBJECT_PREFIX || '';
-
-          return {
-            subject: `${prefix}${modeText}: ${name}`,
-            comment: {
-              body: `${prefix}Jeg ønsker ${modeText} af følgende data:\n\n${payloadCategories.map(c => '- '.concat(c.title)).join('\n')}`
-            },
-            requester: {name, email},
-            custom_fields
-          };
         }
+
+        const prefix = process.env.ZENDESK_SUBJECT_PREFIX || '';
+
+        return {
+          subject: `${prefix}${modeText}: ${name}`,
+          comment: {
+            body: `${prefix}Jeg ønsker ${modeText} af følgende data:\n\n${payloadCategories.map(c => '- '.concat(c.title)).join('\n')}`
+          },
+          requester: {name, email},
+          custom_fields
+        };
       });
     });
   },
