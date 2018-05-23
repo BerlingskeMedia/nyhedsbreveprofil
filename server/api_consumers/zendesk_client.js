@@ -161,12 +161,13 @@ module.exports = {
             });
           }
 
-          const testPrefix = process.env.NODE_ENV === 'production' ? '' : 'TEST - ';
+          const prefix = process.env.ZENDESK_SUBJECT_PREFIX || '';
+          console.log('prefix', prefix);
 
           return {
-            subject: `${testPrefix}${modeText}: ${name}`,
+            subject: `${prefix}${modeText}: ${name}`,
             comment: {
-              body: `${testPrefix}Jeg ønsker ${modeText} af følgende data:\n\n${payloadCategories.map(c => '- '.concat(c.title)).join('\n')}`
+              body: `${prefix}Jeg ønsker ${modeText} af følgende data:\n\n${payloadCategories.map(c => '- '.concat(c.title)).join('\n')}`
             },
             requester: {name, email},
             custom_fields
