@@ -177,7 +177,7 @@ class List extends React.Component {
                           Bemærk at data i visse kategorier ikke vil blive slettet. Dette skyldes, at Berlingske Media f.eks. har en retslig forpligtelse til at gemme disse oplysninger.
                         </p>
                     }
-                    <p>Hvis du er er uenig i vores behandling af din {isConfirmModeInsight ? 'indsigtsanmodning' : 'sletteanmodning'}, har du mulighed for at klage til Datatilsynet. Læs nærmere <a href="https://www.datatilsynet.dk/borger/klage-til-datatilsynet" target="_blank">her</a>.</p>
+                    <p>Hvis du er er uenig i vores behandling af din {isConfirmModeInsight ? 'indsigtsanmodning' : 'sletteanmodning'}, har du mulighed for at klage til Datatilsynet. Læs nærmere <a href="https://www.datatilsynet.dk" target="_blank">her</a>.</p>
                   </Fragment>
                 ) :
                   <p>
