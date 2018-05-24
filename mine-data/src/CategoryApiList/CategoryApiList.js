@@ -24,6 +24,7 @@ export const List = ({userInfo: {userInfo, jwt}}) => (
             label="Navn"
             value={userInfo.profile.firstName && userInfo.profile.lastName && `${userInfo.profile.firstName} ${userInfo.profile.lastName}`}/>
           <DetailsItem label="E-mail" value={userInfo.profile.email}/>
+          <DetailsItem label="Kaldenavn" value={userInfo.profile.nickname}/>
           <DetailsItem
             label="Fødselsdag"
             value={userInfo.profile.birthDay && userInfo.profile.birthMonth && userInfo.profile.birthYear && `${userInfo.profile.birthYear}-${userInfo.profile.birthMonth}-${userInfo.profile.birthDay}`}/>
@@ -31,6 +32,47 @@ export const List = ({userInfo: {userInfo, jwt}}) => (
           <DetailsItem label="Post nr." value={userInfo.profile.zip}/>
           <DetailsItem label="By" value={userInfo.profile.city}/>
           <DetailsItem label="Telefon" value={userInfo.profile.phones.map(phone => phone.number).join(', ')}/>
+          <DetailsItem label="Alder" value={userInfo.profile.age}/>
+          <DetailsItem label="Bio" value={userInfo.profile.bio}/>
+          <DetailsItem label="Fødselsdag" value={userInfo.profile.birthDay}/>
+          <DetailsItem label="Fødselsmåned" value={userInfo.profile.birthMonth}/>
+          <DetailsItem label="Fødselsår" value={userInfo.profile.birthYear}/>
+          <DetailsItem label="Capabilities" value={userInfo.profile.capabilities}/>
+          <DetailsItem label="Certifications" value={userInfo.profile.certifications}/>
+          <DetailsItem label="Land" value={userInfo.profile.country}/>
+          <DetailsItem label="Uddannelse" value={userInfo.profile.education}/>
+          <DetailsItem label="Education level" value={userInfo.profile.educationLevel}/>
+          <DetailsItem label="Favoritter" value={userInfo.profile.favorites}/>
+          <DetailsItem label="Followers count" value={userInfo.profile.followersCount}/>
+          <DetailsItem label="Following count" value={userInfo.profile.followingCount}/>
+          <DetailsItem label="Køn" value={userInfo.profile.gender}/>
+          <DetailsItem label="Hjemby" value={userInfo.profile.hometown}/>
+          <DetailsItem label="Honors" value={userInfo.profile.honors}/>
+          <DetailsItem label="Identities" value={userInfo.profile.identities}/>
+          <DetailsItem label="Industri" value={userInfo.profile.industry}/>
+          <DetailsItem label="Interested in" value={userInfo.profile.interestedIn}/>
+          <DetailsItem label="Interesser" value={userInfo.profile.interests}/>
+          <DetailsItem label="Aktivitetter" value={userInfo.profile.activities}/>
+          <DetailsItem label="iRank" value={userInfo.profile.iRank}/>
+          <DetailsItem label="Sprog" value={userInfo.profile.languages}/>
+          <DetailsItem label="Likes" value={userInfo.profile.likes}/>
+          <DetailsItem label="Locale" value={userInfo.profile.locale}/>
+          <DetailsItem label="Navn" value={userInfo.profile.name}/>
+          <DetailsItem label="Patents" value={userInfo.profile.patents}/>
+          <DetailsItem label="Photo URL" value={userInfo.profile.photoURL}/>
+          <DetailsItem label="Political view" value={userInfo.profile.politicalView}/>
+          <DetailsItem label="Professional headline" value={userInfo.profile.professionalHeadline}/>
+          <DetailsItem label="Profile URL" value={userInfo.profile.profileURL}/>
+          <DetailsItem label="Udgivelser" value={userInfo.profile.publications}/>
+          <DetailsItem label="Relationship status" value={userInfo.profile.relationshipStatus}/>
+          <DetailsItem label="Religion" value={userInfo.profile.religion}/>
+          <DetailsItem label="Skills" value={userInfo.profile.skills}/>
+          <DetailsItem label="Specialiteter" value={userInfo.profile.specialities}/>
+          <DetailsItem label="Stat" value={userInfo.profile.state}/>
+          <DetailsItem label="Tidszone" value={userInfo.profile.timezone}/>
+          <DetailsItem label="Thumbnail URL" value={userInfo.profile.thumbnailURL}/>
+          <DetailsItem label="Username" value={userInfo.profile.username}/>
+          <DetailsItem label="Arbejde" value={userInfo.profile.work}/>
         </Fragment>
       )}/>
 
