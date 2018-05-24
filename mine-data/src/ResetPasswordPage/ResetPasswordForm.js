@@ -52,7 +52,7 @@ export class ResetPasswordFormDisconnected extends React.Component {
           <div className="row justify-content-center">
             <div className="col-sm-6 nav-buttons">
               <Link to="/mine-data">Tilbage</Link>
-              <SubmitButton loading={pending}>Submit</SubmitButton>
+              <SubmitButton loading={pending}>Nulstil</SubmitButton>
             </div>
           </div>
         </form>
