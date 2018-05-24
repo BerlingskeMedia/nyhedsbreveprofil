@@ -30,6 +30,7 @@ export const List = ({userInfo: {userInfo, jwt}}) => (
           <DetailsItem label="Adresse" value={userInfo.profile.address}/>
           <DetailsItem label="Post nr." value={userInfo.profile.zip}/>
           <DetailsItem label="By" value={userInfo.profile.city}/>
+          <DetailsItem label="Telefon" value={userInfo.profile.phones.map(phone => phone.number).join(', ')}/>
         </Fragment>
       )}/>
 
