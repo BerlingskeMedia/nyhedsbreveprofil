@@ -31,7 +31,7 @@ export const List = ({userInfo: {userInfo, jwt}}) => (
           <DetailsItem label="Adresse" value={userInfo.profile.address}/>
           <DetailsItem label="Post nr." value={userInfo.profile.zip}/>
           <DetailsItem label="By" value={userInfo.profile.city}/>
-          <DetailsItem label="Telefon" value={userInfo.profile.phones.map(phone => phone.number).join(', ')}/>
+          <DetailsItem label="Telefon" value={userInfo.profile.phones && userInfo.profile.phones.map(phone => phone.number).join(', ')}/>
           <DetailsItem label="Alder" value={userInfo.profile.age}/>
           <DetailsItem label="Bio" value={userInfo.profile.bio}/>
           <DetailsItem label="Fødselsdag" value={userInfo.profile.birthDay}/>
