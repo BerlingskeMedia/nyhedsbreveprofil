@@ -74,7 +74,7 @@ class MDB {
   }
 
   static findUser(email) {
-    return Http.get(`${MDBAPI_ADDRESS}/users?email=${email}`)
+    return Http.get(`${MDBAPI_ADDRESS}/users?email=${encodeURIComponent(email)}`)
       .then(result => result[0]);
   };
 
