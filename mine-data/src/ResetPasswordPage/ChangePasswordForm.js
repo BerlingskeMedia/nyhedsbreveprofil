@@ -13,9 +13,12 @@ export class ChangePasswordFormDisconnected extends React.Component {
 
     this.fetchChangePassword = this.fetchChangePassword.bind(this);
     this.setNewPassword = this.setNewPassword.bind(this);
+    this.setNewPasswordConfirm = this.setNewPasswordConfirm.bind(this);
 
     this.state = {
-      newPassword: ''
+      newPassword: '',
+      newPasswordConfirm: '',
+      error: ''
     };
   }
 
@@ -25,8 +28,18 @@ export class ChangePasswordFormDisconnected extends React.Component {
 
   fetchChangePassword(e) {
     e.preventDefault();
-    this.props.logOut();
-    this.props.fetchChangePassword(this.state.newPassword, this.props.token);
+
+    if (this.state.newPassword !== this.state.newPasswordConfirm) {
+      this.setState({
+        error: 'Kodeordet skal være ens i begge felter'
+      });
+    } else {
+      this.props.logOut();
+      this.props.fetchChangePassword(this.state.newPassword, this.props.token);
+      this.setState({
+        error: ''
+      });
+    }
   }
 
   setNewPassword(e) {
@@ -35,9 +48,15 @@ export class ChangePasswordFormDisconnected extends React.Component {
     });
   }
 
+  setNewPasswordConfirm(e) {
+    this.setState({
+      newPasswordConfirm: e.target.value
+    });
+  }
+
   render() {
     const {pending, fetched, response} = this.props;
-    const {newPassword} = this.state;
+    const {newPassword, newPasswordConfirm, error} = this.state;
 
     if (!fetched) {
       return (
@@ -48,20 +67,26 @@ export class ChangePasswordFormDisconnected extends React.Component {
               <p>You have requested a password reset:</p>
             </div>
           </div>
-          <FormInput name="password" type="password" label="Ny kodeord"
+          <FormInput name="password" type="password" label="Ny adgangskode"
                      value={newPassword} pending={pending}
                      onChange={this.setNewPassword}/>
+          <FormInput name="password-confirm" type="password" label="Gentag ny adgangskode"
+                     value={newPasswordConfirm} pending={pending}
+                     onChange={this.setNewPasswordConfirm}/>
           <div className="row justify-content-center">
             <div className="col-sm-6 nav-buttons">
               <Link to="/mine-data">Annullér</Link>
               <SubmitButton
-                loading={pending}>Submit</SubmitButton>
+                loading={pending}>Nulstil</SubmitButton>
             </div>
           </div>
+          {error ?
+            <div className="row justify-content-center">
+              <div className="col-sm-6 form-error">{error}</div>
+            </div> : null}
           {response ?
             <div className="row justify-content-center">
-              <div
-                className="col-sm-6 form-error">{response.errorDetails}</div>
+              <div className="col-sm-6 form-error">{response.errorDetails}</div>
             </div> : null}
         </form>
       );
@@ -69,10 +94,10 @@ export class ChangePasswordFormDisconnected extends React.Component {
 
     return (
       <p>
-        Your password has been changed.
+        Din adgangskode er ændret.
         <br/>
         <br/>
-        You can <Link to="/mine-data">login</Link> now.
+        Du kan <Link to="/mine-data">logge ind</Link> nu.
       </p>
     );
   }

@@ -43,7 +43,7 @@ export class ResetPasswordFormDisconnected extends React.Component {
         <form className="form" onSubmit={this.submit} autoComplete="off">
           <div className="row justify-content-center">
             <div className="col-sm-6">
-              <p>Reset password:</p>
+              <p>Nulstil din adganskode:</p>
             </div>
           </div>
           <FormInput name="email" type="email" label="E-mailadresse"
@@ -61,10 +61,10 @@ export class ResetPasswordFormDisconnected extends React.Component {
 
     return (
       <p>
-        Thank you for your request.
+        Tak for din forespørgsel.
         <br/>
         <br/>
-        If there is an account assigned to this email address, you'll receive a link to reset your password.
+        Du får tilsendt en email med et link, hvor du kan nulstille din adgangskode. Det tage op til flere minutter.
         <br/>
         <br/>
         <Link to="/mine-data">Tilbage</Link>

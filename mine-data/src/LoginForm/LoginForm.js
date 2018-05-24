@@ -94,7 +94,7 @@ export class LoginDisconnected extends React.Component {
         <FormInput name="password" type="password" value={password}
                    onChange={this.setPassword} pending={isPending}
                    autoComplete="off"
-                   hint={<Link to="/mine-data/reset-password" className="text-secondary">Forgot password?</Link>}/>
+                   hint={<Link to="/mine-data/reset-password" className="text-secondary">Glemt adgangskode?</Link>}/>
         <div className="row justify-content-center">
           <div className="col-sm-6 nav-buttons">
             <Link to="/mine-data/register">Opret konto</Link>
