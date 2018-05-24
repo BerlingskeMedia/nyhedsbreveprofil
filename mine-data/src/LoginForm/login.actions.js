@@ -1,7 +1,4 @@
-import {
-  fetchUserToken, receiveUserInfo,
-  verifyUser
-} from '../common/userInfo.actions';
+import { fetchUserInfo, verifyUser } from '../common/userInfo.actions';
 
 export const REQUEST_LOGIN = '[login] request';
 export const RECEIVE_LOGIN = '[login] receive';
@@ -33,27 +30,24 @@ export const resetLogin = () => ({
 });
 
 export const login = ({username, password}) => {
-  return (dispatch, getState) => {
+  return dispatch => {
     dispatch(requestLogin());
 
     return new Promise(fulfill => {
       gigya.accounts.login({
         loginID: username,
         password: password,
-        callback: userInfo => {
-          if (userInfo.errorCode === 0) {
-            const {config} = getState();
-
-            fetchUserToken(config, userInfo).then(jwt => {
-              dispatch(receiveUserInfo(userInfo, jwt));
+        callback: response => {
+          if (response.errorCode === 0) {
+            dispatch(resetLogin());
+            dispatch(fetchUserInfo()).then(() => {
               dispatch(verifyUser());
-              dispatch(resetLogin());
             });
           } else {
-            dispatch(receiveLogin(userInfo));
+            dispatch(receiveLogin(response));
           }
 
-          fulfill(userInfo);
+          fulfill(response);
         }
       });
     });
