@@ -174,7 +174,7 @@ class List extends React.Component {
                       :
                         <p>
                           Du vil inden for 30 dage modtage bekræftelse på, at dine data er blevet slettet.<br/>
-                          Bemærk, at hvis du har data i kategorierne x, y, og z vil disse ikke blive slettet. Dette skyldes at Berlingske Media f.eks. har en retslig forpligtelse til at gemme disse oplysninger.
+                          Bemærk at data i visse kategorier ikke vil blive slettet. Dette skyldes, at Berlingske Media f.eks. har en retslig forpligtelse til at gemme disse oplysninger.
                         </p>
                     }
                     <p>Hvis du er er uenig i vores behandling af din {isConfirmModeInsight ? 'indsigtsanmodning' : 'sletteanmodning'}, har du mulighed for at klage til Datatilsynet. Læs nærmere <a href="https://www.datatilsynet.dk/borger/klage-til-datatilsynet" target="_blank">her</a>.</p>
