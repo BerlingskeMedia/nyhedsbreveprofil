@@ -111,10 +111,10 @@ module.exports = {
   mapPayloadToTicket: (payload) => {
     const modeText = payload.mode === 'insight' ? 'INDSIGT' : 'SLET';
     const {email, firstName, lastName, phones, address, city, zip} = payload.user;
-    const name = `${firstName || ''} ${lastName || ''}`.trim();
+    const name = `${firstName || ''} ${lastName || ''}`.trim() || '[Kunde]';
     const custom_fields = [
       {id: 360005004613, value: payload.uid},
-      {id: 360003795594, value: name || '[Kunde]'},
+      {id: 360003795594, value: name},
       {id: 360003795614, value: email},
       {id: 360003718813, value: payload.categories}
     ];
