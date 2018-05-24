@@ -95,14 +95,12 @@ class Register extends React.Component {
         this.props.history.push('/mine-data');
       })
       .catch(response => {
-        this.props.receiveRegister(response);
+        if (response.errorCode === 206002) {
+          this.props.history.push('/mine-data/verserende-email');
+        } else {
+          this.props.receiveRegister(response);
+        }
       });
-  }
-
-  renderRedirect(response) {
-    if (response.errorCode === 206002) {
-      return <Redirect to="/mine-data/verserende-email"/>;
-    }
   }
 
   render() {
@@ -147,7 +145,6 @@ class Register extends React.Component {
           </div>
         </div>
         {response ? <div className="row">
-          {this.renderRedirect(response)}
           {!response.validationErrors ? <div className="offset-sm-3 col-sm-6 form-error mb-1">{response.errorDetails}</div> : null}
           {response.validationErrors ? response.validationErrors.map(error => (
             <div key={error.message} className="offset-sm-3 col-sm-6 form-error">{this.translateError(error)}</div>
