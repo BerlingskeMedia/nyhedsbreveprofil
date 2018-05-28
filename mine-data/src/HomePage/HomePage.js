@@ -14,5 +14,6 @@ export const HomePage = () => (
       Det kan forekomme at vi har data på dig i nedenstående kategorier. Du har derfor mulighed for at anmode om manuel indsigt eller sletning i disse kategorier, som vi herefter vil levere til dig på mail inden for 30 dage.
     </p>
     <CategoryManualList/>
+    <p>Udover hvad der fremgår af ovennævnte oversigt, anvender vi desuden cookies på alle vores websites. Du kan læse nærmere herom i vores <a href="https://www.berlingskemedia.dk/cookie-og-privatlivspolitik">cookie- og privatlivspolitik</a>, herunder hvordan du undgår cookies og sletter dem.</p>
   </Fragment>
 );
