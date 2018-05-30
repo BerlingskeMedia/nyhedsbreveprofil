@@ -10,8 +10,6 @@ module.exports = class extends React.Component {
     this.createSelectOptions = this.createSelectOptions.bind(this);
     this.mapExistingUserSignups = this.mapExistingUserSignups.bind(this);
     this.toggleInteresseBusinessTarget = this.toggleInteresseBusinessTarget.bind(this);
-    this.handleInputChange = this.handleInputChange.bind(this);
-    this.handleInputChange = this.handleInputChange.bind(this);
     this.state = {
       new_signups: {},
       new_signouts: {},
