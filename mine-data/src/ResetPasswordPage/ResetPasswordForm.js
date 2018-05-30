@@ -64,7 +64,9 @@ export class ResetPasswordFormDisconnected extends React.Component {
         Tak for din forespørgsel.
         <br/>
         <br/>
-        Du får tilsendt en email med et link, hvor du kan nulstille din adgangskode. Det tage op til flere minutter.
+        Hvis du har en profil hos Berlingske Media, får du tilsendt en mail, hvor du kan nulstille din adgangskode. Dette kan tage op til flere minutter.
+        <br/>
+        Har du <strong>IKKE</strong> en profil hos Berlingske Media, modtager du ikke nogen mail.
         <br/>
         <br/>
         <Link to="/mine-data">Tilbage</Link>
