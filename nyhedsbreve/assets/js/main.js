@@ -392,10 +392,23 @@ function ($scope, $rootScope, $routeParams, $http, $q, $location, $sce, UserServ
 
   $scope.h1_prefix = 'Alle ';
 
+  function publisherNameToSlug(publisher_navn){
+    return angular.lowercase(publisher_navn)
+    .replace(/\s+/g, '-')           // Replace spaces with -
+    .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+    .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+    .replace(/^-+/, '')             // Trim - from start of text
+    .replace(/-+$/, '');            // Trim - from end of text;
+  }
+
   var getPublishers = PublisherService.fetchPublishers().then(function () {
     if ($routeParams.publisher) {
-      var publisher_exists = PublisherService.getPublishers().some(function (publisher) {
-        if ($routeParams.publisher == publisher.publisher_id || angular.lowercase($routeParams.publisher) === angular.lowercase(publisher.publisher_navn)) {
+      var publisher_exists = PublisherService
+      .getPublishers()
+      .some(function (publisher) {
+        if ($routeParams.publisher == publisher.publisher_id 
+          || angular.lowercase($routeParams.publisher) === angular.lowercase(publisher.publisher_navn)
+          || angular.lowercase($routeParams.publisher) === publisherNameToSlug(publisher.publisher_navn)) {
           $scope.setCurrentPublisher(publisher);
           $scope.h1_prefix = publisher.publisher_navn + ' ';
           return true;
