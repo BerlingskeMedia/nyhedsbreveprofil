@@ -250,7 +250,7 @@ export const List = ({userInfo: {userInfo, jwt}, apiData, resetMDB, resetMailChi
               title="Spørgeskemaer/konkurrencer"
               pending={apiData.surveyGizmo.pending}
               hasError={apiData.surveyGizmo.error}
-              hasData={apiData.surveyGizmo.data.length > 0}
+              hasData={apiData.surveyGizmo.data && apiData.surveyGizmo.data.length > 0}
               renderError={Error}
               render={() => apiData.surveyGizmo.data.map(survey => (
                 <DetailsGroup
