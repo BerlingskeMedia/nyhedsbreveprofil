@@ -46,7 +46,7 @@ class Home extends React.Component {
           30 dage.
         </p>
         <CategoryManualList/>
-        <DeleteAll/>
+        {/*<DeleteAll/>*/}
       </Fragment>
     );
   }

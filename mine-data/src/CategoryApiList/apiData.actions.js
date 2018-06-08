@@ -10,12 +10,12 @@ export const API_DATA_MDB_SUFFIX = 'MDB';
 export const API_DATA_MAIL_CHIMP_SUFFIX = 'MailChimp';
 export const API_DATA_SURVEY_GIZMO_SUFFIX = 'SurveyGizmo';
 
-export const fetchKundeunivers = fetchBuilder(API_DATA_KU_SUFFIX, userInfo => `/mine-data/category/kundeunivers/${userInfo.UID}`);
-export const fetchMDB = fetchBuilder(API_DATA_MDB_SUFFIX, userInfo => `/mine-data/category/mdb/${userInfo.profile.email}`);
-export const fetchMailChimp = fetchBuilder(API_DATA_MAIL_CHIMP_SUFFIX, userInfo => `/mine-data/category/mailchimp/${userInfo.profile.email}`);
-export const fetchSurveyGizmo = fetchBuilder(API_DATA_SURVEY_GIZMO_SUFFIX, userInfo => `/mine-data/category/surveygizmo/${userInfo.profile.email}`);
+export const fetchKundeunivers = fetchBuilder(API_DATA_KU_SUFFIX, '/mine-data/category/kundeunivers');
+export const fetchMDB = fetchBuilder(API_DATA_MDB_SUFFIX, '/mine-data/category/mdb');
+export const fetchMailChimp = fetchBuilder(API_DATA_MAIL_CHIMP_SUFFIX, '/mine-data/category/mailchimp');
+export const fetchSurveyGizmo = fetchBuilder(API_DATA_SURVEY_GIZMO_SUFFIX, '/mine-data/category/surveygizmo');
 
-function fetchBuilder(dataSuffix, getRequestUrl) {
+function fetchBuilder(dataSuffix, requestUrl) {
   return () => {
     return (dispatch, getState) => {
       const {userInfo} = getState();
@@ -24,7 +24,7 @@ function fetchBuilder(dataSuffix, getRequestUrl) {
         type: `${API_DATA_REQUEST} ${dataSuffix}`
       });
 
-      Api.get(getRequestUrl(userInfo.userInfo), userInfo.jwt)
+      Api.get(requestUrl, userInfo.jwt)
         .then(data => dispatch({
           type: `${API_DATA_RECEIVE} ${dataSuffix}`,
           data

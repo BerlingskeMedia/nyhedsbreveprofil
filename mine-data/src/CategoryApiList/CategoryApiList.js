@@ -256,7 +256,7 @@ export const List = ({userInfo: {userInfo, jwt}, apiData, resetMDB, resetMailChi
                 <DetailsGroup
                   key={`${survey.response_id}${survey.survey_id}`}
                   deleteAction={() => Api
-                    .delete(`/mie-data/category/surveygizmo/${survey.survey_id}/${userInfo.profile.email}/${survey.response_id}`, jwt)
+                    .delete(`/mine-data/category/surveygizmo/${survey.survey_id}/${survey.response_id}`, jwt)
                     .then(() => resetSurveyGizmo())}>
                   <DetailsItem value={survey.city} label="By"/>
                   <DetailsItem value={survey.country} label="Country"/>

@@ -6,12 +6,13 @@ import { cancelConfirm, reset, showConfirm, submit } from './deleteAll.actions';
 
 export class DeleteAllDisconnected extends Component {
   render() {
-    const {deleteAll, showConfirm, resetRequest, cancelConfirm, submit} = this.props;
+    const {kundeunivers, deleteAll, showConfirm, resetRequest, cancelConfirm, submit} = this.props;
+    const disableButton = !kundeunivers.data || kundeunivers.data.orders.some(order => order.active);
 
     return (
       <Fragment>
         <div className="nav-buttons justify-content-end mt-5">
-          <SubmitButton color="danger" onClick={showConfirm}>Slet min bruger</SubmitButton>
+          <SubmitButton color="danger" disabled={disableButton} onClick={showConfirm}>Slet min bruger</SubmitButton>
         </div>
         <Modal centered isOpen={deleteAll.confirm} toggle={cancelConfirm}>
           <ModalHeader>ADVARSEL!</ModalHeader>
@@ -21,11 +22,11 @@ export class DeleteAllDisconnected extends Component {
             </p>
           </ModalBody>
           <ModalFooter>
-            <SubmitButton loading={deleteAll.pending} onClick={submit}>Bekræft</SubmitButton>
+            <SubmitButton loading={deleteAll.request.pending} onClick={submit}>Bekræft</SubmitButton>
             <SubmitButton color="link" onClick={cancelConfirm}>Afbryd</SubmitButton>
           </ModalFooter>
         </Modal>
-        <Modal centered isOpen={deleteAll.fetched} toggle={resetRequest}>
+        <Modal centered isOpen={deleteAll.request.fetched} toggle={resetRequest}>
           <ModalBody>
             <p>
               Lorem ipsum... deletion successful.
@@ -40,9 +41,9 @@ export class DeleteAllDisconnected extends Component {
   }
 }
 
-const mapStateToProps = ({deleteAll, apiData}) => ({
+const mapStateToProps = ({deleteAll, apiData: {kundeunivers}}) => ({
   deleteAll,
-  apiData
+  kundeunivers
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -15,10 +15,13 @@ export const receive = actionBuilder(DELETE_ALL_RECEIVE);
 export const reset = actionBuilder(DELETE_ALL_RESET);
 
 export const submit = () => {
-  return dispatch => {
+  return (dispatch, getState) => {
+    const {apiData} = getState();
+
     dispatch(request());
 
     // do the actual deletion
+
     setTimeout(() => {
       dispatch(cancelConfirm());
       dispatch(receive());
