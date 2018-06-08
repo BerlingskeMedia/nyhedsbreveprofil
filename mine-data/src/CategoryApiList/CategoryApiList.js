@@ -111,7 +111,7 @@ export const List = ({userInfo: {userInfo, jwt}, apiData, resetMDB, resetMailChi
                 <DetailsGroup
                   key={permission.name}
                   deleteAction={() => Api
-                    .delete(`/backend/users/${apiData.mdb.data.profile.ekstern_id}/permissions/${permission.id}?location_id=5`, jwt)
+                    .delete(`/mine-data/category/mdb/permissions/${permission.id}`, jwt)
                     .then(() => resetMDB())
                   }>
                   <DetailsTitle>{permission.name}</DetailsTitle>
@@ -131,7 +131,7 @@ export const List = ({userInfo: {userInfo, jwt}, apiData, resetMDB, resetMailChi
                     <DetailsGroup
                       key={newsletter.name}
                       deleteAction={() => Api
-                        .delete(`/backend/users/${apiData.mdb.data.profile.ekstern_id}/nyhedsbreve/${newsletter.id}?location_id=5`, jwt)
+                        .delete(`/mine-data/category/mdb/nyhedsbreve/${newsletter.id}`, jwt)
                         .then(() => resetMDB())}>
                       <DetailsTitle>{newsletter.name}</DetailsTitle>
                       <DetailsItem value={newsletter.time} label="Tid"/>
@@ -195,7 +195,7 @@ export const List = ({userInfo: {userInfo, jwt}, apiData, resetMDB, resetMailChi
                 <DetailsGroup
                   key={interest.name}
                   deleteAction={() => Api
-                    .delete(`/backend/users/${apiData.mdb.data.profile.ekstern_id}/interesser/${interest.id}?location_id=5`, jwt)
+                    .delete(`/mine-data/category/mdb/interesser/${interest.id}`, jwt)
                     .then(() => resetMDB())}>
                   <DetailsTitle>{interest.name}</DetailsTitle>
                 </DetailsGroup>

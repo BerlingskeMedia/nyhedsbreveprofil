@@ -73,6 +73,18 @@ class MDB {
     return allData;
   }
 
+  static deletePermissions(eksternId, permissionId) {
+    return Http.delete(`${MDBAPI_ADDRESS}/users/${eksternId}/permissions/${permissionId}?location_id=5`);
+  }
+
+  static deleteNewsletter(eksternId, newsletterId) {
+    return Http.delete(`${MDBAPI_ADDRESS}/users/${eksternId}/nyhedsbreve/${newsletterId}?location_id=5`);
+  }
+
+  static deleteIterests(eksternId, interestId) {
+    return Http.delete(`${MDBAPI_ADDRESS}/users/${eksternId}/interesser/${interestId}?location_id=5`);
+  }
+
   static findUser(email) {
     return Http.get(`${MDBAPI_ADDRESS}/users?email=${encodeURIComponent(email)}`)
       .then(result => result[0]);

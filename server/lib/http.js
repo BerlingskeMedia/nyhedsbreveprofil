@@ -6,6 +6,10 @@ class Http {
     return Http.request('get', url, credentials);
   }
 
+  static delete(url, credentials) {
+    return Http.request('delete', url, credentials);
+  }
+
   static request(method, uri, credentials, payload = null) {
     return new Promise((fulfill, reject) => {
       request({

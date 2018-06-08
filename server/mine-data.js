@@ -128,6 +128,69 @@ module.exports.register = function (server, options, next) {
 
   server.route({
     method: 'delete',
+    path: '/category/mdb/permissions/{permissionId}',
+    config: {
+      auth: 'jwt'
+    },
+    handler: (req, reply) => {
+      BPC.validateRequest(req)
+        .then(() => MDB.findUser(JWT.decodeRequest(req).email))
+        .then(user => {
+          if (user && user.ekstern_id) {
+            return MDB.deletePermissions(user.ekstern_id, req.params.permissionId)
+              .then(response => reply(response));
+          } else {
+            reply(notFound());
+          }
+        })
+        .catch(err => reply(Http.wrapError(err)));
+    }
+  });
+
+  server.route({
+    method: 'delete',
+    path: '/category/mdb/nyhedsbreve/{newsletterId}',
+    config: {
+      auth: 'jwt'
+    },
+    handler: (req, reply) => {
+      BPC.validateRequest(req)
+        .then(() => MDB.findUser(JWT.decodeRequest(req).email))
+        .then(user => {
+          if (user && user.ekstern_id) {
+            return MDB.deleteNewsletter(user.ekstern_id, req.params.newsletterId)
+              .then(response => reply(response));
+          } else {
+            reply(notFound());
+          }
+        })
+        .catch(err => reply(Http.wrapError(err)));
+    }
+  });
+
+  server.route({
+    method: 'delete',
+    path: '/category/mdb/interesser/{interestId}',
+    config: {
+      auth: 'jwt'
+    },
+    handler: (req, reply) => {
+      BPC.validateRequest(req)
+        .then(() => MDB.findUser(JWT.decodeRequest(req).email))
+        .then(user => {
+          if (user && user.ekstern_id) {
+            return MDB.deleteIterests(user.ekstern_id, req.params.interestId)
+              .then(response => reply(response));
+          } else {
+            reply(notFound());
+          }
+        })
+        .catch(err => reply(Http.wrapError(err)));
+    }
+  });
+
+  server.route({
+    method: 'delete',
     path: '/category/surveygizmo/{surveyId}/{responseId}',
     config: {
       auth: 'jwt'
