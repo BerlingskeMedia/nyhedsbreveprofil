@@ -1,8 +1,5 @@
 import 'whatwg-fetch';
 
-const littleCache = [];
-const cacheTime = 1000;
-
 export class Api {
   static getHeaders(body, isPost, authorization) {
     const headers = {};
@@ -21,21 +18,6 @@ export class Api {
 
   static getUrl(path) {
     return `${process.env.API_URL}${path}`;
-  }
-
-  static getCached(path, authorization) {
-    const now = Date.now();
-    const fromCache = littleCache.find((item) => item.path === path && now < item.expires);
-
-    if (fromCache) {
-      return fromCache.promise;
-    }
-
-    const promise = Api.get(path, authorization);
-    const expires = Date.now() + cacheTime;
-    littleCache.push({path, promise, expires});
-
-    return promise;
   }
 
   static get(path, authorization) {

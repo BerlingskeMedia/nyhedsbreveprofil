@@ -34,7 +34,7 @@ class BPC {
 
   static validateRequest(request) {
     const url = `${request.server.info.uri}${request.path}`;
-    return BPC.validateUserTicket(JWT.decodeRequest(request), request.method, url);
+    return BPC.validateUserTicket(JWT.decodeRequest(request).userTicket, request.method, url);
   }
 
   static validateUserTicket(userTicket) {
@@ -58,8 +58,5 @@ class BPC {
       });
   }
 }
-
-// BPC.appTicket = null;
-// BPC.timeoutId = null;
 
 module.exports = BPC;

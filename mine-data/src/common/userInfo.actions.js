@@ -26,7 +26,7 @@ const getRsvpPayload = (userInfo, app) => ({
 export const fetchUserToken = (config, userInfo) => {
   return Api.request(`${config.bpcUrl}/rsvp`, {method: 'post', payload: getRsvpPayload(userInfo, config.bpcAppId)}, true)
     .then(response => response.json())
-    .then(({rsvp}) => Api.post(`/mine-data/ticket/${rsvp}`))
+    .then(({rsvp}) => Api.post(`/mine-data/ticket/${rsvp}`, {uid: userInfo.UID, email: userInfo.profile.email}))
     .then(response => response.text());
 };
 

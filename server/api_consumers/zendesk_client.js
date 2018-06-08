@@ -4,6 +4,7 @@ const Joi = require('joi');
 const MDB = require('./mdb_client');
 const KU = require('./kundeunivers_client');
 const {categories} = require('./categories_client');
+const JWT = require('../lib/jwt');
 
 var ZENDESK_URL;
 const ZENDESK_API_EMAIL = process.env.ZENDESK_API_EMAIL;
@@ -108,17 +109,20 @@ module.exports = {
     return callZenDesk({ method: 'POST', path: '/api/v2/tickets.json', payload: { ticket: ticket }})
   },
 
-  mapPayloadToTicket: (payload) => {
-    const modeText = payload.mode === 'insight' ? 'INDSIGT' : 'SLET';
-    const {email, firstName, lastName, phones, address, city, zip} = payload.user;
+  mapRequestToTicket: (req) => {
+    const jwt = JWT.decodeRequest(req);
+    const modeText = req.payload.mode === 'insight' ? 'INDSIGT' : 'SLET';
+    const {firstName, lastName, phones, address, city, zip} = req.payload.user;
+    const email = jwt.email;
+    const uid = jwt.uid;
     const name = `${firstName || ''} ${lastName || ''}`.trim() || '[Kunde]';
     const custom_fields = [
-      {id: 360005004613, value: payload.uid},
+      {id: 360005004613, value: uid},
       {id: 360003795594, value: name},
       {id: 360003795614, value: email},
-      {id: 360003718813, value: payload.categories}
+      {id: 360003718813, value: req.payload.categories}
     ];
-    const payloadCategories = payload.categories
+    const payloadCategories = req.payload.categories
       .map(c => categories.find(category => category.name === c))
       .filter(c => !!c);
 
@@ -143,7 +147,7 @@ module.exports = {
         });
       }
 
-      return KU.fetchAllDataSimple(payload.uid).then(orders => {
+      return KU.fetchAllDataSimple(uid).then(orders => {
         if (orders.orders.length > 0) {
           const [orderNumbers, businessPartnerIds] = orders.orders.reduce(([orderIds, partnerIds], order) => {
             return [
