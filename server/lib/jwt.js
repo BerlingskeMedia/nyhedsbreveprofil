@@ -13,7 +13,7 @@ module.exports.authConfig = {
 };
 
 module.exports.generateToken = (userTicket, payload) => {
-  return sign({userTicket, ...payload}, JWT_SECRET);
+  return sign(Object.assign({userTicket}, payload), JWT_SECRET);
 };
 
 module.exports.decodeRequest = request => {
