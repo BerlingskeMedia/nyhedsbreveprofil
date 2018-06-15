@@ -14,7 +14,10 @@ import { compose } from 'redux';
 import { withTitle } from '../CategoryCard/withTitle';
 import { withCollapse } from '../CategoryList/withCollapse';
 import { CategoryList } from '../CategoryList/CategoryList';
-import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import {
+  Modal, ModalBody, ModalFooter, ModalHeader,
+  Tooltip
+} from 'reactstrap';
 import { Loading } from '../Loading/Loading';
 import Checkbox from '../Checkbox/Checkbox';
 import { Info } from '../Info/Info';
@@ -47,6 +50,10 @@ class List extends React.Component {
     this.submitTicket = this.submitTicket.bind(this);
     this.toggle = this.toggle.bind(this);
     this.toggleMode = this.toggleMode.bind(this);
+
+    this.state = {
+      tooltipOpen: false
+    };
   }
 
   componentWillMount() {
@@ -136,11 +143,12 @@ class List extends React.Component {
                 }}/>)}
           </CollapsibleList>
           {mode ? (
-            <Fragment>
-              <div className="nav-buttons justify-content-end">
-                <SubmitButton disabled={!list.length} loading={showConfirm || submit.pending} onClick={this.showConfirmation}>Send anmodning</SubmitButton>
-              </div>
-            </Fragment>
+            <div className="nav-buttons justify-content-end">
+              {!list.length ? <div className="button-label">
+                {isModeInsight ? 'Kryds af hvilke kategorier du ønsker indsigt i' : 'Kryds af hvilke kategorier du ønsker slettet'}
+              </div> : null}
+              <SubmitButton id="SubmitButton" disabled={!list.length} loading={showConfirm || submit.pending} onClick={this.showConfirmation}>Send anmodning</SubmitButton>
+            </div>
           ) : null}
           <Modal centered isOpen={showConfirm} toggle={this.props.hideConfirmation}>
             {isConfirmModeInsight ? null : <ModalHeader>ADVARSEL!</ModalHeader>}

@@ -10,7 +10,7 @@
         </mask>
     </defs>
     <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Unchecked" stroke="#E0E0E0" stroke-width="2" fill="#FFFFFF">
+        <g id="Unchecked" stroke="#a5a5a5" stroke-width="3" fill="#FFFFFF">
             <use id="Oval-1" mask="url(#mask-2)" xlink:href="#path-1"></use>
         </g>
     </g>
