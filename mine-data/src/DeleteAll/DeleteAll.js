@@ -52,7 +52,7 @@ export class DeleteAllDisconnected extends Component {
         <Modal centered isOpen={!!deleteAll.request.error} toggle={resetRequest}>
           <ModalBody>
             <p>Der skete en fejl!</p>
-            <p>Dele af dine data kan ikke bekræftes slettet. Prøv venligst igen.</p>
+            <p>Dele af dine data kan ikke bekræftes slettet.</p>
           </ModalBody>
           <ModalFooter>
             <SubmitButton loading={deleteAll.request.pending} onClick={submit}>Prøv igen</SubmitButton>
