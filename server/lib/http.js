@@ -6,6 +6,10 @@ class Http {
     return Http.request('get', url, credentials);
   }
 
+  static put(url, payload, credentials) {
+    return Http.request('put', url, credentials, payload);
+  }
+
   static delete(url, credentials) {
     return Http.request('delete', url, credentials);
   }

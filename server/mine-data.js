@@ -191,6 +191,27 @@ module.exports.register = function (server, options, next) {
 
   server.route({
     method: 'delete',
+    path: '/category/mdb/user',
+    config: {
+      auth: 'jwt'
+    },
+    handler: (req, reply) => {
+      BPC.validateRequest(req)
+        .then(() => MDB.findUser(JWT.decodeRequest(req).email))
+        .then(user => {
+          if (user && user.ekstern_id) {
+            return MDB.deleteUser(user.ekstern_id)
+              .then(response => reply(response));
+          } else {
+            reply(notFound());
+          }
+        })
+        .catch(err => reply(Http.wrapError(err)));
+    }
+  });
+
+  server.route({
+    method: 'delete',
     path: '/category/surveygizmo/{surveyId}/{responseId}',
     config: {
       auth: 'jwt'
@@ -260,7 +281,7 @@ module.exports.register = function (server, options, next) {
     },
     handler: (req, reply) => {
       BPC.validateRequest(req)
-        // .then(() => Gigya.deleteAccount(JWT.decodeRequest(req).uid))
+        .then(() => KU.deleteAccount(JWT.decodeRequest(req).uid))
         .then(() => {
           reply(null, '');
         })

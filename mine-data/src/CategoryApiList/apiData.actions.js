@@ -41,3 +41,12 @@ export const resetKundeunivers = actionBuilder(`${API_DATA_RESET} ${API_DATA_KU_
 export const resetMDB = actionBuilder(`${API_DATA_RESET} ${API_DATA_MDB_SUFFIX}`);
 export const resetMailChimp = actionBuilder(`${API_DATA_RESET} ${API_DATA_MAIL_CHIMP_SUFFIX}`);
 export const resetSurveyGizmo = actionBuilder(`${API_DATA_RESET} ${API_DATA_SURVEY_GIZMO_SUFFIX}`);
+
+export const resetAll = () => {
+  return dispatch => {
+    dispatch(resetKundeunivers());
+    dispatch(resetMDB());
+    dispatch(resetMailChimp());
+    dispatch(resetSurveyGizmo());
+  }
+};

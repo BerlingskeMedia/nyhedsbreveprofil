@@ -1,26 +1,18 @@
 const Http = require('../lib/http');
 const Url = require('url');
 
-var MDBAPI_ADDRESS;
+let MDBAPI_ADDRESS;
 
 try {
-
-  var temp = Url.parse(process.env.MDBAPI_ADDRESS);
+  const temp = Url.parse(process.env.MDBAPI_ADDRESS);
 
   if(['http:', 'https:'].indexOf(temp.protocol) > -1) {
-
     MDBAPI_ADDRESS = process.env.MDBAPI_ADDRESS;
-
   } else if (process.env.MDBAPI_PORT) {
-
-      MDBAPI_ADDRESS = `http://${process.env.MDBAPI_ADDRESS}:${process.env.MDBAPI_PORT}`
-    
+    MDBAPI_ADDRESS = `http://${process.env.MDBAPI_ADDRESS}:${process.env.MDBAPI_PORT}`
   } else {
-
     throw new Error();
-  
   }
-
 } catch (ex) {
   console.error('Env var MDBAPI_ADDRESS missing or invalid.');
   process.exit(1);
@@ -83,6 +75,44 @@ class MDB {
 
   static deleteIterests(eksternId, interestId) {
     return Http.delete(`${MDBAPI_ADDRESS}/users/${eksternId}/interesser/${interestId}?location_id=5`);
+  }
+
+  static deleteUser(eksterId) {
+    return Http.put(`${MDBAPI_ADDRESS}/users/${eksterId}`, {
+      fornavn: "",
+      efternavn: "",
+      co_navn: "",
+      vejnavn: "",
+      husnummer: "",
+      husbogstav: "",
+      etage: "",
+      sidedoer: "",
+      stednavn: "",
+      bynavn: "",
+      postnummer: "",
+      postnummer_dk: 0,
+      land: "",
+      firma: "",
+      firma_adresse: "",
+      lande_kode: "N/A",
+      udland_flag: false,
+      alder: null,
+      foedselsaar: "",
+      foedselsdato: null,
+      koen: "",
+      telefon: "",
+      mobil: "",
+      brugernavn: "",
+      adgangskode: "",
+      komvej_kode: "N/A",
+      vilkaar: "",
+      status_kode: "",
+      bbs_abo_nr: null,
+      mol_bbs_nr: null,
+      robinson_flag: false,
+      active: false,
+      location_id: 5
+    });
   }
 
   static findUser(email) {

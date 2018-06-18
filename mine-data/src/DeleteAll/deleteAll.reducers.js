@@ -1,5 +1,6 @@
 import {
-  DELETE_ALL_CANCEL_CONFIRM, DELETE_ALL_RECEIVE, DELETE_ALL_REQUEST,
+  DELETE_ALL_CANCEL_CONFIRM, DELETE_ALL_ERROR, DELETE_ALL_RECEIVE,
+  DELETE_ALL_REQUEST,
   DELETE_ALL_RESET,
   DELETE_ALL_SHOW_CONFIRM
 } from './deleteAll.actions';
@@ -20,7 +21,8 @@ const confirm = (state = getDefaultConfirmState(), action) => {
 
 const getDefaultRequestState = () => ({
   pending: false,
-  fetched: false
+  fetched: false,
+  error: null
 });
 
 const request = (state = getDefaultRequestState(), action) => {
@@ -28,7 +30,9 @@ const request = (state = getDefaultRequestState(), action) => {
     case DELETE_ALL_REQUEST:
       return {...state, fetched: false, pending: true};
     case DELETE_ALL_RECEIVE:
-      return {...state, fetched: true, pending: false};
+      return {...state, fetched: true, pending: false, error: null};
+    case DELETE_ALL_ERROR:
+      return {...state, fetched: false, pending: false, error: action.error};
     case DELETE_ALL_RESET:
       return getDefaultRequestState();
     default:
