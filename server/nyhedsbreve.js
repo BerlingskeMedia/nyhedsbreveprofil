@@ -5,10 +5,10 @@ module.exports.register = function (server, options, next) {
 
   server.route({
     method: 'get',
-    path: '/bower_components/{param*}',
+    path: '/node_modules/{param*}',
     handler: {
       directory: {
-        path: 'bower_components'
+        path: 'node_modules'
       }
     }
   });
