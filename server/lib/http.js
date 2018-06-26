@@ -2,8 +2,16 @@ const request = require('request');
 const {boomify, badImplementation, badRequest} = require('boom');
 
 class Http {
-  static get(url, credentials) {
-    return Http.request('get', url, credentials);
+  static get(url, credentials, params) {
+    return Http.request('get', url, credentials, params);
+  }
+
+  static put(url, payload, credentials) {
+    return Http.request('put', url, credentials, payload);
+  }
+
+  static delete(url, credentials) {
+    return Http.request('delete', url, credentials);
   }
 
   static request(method, uri, credentials, payload = null) {
@@ -11,7 +19,7 @@ class Http {
       request({
         uri,
         method,
-        json: payload,
+        [method === 'get' ? 'qs' : 'json']: payload,
         hawk: credentials ? {
           credentials,
           app: credentials.app

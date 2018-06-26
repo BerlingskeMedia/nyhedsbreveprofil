@@ -2,7 +2,10 @@ button.SubmitButton {
   padding: 6px 12px;
   border-radius: 0;
   position: relative;
-  margin-left: 10px;
+
+  @media (min-width: 768px) {
+    margin-left: 10px;
+  }
 
   &:first-child {
     margin-left: 0;

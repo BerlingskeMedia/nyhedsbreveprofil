@@ -9,13 +9,17 @@ import { DetailsItem } from '../Details/DetailsItem';
 import { DetailsTitle } from '../Details/DetailsTitle';
 import { CategoryCard } from '../CategoryCard/CategoryCard';
 import { DetailsGroup } from '../Details/DetailsGroup';
+import {
+  resetKundeunivers, resetMailChimp, resetMDB,
+  resetSurveyGizmo
+} from './apiData.actions';
 
 const CategoriesList = withCollapse(CategoryList);
 const SubCategoriesList = withCollapse(({children}) => <div className="SubCategoryList">{children}</div>);
 const Error = () => <div>Data utilgængelig</div>;
 const SubCategoryCard = ({className, children, ...props}) => <CategoryCard className={classnames(className, 'SubCategoryCard')} details={() => children} {...props}/>;
 
-export const List = ({userInfo: {userInfo, jwt}}) => (
+export const List = ({userInfo: {userInfo, jwt}, apiData, resetMDB, resetMailChimp, resetSurveyGizmo}) => (
   <Fragment>
     <CategoriesList getId={({title}) => title}>
       <CategoryCard title="Register for log-in oplysninger" details={() => (
@@ -82,10 +86,11 @@ export const List = ({userInfo: {userInfo, jwt}}) => (
           <SubCategoriesList getId={({title}) => title}>
             <CategoryApiCardItem
               title="Abonnementsoplysninger"
-              fetchData={() => Api.get(`/mine-data/category/kundeunivers/${userInfo.UID}`, jwt)}
+              pending={apiData.kundeunivers.pending}
+              hasError={apiData.kundeunivers.error}
+              hasData={apiData.kundeunivers.data && apiData.kundeunivers.data.orders && apiData.kundeunivers.data.orders.length > 0}
               renderError={Error}
-              hasData={data => data.orders && data.orders.length > 0}
-              render={({data}) => data.orders.map(order => order.items.map(item => (
+              render={() => apiData.kundeunivers.data.orders.map(order => order.items.map(item => (
                 <DetailsGroup key={item.sap_order_id}>
                   <DetailsItem value={item.product_family} label="Produkt"/>
                   <DetailsItem value={item.delivery_address} label="Leveringsadresse"/>
@@ -98,15 +103,16 @@ export const List = ({userInfo: {userInfo, jwt}}) => (
 
             <CategoryApiCardItem
               title="Samtykker"
-              fetchData={() => Api.getCached(`/mine-data/category/mdb/${userInfo.profile.email}`, jwt)}
+              pending={apiData.mdb.pending}
+              hasError={apiData.mdb.error}
+              hasData={apiData.mdb.data && apiData.mdb.data.permission_list && apiData.mdb.data.permission_list.length > 0}
               renderError={Error}
-              hasData={data => data.permission_list && data.permission_list.length > 0}
-              render={({data, resetData}) => data.permission_list.map(permission => (
+              render={() => apiData.mdb.data.permission_list.map(permission => (
                 <DetailsGroup
                   key={permission.name}
                   deleteAction={() => Api
-                    .delete(`/backend/users/${data.profile.ekstern_id}/permissions/${permission.id}?location_id=5`, jwt)
-                    .then(() => resetData())
+                    .delete(`/mine-data/category/mdb/permissions/${permission.id}`, jwt)
+                    .then(() => resetMDB())
                   }>
                   <DetailsTitle>{permission.name}</DetailsTitle>
                   <DetailsItem value={permission.time} label="Tid"/>
@@ -116,31 +122,29 @@ export const List = ({userInfo: {userInfo, jwt}}) => (
 
             <CategoryApiCardItem
               title="Nyhedsbreve"
-              fetchData={() => Promise.all([
-                Api.getCached(`/mine-data/category/mdb/${userInfo.profile.email}`, jwt),
-                Api.get(`/mine-data/category/mailchimp/${userInfo.profile.email}`, jwt)
-              ])}
-              hasData={([mdb, mailChimp]) => (mdb.nyhedsbreve_list && mdb.nyhedsbreve_list.length > 0) || (mailChimp && mailChimp.length > 0)}
-              render={({data: [mdb, mailChimp], resetData}) => (
+              pending={apiData.mdb.pending || apiData.mdb.pending}
+              hasError={apiData.mdb.error && apiData.mdb.error}
+              hasData={(apiData.mdb.data && apiData.mdb.data.nyhedsbreve_list && apiData.mdb.data.nyhedsbreve_list.length > 0) || (apiData.mailChimp.data && apiData.mailChimp.data.length > 0)}
+              render={() => (
                 <Fragment>
-                  {mdb.nyhedsbreve_list.map(newsletter => (
+                  {apiData.mdb.data.nyhedsbreve_list.map(newsletter => (
                     <DetailsGroup
                       key={newsletter.name}
                       deleteAction={() => Api
-                        .delete(`/backend/users/${mdb.profile.ekstern_id}/nyhedsbreve/${newsletter.id}?location_id=5`, jwt)
-                        .then(() => resetData())}>
+                        .delete(`/mine-data/category/mdb/nyhedsbreve/${newsletter.id}`, jwt)
+                        .then(() => resetMDB())}>
                       <DetailsTitle>{newsletter.name}</DetailsTitle>
                       <DetailsItem value={newsletter.time} label="Tid"/>
                       <DetailsItem value={newsletter.description} label="Beskrivelse"/>
                     </DetailsGroup>
                   ))}
 
-                  {mailChimp.map(({list_title, ...fields}) => (
+                  {apiData.mailChimp.data.map(({list_title, ...fields}) => (
                     <DetailsGroup
                       key={list_title}
                       deleteAction={() => Api
                         .delete(`/mine-data/category/mailchimp/${fields.list_id}/${fields.id}`, jwt)
-                        .then(() => resetData())}>
+                        .then(() => resetMailChimp())}>
                       <DetailsTitle>{list_title}</DetailsTitle>
                       <DetailsItem value={fields.email_address} label="E-mail"/>
                       <DetailsItem value={fields.unique_email_id} label="Unique email ID"/>
@@ -183,74 +187,77 @@ export const List = ({userInfo: {userInfo, jwt}}) => (
 
             <CategoryApiCardItem
               title="Interesser"
-              fetchData={() => Api.getCached(`/mine-data/category/mdb/${userInfo.profile.email}`, jwt)}
+              pending={apiData.mdb.pending}
+              hasError={apiData.mdb.error}
+              hasData={apiData.mdb.data && apiData.mdb.data.interesser_list && apiData.mdb.data.interesser_list.length > 0}
               renderError={Error}
-              hasData={data => data.interesser_list && data.interesser_list.length > 0}
-              render={({data, resetData}) => data.interesser_list.map(interest => (
+              render={() => apiData.mdb.data.interesser_list.map(interest => (
                 <DetailsGroup
                   key={interest.name}
                   deleteAction={() => Api
-                    .delete(`/backend/users/${data.profile.ekstern_id}/interesser/${interest.id}?location_id=5`, jwt)
-                    .then(() => resetData())}>
+                    .delete(`/mine-data/category/mdb/interesser/${interest.id}`, jwt)
+                    .then(() => resetMDB())}>
                   <DetailsTitle>{interest.name}</DetailsTitle>
                 </DetailsGroup>
               ))}/>
 
             <CategoryApiCardItem
               title="Marketing information"
-              fetchData={() => Api.getCached(`/mine-data/category/mdb/${userInfo.profile.email}`, jwt)}
+              pending={apiData.mdb.pending}
+              hasError={apiData.mdb.error}
+              hasData={apiData.mdb.data && apiData.mdb.data.profile && Object.keys(apiData.mdb.data.profile).length > 0}
               renderError={Error}
-              hasData={data => data.profile && Object.keys(data.profile).length > 0}
-              render={({data}) => (
+              render={() => (
                 <DetailsGroup>
-                  <DetailsItem value={data.profile.fornavn} label="Fornavn"/>
-                  <DetailsItem value={data.profile.efternavn} label="Efternavn"/>
-                  <DetailsItem value={data.profile.co_navn} label="CO navn"/>
-                  <DetailsItem value={data.profile.vejnavn} label="Vejnavn"/>
-                  <DetailsItem value={data.profile.husnummer} label="Husnummer"/>
-                  <DetailsItem value={data.profile.husbogstav} label="Husbogstav"/>
-                  <DetailsItem value={data.profile.etage} label="Etage"/>
-                  <DetailsItem value={data.profile.sidedoer} label="Sidedoer"/>
-                  <DetailsItem value={data.profile.stednavn} label="Stednavn"/>
-                  <DetailsItem value={data.profile.bynavn} label="Bynavn"/>
-                  <DetailsItem value={data.profile.postnummer} label="Postnummer"/>
-                  <DetailsItem value={data.profile.postnummer_dk} label="Postnummer dk"/>
-                  <DetailsItem value={data.profile.land} label="Land"/>
-                  <DetailsItem value={data.profile.firma} label="Firma"/>
-                  <DetailsItem value={data.profile.firma_adresse} label="Firma adresse"/>
-                  <DetailsItem value={data.profile.lande_kode} label="Lande kode"/>
-                  <DetailsItem value={data.profile.udland_flag} label="Udland flag"/>
-                  <DetailsItem value={data.profile.alder} label="Alder"/>
-                  <DetailsItem value={data.profile.foedselsaar} label="Foedselsaar"/>
-                  <DetailsItem value={data.profile.foedselsdato} label="Foedselsdato"/>
-                  <DetailsItem value={data.profile.koen} label="Koen"/>
-                  <DetailsItem value={data.profile.telefon} label="Telefon"/>
-                  <DetailsItem value={data.profile.mobil} label="Mobil"/>
-                  <DetailsItem value={data.profile.brugernavn} label="Brugernavn"/>
-                  <DetailsItem value={data.profile.adgangskode} label="Adgangskode"/>
-                  <DetailsItem value={data.profile.komvej_kode} label="Komvej kode"/>
-                  <DetailsItem value={data.profile.vilkaar} label="Vilkaar"/>
-                  <DetailsItem value={data.profile.status_kode} label="Status kode"/>
-                  <DetailsItem value={data.profile.bbs_abo_nr} label="BBS abo nr"/>
-                  <DetailsItem value={data.profile.mol_bbs_nr} label="Mol bbs nr"/>
-                  <DetailsItem value={data.profile.robinson_flag} label="Robinson flag"/>
-                  <DetailsItem value={data.profile.insert_dato} label="Insert dato"/>
-                  <DetailsItem value={data.profile.activate_dato} label="Activate dato"/>
-                  <DetailsItem value={data.profile.opdatering_dato} label="Opdatering dato"/>
+                  <DetailsItem value={apiData.mdb.data.profile.fornavn} label="Fornavn"/>
+                  <DetailsItem value={apiData.mdb.data.profile.efternavn} label="Efternavn"/>
+                  <DetailsItem value={apiData.mdb.data.profile.co_navn} label="CO navn"/>
+                  <DetailsItem value={apiData.mdb.data.profile.vejnavn} label="Vejnavn"/>
+                  <DetailsItem value={apiData.mdb.data.profile.husnummer} label="Husnummer"/>
+                  <DetailsItem value={apiData.mdb.data.profile.husbogstav} label="Husbogstav"/>
+                  <DetailsItem value={apiData.mdb.data.profile.etage} label="Etage"/>
+                  <DetailsItem value={apiData.mdb.data.profile.sidedoer} label="Sidedoer"/>
+                  <DetailsItem value={apiData.mdb.data.profile.stednavn} label="Stednavn"/>
+                  <DetailsItem value={apiData.mdb.data.profile.bynavn} label="Bynavn"/>
+                  <DetailsItem value={apiData.mdb.data.profile.postnummer} label="Postnummer"/>
+                  <DetailsItem value={apiData.mdb.data.profile.postnummer_dk} label="Postnummer dk"/>
+                  <DetailsItem value={apiData.mdb.data.profile.land} label="Land"/>
+                  <DetailsItem value={apiData.mdb.data.profile.firma} label="Firma"/>
+                  <DetailsItem value={apiData.mdb.data.profile.firma_adresse} label="Firma adresse"/>
+                  <DetailsItem value={apiData.mdb.data.profile.lande_kode} label="Lande kode"/>
+                  <DetailsItem value={apiData.mdb.data.profile.udland_flag} label="Udland flag"/>
+                  <DetailsItem value={apiData.mdb.data.profile.alder} label="Alder"/>
+                  <DetailsItem value={apiData.mdb.data.profile.foedselsaar} label="Foedselsaar"/>
+                  <DetailsItem value={apiData.mdb.data.profile.foedselsdato} label="Foedselsdato"/>
+                  <DetailsItem value={apiData.mdb.data.profile.koen} label="Koen"/>
+                  <DetailsItem value={apiData.mdb.data.profile.telefon} label="Telefon"/>
+                  <DetailsItem value={apiData.mdb.data.profile.mobil} label="Mobil"/>
+                  <DetailsItem value={apiData.mdb.data.profile.brugernavn} label="Brugernavn"/>
+                  <DetailsItem value={apiData.mdb.data.profile.adgangskode} label="Adgangskode"/>
+                  <DetailsItem value={apiData.mdb.data.profile.komvej_kode} label="Komvej kode"/>
+                  <DetailsItem value={apiData.mdb.data.profile.vilkaar} label="Vilkaar"/>
+                  <DetailsItem value={apiData.mdb.data.profile.status_kode} label="Status kode"/>
+                  <DetailsItem value={apiData.mdb.data.profile.bbs_abo_nr} label="BBS abo nr"/>
+                  <DetailsItem value={apiData.mdb.data.profile.mol_bbs_nr} label="Mol bbs nr"/>
+                  <DetailsItem value={apiData.mdb.data.profile.robinson_flag} label="Robinson flag"/>
+                  <DetailsItem value={apiData.mdb.data.profile.insert_dato} label="Insert dato"/>
+                  <DetailsItem value={apiData.mdb.data.profile.activate_dato} label="Activate dato"/>
+                  <DetailsItem value={apiData.mdb.data.profile.opdatering_dato} label="Opdatering dato"/>
                 </DetailsGroup>
                 )}/>
 
             <CategoryApiCardItem
               title="Spørgeskemaer/konkurrencer"
-              fetchData={() => Api.get(`/mine-data/category/surveygizmo/${userInfo.profile.email}`, jwt)}
+              pending={apiData.surveyGizmo.pending}
+              hasError={apiData.surveyGizmo.error}
+              hasData={apiData.surveyGizmo.data && apiData.surveyGizmo.data.length > 0}
               renderError={Error}
-              hasData={data => data.length > 0}
-              render={({data, resetData}) => data.map(survey => (
+              render={() => apiData.surveyGizmo.data.map(survey => (
                 <DetailsGroup
                   key={`${survey.response_id}${survey.survey_id}`}
                   deleteAction={() => Api
-                    .delete(`/mie-data/category/surveygizmo/${survey.survey_id}/${userInfo.profile.email}/${survey.response_id}`, jwt)
-                    .then(() => resetData())}>
+                    .delete(`/mine-data/category/surveygizmo/${survey.survey_id}/${survey.response_id}`, jwt)
+                    .then(() => resetSurveyGizmo())}>
                   <DetailsItem value={survey.city} label="By"/>
                   <DetailsItem value={survey.country} label="Country"/>
                   <DetailsItem value={survey.date} label="Dato"/>
@@ -279,8 +286,16 @@ export const List = ({userInfo: {userInfo, jwt}}) => (
   </Fragment>
 );
 
-const mapStateToProps = ({userInfo}) => ({
+const mapStateToProps = ({apiData, userInfo}) => ({
+  apiData,
   userInfo
 });
 
-export const CategoryApiList = connect(mapStateToProps)(List);
+const mapDispatchToProps = dispatch => ({
+  resetKundeunivers: dispatch(resetKundeunivers()),
+  resetMDB: dispatch(resetMDB()),
+  resetMailChimp: dispatch(resetMailChimp()),
+  resetSurveyGizmo: dispatch(resetSurveyGizmo())
+});
+
+export const CategoryApiList = connect(mapStateToProps, mapDispatchToProps)(List);

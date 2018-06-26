@@ -9,71 +9,22 @@ import { CategoryCard } from '../CategoryCard/CategoryCard';
 const SubCategoryCard = ({className, children, ...props}) => <CategoryCard className={classnames(className, 'SubCategoryCard')} details={() => children} {...props}/>;
 
 export class CategoryApiCardItem extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.fetchData = this.fetchData.bind(this);
-    this.toggle = this.toggle.bind(this);
-    this.resetData = this.resetData.bind(this);
-
-    this.state = {
-      data: null,
-      error: null,
-      pending: false
-    };
-  }
-
-  componentWillMount() {
-    this.setState({pending: true});
-    this.fetchData();
-  }
-
-  componentWillUnmount() {
-    this.resetData = () => {};
-  }
-
-  fetchData() {
-    this.props.fetchData()
-      .then(data => this.setState({
-        data,
-        pending: false
-      }))
-      .catch(response => this.setState({
-        pending: false,
-        error: response
-      }));
-  }
-
   renderDetails() {
-    const {hasData, render, renderError} = this.props;
-    const {pending, data, error} = this.state;
+    const {hasData, render, renderError, pending, hasError} = this.props;
 
     if (pending) {
       return <Loading/>;
     }
 
-    if (data && (!hasData || hasData(data))) {
-      return render({data, resetData: this.resetData});
+    if (!!hasData) {
+      return render();
     }
 
-    if (error && renderError) {
-      return renderError(error);
+    if (!!hasError && renderError) {
+      return renderError();
     }
 
     return null;
-  }
-
-  toggle() {
-    this.setState({isOpen: !this.state.isOpen});
-  }
-
-  resetData() {
-    this.setState({
-      pending: true,
-      data: null,
-      error: null
-    });
-    this.fetchData();
   }
 
   render() {
@@ -93,9 +44,10 @@ export class CategoryApiCardItem extends React.Component {
 }
 
 CategoryApiCardItem.propTypes = {
-  fetchData: PropTypes.func.isRequired,
+  pending: PropTypes.bool.isRequired,
   render: PropTypes.func.isRequired,
-  hasData: PropTypes.func,
+  hasData: PropTypes.any,
+  hasError: PropTypes.any,
   renderError: PropTypes.func,
   sideNav: PropTypes.func,
   title: PropTypes.string

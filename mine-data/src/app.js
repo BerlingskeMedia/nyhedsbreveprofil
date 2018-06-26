@@ -23,6 +23,8 @@ import { resetPasswordForm } from './ResetPasswordPage/resetPassword.reducers';
 import { changePasswordForm } from './ResetPasswordPage/changePassword.reducers';
 
 import '../assets/styles.scss';
+import { deleteAll } from './DeleteAll/deleteAll.reducers';
+import { apiData } from './CategoryApiList/apiData.reducers';
 
 const UserDataWithTracking = withTracking(WithUserData);
 
@@ -72,7 +74,9 @@ export const App = ({config}) => {
     register,
     config: createConfigReducer(config),
     resetPasswordForm,
-    changePasswordForm
+    changePasswordForm,
+    deleteAll,
+    apiData
   }), composeEnhancers(applyMiddleware(thunkMiddleware)));
 
   return (

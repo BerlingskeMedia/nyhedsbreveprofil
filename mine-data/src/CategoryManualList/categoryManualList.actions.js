@@ -63,7 +63,10 @@ export const setMode = (mode) => {
 export const requestSubmit = actionBuilder(SUBMIT_REQUEST);
 export const receiveSubmit = actionBuilder(SUBMIT_RECEIVE);
 export const resetSubmit = actionBuilder(SUBMIT_RESET);
-export const failedSubmit = actionBuilder(SUBMIT_FAILED);
+export const failedSubmit = errorCode => ({
+  type: SUBMIT_FAILED,
+  errorCode
+});
 
 export const submitTicket = payload => {
   return (dispatch, getState) => {
@@ -74,8 +77,8 @@ export const submitTicket = payload => {
         dispatch(receiveSubmit());
         dispatch(setNoneMode());
       })
-      .catch(() => {
-        dispatch(failedSubmit());
+      .catch(err => {
+        dispatch(failedSubmit(err.status));
       });
   }
 };

@@ -17,7 +17,6 @@ RUN wget -O - https://nodejs.org/dist/$NODE_VERSION/node-$NODE_VERSION-linux-x64
 WORKDIR /app
 
 # Copying the code into image. Be aware no config files are including.
-COPY ./bower_components /app/bower_components
 COPY ./mine-data /app/mine-data
 COPY ./node_modules /app/node_modules
 COPY ./nyhedsbreve /app/nyhedsbreve

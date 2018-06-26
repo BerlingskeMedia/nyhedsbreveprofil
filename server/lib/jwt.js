@@ -7,13 +7,13 @@ module.exports.authConfig = {
   verifyOptions: {
     algorithms: ['HS256']
   },
-  validateFunc: (authTicket, request, callback) => {
-    callback(null, authTicket && authTicket.exp > Date.now());
+  validateFunc: (token, request, callback) => {
+    callback(null, token && token.userTicket && token.userTicket.exp > Date.now());
   }
 };
 
-module.exports.generateToken = userTicket => {
-  return sign(userTicket, JWT_SECRET);
+module.exports.generateToken = (userTicket, payload) => {
+  return sign(Object.assign({userTicket}, payload), JWT_SECRET);
 };
 
 module.exports.decodeRequest = request => {
