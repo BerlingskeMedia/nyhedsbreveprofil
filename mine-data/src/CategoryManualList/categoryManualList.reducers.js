@@ -55,7 +55,8 @@ export const mode = (state = null, action) => {
 export const getSubmitDefaultState = () => ({
   pending: false,
   fetched: false,
-  failed: false
+  failed: false,
+  errorCode: null
 });
 
 export const submit = (state = getSubmitDefaultState(), action) => {
@@ -65,9 +66,9 @@ export const submit = (state = getSubmitDefaultState(), action) => {
     case SUBMIT_RECEIVE:
       return {...state, pending: false, fetched: true, failed: false};
     case SUBMIT_FAILED:
-      return {...state, pending: false, fetched: true, failed: true};
+      return {...state, pending: false, fetched: true, failed: true, errorCode: action.errorCode};
     case SUBMIT_RESET:
-      return {...state, pending: false, fetched: false};
+      return getSubmitDefaultState();
     default:
       return state;
   }

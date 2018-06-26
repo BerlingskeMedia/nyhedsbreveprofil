@@ -5,6 +5,12 @@ const NYHEDSBREVEPROFIL_APP_ID = process.env.NYHEDSBREVEPROFIL_APP_ID;
 const NYHEDSBREVEPROFIL_APP_SECRET = process.env.NYHEDSBREVEPROFIL_APP_SECRET;
 
 class BPC {
+  static addZenDeskTicket(uid, ticket) {
+    return BPC.callSsoServer(`/permissions/${uid}/zendesk`, BPC.appTicket, {
+      $addToSet: {tickets: {id: ticket.id, createdAt: Date.parse(ticket.created_at)}}
+    }, 'patch');
+  }
+
   static fetchAndSaveAppTicket() {
     this.getAppTicket().then(ticket => {
       console.log('BPC ticket fetched and saved');
@@ -27,6 +33,10 @@ class BPC {
 
     return BPC.callSsoServer('/ticket/app', app);
   };
+
+  static getUserScopeData(uid, scope) {
+    return BPC.callSsoServer(`/permissions/${uid}/${scope}`, BPC.appTicket, null, 'get');
+  }
 
   static getUserTicket(rsvp) {
     return BPC.callSsoServer('/ticket/user', BPC.appTicket, {rsvp});

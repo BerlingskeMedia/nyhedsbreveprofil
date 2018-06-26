@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { fetchUserInfo } from '../common/userInfo.actions';
+import { fetchUserInfo, scheduleJwtRefetch } from '../common/userInfo.actions';
 import { HomePage } from '../HomePage/HomePage';
 import { LoginPage } from '../LoginPage/LoginPage';
 
@@ -14,9 +14,13 @@ class LoadingSwitcher extends React.Component {
     LoadingSwitcher.fetchUserIfNeeded(props);
   }
 
-  static fetchUserIfNeeded({userInfo: {isPending, isFetched}, fetchUserInfo}) {
+  static fetchUserIfNeeded({userInfo: {isPending, isFetched}, fetchUserInfo, scheduleJwtRefetch}) {
     if (!isPending && !isFetched) {
-      fetchUserInfo();
+      fetchUserInfo().then(jwt => {
+        if (jwt) {
+          scheduleJwtRefetch(jwt);
+        }
+      });
     }
   }
 
@@ -51,7 +55,8 @@ const mapStateToProps = ({userInfo}) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  fetchUserInfo: () => dispatch(fetchUserInfo())
+  fetchUserInfo: () => dispatch(fetchUserInfo()),
+  scheduleJwtRefetch: (jwt) => dispatch(scheduleJwtRefetch(jwt))
 });
 
 export const WithUserData = connect(

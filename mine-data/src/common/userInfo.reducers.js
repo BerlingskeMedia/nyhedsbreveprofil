@@ -1,6 +1,6 @@
 import {
   REQUEST_USER_INFO, RECEIVE_USER_INFO,
-  RESET_USER_INFO, VERIFY_USER
+  RESET_USER_INFO, VERIFY_USER, SCHEDULE_REFETCH, CANCEL_REFETCH
 } from './userInfo.actions';
 
 export const defaultUserInfoState = () => ({
@@ -8,6 +8,7 @@ export const defaultUserInfoState = () => ({
   isPending: false,
   isVerified: false,
   userInfo: null,
+  scheduleTimeoutId: null,
   jwt: null
 });
 
@@ -19,6 +20,10 @@ export function userInfo(state = defaultUserInfoState(), action) {
       return {isFetched: true, isPending: false, userInfo: action.userInfo, jwt: action.jwt};
     case VERIFY_USER:
       return {...state, isVerified: true};
+    case SCHEDULE_REFETCH:
+      return {...state, scheduleTimeoutId: action.scheduleTimeoutId};
+    case CANCEL_REFETCH:
+      return {...state, scheduleTimeoutId: null};
     case RESET_USER_INFO:
       return defaultUserInfoState();
     default:

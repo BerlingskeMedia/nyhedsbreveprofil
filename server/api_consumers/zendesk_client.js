@@ -5,11 +5,13 @@ const MDB = require('./mdb_client');
 const KU = require('./kundeunivers_client');
 const {categories} = require('./categories_client');
 const JWT = require('../lib/jwt');
+const BPC = require('../bpc_client');
+const {badRequest} = require('boom');
+const Http = require('../lib/http');
 
 var ZENDESK_URL;
 const ZENDESK_API_EMAIL = process.env.ZENDESK_API_EMAIL;
 const ZENDESK_API_TOKEN = process.env.ZENDESK_API_TOKEN;
-
 
 try {
   ZENDESK_URL = Url.parse(process.env.ZENDESK_URL);
@@ -178,6 +180,40 @@ module.exports = {
         };
       });
     });
+  },
+
+  requestAllowed: (uid) => {
+    return BPC.getUserScopeData(uid, 'zendesk').then(({tickets}) => {
+      const latestTicket = tickets.reduce((latest, ticket) => {
+        if (!latest || ticket.createdAt > latest.createdAt) {
+          return ticket;
+        }
+
+        return latest;
+      }, null);
+
+      // if (!latestTicket) {
+        return true;
+      // }
+
+      return callZenDesk({path: `/api/v2/requests/${latestTicket.id}.json`})
+        .then(ticket => ticket.request.status === 'solved')
+        .catch(err => {
+          if (err && err.error === 'RecordNotFound') {
+            return true;
+          }
+
+          return Promise.reject(err);
+        });
+    });
+  },
+
+  wrapError: (err) => {
+    if (err && err.error) {
+      return badRequest(err.description);
+    }
+
+    return Http.wrapError(err);
   },
 
 

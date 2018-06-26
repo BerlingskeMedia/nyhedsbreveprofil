@@ -3,10 +3,11 @@ const MDB = require('./api_consumers/mdb_client');
 const BPC = require('./bpc_client');
 const MailChimp = require('./api_consumers/mailchimp_client');
 const Http = require('./lib/http');
-const {notFound, forbidden} = require('boom');
+const {notFound, forbidden, tooManyRequests} = require('boom');
 const ZenDesk = require('./api_consumers/zendesk_client');
 const {categories} = require('./api_consumers/categories_client');
 const JWT = require('./lib/jwt');
+const Gigya = require('./api_consumers/gigya_client');
 
 module.exports.register = function (server, options, next) {
 
@@ -252,13 +253,24 @@ module.exports.register = function (server, options, next) {
       auth: 'jwt'
     },
     handler: (req, reply) => {
+      const jwtTicket = JWT.decodeRequest(req);
+
       BPC.validateRequest(req)
-        .then(() => ZenDesk.mapRequestToTicket(req))
-        .then(payload => ZenDesk.createTicket(payload))
-        .then(() => {
-          reply(null, '');
+        .then(() => ZenDesk.requestAllowed(jwtTicket.uid))
+        .then(allowed => {
+          if (allowed) {
+            ZenDesk.mapRequestToTicket(req)
+              .then(payload => ZenDesk.createTicket(payload))
+              .then(response => {
+                BPC.addZenDeskTicket(jwtTicket.uid, response.ticket)
+                  .then(() => reply(response && response.ticket.id).code(201))
+                  .catch(err => reply(ZenDesk.wrapError(err)));
+              });
+          } else {
+            reply(tooManyRequests());
+          }
         })
-        .catch(err => reply(Http.wrapError(err)));
+        .catch(err => reply(ZenDesk.wrapError(err)));
     }
   });
 
@@ -280,12 +292,13 @@ module.exports.register = function (server, options, next) {
       auth: 'jwt'
     },
     handler: (req, reply) => {
+      const uid = JWT.decodeRequest(req).uid;
+
       BPC.validateRequest(req)
-        .then(() => KU.deleteAccount(JWT.decodeRequest(req).uid))
-        .then(() => {
-          reply(null, '');
-        })
-        .catch(err => reply(Http.wrapError(err)));
+        .then(() => KU.deleteAccount(uid))
+        .then(() => Gigya.deleteAccount(uid))
+        .then(() => reply(''))
+        .catch(err => reply(Gigya.wrapError(err)));
     }
   });
 

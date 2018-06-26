@@ -186,10 +186,16 @@ class List extends React.Component {
                     }
                     <p>Hvis du er er uenig i vores behandling af din {isConfirmModeInsight ? 'indsigtsanmodning' : 'sletteanmodning'}, har du mulighed for at klage til Datatilsynet. Læs nærmere <a href="https://www.datatilsynet.dk" target="_blank">her</a>.</p>
                   </Fragment>
-                ) :
-                  <p>
-                    Din anmodning er ikke sendt grundet en teknisk fejl. Kontakt venligst <a href="mailto:persondata@berlingskemedia.dk">persondata@berlingskemedia.dk</a> for at få hjælp til din anmodning.
-                  </p>
+                ) : (
+                  submit.errorCode === 429 ?
+                    <p>
+                      Du kan ikke indsende flere anmodninger lige nu, da du allerede har en åben sag hos os. Du vil få svar på den eksisterende sag senest 30 dage efter du indsendte den.
+                      <br/>
+                      <br/>Hvis du har spørgsmål, bedes du sende en mail til <a href="mailto:persondata@berlingskemedia.dk">persondata@berlingskemedia.dk</a>
+                    </p> : <p>
+                      Din anmodning er ikke sendt grundet en teknisk fejl. Kontakt venligst <a href="mailto:persondata@berlingskemedia.dk">persondata@berlingskemedia.dk</a> for at få hjælp til din anmodning.
+                    </p>
+                )
               }
             </ModalBody>
             <ModalFooter>
