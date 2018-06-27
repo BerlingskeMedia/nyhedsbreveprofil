@@ -184,7 +184,7 @@ module.exports = {
 
   requestAllowed: (uid) => {
     return BPC.getUserScopeData(uid, 'zendesk').then(({tickets}) => {
-      const latestTicket = tickets.reduce((latest, ticket) => {
+      const latestTicket = tickets && tickets.reduce((latest, ticket) => {
         if (!latest || ticket.createdAt > latest.createdAt) {
           return ticket;
         }
@@ -192,9 +192,9 @@ module.exports = {
         return latest;
       }, null);
 
-      // if (!latestTicket) {
+      if (!latestTicket) {
         return true;
-      // }
+      }
 
       return callZenDesk({path: `/api/v2/requests/${latestTicket.id}.json`})
         .then(ticket => ticket.request.status === 'solved')
