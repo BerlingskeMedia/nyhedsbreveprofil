@@ -19,6 +19,8 @@ export const SUBMIT_FAILED = '[category manual list] failed submit';
 
 export const CONFIRM_SHOW = '[category manual list] show confirmation';
 export const CONFIRM_HIDE = '[category manual list] hide confirmation';
+export const CONFIRM_ALLOWED = '[category manual list] confirmation allowance';
+export const CONFIRM_ERROR = '[category manual list] confirmation error';
 
 export const requestCategories = actionBuilder(REQUEST_CATEGORIES);
 export const receiveCategories = (categories) => ({
@@ -83,8 +85,31 @@ export const submitTicket = payload => {
   }
 };
 
-export const showConfirmation = (mode) => ({
+export const confirm = mode => ({
   type: CONFIRM_SHOW,
   mode
 });
+
+export const confirmAllowed = allowed => ({
+  type: CONFIRM_ALLOWED,
+  allowed
+});
+
+export const confirmError = () => ({
+  type: CONFIRM_ERROR
+});
+
+export const showConfirmation = mode => {
+  return (dispatch, getState) => {
+    dispatch(confirm(mode));
+
+    return Api.get('/mine-data/zendesk/check', getState().userInfo.jwt)
+      .then(({allowed}) => {
+        dispatch(confirmAllowed(allowed));
+      })
+      .catch(() => {
+        dispatch(confirmError());
+      });
+  };
+};
 export const hideConfirmation = actionBuilder(CONFIRM_HIDE);

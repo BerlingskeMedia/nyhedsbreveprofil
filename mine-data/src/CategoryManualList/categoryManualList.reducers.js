@@ -1,5 +1,6 @@
 import {
-  ADD_CATEGORY, CONFIRM_HIDE, CONFIRM_SHOW, RECEIVE_CATEGORIES,
+  ADD_CATEGORY, CONFIRM_ALLOWED, CONFIRM_ERROR, CONFIRM_HIDE, CONFIRM_SHOW,
+  RECEIVE_CATEGORIES,
   REMOVE_CATEGORY,
   REQUEST_CATEGORIES,
   RESET_CATEGORY_LIST,
@@ -76,13 +77,20 @@ export const submit = (state = getSubmitDefaultState(), action) => {
 
 const getConfirmModeDefaultState = () => ({
   mode: null,
-  visible: false
+  visible: false,
+  pending: false,
+  allowed: false,
+  error: false
 });
 
 export const confirmMode = (state = getConfirmModeDefaultState(), action) => {
   switch (action.type) {
     case CONFIRM_SHOW:
-      return {...state, visible: true, mode: action.mode};
+      return {...state, visible: true, mode: action.mode, pending: true, error: false, allowed: false};
+    case CONFIRM_ALLOWED:
+      return {...state, allowed: action.allowed, pending: false};
+    case CONFIRM_ERROR:
+      return {...state, error: true, pending: false};
     case CONFIRM_HIDE:
       return {...state, visible: false};
     default:

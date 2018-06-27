@@ -276,6 +276,21 @@ module.exports.register = function (server, options, next) {
 
   server.route({
     method: 'GET',
+    path: '/zendesk/check',
+    config: {
+      auth: 'jwt'
+    },
+    handler: (req, reply) => {
+      ZenDesk.requestAllowed(JWT.decodeRequest(req).uid)
+        .then(allowed => {
+          reply({allowed});
+        })
+        .catch(err => reply(ZenDesk.wrapError(err)));
+    }
+  });
+
+  server.route({
+    method: 'GET',
     path: '/categories',
     config: {
       auth: false

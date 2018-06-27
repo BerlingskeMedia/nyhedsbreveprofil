@@ -70,6 +70,59 @@ class List extends React.Component {
     this.props.resetTicket();
   }
 
+  getConfirmModalContent() {
+    const {confirmMode, submit} = this.props;
+    const isConfirmModeInsight = confirmMode.mode === 'insight';
+
+    if (confirmMode.pending) {
+      return <ModalBody><Loading/></ModalBody>;
+    }
+
+    if (confirmMode.error) {
+      return <ModalBody>
+        <p>
+          Din anmodning er ikke sendt grundet en teknisk fejl. Kontakt venligst <a href="mailto:persondata@berlingskemedia.dk">persondata@berlingskemedia.dk</a> for at få hjælp til din anmodning.
+        </p>
+      </ModalBody>;
+    }
+
+    if (!confirmMode.allowed) {
+      return <Fragment>
+        <ModalBody>
+          <p>
+            Du kan ikke indsende flere anmodninger lige nu, da du allerede har en åben sag hos os. Du vil få svar på den eksisterende sag senest 30 dage efter du indsendte den.
+            <br/>
+            <br/>Hvis du har spørgsmål, bedes du sende en mail til <a href="mailto:persondata@berlingskemedia.dk">persondata@berlingskemedia.dk</a>
+          </p>
+        </ModalBody>
+        <ModalFooter>
+          <SubmitButton onClick={this.props.hideConfirmation}>OK</SubmitButton>
+        </ModalFooter>
+      </Fragment>;
+    }
+
+    return <Fragment>
+      {isConfirmModeInsight ? null : <ModalHeader>ADVARSEL!</ModalHeader>}
+      <ModalBody>
+        {
+          isConfirmModeInsight ?
+            <p>Bekræft venligst at du ønsker dine data tilsendt på mail inden for 30 dage.</p>
+            :
+            <p>
+              Du er ved at slette alle dine personoplysninger i de angivne kategorier.
+              <br/>Dette kan medføre en forringet brugeoplevelse ved brug af vores tjenester.
+              <br/>
+              <br/>Er du sikker på du vil slette dine data?
+            </p>
+        }
+      </ModalBody>
+      <ModalFooter>
+      <SubmitButton loading={submit.pending} onClick={this.submitTicket}>Bekræft</SubmitButton>
+      <SubmitButton color="link" onClick={this.props.hideConfirmation}>Afbryd</SubmitButton>
+      </ModalFooter>
+    </Fragment>;
+  }
+
   isSelected(category) {
     return this.props.list.includes(category.name);
   }
@@ -146,29 +199,14 @@ class List extends React.Component {
               {!list.length ? <div className="button-label">
                 {isModeInsight ? 'Kryds af hvilke kategorier du ønsker indsigt i' : 'Kryds af hvilke kategorier du ønsker slettet'}
               </div> : null}
-              <SubmitButton id="SubmitButton" disabled={!list.length} loading={showConfirm || submit.pending} onClick={this.showConfirmation}>Send anmodning</SubmitButton>
+              <SubmitButton id="SubmitButton" disabled={!list.length} loading={submit.pending} onClick={this.showConfirmation}>Send anmodning</SubmitButton>
             </div>
           ) : null}
+
           <Modal centered isOpen={showConfirm} toggle={this.props.hideConfirmation}>
-            {isConfirmModeInsight ? null : <ModalHeader>ADVARSEL!</ModalHeader>}
-            <ModalBody>
-              {
-                isConfirmModeInsight ?
-                  <p>Bekræft venligst at du ønsker dine data tilsendt på mail inden for 30 dage.</p>
-                :
-                  <p>
-                    Du er ved at slette alle dine personoplysninger i de angivne kategorier.
-                    <br/>Dette kan medføre en forringet brugeoplevelse ved brug af vores tjenester.
-                    <br/>
-                    <br/>Er du sikker på du vil slette dine data?
-                  </p>
-              }
-            </ModalBody>
-            <ModalFooter>
-              <SubmitButton loading={submit.pending} onClick={this.submitTicket}>Bekræft</SubmitButton>
-              <SubmitButton color="link" onClick={this.props.hideConfirmation}>Afbryd</SubmitButton>
-            </ModalFooter>
+            {this.getConfirmModalContent()}
           </Modal>
+
           <Modal centered isOpen={submit.fetched} toggle={this.props.resetTicket}>
             <ModalBody>
               {
