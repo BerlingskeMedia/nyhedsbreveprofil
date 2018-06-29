@@ -256,19 +256,12 @@ module.exports.register = function (server, options, next) {
       const jwtTicket = JWT.decodeRequest(req);
 
       BPC.validateRequest(req)
-        .then(() => ZenDesk.requestAllowed(jwtTicket.uid))
-        .then(allowed => {
-          if (allowed) {
-            ZenDesk.mapRequestToTicket(req)
-              .then(payload => ZenDesk.createTicket(payload))
-              .then(response => {
-                BPC.addZenDeskTicket(jwtTicket.uid, response.ticket)
-                  .then(() => reply(response && response.ticket.id).code(201))
-                  .catch(err => reply(ZenDesk.wrapError(err)));
-              });
-          } else {
-            reply(tooManyRequests());
-          }
+        .then(() => ZenDesk.mapRequestToTicket(req))
+        .then(payload => ZenDesk.createTicket(payload))
+        .then(response => {
+          BPC.addZenDeskTicket(jwtTicket.uid, response.ticket)
+            .then(() => reply(response && response.ticket.id).code(201))
+            .catch(err => reply(ZenDesk.wrapError(err)));
         })
         .catch(err => reply(ZenDesk.wrapError(err)));
     }
