@@ -36,6 +36,20 @@ class Http {
     });
   }
 
+  static request_v2(options) {
+    return new Promise((fulfill, reject) => {
+      request(options, (err, response, body) => {
+        if (err) {
+          reject(err);
+        } else if (response.statusCode > 299) {
+          reject({response, body});
+        } else {
+          fulfill(Http.parseResponse(body));
+        }
+      });
+    });
+  }
+
   static parseResponse(response) {
     if (typeof response === 'string') {
       try {
