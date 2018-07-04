@@ -36,7 +36,7 @@ class Http {
     });
   }
 
-  static request_v2(options) {
+  static request_plain(options) {
     return new Promise((fulfill, reject) => {
       request(options, (err, response, body) => {
         if (err) {
