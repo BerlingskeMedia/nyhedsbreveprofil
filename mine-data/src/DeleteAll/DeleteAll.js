@@ -23,13 +23,13 @@ export class DeleteAllDisconnected extends Component {
           <SubmitButton color="danger" disabled={disableButton} onClick={showConfirm}>Slet al data inkl. denne profil*</SubmitButton>
         </div>
         <p className="DeleteAll-label">
-          *Bemærk at at vi i særlige tilfælde beholder en historik i en tidsbegrænset periode pga. retlig forpligtelse til at gemme denne data. Formålet hermed er, at kunne dokumentere at vi har haft lovhjemmel til behandlingen, eller evt. senere sagsbehandling.
+          *Bemærk at vi i særlige tilfælde beholder en historik i en tidsbegrænset periode pga. retslig forpligtelse til at gemme denne data. Formålet hermed er, at kunne dokumentere at vi har haft lovhjemmel til behandlingen, eller evt. senere sagsbehandling.
         </p>
         <Modal centered isOpen={deleteAll.confirm} toggle={cancelConfirm}>
           <ModalHeader>ADVARSEL!</ModalHeader>
           <ModalBody>
             <p>Er du sikker på at du ønsker at slette alle dine oplysninger?</p>
-            <p>Bemærk at at vi i særlige tilfælde beholder en historik i en tidsbegrænset periode pga. retlig forpligtelse til at gemme denne data. Formålet hermed er, at kunne dokumentere at vi har haft lovhjemmel til behandlingen, eller evt. senere sagsbehandling. Data på tidligere samtykker til nyhedsbreve gemmes i 2 år. Oplysninger om abonnementer gemmes i 5 år.</p>
+            <p>Bemærk at vi i særlige tilfælde beholder en historik i en tidsbegrænset periode pga. retslig forpligtelse til at gemme denne data. Formålet hermed er, at kunne dokumentere at vi har haft lovhjemmel til behandlingen, eller evt. senere sagsbehandling. Data på tidligere samtykker til nyhedsbreve gemmes i 2 år. Oplysninger om abonnementer gemmes i 5 år.</p>
           </ModalBody>
           <ModalFooter>
             <SubmitButton loading={deleteAll.request.pending} onClick={submit}>Bekræft</SubmitButton>
@@ -51,7 +51,7 @@ export class DeleteAllDisconnected extends Component {
         </Modal>
         <Modal centered isOpen={!!deleteAll.request.error} toggle={resetRequest}>
           <ModalBody>
-            <p>Der skete en fejl!</p>
+            <p>Bemærk!</p>
             <p>Dele af dine data kan ikke bekræftes slettet.</p>
           </ModalBody>
           <ModalFooter>
