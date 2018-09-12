@@ -11,6 +11,18 @@ const Gigya = require('./api_consumers/gigya_client');
 
 module.exports.register = function (server, options, next) {
 
+  server.ext('onPreResponse', function(request, reply) {
+
+    request.response.header('X-Frame-Options', 'SAMEORIGIN');
+    request.response.header('X-XSS-Protection', '1; mode=block');
+    request.response.header('Content-Security-Policy', 'default-src https:');
+    request.response.header('X-Content-Type-Options', 'nosniff');
+    request.response.header('Strict-Transport-Security', 'max-age=63072000');
+
+    reply();
+
+  });
+
   server.route({
     method: 'get',
     path: '/{param*}',
