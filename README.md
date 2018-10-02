@@ -7,10 +7,14 @@ changes to newsletter subscriptions as well as personal profile information.
 
 ## Technology Stack
 
-- React.js
+- Node.js 6.10.3 [Docs](https://nodejs.org/dist/latest-v6.x/docs/api/)
+- Angular 1.7.4 [Docs](https://code.angularjs.org/1.7.4/docs/api)
+- Bootstrap 3.3.7 [Docs](http://getbootstrap.com/docs/3.3/)
+- React.js 16.2.0 [Docs](https://reactjs.org/versions/)
 - Less.js
-- Hapi.js
-- Webpack
+- Hapi.js 16.6.2 [Docs](https://hapijs.com/api/16.6.2)
+- Webpack 3.11.0 [Docs](https://github.com/webpack/webpack)
+- Moment.js [Docs](https://momentjs.com/docs/)
 
 
 ## Description

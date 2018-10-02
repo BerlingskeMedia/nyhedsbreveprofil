@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
-    <h1>Dine nyhedsbreve</h1>
+    <h1>Dine tilmeldinger</h1>
 
     <div ng-show="looking_at_one_newsletter">
       <div ng-show="is_subscribed_to_the_one_newsletter">
@@ -12,20 +12,21 @@
       <ul class="list-brand list-border">
         <li>
           <div class="row">
-            <div class="col-xs-4 col-sm-2 col-md-2 col-lg-2">
-              <div class="newsletter_logo center-block">
-                <img src="{{ newsletter.nyhedsbrev_image }}" class="center-block img-responsive" alt="" />
-              </div>
-            </div>
             <div class="col-xs-8 col-sm-10 col-md-10 col-lg-10">
-              <strong class="newsletter-title">{{newsletter.nyhedsbrev_navn}}
+              <strong class="newsletter-title">{{newsletter.navn}}
                 <span>{{newsletter.nyhedsbrev_tag}}</span>
               </strong>
               <small ng-bind-html="newsletter.indhold_safe"></small>
-              <div ng-hide="is_subscribed_to_the_one_newsletter" class="unsubscribe_button text-left">
+              <p></p>
+              <p ng-show="newsletter.signup_dato_fromNow">
+                <small><em>Tilmeldt: <span>{{newsletter.signup_dato_fromNow}}</span></em></small>
+              </p>
+            </div>
+            <div class="col-xs-4 col-sm-2 col-md-2 col-lg-2">
+              <div class="unsubscribe_button" ng-hide="is_subscribed_to_the_one_newsletter">
                 <a class="btn btn-xs btn-default" href="" ng-click="subscribe(newsletter)">Tilmeld</a>
               </div>
-              <div ng-show="is_subscribed_to_the_one_newsletter" class="unsubscribe_button text-left">
+              <div class="unsubscribe_button" ng-show="is_subscribed_to_the_one_newsletter">
                 <a class="btn btn-xs btn-default" href="" ng-click="open(newsletter)">Afmeld</a>
               </div>
             </div>
@@ -46,12 +47,18 @@
       <ul class="list-brand list-border">
         <li ng-repeat="newsletter in newsletters">
           <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-              <strong class="newsletter-title">{{newsletter.nyhedsbrev_navn}}
+            <div class="col-xs-8 col-sm-10 col-md-10 col-lg-10">
+              <strong class="newsletter-title">{{newsletter.navn}}
                 <span>{{newsletter.nyhedsbrev_tag}}</span>
               </strong>
               <small ng-bind-html="newsletter.indhold_safe"></small>
-              <div class="unsubscribe_button text-left">
+              <p></p>
+              <p ng-show="newsletter.signup_dato_fromNow">
+                <small><em>Tilmeldt: <span>{{newsletter.signup_dato_fromNow}}</span></em></small>
+              </p>
+            </div>
+            <div class="col-xs-4 col-sm-2 col-md-2 col-lg-2">
+              <div class="unsubscribe_button">
                 <a class="btn btn-xs btn-default" href="" ng-click="open(newsletter)">Afmeld</a>
               </div>
             </div>
