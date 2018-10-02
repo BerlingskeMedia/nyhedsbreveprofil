@@ -395,7 +395,7 @@ function ($scope, $rootScope, $routeParams, $http, $q, $location, $sce, UserServ
   $scope.h1_prefix = 'Alle ';
 
   function publisherNameToSlug(publisher_navn){
-    return angular.lowercase(publisher_navn)
+    return publisher_navn.toLowerCase()
     .replace(/\s+/g, '-')           // Replace spaces with -
     .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
     .replace(/\-\-+/g, '-')         // Replace multiple - with single -
@@ -403,14 +403,15 @@ function ($scope, $rootScope, $routeParams, $http, $q, $location, $sce, UserServ
     .replace(/-+$/, '');            // Trim - from end of text;
   }
 
-  var getPublishers = PublisherService.fetchPublishers().then(function () {
+  var getPublishers = PublisherService.fetchPublishers()
+  .then(function () {
     if ($routeParams.publisher) {
       var publisher_exists = PublisherService
       .getPublishers()
       .some(function (publisher) {
         if ($routeParams.publisher == publisher.publisher_id 
-          || angular.lowercase($routeParams.publisher) === angular.lowercase(publisher.publisher_navn)
-          || angular.lowercase($routeParams.publisher) === publisherNameToSlug(publisher.publisher_navn)) {
+          || $routeParams.publisher.toLowerCase() === publisher.publisher_navn.toLowerCase()
+          || $routeParams.publisher.toLowerCase() === publisherNameToSlug(publisher.publisher_navn)) {
           $scope.setCurrentPublisher(publisher);
           $scope.h1_prefix = publisher.publisher_navn + ' ';
           return true;
@@ -770,6 +771,7 @@ function ($scope, $routeParams, $http, $rootScope, $location, UserService, login
     '$modal', '$location', '$sce', 'UserService', 'LOCATION_ID',
     function ($scope, $routeParams, $http, $q, $modal, $location, $sce,
     UserService, LOCATION_ID) {
+
   $scope.reasons = [
     "I sender for mange mails",
     "Indholdet i jeres mails er ikke relevant for mig",
@@ -778,41 +780,53 @@ function ($scope, $routeParams, $http, $rootScope, $location, UserService, login
     "Jeg er blevet tilmeldt ved en fejl"];
 
 
-
   function update () {
 
-    var newsletter_request;
-    if ($routeParams.nyhedsbrev_id) {
-      $scope.looking_at_one_newsletter = true;
-      newsletter_request = $http.get("/backend/nyhedsbreve/".concat($routeParams.nyhedsbrev_id));
-    } else {
-      $scope.looking_at_one_newsletter = false;
-      newsletter_request = $http.get("/backend/nyhedsbreve?orderBy=nyhedsbrev_navn&orderDirection=asc");
-    }
+    // var user_request = $http.get("/backend/users/" + UserService.getExternalId());
 
-    var user_request = $http.get("/backend/users/" + UserService.getExternalId());
+    UserService.getData().then(function(response) {
+      
+      var user = response.data;
 
-    $q.all([newsletter_request, user_request]).then(function(resolved) {
+      if ($routeParams.nyhedsbrev_id) {
 
-      $scope.my_subscriptions = resolved[1].data.nyhedsbreve;
-      console.log('tilmeldt:', $scope.my_subscriptions);
-
-      // When $routeParams.nyhedsbrev_id is not set, the result comes as an array
-      if (resolved[0].data instanceof Array) {
-        $scope.newsletters = resolved[0].data.filter(function (newsletter) {
-          return $scope.my_subscriptions.indexOf(newsletter.nyhedsbrev_id) !== -1;
+        $scope.looking_at_one_newsletter = true;
+         var foundNewsletter = user.signups.find(function(signup) {
+          return signup.id == $routeParams.nyhedsbrev_id;
         });
-        $scope.newsletters.forEach(image_and_safe_indhold);
+
+        if (foundNewsletter) {
+
+          $scope.is_subscribed_to_the_one_newsletter = true;
+          image_and_safe_indhold(foundNewsletter);
+          $scope.newsletter = foundNewsletter;
+
+        } else {
+
+          $http.get("/backend/nyhedsbreve/".concat($routeParams.nyhedsbrev_id))
+          .then(function(response) {
+            foundNewsletter = response.data;
+            foundNewsletter.id = foundNewsletter.nyhedsbrev_id;
+            foundNewsletter.navn = foundNewsletter.nyhedsbrev_navn;
+            image_and_safe_indhold(foundNewsletter);
+            $scope.newsletter = foundNewsletter;
+          })
+          .catch(function(err) {
+            $location.path('tilmeldt/');
+          });
+        }
+
       } else {
-        $scope.newsletter = resolved[0].data;
-        $scope.is_subscribed_to_the_one_newsletter = $scope.my_subscriptions.indexOf($scope.newsletter.nyhedsbrev_id) > -1;
-        image_and_safe_indhold($scope.newsletter);
+
+        $scope.looking_at_one_newsletter = false;
+        $scope.newsletters = user.signups;
+        $scope.newsletters.forEach(image_and_safe_indhold);
+
       }
 
-
       function image_and_safe_indhold(newsletter){
-        if (newsletter.nyhedsbrev_image === null || newsletter.nyhedsbrev_image === '') {
-          newsletter.nyhedsbrev_image = 'http://nlstatic.berlingskemedia.dk/newsletter_logos/' + newsletter.nyhedsbrev_id + '.png';
+        if(newsletter.signup_dato) {
+          newsletter.signup_dato_fromNow = moment(newsletter.signup_dato).fromNow()
         }
         newsletter.indhold_safe = $sce.trustAsHtml(newsletter.indhold);
       }
@@ -821,12 +835,15 @@ function ($scope, $routeParams, $http, $rootScope, $location, UserService, login
       console.error('err', err);
       if (err.status === 404){
         $location.path('tilmeldt/');
+      } else {
+        console.error(err);
+        $location.path('login');
       }
     });
   };
 
   $scope.subscribe = function(newsletter) {
-    $http.post("/backend/users/" + UserService.getExternalId() + "/nyhedsbreve/" + newsletter.nyhedsbrev_id + '?location_id=' + LOCATION_ID , null).then(function (response) {
+    $http.post("/backend/users/" + UserService.getExternalId() + "/nyhedsbreve/" + newsletter.id + '?location_id=' + LOCATION_ID , null).then(function (response) {
       $scope.is_subscribed_to_the_one_newsletter = true;
     }, function (error) {
       console.error(error);
@@ -842,7 +859,7 @@ function ($scope, $routeParams, $http, $rootScope, $location, UserService, login
     $scope.unsubscribeError = false;
     var payload = {};
     payload.location_id = LOCATION_ID;
-    payload.nyhedsbrev_id = $scope.to_unsubscribe.nyhedsbrev_id;
+    payload.nyhedsbrev_id = $scope.to_unsubscribe.id;
     payload.user_feedback = feedback;
     $http.post("/backend/users/" + UserService.getExternalId() + "/nyhedsbreve/delete", payload ).then(function (response) {
 
