@@ -1,3 +1,5 @@
+moment.locale('da');
+
 var newsletterApp = angular.module('newsletter', [
   'ngRoute',
   'ui.bootstrap',
