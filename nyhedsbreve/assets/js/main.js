@@ -824,7 +824,7 @@ function ($scope, $routeParams, $http, $rootScope, $location, UserService, login
       } else {
 
         $scope.looking_at_one_newsletter = false;
-        $scope.newsletters = user.signups;
+        $scope.newsletters = user.signups.sort(byNewslettername);
         $scope.newsletters.forEach(image_and_safe_indhold);
 
       }
@@ -834,6 +834,12 @@ function ($scope, $routeParams, $http, $rootScope, $location, UserService, login
           newsletter.signup_dato_fromNow = moment(newsletter.signup_dato).fromNow()
         }
         newsletter.indhold_safe = $sce.trustAsHtml(newsletter.indhold);
+      }
+
+      function byNewslettername(a,b) {
+        if (a.navn < b.navn) { return -1; }
+        if (a.navn > b.navn) { return 1; }
+        return 0;
       }
 
     }, function (err){
