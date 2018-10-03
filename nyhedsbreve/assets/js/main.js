@@ -806,6 +806,11 @@ function ($scope, $routeParams, $http, $rootScope, $location, UserService, login
           $http.get("/backend/nyhedsbreve/".concat($routeParams.nyhedsbrev_id))
           .then(function(response) {
             foundNewsletter = response.data;
+            // If newletter is hidden or disabled, we don't want to show it
+            if(foundNewsletter.enabled === 0 || foundNewsletter.hidden === 0) {
+              $location.path('tilmeldt/');  
+              return;
+            }
             foundNewsletter.id = foundNewsletter.nyhedsbrev_id;
             foundNewsletter.navn = foundNewsletter.nyhedsbrev_navn;
             image_and_safe_indhold(foundNewsletter);
