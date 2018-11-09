@@ -13,6 +13,7 @@
   <script src="/node_modules/angular-route/angular-route.js"></script>
   <script src="/node_modules/checklist-model/checklist-model.js"></script>
   <script src="/node_modules/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+  <script src="/assets/js/moment-with-locales.js"></script>
   <script src="/assets/js/main.js"></script>
   <base href="/">
 </head>
@@ -45,7 +46,7 @@
             </li>
             <li ng-class="{'hidden-mobile': !showMenu}" ng-show="loggedIn" class="mobile-nav">
               <a href="nyhedsbreve"><i class="fa fa-envelope"></i> Alle nyhedsbreve</a>
-              <a href="tilmeldt"><i class="fa fa-envelope"></i> Dine nyhedsbreve</a>
+              <a href="tilmeldt"><i class="fa fa-envelope"></i> Dine tilmeldinger</a>
             </li>
             <li ng-class="{'hidden-mobile': !showMenu}" class="mobile-nav">
               <a href="oplysninger" ng-if="loggedIn"><i class="fa fa-cog"></i> Din profil</a>
