@@ -5,7 +5,7 @@
   "main": "server/index.js",
   "scripts": {
     "start": "node server/index.js",
-    "dev": "nodemon server/index.js",
+    "dev": "nodemon --inspect --ignore 'mine-data/' --ignore 'nyhedsbreve/' --ignore 'opdatering/' server",
     "build": "gulp build",
     "mine-data:dev": "webpack-dev-server --config webpack.mine-data.dev.config.js",
     "mine-data:build": "rm -rf ./mine-data/build && webpack --config webpack.mine-data.config.js"
@@ -72,7 +72,7 @@
     "html-webpack-plugin": "3.1.0",
     "json-loader": "^0.5.4",
     "node-sass": "4.8.3",
-    "nodemon": "1.17.4",
+    "nodemon": "1.18.9",
     "sass-loader": "6.0.7",
     "script-ext-html-webpack-plugin": "2.0.1",
     "style-loader": "0.20.3",
