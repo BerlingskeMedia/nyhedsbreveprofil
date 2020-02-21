@@ -5,8 +5,6 @@ MAINTAINER Daniel Kokott <dako@berlingskemedia.dk>
 # Set the working directory.
 WORKDIR /app
 
-# Copying the code into image. Be aware no config files are including.
-COPY ./node_modules /app/node_modules
 COPY ./mine-data /app/mine-data
 COPY ./nyhedsbreve /app/nyhedsbreve
 COPY ./opdatering /app/opdatering
