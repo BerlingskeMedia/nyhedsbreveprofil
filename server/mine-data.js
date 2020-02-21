@@ -11,6 +11,18 @@ const Gigya = require('./api_consumers/gigya_client');
 
 module.exports.register = function (server, options, next) {
 
+  server.ext('onRequest', function (request, reply) {
+    var redirect = options.proxy !== false
+      ? request.headers['x-forwarded-proto'] === 'http'
+      : request.server.info.protocol === 'http'
+
+    if (redirect) {
+      return reply()
+        .redirect('https://' + request.headers.host + request.url.path)
+        .code(301)
+    }
+    reply.continue()
+  })
   server.ext('onPreResponse', function(request, reply) {
 
     if(request.route.path.startsWith('/mine-data')) {
