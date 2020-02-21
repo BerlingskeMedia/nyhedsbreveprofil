@@ -1,7 +1,6 @@
-MAINTAINER Daniel Kokott <dako@berlingskemedia.dk>
-
-
 FROM node:10.17-alpine as build
+
+MAINTAINER Daniel Kokott <dako@berlingskemedia.dk>
 
 WORKDIR /build
 
