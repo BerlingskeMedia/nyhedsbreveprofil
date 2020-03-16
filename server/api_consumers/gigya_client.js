@@ -1,5 +1,5 @@
 const Http = require('../lib/http');
-const {badImplementation} = require('boom');
+const {badImplementation} = require('@hapi/boom');
 
 class Gigya {
   static deleteAccount(UID) {

@@ -1,84 +1,98 @@
 /*jshint node: true */
 'use strict';
 
-const Hapi = require('hapi');
-const BPC = require('./bpc_client');
+const Hapi = require('@hapi/hapi');
+const HapiBpc = require('hapi-bpc');
 const backend = require('./backend');
 const nyhedsbreve = require('./nyhedsbreve');
 const smartlinks = require('./smartlinks');
 const opdatering = require('./opdatering');
 const mineData = require('./mine-data');
-const inert = require('inert');
-const good = require('good');
+const inert = require('@hapi/inert');
 const hapiAuthJwt2 = require('hapi-auth-jwt2');
 const { authConfig } = require('./lib/jwt');
 
-var server = new Hapi.Server({
-  connections: {
-    router: {
-      stripTrailingSlash: false
-    }
-  }
-});
+const init = async () => {
 
-var goodOpts = {
-  reporters: {
-    cliReporter: [{
-      module: 'good-squeeze',
-      name: 'Squeeze',
-      args: [{ log: '*', response: '*' }]
-    }, {
-      module: 'good-console'
-    }, 'stdout']
-  }
-};
+  const server = Hapi.server({
+      port: 3000,
+      host: 'localhost'
+  });
 
-server.connection({
-  port: process.env.PORT ? process.env.PORT : 8000,
-  routes: {
-    cors: true
-  }
-});
 
-server.register(hapiAuthJwt2, err => {
-  if (err) {
-    console.log(err);
-  }
+  await server.register(hapiAuthJwt2);
+  server.auth.strategy('jwt', 'jwt',
+  { key: process.env.JWT_SECRET, // Never Share your secret key
+    validate: authConfig.validateFunc  // validate function defined above
+  });
 
-  server.auth.strategy('jwt', 'jwt', authConfig);
+  // server.auth.default('jwt');
+
+  // server.auth.strategy('jwt', 'jwt', authConfig);
 
   server.route({
     method: 'GET',
     path: '/healthcheck',
-    handler: function (request, reply) {
-      return reply('OK');
+    handler: function (request, h) {
+      return 'OK';
     }
   });
-  server.register({register: good, options: goodOpts}, cb);
-  server.register(inert, cb);
-  server.register(nyhedsbreve, cb);
-  server.register(opdatering, {routes: {prefix: '/opdatering'}}, cb);
-  server.register(backend, {routes: {prefix: '/backend'}}, cb);
-  server.register(smartlinks, {routes: {prefix: '/smartlinks'}}, cb);
-  server.register(mineData, {routes: {prefix: '/mine-data'}}, cb);
 
-  if (!module.parent) {
-    server.start((err) => {
-      if (err) {
-        throw err;
-      }
 
-      console.log(`Server running at: ${server.info.uri}`);
-      BPC.fetchAndSaveAppTicket();
-    });
-  }
-});
+  await server.register(inert);
+  await server.register(HapiBpc);
+  await server.register(nyhedsbreve);
+  await server.register(opdatering, {routes: {prefix: '/opdatering'}});
+  await server.register(backend, {routes: {prefix: '/backend'}});
+  await server.register(smartlinks, {routes: {prefix: '/smartlinks'}});
+  await server.register(mineData, {routes: {prefix: '/mine-data'}});
 
-function cb (err) {
-  if (err) {
-    console.log('Error when loading plugin', err);
-    server.stop();
-  }
-}
+  await server.start();
+  console.log('Server running on %s', server.info.uri);
+};
 
-module.exports = server;
+init();
+
+// var server = new Hapi.Server({
+//   connections: {
+//     router: {
+//       stripTrailingSlash: false
+//     }
+//   }
+// });
+
+
+
+// server.connection({
+//   port: process.env.PORT ? process.env.PORT : 8000,
+//   routes: {
+//     cors: true
+//   }
+// });
+
+// server.register(hapiAuthJwt2, err => {
+//   if (err) {
+//     console.log(err);
+//   }
+
+
+
+//   if (!module.parent) {
+//     server.start((err) => {
+//       if (err) {
+//         throw err;
+//       }
+
+//       console.log(`Server running at: ${server.info.uri}`);
+//     });
+//   }
+// });
+
+// function cb (err) {
+//   if (err) {
+//     console.log('Error when loading plugin', err);
+//     server.stop();
+//   }
+// }
+
+// module.exports = server;

@@ -40,18 +40,14 @@ try {
 console.log('Connecting backend to MDBAPI on hostname', MDBAPI_HOSTNAME, 'and port', MDBAPI_PORT);
 
 
-function proxy (request, reply) {
-
-  if (reply === undefined) {
-    reply = function(){};
-  }
+async function proxy (request, h) {
 
   var options = {
     protocol: MDBAPI_PROTOCOL,
     hostname: MDBAPI_HOSTNAME,
     port: MDBAPI_PORT,
     method: request.method,
-    path: request.url.path.replace('/backend', ''),
+    path: request.url.pathname.replace('/backend', ''),
     headers: {}
   };
 
@@ -67,29 +63,47 @@ function proxy (request, reply) {
     options.headers['user-agent'] = request.headers['user-agent'];
   }
 
-  var req = Http.request(options, function( res ) {
-    reply(null, res);
+  return new Promise((resolve, reject) => {
 
-  }).on('error', function(e) {
-    console.log('Got error while requesting (' + request.url + '): ' + e.message);
-    reply(e, null);
+    const req = Http.request(options, function( res ) {
+
+      let data = '';
+
+      res.setEncoding('utf8');
+      
+      res.on('data', (chunk) => {
+        data += chunk;
+      });
+
+      res.on('end', () => {
+        try {
+          resolve(JSON.parse(data));
+        } catch(ex) {
+          console.log(ex)
+          reject(ex);
+        }
+      });
+  
+    })
+    
+    req.on('error', function(e) {
+      console.log('Got error while requesting (' + request.url + '): ' + e.message);
+      reject(e);
+    });
+  
+    if (request.payload) {
+      req.write(JSON.stringify(request.payload));
+    }
+  
+    req.end();
   });
-
-  if (request.payload) {
-    req.write(JSON.stringify(request.payload));
-  }
-
-  req.end();
 }
 
-function updateUser (request, reply) {
-  proxy(request, function (error, response) {
-    if (error) {
-      return reply(error);
-    } else if (response.statusCode !== 200) {
-      return reply(response);
-    }
 
+async function updateUser (request, h) {
+  const response = await proxy(request);
+  
+  if (response.statusCode === 200) {
     // We send a reciept for all updateUser request thats
     // a) not from our site (usually a smartlink) and
     // b) not from a silenced location eg. opdateringskampagnen
@@ -98,11 +112,9 @@ function updateUser (request, reply) {
     const locationIdsForOpdateringskampagnen = [2059, 2077, 2635];
     const requestHasOpdateringskampagnenLocation = locationIdsForOpdateringskampagnen.indexOf(request.payload.location_id) > -1;
     const requestIsFromOpdateringskampagnen = requestIsFromTheMainSite && requestHasOpdateringskampagnenLocation;
-
-    if (requestIsFromOpdateringskampagnen) {
-      reply(response);
-    } else {
-      proxy({
+  
+    if (!requestIsFromOpdateringskampagnen) {
+      await proxy({
         method: 'POST',
         url: {
           path: '/mails/send'
@@ -114,22 +126,22 @@ function updateUser (request, reply) {
           substitutions: request.payload !== null ? request.payload : {}
         },
         headers: {}
-      }, function (error2, response2) {
-        if (error2) {
-          return reply(error2);
-        }
-
-        // We want to return the first response from POST /users/{id} - not the response from email
-        reply(response);
       });
     }
-  });
+  }
+
+  // We want to return the first response from POST /users/{id} - not the response from email
+  return response;
 }
 
 
-var backend = {
+module.exports = {
+  name: 'backend',
+  version: '1.0.0',
+
   proxy: proxy,
-  register: function (server, options, next) {
+
+  register: async function (server, options) {
 
     /* These are the URL's we're allowing to proxy */
 
@@ -252,14 +264,5 @@ var backend = {
       path: '/kampagner/kampagnelinie',
       handler: proxy
     });
-
-    next();
   }
 };
-
-backend.register.attributes = {
-  name: 'backend',
-  version: '1.0.0'
-};
-
-module.exports = backend;

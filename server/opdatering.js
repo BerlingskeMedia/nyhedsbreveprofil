@@ -3,53 +3,51 @@
 
 var backend = require('./backend');
 
-module.exports.register = function (server, options, next) {
-
-  server.route({
-    method: 'get',
-    path: '/build/{param*}',
-    handler: {
-      directory: {
-        path: 'opdatering/build'
-      }
-    }
-  });
-
-  server.route({
-    method: 'get',
-    path: '/assets/{param*}',
-    handler: {
-      directory: {
-        path: 'opdatering/assets'
-      }
-    }
-  });
-
-  server.route({
-    method: 'get',
-    path: '/{param*}',
-    handler: {
-      file: 'opdatering/index.html'
-    }
-  });
-
-  server.route({
-    method: 'post',
-    path: '/finished',
-    handler: sendThankYouReciept
-  });
-
-  next();
-};
-
-module.exports.register.attributes = {
+module.exports = {
   name: 'opdatering',
-  version: '1.0.0'
-};
+  version: '1.0.0',
+
+  register: async function (server, options) {
+
+    server.route({
+      method: 'get',
+      path: '/build/{param*}',
+      handler: {
+        directory: {
+          path: 'opdatering/build'
+        }
+      }
+    });
+
+    server.route({
+      method: 'get',
+      path: '/assets/{param*}',
+      handler: {
+        directory: {
+          path: 'opdatering/assets'
+        }
+      }
+    });
+
+    server.route({
+      method: 'get',
+      path: '/{param*}',
+      handler: {
+        file: 'opdatering/index.html'
+      }
+    });
+
+    server.route({
+      method: 'post',
+      path: '/finished',
+      handler: sendThankYouReciept
+    });
+  }
+}
 
 
-function sendThankYouReciept(request, reply) {
-  backend.proxy({
+function sendThankYouReciept(request, h) {
+  return backend.proxy({
     method: 'POST',
     url: {
       path: '/mails/send'
@@ -61,10 +59,5 @@ function sendThankYouReciept(request, reply) {
       substitutions: request.payload !== null ? request.payload : { fornavn: ''}
     },
     headers: {}
-  }, function (error, response) {
-    if (error) {
-      return reply(error);
-    }
-    reply(response);
   });
 }

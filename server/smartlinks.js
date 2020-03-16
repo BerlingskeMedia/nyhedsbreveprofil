@@ -1,33 +1,30 @@
 /*jshint node: true */
 'use strict';
 
-var Joi = require('joi'),
-    Boom = require('boom'),
-    backend = require('./backend');
+const backend = require('./backend');
 
-module.exports.register = function (server, options, next) {
-  server.route({
-    method: 'GET',
-    path: '/',
-    handler: backend.proxy
-  });
+module.exports = {
+  name: 'smartlinks',
+  version: '1.0.0',
 
-  server.route({
-    method: 'POST',
-    path: '/',
-    handler: backend.proxy
-  });
+  register: async function (server, options) {
 
-  server.route({
-    method: 'OPTIONS',
-    path: '/',
-    handler: backend.proxy
-  });
+    server.route({
+      method: 'GET',
+      path: '/',
+      handler: backend.proxy
+    });
 
-  next();
-};
+    server.route({
+      method: 'POST',
+      path: '/',
+      handler: backend.proxy
+    });
 
-module.exports.register.attributes = {
-    name: 'smartlinks',
-    version: '1.0.0'
-};
+    server.route({
+      method: 'OPTIONS',
+      path: '/',
+      handler: backend.proxy
+    });
+  }
+}

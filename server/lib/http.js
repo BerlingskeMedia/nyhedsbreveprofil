@@ -1,5 +1,5 @@
 const request = require('request');
-const {boomify, badImplementation, badRequest} = require('boom');
+const {boomify, badImplementation, badRequest} = require('@hapi/boom');
 
 class Http {
   static get(url, credentials, params) {

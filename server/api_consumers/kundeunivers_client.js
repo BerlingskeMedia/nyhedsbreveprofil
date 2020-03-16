@@ -1,4 +1,4 @@
-const BPC = require('../bpc_client');
+// const BPC = require('../bpc_client');
 const Http = require('../lib/http');
 
 module.exports.fetchAllData = (gigyaUid) => {

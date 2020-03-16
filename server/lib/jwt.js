@@ -7,8 +7,8 @@ module.exports.authConfig = {
   verifyOptions: {
     algorithms: ['HS256']
   },
-  validateFunc: (token, request, callback) => {
-    callback(null, token && token.userTicket && token.userTicket.exp > Date.now());
+  validateFunc: (token, request, h) => {
+    return token && token.userTicket && token.userTicket.exp > Date.now();
   }
 };
 

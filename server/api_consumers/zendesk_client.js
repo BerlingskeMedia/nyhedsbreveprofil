@@ -1,12 +1,12 @@
 const Https = require('https');
 const Url = require('url');
-const Joi = require('joi');
+const Joi = require('@hapi/joi');
 const MDB = require('./mdb_client');
-const KU = require('./kundeunivers_client');
+// const KU = require('./kundeunivers_client');
 const {categories} = require('./categories_client');
 const JWT = require('../lib/jwt');
-const BPC = require('../bpc_client');
-const {badRequest} = require('boom');
+// const BPC = require('../bpc_client');
+const {badRequest} = require('@hapi/boom');
 const Http = require('../lib/http');
 
 var ZENDESK_URL;
@@ -17,17 +17,17 @@ try {
   ZENDESK_URL = Url.parse(process.env.ZENDESK_URL);
 } catch (ex) {
   console.error('Env var ZENDESK_URL missing or invalid.');
-  process.exit(1);
+  // process.exit(1);
 }
 
 if (!ZENDESK_API_EMAIL || ZENDESK_API_EMAIL.length === 0) {
   console.error('Env var ZENDESK_API_EMAIL missing or invalid.');
-  process.exit(1);
+  // process.exit(1);
 }
 
 if (!ZENDESK_API_TOKEN || ZENDESK_API_TOKEN.length === 0) {
   console.error('Env var ZENDESK_API_TOKEN missing or invalid.');
-  process.exit(1);
+  // process.exit(1);
 }
 
 
@@ -64,7 +64,7 @@ const customFieldsContactReason = { id: 114101503914, value: 'gdpr' };
 const stdTicketCustomFields = [customFieldsContactReason];
 
 
-const authorizationHeader = 'Basic ' + new Buffer(ZENDESK_API_EMAIL + '/token:' + ZENDESK_API_TOKEN).toString('base64');
+const authorizationHeader = 'Basic ' + Buffer.from(ZENDESK_API_EMAIL + '/token:' + ZENDESK_API_TOKEN).toString('base64');
 
 
 module.exports = {
@@ -224,6 +224,11 @@ module.exports = {
 
 
 function callZenDesk({method = 'GET', path, payload}){
+
+  if(!ZENDESK_URL) {
+    return Promise.resolve();
+  }
+
   const options = {
     protocol: ZENDESK_URL.protocol,
     hostname: ZENDESK_URL.hostname,
