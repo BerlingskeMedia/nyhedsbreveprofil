@@ -2,12 +2,8 @@ const Https = require('https');
 const Url = require('url');
 const Joi = require('@hapi/joi');
 const MDB = require('./mdb_client');
-// const KU = require('./kundeunivers_client');
 const {categories} = require('./categories_client');
-const JWT = require('../lib/jwt');
-// const BPC = require('../bpc_client');
 const {badRequest} = require('@hapi/boom');
-const Http = require('../lib/http');
 
 var ZENDESK_URL;
 const ZENDESK_API_EMAIL = process.env.ZENDESK_API_EMAIL;
@@ -111,20 +107,17 @@ module.exports = {
     return callZenDesk({ method: 'POST', path: '/api/v2/tickets.json', payload: { ticket: ticket }})
   },
 
-  mapRequestToTicket: (req) => {
-    const jwt = JWT.decodeRequest(req);
+  mapRequestToTicket: ({ payload, uid, email }) => {
     const modeText = req.payload.mode === 'insight' ? 'INDSIGT' : 'SLET';
     const {firstName, lastName, phones, address, city, zip} = req.payload.user;
-    const email = jwt.email;
-    const uid = jwt.uid;
     const name = `${firstName || ''} ${lastName || ''}`.trim() || '[Kunde]';
     const custom_fields = [
       {id: 360005004613, value: uid},
       {id: 360003795594, value: name},
       {id: 360003795614, value: email},
-      {id: 360003718813, value: req.payload.categories}
+      {id: 360003718813, value: payload.categories}
     ];
-    const payloadCategories = req.payload.categories
+    const payloadCategories = payload.categories
       .map(c => categories.find(category => category.name === c))
       .filter(c => !!c);
 
@@ -207,17 +200,6 @@ module.exports = {
         });
     });
   },
-
-  wrapError: (err) => {
-    if (err && err.error) {
-      return badRequest(err.description);
-    }
-
-    return Http.wrapError(err);
-  },
-
-
-  // TODO: Add more helper functions if needed
 
   request: callZenDesk
 };

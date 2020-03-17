@@ -34,15 +34,6 @@ class Gigya {
       return response;
     });
   }
-
-  static wrapError(response) {
-    if (response && response.statusCode > 399) {
-      console.log('[Gigya API error]', response.statusCode, response.errorDetails);
-      return badImplementation();
-    }
-
-    return Http.wrapError(response);
-  }
 }
 
 module.exports = Gigya;

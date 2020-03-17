@@ -18,27 +18,95 @@ export const receiveUserInfo = ({UID, profile, errorCode}, jwt) => ({
 });
 export const resetUserInfo = actionBuilder(RESET_USER_INFO);
 export const verifyUser = actionBuilder(VERIFY_USER);
-export const refetchJwt = scheduleTimeoutId => ({
-  type: SCHEDULE_REFETCH,
-  scheduleTimeoutId
-});
-export const cancelJwtRefetch = actionBuilder(CANCEL_REFETCH);
 
-const getRsvpPayload = (userInfo, app) => ({
-  app,
-  provider: 'gigya',
-  UID: userInfo.UID,
-  UIDSignature: userInfo.UIDSignature,
-  signatureTimestamp: userInfo.signatureTimestamp,
-  email: encodeURI(userInfo.profile.email)
-});
 
-export const fetchUserToken = (config, userInfo) => {
-  return Api.request(`${config.bpcUrl}/rsvp`, {method: 'post', payload: getRsvpPayload(userInfo, config.bpcAppId)}, true)
-    .then(response => response.json())
-    .then(({rsvp}) => Api.post(`/mine-data/ticket/${rsvp}`, {uid: userInfo.UID, email: userInfo.profile.email}))
-    .then(response => response.text());
-};
+
+
+function fetchUserTicket (accountInfo) {
+
+  const payload = {
+    UID: accountInfo.UID,
+    UIDSignature: accountInfo.UIDSignature,
+    signatureTimestamp: accountInfo.signatureTimestamp,
+  };
+
+  return fetch(new Request('/authenticate',
+    {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    }
+  ))
+  .then(response => userTicketReponseHandler(response));
+}
+
+
+function reissueUserTicket (){
+  return fetch(new Request('/authenticate',
+    {
+      method: 'GET'
+    }
+  ))
+  .then(response => userTicketReponseHandler(response))
+  .catch(err => {
+
+  });
+}
+
+
+function userTicketReponseHandler (response) {
+  if(response.ok) {
+    response
+    .json()
+    .then(userTicket => {
+      setTimeout(reissueUserTicket, userTicket.exp - Date.now() - (60 * 1000));
+      return Promise.resolve(userTicket);
+    });
+  } else {
+    setTimeout(reissueUserTicket, 60 * 1000); // One minute
+    return Promise.reject()
+  }
+}
+
+
+
+
+// export const refetchJwt = scheduleTimeoutId => ({
+//   type: SCHEDULE_REFETCH,
+//   scheduleTimeoutId
+// });
+
+// export const cancelJwtRefetch = actionBuilder(CANCEL_REFETCH);
+
+// const reissueUserTicket = () => {
+//   return fetch(new Request('/authenticate',
+//     {
+//       method: 'GET'
+//     }
+//   ))
+//   .then(response => userTicketReponseHandler(response))
+//   .catch(err => {
+
+//   });
+// };
+
+// export const fetchUserTicket___ = (config, userInfo) => {
+  
+//   const getUserTicketPayload = {
+//     UID: userInfo.UID,
+//     UIDSignature: userInfo.UIDSignature,
+//     signatureTimestamp: userInfo.signatureTimestamp,
+//   };
+
+//   return Api.post(`/authenticate`, getUserTicketPayload)
+//   .then(response => response.text())
+//   .then(userTicket => {
+    
+//     setTimeout(reissueUserTicket, userTicket.exp - Date.now() - 1000);
+
+//     console.log(userTicket);
+//     return Promise.resolve(userTicket);
+//   });
+// };
 
 export const fetchUserInfo = () => {
   return (dispatch, getState) => {
@@ -49,10 +117,10 @@ export const fetchUserInfo = () => {
         include: 'profile',
         extraProfileFields: 'address,phones',
         callback: userInfo => {
-          const {config} = getState();
 
           if (userInfo.errorCode === 0) {
-            fetchUserToken(config, userInfo).then(jwt => {
+            fetchUserTicket(userInfo)
+            .then(jwt => {
               dispatch(receiveUserInfo(userInfo, jwt));
               fulfill(jwt);
             });
@@ -66,24 +134,24 @@ export const fetchUserInfo = () => {
   }
 };
 
-export const scheduleJwtRefetch = jwt => {
-  return dispatch => {
-    const timeout = setTimeout(() => {
-      dispatch(fetchUserInfo());
-    }, decode(jwt).userTicket.exp - Date.now());
+// export const scheduleJwtRefetch = jwt => {
+//   return dispatch => {
+//     const timeout = setTimeout(() => {
+//       dispatch(fetchUserInfo());
+//     }, decode(jwt).userTicket.exp - Date.now());
 
-    dispatch(refetchJwt(timeout));
-  };
-};
+//     dispatch(refetchJwt(timeout));
+//   };
+// };
 
-export const cancelJwtSchedule = () => {
-  return (dispatch, getState) => {
-    const {scheduleTimeout} = getState().userInfo;
+// export const cancelJwtSchedule = () => {
+//   return (dispatch, getState) => {
+//     const {scheduleTimeout} = getState().userInfo;
 
-    if (scheduleTimeout) {
-      clearTimeout(scheduleTimeout);
-    }
+//     if (scheduleTimeout) {
+//       clearTimeout(scheduleTimeout);
+//     }
 
-    dispatch(cancelJwtRefetch());
-  };
-};
+//     dispatch(cancelJwtRefetch());
+//   };
+// };

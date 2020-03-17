@@ -1,5 +1,6 @@
 const Http = require('../lib/http');
 const Url = require('url');
+const Boom = require('@hapi/boom');
 
 let MDBAPI_ADDRESS;
 
@@ -117,7 +118,13 @@ class MDB {
 
   static findUser(email) {
     return Http.get(`${MDBAPI_ADDRESS}/users?email=${encodeURIComponent(email)}`)
-      .then(result => result[0]);
+    .then(result => {
+      if(result.length && result[0] && result[0].ekstern_id) {
+        return Promise.resolve(result[0]);
+      } else {
+        return Promise.reject(Boom.notFound());
+      }
+    });
   };
 
   static findSurveyGizmoUser(email) {

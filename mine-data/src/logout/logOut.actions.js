@@ -1,4 +1,4 @@
-import { cancelJwtSchedule, resetUserInfo } from '../common/userInfo.actions';
+import { resetUserInfo } from '../common/userInfo.actions';
 
 export const logOut = () => {
   return (dispatch, getState) => {
@@ -13,7 +13,6 @@ export const logOut = () => {
         callback: response => {
           if (!response.errorCode || response.errorCode === 403013) {
             dispatch(resetUserInfo());
-            dispatch(cancelJwtSchedule());
             fulfill(response);
           } else {
             reject(response);

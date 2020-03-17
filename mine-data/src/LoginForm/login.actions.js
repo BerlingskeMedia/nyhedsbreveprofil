@@ -1,5 +1,5 @@
 import {
-  fetchUserInfo, scheduleJwtRefetch,
+  fetchUserInfo,
   verifyUser
 } from '../common/userInfo.actions';
 
@@ -43,9 +43,8 @@ export const login = ({username, password}) => {
         callback: response => {
           if (response.errorCode === 0) {
             dispatch(resetLogin());
-            dispatch(fetchUserInfo()).then(jwt => {
+            dispatch(fetchUserInfo()).then(() => {
               dispatch(verifyUser());
-              dispatch(scheduleJwtRefetch(jwt));
             });
           } else {
             dispatch(receiveLogin(response));
