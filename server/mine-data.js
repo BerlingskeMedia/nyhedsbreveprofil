@@ -10,33 +10,6 @@ module.exports = {
 
   register: async function (server, options) {
 
-    // server.ext('onRequest', function (request, h) {
-    //   var redirect = options.proxy !== false
-    //     ? request.headers['x-forwarded-proto'] === 'http'
-    //     : request.server.info.protocol === 'http'
-
-    //   if (redirect) {
-    //     return reply()
-    //       .redirect('https://' + request.headers.host + request.url.path)
-    //       .code(301)
-    //   }
-    //   return h.continue;
-    // })
-
-    // server.ext('onPreResponse', function(request, h) {
-
-    //   if(request.route.path.startsWith('/mine-data')) {
-    //     request.response.header("X-Frame-Options", "SAMEORIGIN");
-    //     request.response.header("X-XSS-Protection", "1; mode=block");
-    //     request.response.header("Content-Security-Policy", "default-src 'unsafe-eval' https:; style-src 'unsafe-inline' https:");
-    //     request.response.header("X-Content-Type-Options", "nosniff");
-    //     request.response.header("Strict-Transport-Security", "max-age=63072000");
-    //   }
-
-    //   return h.continue;
-
-    // });
-
     server.route({
       method: 'get',
       path: '/{param*}',
