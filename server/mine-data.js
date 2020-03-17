@@ -1,5 +1,4 @@
 const MDB = require('./api_consumers/mdb_client');
-const MailChimp = require('./api_consumers/mailchimp_client');
 const Boom = require('@hapi/boom');
 const ZenDesk = require('./api_consumers/zendesk_client');
 const {categories} = require('./api_consumers/categories_client');
@@ -82,21 +81,6 @@ module.exports = {
 
     server.route({
       method: 'get',
-      path: '/category/kundeunivers',
-      config: {
-        auth: 'bpc'
-      },
-      handler: async (req, h) => {
-
-        const userTicket = req.auth.credentials;
-        console.log(userTicket)
-
-        return {};
-      }
-    });
-
-    server.route({
-      method: 'get',
       path: '/category/mdb',
       config: {
         auth: 'bpc'
@@ -124,23 +108,6 @@ module.exports = {
       }
     });
 
-    server.route({
-      method: 'get',
-      path: '/category/mailchimp',
-      config: {
-        auth: 'bpc'
-      },
-      handler: async (req, h) => {
-        const email = 'dako@berlingskemedia.dk';
-        try {
-          const a = await MailChimp.getData(email);
-          console.log(a)
-        } catch(err) {
-          console.log(err)
-        }
-        return {};
-      }
-    });
 
     server.route({
       method: 'delete',
@@ -207,23 +174,6 @@ module.exports = {
     });
 
     server.route({
-      method: 'delete',
-      path: '/category/mailchimp/{listId}/{userId}',
-      config: {
-        auth: 'bpc'
-      },
-      handler: async (req, h) => {
-        const email = 'dako@berlingskemedia.dk';
-        const mailChimpData = await MailChimp.getData(email);
-        if (mailChimpData.some(item => item.list_id === req.params.listId && item.id === req.params.userId)) {
-          return await MailChimp.delete(req.params.listId, req.params.userId)
-        }
-
-        throw Boom.notFound();
-      }
-    });
-
-    server.route({
       method: 'POST',
       path: '/zendesk/request',
       config: {
@@ -236,10 +186,17 @@ module.exports = {
         const payload = await ZenDesk.mapRequestToTicket({ payload: req.payload, uid, email });
         const response = await ZenDesk.createTicket(payload);
 
+        const bpc = h.bpc;
 
+        await bpc.request({
+          path: `/permissions/${uid}/zendesk`,
+          method: 'PATCH',
+          payload: {
+            $addToSet: { tickets: { id: ticket.id, createdAt: Date.parse(ticket.created_at) }}
+          }
+        });
 
-        BPC.addZenDeskTicket(uid, response.ticket)
-          .then(() => reply(response && response.ticket.id).code(201))
+        return h.response(response && response.ticket.id).code(201);
       }
     });
 

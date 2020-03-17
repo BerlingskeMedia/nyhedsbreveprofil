@@ -12,7 +12,7 @@ import './DeleteAll.scss';
 export class DeleteAllDisconnected extends Component {
   render() {
     const {kundeunivers, deleteAll, showConfirm, resetRequest, cancelConfirm, submit, finalizeRequest} = this.props;
-    const disableButton = !kundeunivers.data || kundeunivers.data.orders.some(order => order.active);
+    const disableButton = !kundeunivers || !kundeunivers.data || kundeunivers.data.orders.some(order => order.active);
 
     return (
       <Fragment>

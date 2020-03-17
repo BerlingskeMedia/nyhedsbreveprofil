@@ -124,7 +124,7 @@ export const List = ({userInfo: {userInfo, jwt}, apiData, resetMDB, resetMailChi
               title="Nyhedsbreve"
               pending={apiData.mdb.pending || apiData.mdb.pending}
               hasError={apiData.mdb.error && apiData.mdb.error}
-              hasData={(apiData.mdb.data && apiData.mdb.data.nyhedsbreve_list && apiData.mdb.data.nyhedsbreve_list.length > 0) || (apiData.mailChimp.data && apiData.mailChimp.data.length > 0)}
+              hasData={(apiData.mdb.data && apiData.mdb.data.nyhedsbreve_list && apiData.mdb.data.nyhedsbreve_list.length > 0)}
               render={() => (
                 <Fragment>
                   {apiData.mdb.data.nyhedsbreve_list.map(newsletter => (
@@ -136,50 +136,6 @@ export const List = ({userInfo: {userInfo, jwt}, apiData, resetMDB, resetMailChi
                       <DetailsTitle>{newsletter.name}</DetailsTitle>
                       <DetailsItem value={newsletter.time} label="Tid"/>
                       <DetailsItem value={newsletter.description} label="Beskrivelse"/>
-                    </DetailsGroup>
-                  ))}
-
-                  {apiData.mailChimp.data.map(({list_title, ...fields}) => (
-                    <DetailsGroup
-                      key={list_title}
-                      deleteAction={() => Api
-                        .delete(`/mine-data/category/mailchimp/${fields.list_id}/${fields.id}`, jwt)
-                        .then(() => resetMailChimp())}>
-                      <DetailsTitle>{list_title}</DetailsTitle>
-                      <DetailsItem value={fields.email_address} label="E-mail"/>
-                      <DetailsItem value={fields.unique_email_id} label="Unique email ID"/>
-                      <DetailsItem value={fields.email_type} label="Email type"/>
-                      <DetailsItem value={fields.status} label="Satus"/>
-                      <DetailsItem value={fields.merge_fields.FNAME} label="Fornavn"/>
-                      <DetailsItem value={fields.merge_fields.LNAME} label="Efternavn"/>
-                      <DetailsItem value={fields.stats.avg_open_rate} label="Avg open rate"/>
-                      <DetailsItem value={fields.stats.avg_click_rate} label="Avg click rate"/>
-                      <DetailsItem value={fields.ip_signup} label="IP adresse"/>
-                      <DetailsItem value={fields.timestamp_signup} label="Tidsstempel signup"/>
-                      <DetailsItem value={fields.ip_opt} label="IP opt"/>
-                      <DetailsItem value={fields.timestamp_opt} label="Tidsstempel opt"/>
-                      <DetailsItem value={fields.member_rating} label="Rangering"/>
-                      <DetailsItem value={fields.last_changed} label="Sidste ændring"/>
-                      <DetailsItem value={fields.language} label="Sprog"/>
-                      <DetailsItem value={fields.vip} label="VIP"/>
-                      <DetailsItem value={fields.email_client} label="Email client"/>
-                      <DetailsItem label="Lokation" allowEmpty/>
-                      <DetailsItem value={fields.location.latitude} label="Latitude"/>
-                      <DetailsItem value={fields.location.longitude} label="Longitude"/>
-                      <DetailsItem value={fields.location.gmtoff} label="GMT off"/>
-                      <DetailsItem value={fields.location.dstoff} label="DST off"/>
-                      <DetailsItem value={fields.location.country_code} label="Country code"/>
-                      <DetailsItem value={fields.location.timezone} label="Timezone"/>
-                      <DetailsItem label="Aktiviteter" className="mt-2" allowEmpty/>
-                      {fields.activity.map(activityItem => (
-                        <div className="mt-2 ml-2" key={activityItem.timestamp}>
-                          <DetailsItem value={activityItem.bounce} label="Bounce"/>
-                          <DetailsItem value={activityItem.campaign_id} label="Campaign ID"/>
-                          <DetailsItem value={activityItem.timestamp} label="Tidsstempel"/>
-                          <DetailsItem value={activityItem.title} label="Titel"/>
-                          <DetailsItem value={activityItem.type} label="Type"/>
-                        </div>
-                      ))}
                     </DetailsGroup>
                   ))}
                 </Fragment>

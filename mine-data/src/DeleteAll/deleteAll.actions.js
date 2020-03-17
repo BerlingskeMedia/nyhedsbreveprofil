@@ -40,12 +40,6 @@ export const submit = () => {
       promises.push(Api.delete('/mine-data/category/mdb/user', jwt));
     }
 
-    if (apiData.mailChimp.data) {
-      apiData.mailChimp.data.map(item => {
-        promises.push(Api.delete(`/mine-data/category/mailchimp/${item.list_id}/${item.id}`, jwt));
-      });
-    }
-
     if (apiData.surveyGizmo.data) {
       apiData.surveyGizmo.data.map(survey => {
         promises.push(Api.delete(`/mine-data/category/surveygizmo/${survey.survey_id}/${survey.response_id}`, jwt));

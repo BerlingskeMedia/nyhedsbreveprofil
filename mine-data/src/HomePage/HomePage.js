@@ -4,22 +4,14 @@ import { CategoryApiList } from '../CategoryApiList/CategoryApiList';
 import { DeleteAll } from '../DeleteAll/DeleteAll';
 import { connect } from 'react-redux';
 import {
-  fetchKundeunivers, fetchMailChimp,
   fetchMDB, fetchSurveyGizmo
 } from '../CategoryApiList/apiData.actions';
 
 class Home extends React.Component {
-  componentWillReceiveProps({apiData, fetchKundeunivers, fetchMDB, fetchMailChimp, fetchSurveyGizmo}) {
-    if (!apiData.kundeunivers.pending && !apiData.kundeunivers.data && !apiData.kundeunivers.error) {
-      fetchKundeunivers();
-    }
+  componentWillReceiveProps({apiData, fetchMDB, fetchSurveyGizmo}) {
 
     if (!apiData.mdb.pending && !apiData.mdb.data && !apiData.mdb.error) {
       fetchMDB();
-    }
-
-    if (!apiData.mailChimp.pending && !apiData.mailChimp.data && !apiData.mailChimp.error) {
-      fetchMailChimp();
     }
 
     if (!apiData.surveyGizmo.pending && !apiData.surveyGizmo.data && !apiData.surveyGizmo.error) {
@@ -57,9 +49,9 @@ const mapStateToProps = ({apiData}) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  fetchKundeunivers: () => dispatch(fetchKundeunivers()),
+  // fetchKundeunivers: () => dispatch(fetchKundeunivers()),
   fetchMDB: () => dispatch(fetchMDB()),
-  fetchMailChimp: () => dispatch(fetchMailChimp()),
+  // fetchMailChimp: () => dispatch(fetchMailChimp()),
   fetchSurveyGizmo: () => dispatch(fetchSurveyGizmo())
 });
 
