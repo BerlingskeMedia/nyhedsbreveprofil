@@ -1,6 +1,12 @@
 /*jshint node: true */
 'use strict';
 
+// To remain compatible with the puppet-scripts
+if(process.env.NYHEDSBREVEPROFIL_APP_ID && !process.env.BPC_APP_ID) {
+  process.env.BPC_APP_ID = process.env.NYHEDSBREVEPROFIL_APP_ID;
+  process.env.BPC_APP_KEY = process.env.NYHEDSBREVEPROFIL_APP_SECRET;
+}
+
 const Hapi = require('@hapi/hapi');
 const inert = require('@hapi/inert');
 const HapiBpc = require('hapi-bpc');
@@ -41,13 +47,6 @@ const init = async () => {
 
   await server.register(inert);
   
-  // To remain compatible with the puppet-scripts
-  if(process.env.NYHEDSBREVEPROFIL_APP_ID && !process.env.BPC_APP_ID) {
-    process.env.BPC_APP_ID = process.env.NYHEDSBREVEPROFIL_APP_ID;
-    process.env.BPC_APP_KEY = process.env.NYHEDSBREVEPROFIL_APP_SECRET;
-  }
-  console.log(`Using ${ process.env.BPC_APP_ID }`)
-  console.log(`Using ${ process.env.BPC_APP_KEY }`)
   await server.register(HapiBpc);
   await server.bpc.connect();
 
