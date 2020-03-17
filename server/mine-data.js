@@ -45,9 +45,7 @@ module.exports = {
       handler: async (req, h) => {
         return {
           gigyaApiKey: process.env.GIGYA_API_KEY || '',
-          trackingId: process.env.GA_TRACKING_ID || '',
-          bpcUrl: process.env.BPC_URL || '',
-          bpcAppId: process.env.NYHEDSBREVEPROFIL_APP_ID
+          trackingId: process.env.GA_TRACKING_ID || ''
         };
       }
     });
@@ -59,8 +57,11 @@ module.exports = {
         auth: 'bpc'
       },
       handler: async (req, h) => {
-        const email = 'dako@berlingskemedia.dk';
-        const user = await MDB.findUser(email);
+
+        const me = await h.bpc.request({ path: `/me` }, req.auth.credentials);
+
+        const user = await MDB.findUser(me.email);
+
         if (user && user.ekstern_id) {
           return await MDB.getData(user.ekstern_id);
         } else {
@@ -76,11 +77,11 @@ module.exports = {
         auth: 'bpc'
       },
       handler: async (req, h) => {
-        const email = 'dako@berlingskemedia.dk';
-        return MDB.findSurveyGizmoUser(email);
+        const me = await h.bpc.request({ path: `/me` }, req.auth.credentials);
+
+        return MDB.findSurveyGizmoUser(me.email);
       }
     });
-
 
     server.route({
       method: 'delete',
@@ -89,8 +90,9 @@ module.exports = {
         auth: 'bpc'
       },
       handler: async (req, h) => {
-        const email = 'dako@berlingskemedia.dk';
-        const user = await MDB.findUser(email);
+        const me = await h.bpc.request({ path: `/me` }, req.auth.credentials);
+
+        const user = await MDB.findUser(me.email);
         return MDB.deletePermissions(user.ekstern_id, req.params.permissionId);
       }
     });
@@ -102,8 +104,9 @@ module.exports = {
         auth: 'bpc'
       },
       handler: async (req, h) => {
-        const email = 'dako@berlingskemedia.dk';
-        const user = await MDB.findUser(email);
+        const me = await h.bpc.request({ path: `/me` }, req.auth.credentials);
+
+        const user = await MDB.findUser(me.email);
         return MDB.deleteNewsletter(user.ekstern_id, req.params.newsletterId);
       }
     });
@@ -115,8 +118,9 @@ module.exports = {
         auth: 'bpc'
       },
       handler: async (req, h) => {
-        const email = 'dako@berlingskemedia.dk';
-        const user = await MDB.findUser(email);
+        const me = await h.bpc.request({ path: `/me` }, req.auth.credentials);
+
+        const user = await MDB.findUser(me.email);
         return MDB.deleteIterests(user.ekstern_id, req.params.interestId);
       }
     });
@@ -128,8 +132,9 @@ module.exports = {
         auth: 'bpc'
       },
       handler: async (req, h) => {
-        const email = 'dako@berlingskemedia.dk';
-        const user = await MDB.findUser(email);
+        const me = await h.bpc.request({ path: `/me` }, req.auth.credentials);
+
+        const user = await MDB.findUser(me.email);
         return MDB.deleteUser(user.ekstern_id);
       }
     });
@@ -141,8 +146,9 @@ module.exports = {
         auth: 'bpc'
       },
       handler: async (req, h) => {
-        const email = 'dako@berlingskemedia.dk';
-        return MDB.deleteSurveyGizmoResponse(req.params.surveyId, email, req.params.responseId);
+        const me = await h.bpc.request({ path: `/me` }, req.auth.credentials);
+
+        return MDB.deleteSurveyGizmoResponse(req.params.surveyId, me.email, req.params.responseId);
       }
     });
 
@@ -153,15 +159,14 @@ module.exports = {
         auth: 'bpc'
       },
       handler: async (req, h) => {
-        // TODO
-        const uid = '_guid_dVlIynSm5Mk913pi57uG3j0l7hGnSb7hMy4GlTGJXFU=';
-        const email = 'dako@berlingskemedia.dk';
+        const me = await h.bpc.request({ path: `/me` }, req.auth.credentials);
+        const uid = me.id
+        const email = me.email
+
         const payload = await ZenDesk.mapRequestToTicket({ payload: req.payload, uid, email });
         const response = await ZenDesk.createTicket(payload);
 
-        const bpc = h.bpc;
-
-        await bpc.request({
+        await h.pc.request({
           path: `/permissions/${uid}/zendesk`,
           method: 'PATCH',
           payload: {
@@ -180,9 +185,8 @@ module.exports = {
         auth: 'bpc'
       },
       handler: async (req, h) => {
-        // TODO:
-        const uid = '_guid_dVlIynSm5Mk913pi57uG3j0l7hGnSb7hMy4GlTGJXFU=';
-        return ZenDesk.requestAllowed(uid)
+        const me = await h.bpc.request({ path: `/me` }, req.auth.credentials);
+        return ZenDesk.requestAllowed(me.id)
       }
     });
 
@@ -204,12 +208,8 @@ module.exports = {
         auth: 'bpc'
       },
       handler: async (req, h) => {
-        // const uid = JWT.decodeRequest(req).uid;
-        const uid = "_guid_dVlIynSm5Mk913pi57uG3j0l7hGnSb7hMy4GlTGJXFU=";
-
-        await KU.deleteAccount(uid);
-        await Gigya.deleteAccount(uid);
-
+        const me = await h.bpc.request({ path: `/me` }, req.auth.credentials);
+        await Gigya.deleteAccount(me.id);
         return 'OK';
       }
     });
