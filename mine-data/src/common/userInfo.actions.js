@@ -1,6 +1,4 @@
-import { Api } from './api';
 import { actionBuilder } from './redux-utils';
-import { decode } from 'jsonwebtoken';
 
 export const REQUEST_USER_INFO = '[user info] request';
 export const RECEIVE_USER_INFO = '[user info] receive';
@@ -67,47 +65,6 @@ function userTicketReponseHandler (response) {
   }
 }
 
-
-
-
-// export const refetchJwt = scheduleTimeoutId => ({
-//   type: SCHEDULE_REFETCH,
-//   scheduleTimeoutId
-// });
-
-// export const cancelJwtRefetch = actionBuilder(CANCEL_REFETCH);
-
-// const reissueUserTicket = () => {
-//   return fetch(new Request('/authenticate',
-//     {
-//       method: 'GET'
-//     }
-//   ))
-//   .then(response => userTicketReponseHandler(response))
-//   .catch(err => {
-
-//   });
-// };
-
-// export const fetchUserTicket___ = (config, userInfo) => {
-  
-//   const getUserTicketPayload = {
-//     UID: userInfo.UID,
-//     UIDSignature: userInfo.UIDSignature,
-//     signatureTimestamp: userInfo.signatureTimestamp,
-//   };
-
-//   return Api.post(`/authenticate`, getUserTicketPayload)
-//   .then(response => response.text())
-//   .then(userTicket => {
-    
-//     setTimeout(reissueUserTicket, userTicket.exp - Date.now() - 1000);
-
-//     console.log(userTicket);
-//     return Promise.resolve(userTicket);
-//   });
-// };
-
 export const fetchUserInfo = () => {
   return (dispatch, getState) => {
     dispatch(requestUserInfo());
@@ -133,25 +90,3 @@ export const fetchUserInfo = () => {
     });
   }
 };
-
-// export const scheduleJwtRefetch = jwt => {
-//   return dispatch => {
-//     const timeout = setTimeout(() => {
-//       dispatch(fetchUserInfo());
-//     }, decode(jwt).userTicket.exp - Date.now());
-
-//     dispatch(refetchJwt(timeout));
-//   };
-// };
-
-// export const cancelJwtSchedule = () => {
-//   return (dispatch, getState) => {
-//     const {scheduleTimeout} = getState().userInfo;
-
-//     if (scheduleTimeout) {
-//       clearTimeout(scheduleTimeout);
-//     }
-
-//     dispatch(cancelJwtRefetch());
-//   };
-// };
