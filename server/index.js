@@ -18,10 +18,7 @@ const mineData = require('./mine-data');
 
 const init = async () => {
 
-  const server = Hapi.server({
-      port: process.env.PORT || 8000,
-      host: 'localhost'
-  });
+  const server = Hapi.server({ port: process.env.PORT || 8000 });
 
   server.route({
     method: 'GET',
