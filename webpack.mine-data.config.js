@@ -15,30 +15,47 @@ const EnvVariablesPlugin = new webpack.DefinePlugin({
   'process.env.API_URL': JSON.stringify(process.env.API_URL || '')
 });
 
-const entry = 'index.js';
-
 module.exports = {
-  entry: [
-    'babel-polyfill',
-    `./mine-data/${entry}`
-  ],
+  target: 'web',
+  mode: process.env.WEBPACK_MODE || 'production', // 'development' || 'production'
+  entry: {
+    main: `./mine-data/index.js`
+  },
   output: {
     path: path.resolve('./mine-data/build'),
     filename: 'bundle-[hash].js',
     publicPath: '/mine-data'
   },
   module: {
-    loaders: [
+    rules: [
       {
-        test: /\.js(x)?$/, loader: 'babel-loader', exclude: /node_modules/
+        test: /\.js(x)?$/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: [
+              '@babel/preset-env',
+              '@babel/preset-react'
+            ]
+          }
+        },
+        exclude: /node_modules/
       },
       {
-        test: /\.(svg|jpg|png|mp4|webm|ico)$/i, loader: 'file-loader', exclude: /node_modules/,
-        options: {name: '/[name].[ext]'}
+        test: /\.(svg|jpg|png|mp4|webm|ico)$/i,
+        use: {
+          loader: 'file-loader',
+          options: { name: '/[name].[ext]' }
+        },
+        exclude: /node_modules/,
       },
       {
         test: /\.(s)?css$/,
-        use: [{loader: 'style-loader'}, {loader: 'css-loader'}, {loader: 'sass-loader'}]
+        use: [
+          { loader: 'style-loader' },
+          { loader: 'css-loader' },
+          { loader: 'sass-loader' }
+        ]
       }
     ]
   },
@@ -51,8 +68,8 @@ module.exports = {
   devServer: {
     historyApiFallback: {
       rewrites: [
-        {from: /\/mine-data\/.*$/, to: '/mine-data'},
-        {from: /^\/?$/, to: '/mine-data'}
+        { from: /\/mine-data\/.*$/, to: '/mine-data' },
+        { from: /^\/?$/, to: '/mine-data' }
       ]
     }
   }

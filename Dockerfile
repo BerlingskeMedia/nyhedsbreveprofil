@@ -12,7 +12,9 @@ ADD webpack.opdatering.config.js /build
 ADD .babelrc /build
 
 RUN npm i
-RUN npm i -g webpack@3.11.0
+RUN npm i -g webpack@4.42.0
+RUN npm run mine-data:build
+RUN npm run opdatering:build
 
 
 FROM node:10.17-alpine
