@@ -3,7 +3,9 @@
 
 const Http = require('http');
 const Url = require('url');
+const Boom = require('@hapi/boom');
 
+var route_prefix = '';
 
 var MDBAPI_PROTOCOL;
 var MDBAPI_HOSTNAME;
@@ -13,11 +15,16 @@ var MDBAPI_PORT;
 try {
   var temp = Url.parse(process.env.MDBAPI_ADDRESS);
 
+  // Sometimes the ENV var is including the protocol, eg: MDBAPI_ADDRESS=http://mdbapi-test.bemit.dk
+
   if(['http:', 'https:'].indexOf(temp.protocol) > -1) {
 
     MDBAPI_PROTOCOL = temp.protocol;
     MDBAPI_HOSTNAME = temp.hostname;
     MDBAPI_PORT = temp.port;
+
+
+    // Other times (eg. in puppet) there are two seperate ENV vars, eg: MDBAPI_ADDRESS=mdbapi-test.bemit.dk MDBAPI_PORT=80
 
   } else if (process.env.MDBAPI_PORT) {
 
@@ -42,12 +49,17 @@ console.log('Connecting backend to MDBAPI on hostname', MDBAPI_HOSTNAME, 'and po
 
 async function proxy (request, h) {
 
+  var path = request.raw.req.url;
+  if(path.startsWith(route_prefix)){
+    path = path.slice(route_prefix.length)
+  }
+
   var options = {
     protocol: MDBAPI_PROTOCOL,
     hostname: MDBAPI_HOSTNAME,
     port: MDBAPI_PORT,
     method: request.method,
-    path: request.url.pathname.replace('/backend', ''),
+    path: path,
     headers: {}
   };
 
@@ -76,6 +88,12 @@ async function proxy (request, h) {
       });
 
       res.on('end', () => {
+
+        if(res.statusCode >= 400) {
+          const err = new Error(res.statusMessage);
+          return reject(Boom.boomify(err, { statusCode: res.statusCode }));
+        }
+        
         try {
           resolve(JSON.parse(data));
         } catch(ex) {
@@ -142,6 +160,8 @@ module.exports = {
   proxy: proxy,
 
   register: async function (server, options) {
+
+    route_prefix = server.realm.modifiers.route.prefix;
 
     /* These are the URL's we're allowing to proxy */
 
