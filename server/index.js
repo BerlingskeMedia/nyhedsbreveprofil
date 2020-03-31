@@ -10,6 +10,7 @@ if(process.env.NYHEDSBREVEPROFIL_APP_ID && !process.env.BPC_APP_ID) {
 const Hapi = require('@hapi/hapi');
 const inert = require('@hapi/inert');
 const HapiBpc = require('hapi-bpc');
+const api = require('./api');
 const backend = require('./backend');
 const nyhedsbreve = require('./nyhedsbreve');
 const smartlinks = require('./smartlinks');
@@ -34,6 +35,7 @@ const init = async () => {
   await server.bpc.connect();
 
   await server.register(nyhedsbreve);
+  await server.register(api, {routes: {prefix: '/api'}});
   await server.register(backend, {routes: {prefix: '/backend'}});
   await server.register(opdatering, {routes: {prefix: '/opdatering'}});
   await server.register(smartlinks, {routes: {prefix: '/smartlinks'}});
