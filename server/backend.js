@@ -34,7 +34,7 @@ try {
   
   } else {
 
-    throw new Error();
+    throw new Error('unknown protocol or port');
 
   }
 

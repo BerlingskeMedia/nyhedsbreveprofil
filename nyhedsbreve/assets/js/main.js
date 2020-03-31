@@ -50,6 +50,7 @@ var newsletterApp = angular.module('newsletter', [
     return basket !== null ? basket :
     {
       nyhedsbreve: [],
+      permissions: [],
       interesser: [],
       location_id: LOCATION_ID
     };
@@ -59,17 +60,23 @@ var newsletterApp = angular.module('newsletter', [
     window.sessionStorage.setItem('user', JSON.stringify(user));
   }
 
-  function addToBasket(newsletter) {
+  function addToBasket(subscriptionObject) {
     var basket = getBasket();
-    basket.nyhedsbreve.push(newsletter);
+    if(subscriptionObject.permission) {
+      basket.permissions = basket.permissions || [];
+      basket.permissions.push(subscriptionObject);
+    } else {
+      basket.nyhedsbreve = basket.nyhedsbreve || [];
+      basket.nyhedsbreve.push(subscriptionObject);
+    }
     window.sessionStorage.setItem('user', JSON.stringify(basket));
   }
 
-  function removeFromBasket(newsletterId) {
+  function removeFromBasket(subscriptionObject) {
     var basket = getBasket(),
       idIndex;
     for (var index = 0; index < basket.nyhedsbreve.length; index++) {
-      if (basket.nyhedsbreve[index].nyhedsbrev_id === newsletterId) {
+      if (basket.nyhedsbreve[index].nyhedsbrev_id === subscriptionObject.nyhedsbrev_id) {
         idIndex = index;
         break;
       }
@@ -133,9 +140,9 @@ var newsletterApp = angular.module('newsletter', [
   }
 
   function toggleSubscription(doEnable, subscriptionObject) {
-    var deferred = $q.defer(),
-      url = '/backend/users/' + getExternalId() + '/nyhedsbreve/' +
-          subscriptionObject.nyhedsbrev_id;
+
+    var deferred = $q.defer();
+    const url = '/backend/users/' + getExternalId() + (subscriptionObject.permission ? '/permissions/' : '/nyhedsbreve/') + subscriptionObject.nyhedsbrev_id;
 
     if (isLoggedIn() && doEnable) {
       $http.post(url + "?location_id=" + LOCATION_ID).then(function (response) {
@@ -147,7 +154,7 @@ var newsletterApp = angular.module('newsletter', [
       if (doEnable) {
         addToBasket(subscriptionObject);
       } else {
-        removeFromBasket(subscriptionObject.nyhedsbrev_id);
+        removeFromBasket(subscriptionObject);
       }
       deferred.resolve(true);
     } else {
@@ -477,25 +484,21 @@ function ($scope, $rootScope, $routeParams, $http, $q, $location, $sce, UserServ
     return false;
   };
 
-  $scope.toggleSubscription = function (checkbox, newsletterId, newsletterName,
-      publisherId) {
+  $scope.toggleSubscription = function (checkbox, subscriptionObject) {
 
     if ($scope.loggedIn && !checkbox.checked){
       return;
     }
 
-    UserService.toggleSubscription(checkbox.checked, {
-      nyhedsbrev_id: newsletterId,
-      nyhedsbrev_navn: newsletterName,
-      publisher_id: publisherId
-    }).then(function (response) {
+    UserService.toggleSubscription(checkbox.checked, subscriptionObject)
+    .then(function (response) {
       if (angular.isObject(response)) {
         $scope.user.nyhedsbreve = response.data;
         checkbox.$parent.created = checkbox.checked;
         checkbox.$parent.deleted = !checkbox.checked;
       }
       if (!$scope.loggedIn) {
-        UserService.updateLogo(PublisherService.getById(publisherId));
+        UserService.updateLogo(PublisherService.getById(subscriptionObject.publisherId));
       }
     }, function (err) {
       console.error(err);
@@ -539,20 +542,16 @@ function ($scope, $rootScope, $routeParams, $http, $q, $location, $sce, UserServ
 
   };
 
-  $scope.toggleSubscription = function (checkbox, newsletterId, newsletterName,
-      publisherId) {
+  $scope.toggleSubscription = function (checkbox, subscriptionObject) {
 
-    UserService.toggleSubscription(checkbox.checked, {
-      nyhedsbrev_id: newsletterId,
-      nyhedsbrev_navn: newsletterName,
-      publisher_id: publisherId
-    }).then(function (response) {
+    UserService.toggleSubscription(checkbox.checked, subscriptionObject)
+    .then(function (response) {
       if (angular.isObject(response)) {
         $scope.user.nyhedsbreve = response.data;
         checkbox.$parent.created = checkbox.checked;
         checkbox.$parent.deleted = !checkbox.checked;
       }
-      UserService.updateLogo(PublisherService.getById(publisherId));
+      UserService.updateLogo(PublisherService.getById(subscriptionObject.publisherId));
     }, function (err) {
       console.log(err);
     });
@@ -581,6 +580,11 @@ function ($scope, $rootScope, $routeParams, $http, $q, $location, $sce, UserServ
     payload.nyhedsbreve = payload.nyhedsbreve.map(function (newsletter) {
       return angular.isObject(newsletter) ? newsletter.nyhedsbrev_id : newsletter;
     }).filter(Boolean);
+
+    payload.permissions = payload.permissions.map(function (permission) {
+      return angular.isObject(permission) ? permission.nyhedsbrev_id : permission;
+    }).filter(Boolean);
+
 
     $http.post("/backend/doubleopt", payload).then(function (response) {
       UserService.setDoubleOptKey(response.data.double_opt_key);

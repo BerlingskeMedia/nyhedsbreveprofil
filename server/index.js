@@ -34,8 +34,8 @@ const init = async () => {
   await server.bpc.connect();
 
   await server.register(nyhedsbreve);
-  await server.register(opdatering, {routes: {prefix: '/opdatering'}});
   await server.register(backend, {routes: {prefix: '/backend'}});
+  await server.register(opdatering, {routes: {prefix: '/opdatering'}});
   await server.register(smartlinks, {routes: {prefix: '/smartlinks'}});
   await server.register(mineData, {routes: {prefix: '/mine-data'}});
 

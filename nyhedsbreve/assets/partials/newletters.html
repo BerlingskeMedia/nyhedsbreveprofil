@@ -35,10 +35,12 @@
             <div class="row">
               <div class="col-xs-2 col-sm-2 col-md-2 col-lg-1">
                 <div class="mdbCheckbox mdbGreenCheckbox">
-                  <input type="checkbox" checklist-model="user.nyhedsbreve"
+                  <input
+                    type="checkbox"
+                    checklist-model="user.nyhedsbreve"
                     checklist-value="newsletter" checklist-comparator="compareNewsletters"
                     ng-disabled="loggedIn && this.checked"
-                    ng-change="toggleSubscription(this, newsletter.nyhedsbrev_id, newsletter.nyhedsbrev_navn, newsletter.publisher_id)"
+                    ng-change="toggleSubscription(this, newsletter)"
                     id="label_nes_{{ $index }}">
                   <label class="control-label" for="label_nes_{{ $index }}"></label>
                 </div>
