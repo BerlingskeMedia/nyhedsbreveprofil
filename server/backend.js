@@ -262,6 +262,12 @@ module.exports = {
     });
 
     server.route({
+      method: ['POST', 'DELETE'],
+      path: '/users/{user_id}/interesser/{interesse_id}',
+      handler: proxy
+    });
+
+    server.route({
       method: 'POST',
       path: '/kampagner/kampagnelinie',
       handler: proxy
