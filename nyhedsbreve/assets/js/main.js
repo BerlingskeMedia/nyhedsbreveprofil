@@ -69,21 +69,25 @@ var newsletterApp = angular.module('newsletter', [
       basket.nyhedsbreve = basket.nyhedsbreve || [];
       basket.nyhedsbreve.push(subscriptionObject);
     }
+
     window.sessionStorage.setItem('user', JSON.stringify(basket));
   }
 
   function removeFromBasket(subscriptionObject) {
-    var basket = getBasket(),
-      idIndex;
-    for (var index = 0; index < basket.nyhedsbreve.length; index++) {
-      if (basket.nyhedsbreve[index].nyhedsbrev_id === subscriptionObject.nyhedsbrev_id) {
-        idIndex = index;
-        break;
+    var basket = getBasket();
+
+    if(subscriptionObject.permission) {
+      const pi = basket.permissions.findIndex(p => p.nyhedsbrev_id === subscriptionObject.nyhedsbrev_id);
+      if (pi !== undefined) {
+        basket.permissions.splice(pi, 1);
+      }
+    } else {
+      const ni = basket.nyhedsbreve.findIndex(p => p.nyhedsbrev_id === subscriptionObject.nyhedsbrev_id);
+      if (ni !== undefined) {
+        basket.nyhedsbreve.splice(ni, 1);
       }
     }
-    if (idIndex !== undefined) {
-      basket.nyhedsbreve.splice(idIndex, 1);
-    }
+
     window.sessionStorage.setItem('user', JSON.stringify(basket));
   }
 
