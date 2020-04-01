@@ -94,14 +94,20 @@ async function proxy (request, h) {
           return reject(Boom.boomify(err, { statusCode: res.statusCode }));
         }
 
-        console.log(`-- ${ options.method } ${ options.path }`)
-        try {
-          const parsed = JSON.parse(data);
-          resolve(parsed);
-        } catch(ex) {
-          console.log(ex);
-          console.log(data);
-          resolve(data);
+        console.log(`-- ${ options.method } ${ options.path }`);
+        console.log(`--    ${ JSON.stringify(options.headers) }`);
+
+        if(data.length > 0) {
+          try {
+            const parsed = JSON.parse(data);
+            resolve(parsed);
+          } catch(ex) {
+            console.log(ex);
+            console.log(data);
+            resolve(data);
+          }
+        } else {
+          resolve('OK');
         }
       });
   
