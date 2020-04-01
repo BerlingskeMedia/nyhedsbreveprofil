@@ -93,12 +93,15 @@ async function proxy (request, h) {
           const err = new Error(res.statusMessage);
           return reject(Boom.boomify(err, { statusCode: res.statusCode }));
         }
-        
+
+        console.log(`-- ${ options.method } ${ options.path }`)
         try {
-          resolve(JSON.parse(data));
+          const parsed = JSON.parse(data);
+          resolve(parsed);
         } catch(ex) {
-          console.log(ex)
-          reject(ex);
+          console.log(ex);
+          console.log(data);
+          resolve(data);
         }
       });
   
