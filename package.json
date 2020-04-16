@@ -5,7 +5,7 @@
   "main": "server/index.js",
   "scripts": {
     "start": "node server/index.js",
-    "dev": "npx webpack --watch --config webpack.mine-data.config.js & npx webpack --watch --config webpack.opdatering.config.js & nodemon --inspect --ignore 'mine-data/' --ignore 'nyhedsbreve/' --ignore 'opdatering/' server",
+    "dev": "npx webpack --watch --config webpack.mine-data.config.js & npx webpack --watch --config webpack.opdatering.config.js & nodemon --inspect=0.0.0.0:9229 --ignore 'mine-data/' --ignore 'nyhedsbreve/' --ignore 'opdatering/' server",
     "mine-data:build": "rm -rf ./mine-data/build && webpack --config webpack.mine-data.config.js",
     "opdatering:build": "rm -rf ./opdatering/build && webpack --config webpack.opdatering.config.js"
   },

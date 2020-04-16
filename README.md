@@ -25,18 +25,29 @@ it communicates with MDBAPI via a basic proxy middleware written in `Hapi.js`.
 
 ## For Developers
 
-You'll need a recent version of node.js, _v4.2.2 or newer_. You'll need to setup
+You'll need a recent version of node.js, _v10.17 or newer_. You'll need to setup
 the following environment variables before you start;
 
 ```bash
-export NODE_ENV="development"
-export TZ="Europe/Copenhagen"
-export MDBAPI_ADDRESS=mdbapi.bemit.dk
-export MDBAPI_PORT=80
-
-# variables consumed by mine-data web application
-export API_URL=http://localhost:8082
+export API_URL=http://localhost:8000
+export WEBPACK_MODE=development
+export MDBAPI_ADDRESS=http://localhost
+export MDBAPI_PORT=8080
+export BPC_URL=https://bpc.berlingskemedia-testing.net
+export BPC_APP_ID=nyhedsbreveprofil
+export BPC_APP_KEY=e5e9ffa0a0cc226a2d48ff8b2bddb97445cb1ccf4a4dc6c7c0
 export GIGYA_API_KEY=5__cAWpT5nWdkxSuly0T2OJd2svumYf1dvKWweeUeUddlIrbgnoZLzxxtky7eQasdASDAsd
+export GA_TRACKING_ID
+export GIGYA_SECRET_KEY
+export GIGYA_USER_KEY
+export GIGYA_DC=eu1
+export GIGYA_HOSTNAME=gigya.com
+export SURVEYGIZMO_REST_API_AUTH_KEY
+export SURVEYGIZMO_REST_API_AUTH_SECRET_KEY
+export ZENDESK_API_EMAIL
+export ZENDESK_API_TOKEN
+export ZENDESK_URL
+export ZENDESK_SUBJECT_PREFIX
 ```
 
 These can of course be reconfigured as required. You'll also need `bower.js`, if

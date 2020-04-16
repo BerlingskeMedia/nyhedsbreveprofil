@@ -32,7 +32,7 @@ const init = async () => {
   await server.register(inert);
   
   await server.register(HapiBpc);
-  await server.bpc.connect();
+  await server.bpc.connect(null, process.env.BPC_URL);
 
   await server.register(nyhedsbreve);
   await server.register(api, {routes: {prefix: '/api'}});
