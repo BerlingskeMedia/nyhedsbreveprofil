@@ -16,6 +16,7 @@ const nyhedsbreve = require('./nyhedsbreve');
 const smartlinks = require('./smartlinks');
 const opdatering = require('./opdatering');
 const mineData = require('./mine-data');
+const marketingcloudapis = require('./marketingcloudapis');
 
 const init = async () => {
 
@@ -40,6 +41,7 @@ const init = async () => {
   await server.register(opdatering, {routes: {prefix: '/opdatering'}});
   await server.register(smartlinks, {routes: {prefix: '/smartlinks'}});
   await server.register(mineData, {routes: {prefix: '/mine-data'}});
+  await server.register(marketingcloudapis, {routes: {prefix: '/mc'}});
 
   await server.start();
   console.log('Server running on %s', server.info.uri);
