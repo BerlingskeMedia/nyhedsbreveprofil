@@ -102,8 +102,6 @@ async function proxy (request, h) {
             const parsed = JSON.parse(data);
             resolve(parsed);
           } catch(ex) {
-            console.log(ex);
-            console.log(data);
             resolve(data);
           }
         } else {
