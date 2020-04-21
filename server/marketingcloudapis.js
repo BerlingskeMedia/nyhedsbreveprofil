@@ -121,7 +121,7 @@ async function proxy (request, h) {
 
   let me;
 
-  const userTicket = request.state[h.bpc.state_name];
+  const userTicket = request.state[h.bpc.env.state_name];
   const credentials = request.auth.credentials;
 
 
