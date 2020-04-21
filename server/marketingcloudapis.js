@@ -128,7 +128,7 @@ async function proxy (request, h) {
   if(userTicket) {
 
     me = await h.bpc.request({
-      path: `/me/${ credentials.user }`,
+      path: `/me`,
       method: 'GET'
     }, userTicket);
 
@@ -144,10 +144,11 @@ async function proxy (request, h) {
   
 
   // Responds
-  // { _id: '5bd1b40b1f5b7ae5f13d7cf2',
-  // id: '106511102199683663923',
-  // email: 'daniel.kokott@persgroep.net',
-  // provider: 'google' }
+  // { _id: '5bd45abd1f5b7ae5f143f2df',
+  // id: '97b75fa8a2f842aba44a64b1d963fef0',
+  // email: 'dako@berlingskemedia.dk',
+  // provider: 'gigya' }
+
 
   return 'ok';
 
