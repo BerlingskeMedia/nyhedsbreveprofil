@@ -90,59 +90,37 @@ async function marketingcloudapisRequest(options, MARKETINGCLOUDAPIS_URL) {
 
 
 
-// Data in request.auth, is successful authenticated, will look like:
-// request.auth.credentials.user is the Internal ID in BPC.
-// Now get the Gigya UID (HTTPS GET /me) from BPC.
-// Use the Gigya UID and User Key in Markeing Cloud.
-
-//         { isAuthenticated: true,
-//           isAuthorized: true,
-//           credentials:
-//            { exp: 1587116049511,
-//              app: 'bpp_api',
-//              scope:
-//               [ 'role:bpp_api:companies:admin',
-//                 'role:bpp_api:accessrules:admin' ],
-//              grant: 'dafa15cc7854c3bba483b38307ac0f0c58e57282',
-//              user: '5bd1b40b1f5b7ae5f13d7cf2',
-//              algorithm: 'sha256',
-//              status: 'ok' },
-//           artifacts: undefined,
-//           strategy: 'bpc',
-//           mode: 'required',
-//           error: null }
-
 
 async function proxy (request, h) {
   
-  // console.log(h.bpc)
-  // console.log(request.state)
-  // console.log(request.auth.credentials)
-
   let me;
 
   const userTicket = request.state[h.bpc.env.state_name];
-  const credentials = request.auth.credentials;
-
-
+  
   if(userTicket) {
+    
+    // This is the case where the user is authenticated using the endpoints in the hapi-bpc plugins.
+    // In this case we have the full user ticket in the cookies (same-domain, secure, http-only etc.)
 
     me = await h.bpc.request({
       path: `/me`,
       method: 'GET'
-    }, userTicket);
-
+    }, userTicket); // <--- using user ticket
+    
   } else {
-  
+    
+    // This is the case where the user is authorized using a Hawk Authorization header.
+    // In this case, the credentials are not a complete user ticket (security reasons).
+    // So instead we use the app ticket to fetch the user details.
+
+    const credentials = request.auth.credentials;
     me = await h.bpc.request({
       path: `/me/${ credentials.user }`,
       method: 'GET'
-    });
+    });     // <--- using app ticket
   }
 
   console.log(me);
-  
-
   // Responds
   // { _id: '5bd45abd1f5b7ae5f143f2df',
   // id: '97b75fa8a2f842aba44a64b1d963fef0',
@@ -150,7 +128,10 @@ async function proxy (request, h) {
   // provider: 'gigya' }
 
 
-  return 'ok';
+  // Now we must fetch data about me.id from Markering Cloud.
+
+
+  return me;
 
 }
 
