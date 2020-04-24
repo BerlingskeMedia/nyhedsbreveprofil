@@ -38,7 +38,7 @@ module.exports = {
       purpose: 'At administrere stamoplysninger, interesser, nyhedsbreve, samtykker på Berlingske Media\'s kunder. At understøtte Berlingske Media\'s marketing. At servicere kundens abonnementer på nyhedsbreve',
       authority: 'Læserens samtykke. Desuden kontrakt. Databehandling foretages af hensyn til opfyldelse af aftaler, som kunden er part i.',
       access: 'Relevante medarbejdere i Berlingske Media\'s afdeling for salg og marketing.',
-      origin: 'Sweetdeal, kundeunivers, Abonnementsregister, manuelle indtastninger og Oplysninger afgivet af Kunden online',
+      origin: 'kundeunivers, Abonnementsregister, manuelle indtastninger og Oplysninger afgivet af Kunden online',
       registrer: 'Alle kunder i Berlingske Media',
       storeLongevity: '0-5 år efter brug'
     },
@@ -125,20 +125,6 @@ module.exports = {
       origin: 'Fra kunden ved ordreafgivelse',
       registrer: 'Kunder der har indrykket annoncer hos Berlingske Media',
       storeLongevity: '2-5 år efter brug'
-    },
-    {
-      description: 'Sweetdeal & Shops',
-      title: 'Sweetdeal og Shops',
-      name: 'sweetdeal_og_shops',
-      manual: true,
-      deleteAllowed: true,
-      informationType: 'Navn, adresse, email, Sweetdeal city',
-      purpose: 'At understøtte kundens handler i shops på Berlingske Media\'s platforme',
-      authority: 'Kontrakt. Databehandling foretages af hensyn til opfyldelse af aftalte handler, som kunden er part i.',
-      access: 'Relevante medarbejdere i Berlingske Media\'s shops-afdeling',
-      origin: 'Oplysninger afgivet af Kunden online',
-      registrer: 'Kunder i Berlingske Media\'s Sweetdeal shop.',
-      storeLongevity: '5 år efter brug'
     }
   ]
 };
