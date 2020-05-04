@@ -186,7 +186,26 @@ module.exports = {
       },
       handler: async (req, h) => {
         const me = await h.bpc.request({ path: `/me` }, req.auth.credentials);
-        return ZenDesk.requestAllowed(me.id)
+
+        const zendeskScope = await h.bpc.request({
+          path: `/permissions/zendesk`,
+        }, req.auth.credentials);
+
+        const tickets = zendeskScope.tickets;
+
+        const latestTicket = tickets && tickets.reduce((latest, ticket) => {
+          if (!latest || ticket.createdAt > latest.createdAt) {
+            return ticket;
+          }
+  
+          return latest;
+        }, null);
+
+        if (!latestTicket) {
+          return true;
+        }
+
+        return ZenDesk.requestAllowed(latestTicket)
       }
     });
 

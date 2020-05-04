@@ -175,30 +175,16 @@ module.exports = {
     });
   },
 
-  requestAllowed: (uid) => {
-    return BPC.getUserScopeData(uid, 'zendesk').then(({tickets}) => {
-      const latestTicket = tickets && tickets.reduce((latest, ticket) => {
-        if (!latest || ticket.createdAt > latest.createdAt) {
-          return ticket;
+  requestAllowed: (latestTicket) => {
+    return callZenDesk({path: `/api/v2/requests/${latestTicket.id}.json`})
+      .then(ticket => ticket.request.status === 'solved')
+      .catch(err => {
+        if (err && err.error === 'RecordNotFound') {
+          return true;
         }
 
-        return latest;
-      }, null);
-
-      if (!latestTicket) {
-        return true;
-      }
-
-      return callZenDesk({path: `/api/v2/requests/${latestTicket.id}.json`})
-        .then(ticket => ticket.request.status === 'solved')
-        .catch(err => {
-          if (err && err.error === 'RecordNotFound') {
-            return true;
-          }
-
-          return Promise.reject(err);
-        });
-    });
+        return Promise.reject(err);
+      });
   },
 
   request: callZenDesk
