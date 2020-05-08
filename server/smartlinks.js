@@ -12,18 +12,27 @@ module.exports = {
     server.route({
       method: 'GET',
       path: '/',
+      config: {
+        cors: true,
+      },
       handler: backend.proxy
     });
 
     server.route({
       method: 'POST',
       path: '/',
+      config: {
+        cors: true,
+      },
       handler: backend.proxy
     });
 
     server.route({
       method: 'OPTIONS',
       path: '/',
+      config: {
+        cors: true,
+      },
       handler: backend.proxy
     });
   }
