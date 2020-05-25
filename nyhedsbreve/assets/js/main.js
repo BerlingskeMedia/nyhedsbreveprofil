@@ -876,25 +876,38 @@ function ($scope, $routeParams, $http, $rootScope, $location, UserService, login
       return;
     }
     $scope.unsubscribeError = false;
-    var payload = {};
-    payload.location_id = LOCATION_ID;
-    payload.nyhedsbrev_id = $scope.to_unsubscribe.id;
-    payload.user_feedback = feedback;
-    $http.post("/backend/users/" + UserService.getExternalId() + "/nyhedsbreve/delete", payload ).then(function (response) {
-
-      // If the user has a direct link, he/she will be redirected to the publishers newsletter page
-      if ($scope.looking_at_one_newsletter && $scope.newsletter) {
-        $location.path('nyhedsbreve/' + $scope.newsletter.publisher_id);
-      } else {
-        update();
+    let requestResult;
+    if ($scope.to_unsubscribe.permission) {
+       requestResult = $http.delete(
+         "/backend/users/"
+         + UserService.getExternalId()
+         + "/permissions/"
+         + $scope.to_unsubscribe.id
+         + "?location_id="
+         + LOCATION_ID
+       );
+    } else {
+      var payload = {};
+      payload.location_id = LOCATION_ID;
+      payload.nyhedsbrev_id = $scope.to_unsubscribe.id;
+      payload.user_feedback = feedback;
+      requestResult = $http.post("/backend/users/" + UserService.getExternalId() + "/nyhedsbreve/delete", payload);
+    }
+    requestResult.then(
+      function (response) {
+        // If the user has a direct link, he/she will be redirected to the publishers newsletter page
+        if ($scope.looking_at_one_newsletter && $scope.newsletter) {
+          $location.path('nyhedsbreve/' + $scope.newsletter.publisher_id);
+        } else {
+          update();
+        }
+        $scope.modalInstance.close();
+      },
+      function (error) {
+        console.error(error);
+        $scope.modalInstance.close();
       }
-
-      $scope.modalInstance.close();
-    }, function (error) {
-      console.error(error);
-      $scope.modalInstance.close();
-    });
-
+    )
   };
 
   $scope.open = function (newsletter) {
