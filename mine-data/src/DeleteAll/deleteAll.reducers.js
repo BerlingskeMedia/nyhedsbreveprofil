@@ -2,9 +2,26 @@ import {
   DELETE_ALL_CANCEL_CONFIRM, DELETE_ALL_ERROR, DELETE_ALL_RECEIVE,
   DELETE_ALL_REQUEST,
   DELETE_ALL_RESET,
-  DELETE_ALL_SHOW_CONFIRM
+  DELETE_ALL_SHOW_CONFIRM,
+  DELETE_ALL_RECEIVE_SUBSCRIPTION_STATUS, DELETE_ALL_REQUEST_SUBSCRIPTION_STATUS
 } from './deleteAll.actions';
 import { combineReducers } from 'redux';
+
+export const getSubscriptionDefaultStatus = () => ({
+  pending: false,
+  status: true
+});
+
+export const subscriptionStatus = (state = getSubscriptionDefaultStatus(), action) => {
+  switch (action.type) {
+    case DELETE_ALL_REQUEST_SUBSCRIPTION_STATUS:
+      return {...state, pending: true, status: true};
+    case DELETE_ALL_RECEIVE_SUBSCRIPTION_STATUS:
+      return {...state, pending: false, status: action.signatureStatus};
+    default:
+      return state;
+  }
+};
 
 const getDefaultConfirmState = () => false;
 
@@ -42,5 +59,6 @@ const request = (state = getDefaultRequestState(), action) => {
 
 export const deleteAll = combineReducers({
   confirm,
-  request
+  request,
+  subscriptionStatus
 });

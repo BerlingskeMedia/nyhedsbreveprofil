@@ -3,6 +3,7 @@ const Boom = require('@hapi/boom');
 const ZenDesk = require('./api_consumers/zendesk_client');
 const {categories} = require('./api_consumers/categories_client');
 const Gigya = require('./api_consumers/gigya_client');
+const ARIA = require('./api_consumers/aria_client');
 
 module.exports = {
   name: 'mine-data',
@@ -67,6 +68,21 @@ module.exports = {
         } else {
           throw Boom.notFound();
         }
+      }
+    });
+
+    server.route({
+      method: 'get',
+      path: '/category/aria',
+      config: {
+        auth: 'bpc'
+      },
+      handler: async (req, h) => {
+        const me = await h.bpc.request({ path: `/me` }, req.auth.credentials);
+        return await ARIA.SubsRetrieveSubscription({
+          "returnLevelOfHistory": 'ACTIVE-ONLY',
+          "ariaAccountID": me.id
+        })
       }
     });
 
@@ -186,7 +202,6 @@ module.exports = {
       },
       handler: async (req, h) => {
         const me = await h.bpc.request({ path: `/me` }, req.auth.credentials);
-
         const zendeskScope = await h.bpc.request({
           path: `/permissions/zendesk`,
         }, req.auth.credentials);
@@ -197,7 +212,7 @@ module.exports = {
           if (!latest || ticket.createdAt > latest.createdAt) {
             return ticket;
           }
-  
+
           return latest;
         }, null);
 
@@ -205,7 +220,7 @@ module.exports = {
           return true;
         }
 
-        return ZenDesk.requestAllowed(latestTicket)
+        return ZenDesk.requestAllowed(latestTicket);
       }
     });
 

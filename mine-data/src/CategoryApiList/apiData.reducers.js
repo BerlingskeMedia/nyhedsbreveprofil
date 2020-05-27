@@ -1,6 +1,6 @@
 import {
   API_DATA_ERROR,
-  API_DATA_KU_SUFFIX, API_DATA_MAIL_CHIMP_SUFFIX, API_DATA_MDB_SUFFIX,
+  API_DATA_MAIL_CHIMP_SUFFIX, API_DATA_MDB_SUFFIX,
   API_DATA_RECEIVE,
   API_DATA_REQUEST, API_DATA_RESET, API_DATA_SURVEY_GIZMO_SUFFIX
 } from './apiData.actions';
@@ -28,7 +28,6 @@ export const apiDataBuilder = suffix => (state = getDefaultState(), action) => {
 };
 
 export const apiData = combineReducers({
-  kundeunivers: apiDataBuilder(API_DATA_KU_SUFFIX),
   mdb: apiDataBuilder(API_DATA_MDB_SUFFIX),
   mailChimp: apiDataBuilder(API_DATA_MAIL_CHIMP_SUFFIX),
   surveyGizmo: apiDataBuilder(API_DATA_SURVEY_GIZMO_SUFFIX)

@@ -3,24 +3,40 @@ import SubmitButton from '../SubmitButton/SubmitButton';
 import { connect } from 'react-redux';
 import { Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
 import {
-  cancelConfirm, finalize, reset, showConfirm,
+  cancelConfirm, finalize, reset, showConfirm, checkIfSubscriptionActive,
   submit
 } from './deleteAll.actions';
 
 import './DeleteAll.scss';
 
 export class DeleteAllDisconnected extends Component {
+
+  static checkIfCurrentSubscriptionActive({subscriptionStatus: {status}, checkIfSubscriptionActive}) {
+    checkIfSubscriptionActive();
+  }
+
+  constructor(props) {
+    super(props);
+  }
+
+  componentWillMount() {
+    DeleteAllDisconnected.checkIfCurrentSubscriptionActive(this.props);
+  }
+
+  getDerivedStateFromProps(props) {
+    DeleteAllDisconnected.checkIfCurrentSubscriptionActive(props);
+  }
+
   render() {
-    const {kundeunivers, deleteAll, showConfirm, resetRequest, cancelConfirm, submit, finalizeRequest} = this.props;
-    const disableButton = !kundeunivers || !kundeunivers.data || kundeunivers.data.orders.some(order => order.active);
+    const {deleteAll, showConfirm, resetRequest, cancelConfirm, submit, finalizeRequest, subscriptionStatus} = this.props;
 
     return (
       <Fragment>
         <div className="nav-buttons justify-content-end mt-5">
-          {disableButton ? <div className="button-label text-lg-right">
+          {subscriptionStatus.status ? <div className="button-label text-lg-right">
             Sletning er ikke mulig, da du har aktive ordre, og vi dermed ikke kan slette din bruger.
           </div> : null}
-          <SubmitButton color="danger" disabled={disableButton} onClick={showConfirm}>Slet al data inkl. denne profil*</SubmitButton>
+          <SubmitButton color="danger" disabled={subscriptionStatus.status} onClick={showConfirm}>Slet al data inkl. denne profil*</SubmitButton>
         </div>
         <p className="DeleteAll-label">
           *Bemærk at at vi i særlige tilfælde beholder en historik i en tidsbegrænset periode pga. retlig forpligtelse til at gemme denne data. Formålet hermed er, at kunne dokumentere at vi har haft lovhjemmel til behandlingen, eller evt. senere sagsbehandling.
@@ -64,9 +80,9 @@ export class DeleteAllDisconnected extends Component {
   }
 }
 
-const mapStateToProps = ({deleteAll, apiData: {kundeunivers}}) => ({
+const mapStateToProps = ({deleteAll, deleteAll: {subscriptionStatus}}) => ({
   deleteAll,
-  kundeunivers
+  subscriptionStatus
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -74,7 +90,8 @@ const mapDispatchToProps = dispatch => ({
   resetRequest: () => dispatch(reset()),
   finalizeRequest: () => dispatch(finalize()),
   showConfirm: () => dispatch(showConfirm()),
-  cancelConfirm: () => dispatch(cancelConfirm())
+  cancelConfirm: () => dispatch(cancelConfirm()),
+  checkIfSubscriptionActive: () => dispatch(checkIfSubscriptionActive())
 });
 
 export const DeleteAll = connect(mapStateToProps, mapDispatchToProps)(DeleteAllDisconnected);

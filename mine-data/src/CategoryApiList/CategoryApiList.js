@@ -10,7 +10,7 @@ import { DetailsTitle } from '../Details/DetailsTitle';
 import { CategoryCard } from '../CategoryCard/CategoryCard';
 import { DetailsGroup } from '../Details/DetailsGroup';
 import {
-  resetKundeunivers, resetMailChimp, resetMDB,
+  resetMailChimp, resetMDB,
   resetSurveyGizmo
 } from './apiData.actions';
 
@@ -84,22 +84,6 @@ export const List = ({userInfo: {userInfo, jwt}, apiData, resetMDB, resetMailChi
         title="Register for Kundeoplysninger, Marketing og nyhedsbreve"
         details={() => (
           <SubCategoriesList getId={({title}) => title}>
-            <CategoryApiCardItem
-              title="Abonnementsoplysninger"
-              pending={apiData.kundeunivers.pending}
-              hasError={apiData.kundeunivers.error}
-              hasData={apiData.kundeunivers.data && apiData.kundeunivers.data.orders && apiData.kundeunivers.data.orders.length > 0}
-              renderError={Error}
-              render={() => apiData.kundeunivers.data.orders.map(order => order.items.map(item => (
-                <DetailsGroup key={item.sap_order_id}>
-                  <DetailsItem value={item.product_family} label="Produkt"/>
-                  <DetailsItem value={item.delivery_address} label="Leveringsadresse"/>
-                  <DetailsItem value={item.subscription_type} label="Abonnementstype"/>
-                  <DetailsItem value={item.status} label="Status"/>
-                  <DetailsItem value={item.expiration_date} label="Udløbsdato"/>
-                  <DetailsItem value={item.billing_frequency} label="Betalingsfrekvens"/>
-                </DetailsGroup>
-              )))}/>
 
             <CategoryApiCardItem
               title="Samtykker"
@@ -248,7 +232,6 @@ const mapStateToProps = ({apiData, userInfo}) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  resetKundeunivers: dispatch(resetKundeunivers()),
   resetMDB: dispatch(resetMDB()),
   resetMailChimp: dispatch(resetMailChimp()),
   resetSurveyGizmo: dispatch(resetSurveyGizmo())

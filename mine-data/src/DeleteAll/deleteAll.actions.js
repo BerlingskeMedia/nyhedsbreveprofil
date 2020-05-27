@@ -9,6 +9,14 @@ export const DELETE_ALL_CANCEL_CONFIRM = '[delete all] cancel confirm';
 export const showConfirm = actionBuilder(DELETE_ALL_SHOW_CONFIRM);
 export const cancelConfirm = actionBuilder(DELETE_ALL_CANCEL_CONFIRM);
 
+export const DELETE_ALL_REQUEST_SUBSCRIPTION_STATUS = '[delete all] request subscription status';
+export const DELETE_ALL_RECEIVE_SUBSCRIPTION_STATUS = '[delete all] receive subscription status';
+export const subscriptionStatusRequest = actionBuilder(DELETE_ALL_REQUEST_SUBSCRIPTION_STATUS);
+export const receiveSignatureStatus = (signatureStatus) => ({
+    type: DELETE_ALL_RECEIVE_SUBSCRIPTION_STATUS,
+    signatureStatus
+});
+
 export const DELETE_ALL_REQUEST = '[delete all] request';
 export const DELETE_ALL_RECEIVE = '[delete all] receive';
 export const DELETE_ALL_RESET = '[delete all] reset';
@@ -27,6 +35,27 @@ export const finalize = () => {
     dispatch(reset());
     dispatch(logOut());
   };
+};
+
+export const checkIfSubscriptionActive = () => {
+    return dispatch => {
+        dispatch(subscriptionStatusRequest());
+
+        return Api.get('/mine-data/category/aria')
+        .then((data) => {
+            let subscriptionInfo = data["subsRetrieveSubscriptionResponseDetails"]["subsRetrieveSubscriptionList"];
+
+            if (subscriptionInfo && subscriptionInfo.length > 0) {
+                dispatch(receiveSignatureStatus(true));
+            } else {
+                dispatch(receiveSignatureStatus(false));
+            }
+        })
+        .catch(err => {
+            console.log(err);
+            dispatch(receiveSignatureStatus(false));
+        });
+    }
 };
 
 export const submit = () => {

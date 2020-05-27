@@ -177,14 +177,14 @@ module.exports = {
 
   requestAllowed: (latestTicket) => {
     return callZenDesk({path: `/api/v2/requests/${latestTicket.id}.json`})
-      .then(ticket => ticket.request.status === 'solved')
-      .catch(err => {
-        if (err && err.error === 'RecordNotFound') {
-          return true;
-        }
+        .then(ticket => ticket.request.status === 'solved')
+        .catch(err => {
+          if (err && err.error === 'RecordNotFound') {
+            return true;
+          }
 
-        return Promise.reject(err);
-      });
+          return Promise.reject(err);
+        });
   },
 
   request: callZenDesk
