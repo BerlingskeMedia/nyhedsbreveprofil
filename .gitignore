@@ -39,3 +39,6 @@ opdatering/build
 mine-data/build
 
 .idea
+
+cypress/screenshots
+cypress/videos
