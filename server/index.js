@@ -21,6 +21,11 @@ const init = async () => {
 
   const server = Hapi.server({ port: process.env.PORT || 8000 });
 
+  await server.ext('onPreResponse', function (request, reply) {
+    request.response.header('X-Frame-Options', 'DENY');
+    return reply.continue;
+  })
+
   server.route({
     method: 'GET',
     path: '/healthcheck',
@@ -30,7 +35,6 @@ const init = async () => {
   });
 
   await server.register(inert);
-  
   await server.register(HapiBpc);
   await server.bpc.connect(null, process.env.BPC_URL);
 
