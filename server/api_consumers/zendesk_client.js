@@ -77,6 +77,7 @@ module.exports = {
 
   createTicket: function(ticket) {
     const validate_result = createTicketSchema.validate(ticket);
+
     if(validate_result.error) {
       return Promise.reject(validate_result.error);
     }
