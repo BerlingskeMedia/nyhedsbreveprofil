@@ -89,6 +89,13 @@ async function proxy (request, h) {
 
       res.on('end', () => {
 
+        // Redirect when the smartlink is using parameter "url"
+        if(res.statusCode === 302) {
+          if(res.headers && res.headers.location) {
+            return resolve(h.response().redirect(res.headers.location));
+          }
+        }
+        
         if(res.statusCode >= 400) {
           const err = new Error(res.statusMessage);
           return reject(Boom.boomify(err, { statusCode: res.statusCode }));
