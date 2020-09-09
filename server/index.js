@@ -22,7 +22,14 @@ const init = async () => {
   const server = Hapi.server({ port: process.env.PORT || 8000 });
 
   await server.ext('onPreResponse', function (request, reply) {
-    request.response.header('X-Frame-Options', 'DENY');
+    const {response} = request;
+
+    if (response.isBoom) {
+      response.output.headers['X-Frame-Options'] = 'DENY';
+    } else {
+      response.header('X-Frame-Options', 'DENY');
+    }
+
     return reply.continue;
   })
 

@@ -176,17 +176,17 @@ module.exports = {
       },
       handler: async (req, h) => {
         const me = await h.bpc.request({ path: `/me` }, req.auth.credentials);
-        const uid = me.id
-        const email = me.email
+        const uid = me.id;
+        const email = me.email;
 
         const payload = await ZenDesk.mapRequestToTicket({ payload: req.payload, uid, email });
         const response = await ZenDesk.createTicket(payload);
 
-        await h.pc.request({
+        await h.bpc.request({
           path: `/permissions/${uid}/zendesk`,
           method: 'PATCH',
           payload: {
-            $addToSet: { tickets: { id: ticket.id, createdAt: Date.parse(ticket.created_at) }}
+            $addToSet: { tickets: { id: response.ticket.id, createdAt: Date.parse(response.ticket.created_at) }}
           }
         });
 

@@ -46,14 +46,14 @@ function reissueUserTicket (){
   ))
   .then(response => userTicketReponseHandler(response))
   .catch(err => {
-
+    console.error(err);
   });
 }
 
 
 function userTicketReponseHandler (response) {
   if(response.ok) {
-    response
+    return response
     .json()
     .then(userTicket => {
       setTimeout(reissueUserTicket, userTicket.exp - Date.now() - (60 * 1000));

@@ -104,8 +104,8 @@ export const showConfirmation = mode => {
     dispatch(confirm(mode));
 
     return Api.get('/mine-data/zendesk/check', getState().userInfo.jwt)
-      .then(({allowed}) => {
-        dispatch(confirmAllowed(allowed));
+      .then(response => {
+        dispatch(confirmAllowed(response));
       })
       .catch(() => {
         dispatch(confirmError());
