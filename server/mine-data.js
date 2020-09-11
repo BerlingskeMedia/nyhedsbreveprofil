@@ -190,8 +190,6 @@ module.exports = {
         });
 
         return h.response(response && response.ticket.id).code(201);
-
-        return true;
       }
     });
 
