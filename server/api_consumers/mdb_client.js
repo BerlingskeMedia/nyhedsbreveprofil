@@ -131,6 +131,7 @@ class MDB {
   static findUser(email) {
     return Http.get(`${MDBAPI_ADDRESS}/users?email=${encodeURIComponent(email)}`)
     .then(result => {
+
       if(result.length && result[0] && result[0].ekstern_id) {
         return Promise.resolve(result[0]);
       } else {
@@ -168,6 +169,7 @@ class MDB {
       const item = items.find(item => {
         return item.response_id === responseId && item.survey_id === surveyIdNumber
       });
+
       if (item) {
         const deleteSurvey = async function (surveyId) {
           try {
