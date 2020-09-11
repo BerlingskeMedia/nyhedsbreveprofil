@@ -94,7 +94,6 @@ module.exports = {
       },
       handler: async (req, h) => {
         const me = await h.bpc.request({ path: `/me` }, req.auth.credentials);
-
         return MDB.findSurveyGizmoUser(me.email);
       }
     });
@@ -149,9 +148,9 @@ module.exports = {
       },
       handler: async (req, h) => {
         const me = await h.bpc.request({ path: `/me` }, req.auth.credentials);
-
         const user = await MDB.findUser(me.email);
-        return MDB.deleteUser(user.ekstern_id);
+
+        return MDB.deleteUser(user.ekstern_id, me.email);
       }
     });
 
@@ -191,6 +190,8 @@ module.exports = {
         });
 
         return h.response(response && response.ticket.id).code(201);
+
+        return true;
       }
     });
 

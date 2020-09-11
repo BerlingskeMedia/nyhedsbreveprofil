@@ -78,8 +78,8 @@ class MDB {
     return Http.delete(`${MDBAPI_ADDRESS}/users/${eksternId}/interesser/${interestId}?location_id=5`);
   }
 
-  static deleteUser(eksterId) {
-    return Http.put(`${MDBAPI_ADDRESS}/users/${eksterId}`, {
+  static deleteUser(eksterId, mail) {
+    const payload = {
       fornavn: "",
       efternavn: "",
       co_navn: "",
@@ -112,8 +112,20 @@ class MDB {
       mol_bbs_nr: null,
       robinson_flag: false,
       active: false,
-      location_id: 5
-    });
+      location_id: 5,
+      email: mail
+    }
+    const deleteAllEntries = async function (payload) {
+      try {
+        const resp = await Http.put(`${MDBAPI_ADDRESS}/users/${eksterId}`, payload);
+        return resp;
+      } catch (err) {
+        console.log(JSON.stringify(err));
+      }
+    };
+    return {
+      request: deleteAllEntries(payload)
+    };
   }
 
   static findUser(email) {
@@ -157,14 +169,24 @@ class MDB {
         return item.response_id === responseId && item.survey_id === surveyIdNumber
       });
       if (item) {
-        return Http.get(MDB.surveyGizmoDeletePath(surveyId, responseId));
+        const deleteSurvey = async function (surveyId) {
+          try {
+            const resp = await Http.put(MDB.surveyGizmoDeletePath(surveyId));
+            return resp;
+          } catch (err) {
+            console.log(JSON.stringify(err));
+          }
+        };
+        return {
+          request: deleteSurvey(surveyId)
+        };
       }
     });
   }
 
-  static surveyGizmoDeletePath(surveyId, responseId) {
+  static surveyGizmoDeletePath(surveyId) {
     const credentials = `api_token=${process.env.SURVEYGIZMO_REST_API_AUTH_KEY}&api_token_secret=${process.env.SURVEYGIZMO_REST_API_AUTH_SECRET_KEY}`;
-    const path = `${process.env.SURVEYGIZMO_REST_API_URL}/survey/${surveyId}/surveyresponse/${responseId}?_method=DELETE&${credentials}`;
+    const path = `${process.env.SURVEYGIZMO_REST_API_URL}/survey/${surveyId}?_method=DELETE&${credentials}`;
     return path;
   }
 
