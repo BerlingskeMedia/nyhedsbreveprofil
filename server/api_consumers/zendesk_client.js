@@ -78,8 +78,11 @@ module.exports = {
   createTicket: function(ticket) {
     const validate_result = createTicketSchema.validate(ticket);
     if(validate_result.error) {
+      console.log("validate error " + validate_result.error);
       return Promise.reject(validate_result.error);
     }
+
+    console.log("validated");
 
     // Setting standard values
     Object.assign(ticket, stdTicketFieldValues);
@@ -103,6 +106,8 @@ module.exports = {
     } else {
       ticket.custom_fields = stdTicketCustomFields;
     }
+
+    console.log("lets call zendesk shall we");
 
     return callZenDesk({ method: 'POST', path: '/api/v2/tickets.json', payload: { ticket: ticket }})
   },
