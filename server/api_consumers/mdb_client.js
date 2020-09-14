@@ -112,8 +112,7 @@ class MDB {
       mol_bbs_nr: null,
       robinson_flag: false,
       active: false,
-      location_id: 5,
-      email: mail
+      location_id: 5
     }
     const deleteAllEntries = async function (payload) {
       try {

@@ -174,20 +174,12 @@ module.exports = {
         auth: 'bpc'
       },
       handler: async (req, h) => {
-        console.log("Whats going on...");
         const me = await h.bpc.request({ path: `/me` }, req.auth.credentials);
         const uid = me.id;
         const email = me.email;
 
-        console.log("uid " + uid);
-        console.log("email " + email);
-
         const payload = await ZenDesk.mapRequestToTicket({ payload: req.payload, uid, email });
-        console.log("payload " + payload);
-        console.log("payload full " + JSON.stringify(payload));
         const response = await ZenDesk.createTicket(payload);
-        console.log("response " + response);
-        console.log("response full " + JSON.stringify(response));
 
         await h.bpc.request({
           path: `/permissions/${uid}/zendesk`,
