@@ -76,7 +76,7 @@ module.exports = {
 
 
   createTicket: function(ticket) {
-    const validate_result = Joi.validate(ticket, createTicketSchema, { convert: false });
+    const validate_result = createTicketSchema.validate(ticket);
     if(validate_result.error) {
       return Promise.reject(validate_result.error);
     }
@@ -108,8 +108,8 @@ module.exports = {
   },
 
   mapRequestToTicket: ({ payload, uid, email }) => {
-    const modeText = req.payload.mode === 'insight' ? 'INDSIGT' : 'SLET';
-    const {firstName, lastName, phones, address, city, zip} = req.payload.user;
+    const modeText = payload.mode === 'insight' ? 'INDSIGT' : 'SLET';
+    const {firstName, lastName, phones, address, city, zip} = payload.user;
     const name = `${firstName || ''} ${lastName || ''}`.trim() || '[Kunde]';
     const custom_fields = [
       {id: 360005004613, value: uid},
@@ -142,36 +142,16 @@ module.exports = {
         });
       }
 
-      return KU.fetchAllDataSimple(uid).then(orders => {
-        if (orders.orders.length > 0) {
-          const [orderNumbers, businessPartnerIds] = orders.orders.reduce(([orderIds, partnerIds], order) => {
-            return [
-              [...orderIds, order.sap_order_id],
-              [...partnerIds, ...order.items.map(item => item.business_partner_id)]
-            ];
-          }, [[], []]);
+      const prefix = process.env.ZENDESK_SUBJECT_PREFIX || '';
 
-          if (orderNumbers.length) {
-            custom_fields.push({
-              id: 360005127574, value: orderNumbers
-            });
-            custom_fields.push({
-              id: 360005127594, value: businessPartnerIds
-            });
-          }
-        }
-
-        const prefix = process.env.ZENDESK_SUBJECT_PREFIX || '';
-
-        return {
-          subject: `${prefix}${modeText}: ${name}`,
-          comment: {
-            body: `${prefix}Jeg ønsker ${modeText} af følgende data:\n\n${payloadCategories.map(c => '- '.concat(c.title)).join('\n')}`
-          },
-          requester: {name, email},
-          custom_fields
-        };
-      });
+      return {
+        subject: `${prefix}${modeText}: ${name}`,
+        comment: {
+          body: `${prefix}Jeg ønsker ${modeText} af følgende data:\n\n${payloadCategories.map(c => '- '.concat(c.title)).join('\n')}`
+        },
+        requester: {name, email},
+        custom_fields
+      };
     });
   },
 

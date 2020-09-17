@@ -39,6 +39,7 @@
     "components-font-awesome": "^5.9.0",
     "hapi-bpc": "^3.5.2",
     "jquery": "^3.5.1",
+    "lodash-es": "^4.17.15",
     "prop-types": "15.7.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
