@@ -115,7 +115,7 @@ steps:
       secret_key:
         from_secret: aws_access_key_secret_testing
       region: eu-west-1
-      repo: cust-test-newsletter-ecr/nyhedsbreveprofil
+      repo: cust-testing-newsletter-ecr/nyhedsbreveprofil
       registry: 815296035528.dkr.ecr.eu-west-1.amazonaws.com
       dockerfile: Dockerfile
       tags:
@@ -162,30 +162,30 @@ steps:
         - BPC_URL=https://bpc.berlingskemedia-testing.net
         - ZENDESK_URL=https://berlingskemediahelp.zendesk.com
         - ARIA_HOST=https://eu-stage03.workflow.ariasystems.net/bpa/c_DePersgroepQA01
-      cluster: cust-test-newsletter
+      cluster: cust-testing-newsletter
       compatibilities: FARGATE
       deployment_configuration: 100 200
       desired_count: 1
-      docker_image: 815296035528.dkr.ecr.eu-west-1.amazonaws.com/cust-test-newsletter-ecr/nyhedsbreveprofil
-      container_name: cust-test-newsletter-nyhedsbreveprofil-container
-      family: cust-test-newsletter-nyhedsbreveprofil-qa1
+      docker_image: 815296035528.dkr.ecr.eu-west-1.amazonaws.com/cust-testing-newsletter-ecr/nyhedsbreveprofil
+      container_name: cust-testing-newsletter-nyhedsbreveprofil-container
+      family: cust-testing-newsletter-nyhedsbreveprofil-qa1
       log_driver: awslogs
       log_options:
-        - awslogs-group=cust-test-newsletter
+        - awslogs-group=cust-testing-newsletter
         - awslogs-region=eu-west-1
-        - awslogs-stream-prefix=cust-test-newsletter-nyhedsbreveprofil
+        - awslogs-stream-prefix=cust-testing-newsletter-nyhedsbreveprofil
       memory: 512
       port_mappings:
         - 8000 8000
       region: eu-west-1
-      service: cust-test-newsletter-nyhedsbreveprofil-qa1
+      service: cust-testing-newsletter-nyhedsbreveprofil-qa1
       service_network_security_groups:
       [security_groups]
       service_network_subnets:
       [subnets]
       tag: ${CI_COMMIT_SHA}
       task_cpu: 256
-      task_execution_role_arn: arn:aws:iam::815296035528:role/cust-test-newsletter-nyhedsbreveprofil-qa1-exec
+      task_execution_role_arn: arn:aws:iam::815296035528:role/cust-testing-newsletter-nyhedsbreveprofil-qa1-exec
       task_memory: 512
       task_network_mode: awsvpc
     when:
@@ -235,30 +235,30 @@ steps:
         - BPC_URL=https://bpc.berlingskemedia-testing.net #set prod value
         - ZENDESK_URL=https://berlingskemediahelp.zendesk.com #set prod value
         - ARIA_HOST=https://eu-stage03.workflow.ariasystems.net/bpa/c_DePersgroepQA01 #set prod value
-      cluster: cust-test-newsletter
+      cluster: cust-testing-newsletter
       compatibilities: FARGATE
       deployment_configuration: 100 200
       desired_count: 1
-      docker_image: 815296035528.dkr.ecr.eu-west-1.amazonaws.com/cust-test-newsletter-ecr/nyhedsbreveprofil
-      container_name: cust-test-newsletter-nyhedsbreveprofil-container
-      family: cust-test-newsletter-nyhedsbreveprofil-qa2
+      docker_image: 815296035528.dkr.ecr.eu-west-1.amazonaws.com/cust-testing-newsletter-ecr/nyhedsbreveprofil
+      container_name: cust-testing-newsletter-nyhedsbreveprofil-container
+      family: cust-testing-newsletter-nyhedsbreveprofil-qa2
       log_driver: awslogs
       log_options:
-        - awslogs-group=cust-test-newsletter
+        - awslogs-group=cust-testing-newsletter
         - awslogs-region=eu-west-1
-        - awslogs-stream-prefix=cust-test-newsletter-nyhedsbreveprofil
+        - awslogs-stream-prefix=cust-testing-newsletter-nyhedsbreveprofil
       memory: 512
       port_mappings:
         - 8000 8000
       region: eu-west-1
-      service: cust-test-newsletter-nyhedsbreveprofil-qa2
+      service: cust-testing-newsletter-nyhedsbreveprofil-qa2
       service_network_security_groups:
       [ security_groups ]
       service_network_subnets:
       [ subnets ]
       tag: ${CI_COMMIT_SHA}
       task_cpu: 256
-      task_execution_role_arn: arn:aws:iam::815296035528:role/cust-test-newsletter-nyhedsbreveprofil-qa2-exec
+      task_execution_role_arn: arn:aws:iam::815296035528:role/cust-testing-newsletter-nyhedsbreveprofil-qa2-exec
       task_memory: 512
       task_network_mode: awsvpc
     when:
@@ -280,35 +280,24 @@ trigger:
 kind: "secret"
 name: "aws_access_key_testing"
 get:
-  path: "[SSM_path]"
+  path: "drone/cust-production-newsletter"
   name: "aws_access_key"
 ---
 kind: "secret"
 name: "aws_access_key_secret_testing"
 get:
-  path: "drone/userhandling-testing-pm"
+  path: "drone/cust-testing-pm"
   name: "aws_access_key_secret"
 ---
 kind: "secret"
 name: "aws_access_key_production"
 get:
-  path: "[SSM_path]"
+  path: "drone/cust-production-newsletter"
   name: "aws_access_key"
 ---
 kind: "secret"
 name: "aws_access_key_secret_production"
 get:
-  path: "[SSM_path]"
+  path: "drone/cust-production-newsletter"
   name: "aws_access_key_secret"
 ---
-kind: "secret"
-name: "my_test_ssm_secret"
-get:
-  path: "[SSM_path]"
-  name: "some_ssm_value_name"
----
-kind: "secret"
-name: "my_production_ssm_secret"
-get:
-  path: "[SSM_path]"
-  name: "some_ssm_value_name"
