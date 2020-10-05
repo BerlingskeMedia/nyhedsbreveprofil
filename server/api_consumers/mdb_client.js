@@ -79,41 +79,7 @@ class MDB {
   }
 
   static deleteUser(eksterId) {
-    return Http.put(`${MDBAPI_ADDRESS}/users/${eksterId}`, {
-      fornavn: "",
-      efternavn: "",
-      co_navn: "",
-      vejnavn: "",
-      husnummer: "",
-      husbogstav: "",
-      etage: "",
-      sidedoer: "",
-      stednavn: "",
-      bynavn: "",
-      postnummer: "",
-      postnummer_dk: 0,
-      land: "",
-      firma: "",
-      firma_adresse: "",
-      lande_kode: "N/A",
-      udland_flag: false,
-      alder: null,
-      foedselsaar: "",
-      foedselsdato: null,
-      koen: "",
-      telefon: "",
-      mobil: "",
-      brugernavn: "",
-      adgangskode: "",
-      komvej_kode: "N/A",
-      vilkaar: "",
-      status_kode: "",
-      bbs_abo_nr: null,
-      mol_bbs_nr: null,
-      robinson_flag: false,
-      active: false,
-      location_id: 5
-    });
+    return Http.delete(`${MDBAPI_ADDRESS}/users/${eksterId}?location_id=5`);
   }
 
   static findUser(email) {
