@@ -32,7 +32,7 @@ Help()
 ########
 
 
-allowed_quas=( "qa1" )
+allowed_quas=( "qa1" "qa2" )
 
 if [[ $1 = "-h" || $1 = "--help" ]]; then
 	Help
