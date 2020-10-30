@@ -167,7 +167,7 @@ steps:
     when:
       ref:
         include:
-          - refs/tags/qa1*
+          - refs/tags/qa2*
         exclude:
           - refs/heads/master
 
