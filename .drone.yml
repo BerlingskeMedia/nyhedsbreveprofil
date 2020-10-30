@@ -73,7 +73,7 @@ steps:
         - awslogs-stream-prefix=newsletter-np-qa1
       memory: 512
       port_mappings:
-        - 8000 8000
+        - 8080 8080
       region: eu-west-1
       service: cust-testing-newsletter-np-qa1
       service_network_security_groups:
