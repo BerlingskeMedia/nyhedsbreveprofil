@@ -31,6 +31,12 @@ try {
     MDBAPI_PROTOCOL = 'http:';
     MDBAPI_HOSTNAME = process.env.MDBAPI_ADDRESS;
     MDBAPI_PORT = process.env.MDBAPI_PORT;
+
+  } else if(!temp.protocol && process.env.MDBAPI_ADDRESS) {
+    console.log('TEST 4back');
+    MDBAPI_PROTOCOL = 'https:';
+    MDBAPI_HOSTNAME = process.env.MDBAPI_ADDRESS;
+    MDBAPI_PORT = '443';
   
   } else {
 
