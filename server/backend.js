@@ -185,11 +185,11 @@ module.exports = {
 
     /* These are the URL's we're allowing to proxy */
 
-    server.route({
-      method: 'GET',
-      path: '/healthcheck',
-      handler: proxy
-    });
+    // server.route({
+    //   method: 'GET',
+    //   path: '/healthcheck',
+    //   handler: proxy
+    // });
 
     server.route({
       method: 'GET',

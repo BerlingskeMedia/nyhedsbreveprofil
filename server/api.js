@@ -137,14 +137,14 @@ module.exports = {
 
     route_prefix = server.realm.modifiers.route.prefix;
 
-    server.route({
-      method: 'GET',
-      path: '/healthcheck',
-      options: {
-        auth: false
-      },
-      handler: proxy
-    });
+    // server.route({
+    //   method: 'GET',
+    //   path: '/healthcheck',
+    //   options: {
+    //     auth: false
+    //   },
+    //   handler: proxy
+    // });
 
     server.route({
       method: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
