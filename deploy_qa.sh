@@ -53,7 +53,7 @@ if [ -z "$COMMENT" ]; then
 	COMMENT="$QA from branch: $BRANCH_NAME"
 fi
 
-LAST_TAG=$(git tag | grep -P "^$QA-\d+-" |sort | tail -n 1)
+LAST_TAG=$(git tag | grep -P "^$QA-\d+-" |sort -V | tail -n 1)
 BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
 
 # Check if tag exists, if not create first tag
