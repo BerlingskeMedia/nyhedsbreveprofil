@@ -1,6 +1,8 @@
 /*jshint node: true */
 'use strict';
 
+const.log('MA ', process.env.MDBAPI_ADDRESS);
+
 // To remain compatible with the puppet-scripts
 if(process.env.NYHEDSBREVEPROFIL_APP_ID && !process.env.BPC_APP_ID) {
   process.env.BPC_APP_ID = process.env.NYHEDSBREVEPROFIL_APP_ID;
