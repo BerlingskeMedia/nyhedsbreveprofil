@@ -19,7 +19,7 @@ try {
   // console.log('Temp ', temp);
   console.log('Temp', temp);
   console.log('Temp prot', temp.protocol);
-  console.log('Temp url', temp.uri);
+  console.log('Temp host', temp.host);
 
   // Sometimes the ENV var is including the protocol, eg: MDBAPI_ADDRESS=http://mdbapi-test.bemit.dk
 
