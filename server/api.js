@@ -40,7 +40,7 @@ try {
     console.log('TEST 4');
     MDBAPI_PROTOCOL = 'https:';
     MDBAPI_HOSTNAME = process.env.MDBAPI_ADDRESS;
-    // MDBAPI_PORT = process.env.MDBAPI_PORT;
+    MDBAPI_PORT = '443';
     
   } else {
     console.log('TEST 5');
