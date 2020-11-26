@@ -46,7 +46,7 @@ const init = async () => {
   // Remove this route when task BDM-5915 will be done
   server.route({
     method: 'GET',
-    path: '/healthcheck',
+    path: '/',
     handler: function (request, h) {
       return 'OK';
     }
