@@ -7,6 +7,8 @@ steps:
   - name: publish image to test
     image: plugins/ecr
     settings:
+      onfig:
+        from_secret: dockerhub_auth_config
       access_key:
         from_secret: aws_access_key_testing
       secret_key:
@@ -182,6 +184,12 @@ trigger:
   ref:
     include:
       - refs/tags/qa*
+---
+kind: secret
+name: dockerhub_auth_config
+get:
+  path: drone/dockerhub_auth_secret
+  name: auth_json
 ---
 kind: "secret"
 name: "aws_access_key_testing"
