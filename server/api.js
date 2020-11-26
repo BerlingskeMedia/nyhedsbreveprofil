@@ -17,37 +17,28 @@ try {
 
 
   // console.log('Temp ', temp);
+  console.log('Temp', temp);
   console.log('Temp prot', temp.protocol);
+  console.log('Temp url', temp.uri);
 
   // Sometimes the ENV var is including the protocol, eg: MDBAPI_ADDRESS=http://mdbapi-test.bemit.dk
 
   if(['http:', 'https:'].indexOf(temp.protocol) > -1) {
-    console.log('TEST1');
     
     MDBAPI_PROTOCOL = temp.protocol;
     MDBAPI_HOSTNAME = temp.hostname;
     MDBAPI_PORT = temp.port;
 
-    console.log('T1 ', MDBAPI_PROTOCOL);
-    console.log('T1 ', MDBAPI_HOSTNAME);
-    console.log('T1 ', MDBAPI_PORT);
-
   // Other times (eg. in puppet) there are two seperate ENV vars, eg: MDBAPI_ADDRESS=mdbapi-test.bemit.dk MDBAPI_PORT=80
 
   } else if (process.env.MDBAPI_PORT) {
 
-    console.log('TEST2');
-
     MDBAPI_PROTOCOL = 'http:';
     MDBAPI_HOSTNAME = process.env.MDBAPI_ADDRESS;
     MDBAPI_PORT = process.env.MDBAPI_PORT;
-
-    console.log('T2 ', MDBAPI_PROTOCOL);
-    console.log('T2 ', MDBAPI_HOSTNAME);
-    console.log('T2 ', MDBAPI_PORT);
     
   } else {
-    console.log('TEST3');
+
     throw new Error();
     
   }
