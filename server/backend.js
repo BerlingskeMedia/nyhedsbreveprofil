@@ -34,9 +34,9 @@ try {
 
   } else if(!temp.protocol && process.env.MDBAPI_ADDRESS) {
     console.log('TEST 4back');
-    MDBAPI_PROTOCOL = 'https:';
+    MDBAPI_PROTOCOL = 'http:';
     MDBAPI_HOSTNAME = process.env.MDBAPI_ADDRESS;
-    MDBAPI_PORT = '443';
+    MDBAPI_PORT = '8000';
   
   } else {
 
@@ -185,11 +185,11 @@ module.exports = {
 
     /* These are the URL's we're allowing to proxy */
 
-    // server.route({
-    //   method: 'GET',
-    //   path: '/healthcheck',
-    //   handler: proxy
-    // });
+    server.route({
+      method: 'GET',
+      path: '/healthcheck',
+      handler: proxy
+    });
 
     server.route({
       method: 'GET',

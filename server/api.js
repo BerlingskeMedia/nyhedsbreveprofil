@@ -38,9 +38,9 @@ try {
     MDBAPI_PORT = process.env.MDBAPI_PORT;
   } else if(!temp.protocol && process.env.MDBAPI_ADDRESS) {
     console.log('TEST 4');
-    MDBAPI_PROTOCOL = 'https:';
+    MDBAPI_PROTOCOL = 'http:';
     MDBAPI_HOSTNAME = process.env.MDBAPI_ADDRESS;
-    MDBAPI_PORT = '443';
+    MDBAPI_PORT = '8000';
     
   } else {
     console.log('TEST 5');
@@ -137,14 +137,14 @@ module.exports = {
 
     route_prefix = server.realm.modifiers.route.prefix;
 
-    // server.route({
-    //   method: 'GET',
-    //   path: '/healthcheck',
-    //   options: {
-    //     auth: false
-    //   },
-    //   handler: proxy
-    // });
+    server.route({
+      method: 'GET',
+      path: '/healthcheck',
+      options: {
+        auth: false
+      },
+      handler: proxy
+    });
 
     server.route({
       method: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
