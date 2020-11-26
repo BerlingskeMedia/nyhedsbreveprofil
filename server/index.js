@@ -41,6 +41,15 @@ const init = async () => {
     }
   });
 
+  // Remove this route when task BDM-5915 will be done
+  server.route({
+    method: 'GET',
+    path: '/healthcheck',
+    handler: function (request, h) {
+      return 'OK';
+    }
+  });
+
   await server.register(inert);
   await server.register(HapiBpc);
   await server.bpc.connect(null, process.env.BPC_URL);
