@@ -214,3 +214,9 @@ name: "aws_access_key_secret_production"
 get:
   path: "drone/cust-production-newsletter"
   name: "aws_access_key_secret"
+---
+kind: secret
+name: mdbapi_qa1_service_discovery
+get:
+  path: drone/cust-testing-newsletter
+  name: mdbapi_qa1_service_discovery
