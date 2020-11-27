@@ -61,6 +61,7 @@ steps:
         - ARIA_AUTH_KEY
         - MDBAPI_ADDRESS
       environment_variables:
+        - MDBAPI_PORT=8000
         - BPC_URL=https://bpc.berlingskemedia-testing.net
         - ZENDESK_URL=https://berlingskemediahelp.zendesk.com
         - ARIA_HOST=https://eu-stage03.workflow.ariasystems.net/bpa/c_DePersgroepQA01

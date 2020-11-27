@@ -32,12 +32,13 @@ try {
   // Other times (eg. in puppet) there are two seperate ENV vars, eg: MDBAPI_ADDRESS=mdbapi-test.bemit.dk MDBAPI_PORT=80
 
   } else if (process.env.MDBAPI_PORT) {
+    console.log('TEST3');
 
     MDBAPI_PROTOCOL = 'http:';
     MDBAPI_HOSTNAME = process.env.MDBAPI_ADDRESS;
     MDBAPI_PORT = process.env.MDBAPI_PORT;
   } else if(!temp.protocol && process.env.MDBAPI_ADDRESS) {
-    console.log('TEST 4');
+    console.log('TEST4');
     MDBAPI_PROTOCOL = 'http:';
     MDBAPI_HOSTNAME = process.env.MDBAPI_ADDRESS;
     MDBAPI_PORT = '8000';

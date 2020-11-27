@@ -12,7 +12,6 @@ try {
   } else if (process.env.MDBAPI_PORT) {
     MDBAPI_ADDRESS = `http://${process.env.MDBAPI_ADDRESS}:${process.env.MDBAPI_PORT}`
   } else if(!temp.protocol && process.env.MDBAPI_ADDRESS) {
-    console.log('TEST 4client');
     MDBAPI_ADDRESS = `https://${process.env.MDBAPI_ADDRESS}`;
 
   } else {
