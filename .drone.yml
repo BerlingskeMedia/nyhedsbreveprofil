@@ -125,7 +125,7 @@ steps:
       ARIA_AUTH_KEY:
         from_secret: aria_auth_key_test_qa2
       MDBAPI_ADDRESS:
-        from_secret: mdbapi_qa1_service_discovery
+        from_secret: mdbapi_qa2_service_discovery
     settings:
       task_role_arn: arn:aws:iam::815296035528:role/cust-testing-newsletter-np-qa2-exec
       secret_environment_variables:
