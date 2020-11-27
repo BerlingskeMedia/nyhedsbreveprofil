@@ -31,11 +31,6 @@ try {
     MDBAPI_PROTOCOL = 'http:';
     MDBAPI_HOSTNAME = process.env.MDBAPI_ADDRESS;
     MDBAPI_PORT = process.env.MDBAPI_PORT;
-
-  } else if(!temp.protocol && process.env.MDBAPI_ADDRESS) {
-    MDBAPI_PROTOCOL = 'http:';
-    MDBAPI_HOSTNAME = process.env.MDBAPI_ADDRESS;
-    MDBAPI_PORT = '8000';
   
   } else {
 
