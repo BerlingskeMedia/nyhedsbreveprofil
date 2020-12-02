@@ -14,6 +14,8 @@ var MDBAPI_PORT;
 
 try {
   var temp = Url.parse(process.env.MDBAPI_ADDRESS);
+  console.log(process.env.MDBAPI_ADDRESS);
+  console.log(temp);
 
   // Sometimes the ENV var is including the protocol, eg: MDBAPI_ADDRESS=http://mdbapi-test.bemit.dk
 
