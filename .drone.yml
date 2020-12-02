@@ -82,7 +82,7 @@ steps:
       port_mappings:
         - 8000 8000
       region: eu-west-1
-      service: cust-production-newsletter-nyhedsbreveprofil
+      service: cust-production-newsletter-np
       service_network_security_groups:
         - sg-0c2900399db25f1d7
         - sg-0b6b2a83e91eab1c6
