@@ -43,6 +43,8 @@ steps:
         from_secret: aria_client_no_prod
       ARIA_AUTH_KEY:
         from_secret: aria_auth_key_prod
+      MDBAPI_ADDRESS:
+        from_secret: mdbapi_service_discovery
     settings:
       secret_environment_variables:
         - NYHEDSBREVEPROFIL_APP_ID
@@ -50,13 +52,13 @@ steps:
         - ZENDESK_API_EMAIL
         - ZENDESK_API_TOKEN
         - GIGYA_API_KEY
-        - GIGYA_API_USER=AADC9FWioQwh
+        - GIGYA_API_USER
         - GIGYA_API_SECRET
         - GA_TRACKING_ID
         - ARIA_CLIENT_NO
         - ARIA_AUTH_KEY
+        - MDBAPI_ADDRESS
       environment_variables:
-        - MDBAPI_ADDRESS=http://10.94.93.46:8000 #set prod value
         - BPC_URL=https://bpc.berlingskemedia-testing.net #set prod value
         - ZENDESK_URL=https://berlingskemediahelp.zendesk.com #set prod value
         - ARIA_HOST=https://eu-stage03.workflow.ariasystems.net/bpa/c_DePersgroepQA01 #set prod value
@@ -179,7 +181,7 @@ trigger:
 #        - ZENDESK_API_EMAIL
 #        - ZENDESK_API_TOKEN
 #        - GIGYA_API_KEY
-#        - GIGYA_API_USER=AADC9FWioQwh
+#        - GIGYA_API_USER
 #        - GIGYA_API_SECRET
 #        - GA_TRACKING_ID
 #        - ARIA_CLIENT_NO
