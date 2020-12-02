@@ -353,3 +353,9 @@ name: mdbapi_qa2_service_discovery
 get:
   path: drone/cust-testing-newsletter
   name: mdbapi_qa2_service_discovery
+---
+kind: secret
+name: mdbapi_service_discovery
+get:
+  path: drone/cust-testing-newsletter
+  name: mdbapi_service_discovery
