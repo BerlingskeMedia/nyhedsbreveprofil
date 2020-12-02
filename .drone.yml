@@ -7,6 +7,7 @@ steps:
   - name: publish image to production
     image: plugins/ecr
     settings:
+      mirror: https://proxy.docker.all.berlingskemedia.net
       access_key:
         from_secret: aws_access_key_production
       secret_key:
