@@ -59,7 +59,7 @@ steps:
         - ARIA_AUTH_KEY
         - MDBAPI_ADDRESS
       environment_variables:
-        - BPC_URL=https://bpc.berlingskemedia-testing.net #set prod value
+        - BPC_URL=https://bpc.berlingskemedia.net
         - ZENDESK_URL=https://berlingskemediahelp.zendesk.com #set prod value
         - ARIA_HOST=https://eu-stage03.workflow.ariasystems.net/bpa/c_DePersgroepQA01 #set prod value
       aws_access_key_id:
@@ -359,5 +359,5 @@ get:
 kind: secret
 name: mdbapi_service_discovery
 get:
-  path: drone/cust-testing-newsletter
+  path: drone/cust-production-newsletter
   name: mdbapi_service_discovery
