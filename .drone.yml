@@ -45,6 +45,10 @@ steps:
         from_secret: aria_auth_key_prod
       MDBAPI_ADDRESS:
         from_secret: mdbapi_service_discovery
+      MAILCHIMP_API_SECRET:
+        from_secret: mailchimp_api_secret_prod
+      JWT_SECRET:
+        from_secret: jwt_secret_prod
     settings:
       secret_environment_variables:
         - NYHEDSBREVEPROFIL_APP_ID
@@ -58,11 +62,14 @@ steps:
         - ARIA_CLIENT_NO
         - ARIA_AUTH_KEY
         - MDBAPI_ADDRESS
+        - JWT_SECRET
+        - MAILCHIMP_API_SECRET
       environment_variables:
         - MDBAPI_PORT=8000
         - BPC_URL=https://bpc.berlingskemedia.net
         - ZENDESK_URL=https://berlingskemediahelp.zendesk.com #set prod value
-        - ARIA_HOST=https://eu-stage03.workflow.ariasystems.net/bpa/c_DePersgroepQA01 #set prod value
+        - ARIA_HOST=https://prmtwf01-ew1.ms.ariasystems.net/bpa/DePersGroep_Prod0
+        - GIGYA_API_URL=https://accounts.eu1.gigya.com
       aws_access_key_id:
         from_secret: aws_access_key_production
       aws_secret_access_key:
