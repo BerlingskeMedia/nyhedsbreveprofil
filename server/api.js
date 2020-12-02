@@ -15,12 +15,6 @@ var MDBAPI_PORT;
 try {
   var temp = Url.parse(process.env.MDBAPI_ADDRESS);
 
-
-  // console.log('Temp ', temp);
-  console.log('Temp', temp);
-  console.log('Temp prot', temp.protocol);
-  console.log('Temp host', temp.host);
-
   // Sometimes the ENV var is including the protocol, eg: MDBAPI_ADDRESS=http://mdbapi-test.bemit.dk
 
   if(['http:', 'https:'].indexOf(temp.protocol) > -1) {
@@ -38,7 +32,6 @@ try {
     MDBAPI_PORT = process.env.MDBAPI_PORT;
 
   } else {
-    console.log('TEST 5');
     throw new Error();
     
   }
