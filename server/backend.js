@@ -41,7 +41,8 @@ try {
   }
 
 } catch (ex) {
-  console.error('Env var MDBAPI_ADDRESS missing or invalid.');
+  console.log(process.env.MDBAPI_ADDRESS);
+  console.error('Env var MDBAPI_ADDRESS missing or invalid 1.');
   process.exit(1);
 }
 
