@@ -85,7 +85,7 @@ module.exports.client = ({ARIA_HOST, ARIA_AUTH_KEY, ARIA_CLIENT_NO}) => {
             });
 
             req.on('error', (err) => {
-                console.err(err.toString());
+                console.error(err.toString());
                 reject(err);
             });
 

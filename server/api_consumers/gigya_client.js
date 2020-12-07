@@ -80,7 +80,7 @@ module.exports.request = async ({ path, payload, api = 'accounts' }) => {
     });
     
     req.on('error', (err) => {
-      console.err(err.toString());
+      console.error(err.toString());
       reject(err);
     });
     
