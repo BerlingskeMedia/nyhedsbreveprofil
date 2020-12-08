@@ -1,6 +1,8 @@
 /*jshint node: true */
 'use strict';
 
+console.log('MA ', process.env.MDBAPI_ADDRESS);
+
 // To remain compatible with the puppet-scripts
 if(process.env.NYHEDSBREVEPROFIL_APP_ID && !process.env.BPC_APP_ID) {
   process.env.BPC_APP_ID = process.env.NYHEDSBREVEPROFIL_APP_ID;
@@ -36,6 +38,15 @@ const init = async () => {
   server.route({
     method: 'GET',
     path: '/healthcheck',
+    handler: function (request, h) {
+      return 'OK';
+    }
+  });
+
+  // Remove this route when task BDM-5915 will be done
+  server.route({
+    method: 'GET',
+    path: '/',
     handler: function (request, h) {
       return 'OK';
     }
