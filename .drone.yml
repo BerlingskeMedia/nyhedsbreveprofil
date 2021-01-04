@@ -39,6 +39,8 @@ steps:
         from_secret: gigya_api_secret_prod
       GA_TRACKING_ID:
         from_secret: ga_tracking_id_prod
+      ARIA_HOST:
+        from_secret: aria_host_prod
       ARIA_CLIENT_NO:
         from_secret: aria_client_no_prod
       ARIA_AUTH_KEY:
@@ -59,6 +61,7 @@ steps:
         - GIGYA_API_USER
         - GIGYA_API_SECRET
         - GA_TRACKING_ID
+        - ARIA_HOST
         - ARIA_CLIENT_NO
         - ARIA_AUTH_KEY
         - MDBAPI_ADDRESS
@@ -68,7 +71,6 @@ steps:
         - MDBAPI_PORT=8000
         - BPC_URL=https://bpc.berlingskemedia.net
         - ZENDESK_URL=https://berlingskemediahelp.zendesk.com #set prod value
-        - ARIA_HOST=https://prmtwf01-ew1.ms.ariasystems.net/bpa/DePersGroep_Prod0
         - GIGYA_API_URL=https://accounts.eu1.gigya.com
       aws_access_key_id:
         from_secret: aws_access_key_prod
@@ -157,6 +159,8 @@ steps:
         from_secret: gigya_api_secret_test_qa1
       GA_TRACKING_ID:
         from_secret: ga_tracking_id_test_qa1
+      ARIA_HOST:
+        from_secret: aria_host_test_qa1
       ARIA_CLIENT_NO:
         from_secret: aria_client_no_test_qa1
       ARIA_AUTH_KEY:
@@ -174,6 +178,7 @@ steps:
         - GIGYA_API_USER
         - GIGYA_API_SECRET
         - GA_TRACKING_ID
+        - ARIA_HOST
         - ARIA_CLIENT_NO
         - ARIA_AUTH_KEY
         - MDBAPI_ADDRESS
@@ -181,7 +186,6 @@ steps:
         - MDBAPI_PORT=8000
         - BPC_URL=https://bpc.berlingskemedia-testing.net
         - ZENDESK_URL=https://berlingskemediahelp.zendesk.com
-        - ARIA_HOST=https://eu-stage03.workflow.ariasystems.net/bpa/c_DePersgroepQA01
       cluster: cust-testing-newsletter
       compatibilities: FARGATE
       deployment_configuration: 100 200
@@ -237,6 +241,8 @@ steps:
         from_secret: gigya_api_secret_test_qa2
       GA_TRACKING_ID:
         from_secret: ga_tracking_id_test_qa2
+      ARIA_HOST:
+        from_secret: aria_host_test_qa2
       ARIA_CLIENT_NO:
         from_secret: aria_client_no_test_qa2
       ARIA_AUTH_KEY:
@@ -254,6 +260,7 @@ steps:
         - GIGYA_API_USER=AADC9FWioQwh
         - GIGYA_API_SECRET
         - GA_TRACKING_ID
+        - ARIA_HOST
         - ARIA_CLIENT_NO
         - ARIA_AUTH_KEY
         - MDBAPI_ADDRESS
@@ -261,7 +268,6 @@ steps:
         - MDBAPI_PORT=8000
         - BPC_URL=https://bpc.berlingskemedia-testing.net
         - ZENDESK_URL=https://berlingskemediahelp.zendesk.com
-        - ARIA_HOST=https://eu-stage03.workflow.ariasystems.net/bpa/c_DePersgroepQA01
       cluster: cust-testing-newsletter
       compatibilities: FARGATE
       deployment_configuration: 100 200
