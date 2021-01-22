@@ -56,6 +56,7 @@ steps:
       COOKIE_AUTH_STRING:
         from_secret: cookie_auth_string_prod
     settings:
+      task_role_arn: arn:aws:iam::815296035528:role/cust-production-newsletter-np-exec
       secret_environment_variables:
         - NYHEDSBREVEPROFIL_APP_ID
         - NYHEDSBREVEPROFIL_APP_SECRET
@@ -76,7 +77,7 @@ steps:
       environment_variables:
         - MDBAPI_PORT=8000
         - BPC_URL=https://bpc.berlingskemedia.net
-        - ZENDESK_URL=https://berlingskemediahelp.zendesk.com #set prod value
+        - ZENDESK_URL=https://berlingskemediahelp.zendesk.com
         - GIGYA_API_URL=https://accounts.eu1.gigya.com
       aws_access_key_id:
         from_secret: aws_access_key_prod
@@ -94,6 +95,7 @@ steps:
         - awslogs-group=cust-production-newsletter
         - awslogs-region=eu-west-1
         - awslogs-stream-prefix=newsletter-np
+        - awslogs-datetime-format=\[%Y-%m-%dT%H:%M:%S%L\]
       memory: 512
       port_mappings:
         - 8000 8000
@@ -210,6 +212,7 @@ steps:
         - awslogs-group=cust-testing-newsletter
         - awslogs-region=eu-west-1
         - awslogs-stream-prefix=newsletter-np-qa1
+        - awslogs-datetime-format=\[%Y-%m-%dT%H:%M:%S%L\]
       memory: 512
       port_mappings:
         - 8000 8000
@@ -298,6 +301,7 @@ steps:
         - awslogs-group=cust-testing-newsletter
         - awslogs-region=eu-west-1
         - awslogs-stream-prefix=newsletter-np-qa2
+        - awslogs-datetime-format=\[%Y-%m-%dT%H:%M:%S%L\]
       memory: 512
       port_mappings:
         - 8000 8000
