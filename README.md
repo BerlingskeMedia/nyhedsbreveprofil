@@ -185,3 +185,18 @@ Zendesk.createTicket(newTicket)
 | 360005127574 | Ordrenummer | Multi-line | |
 | 360005127594 | Kundenummer | Multi-line | |
 | 360003718813 | System | Multi-select |  Possible values: *Abonnement* (abonnement), *Annoncering* (annoncering), *Kundeservice* (kundeservice), *Markedsundersøgelse* (markedsundersogelse), *Rapportering* (rapportering), *Telemarketing* (telemarketing), *Tracking* (tracking) |
+
+## Maintenance page
+Maintenance page has been prepared for providing new pipelines, but it can be used to other reasons.
+Using dedicated cookie, one can go through maintenance page and can use application in normal way.
+It is done for testing reasons.
+
+To configure maintenance page you have to set following envs:
+
+- `MAINTENANCE_PAGE` 'true' or `false` Turn on/off maintenance page. Default set to `false`.
+- `COOKIE_AUTH_STRING` String you have to add in query to obtain `GO_THOUGHT_MAINTENANCE_PAGE_COOKIE_NAME` cookie
+- `GO_THOUGH_MAINTENANCE_PAGE_COOKIE_NAME` Default value: `go_thought_maintenance_page` Name of the cookie which allows to go through maintenance page
+- `GO_THOUGH_MAINTENANCE_PAGE_STRING` Default value `allowed`. Value of cookie set in browser.
+
+To obtain above cookie go to page `/setauthcookie?authstring={COOKIE_AUTH_STRING}`.
+Maintenance page has path: `/maintenace`. 

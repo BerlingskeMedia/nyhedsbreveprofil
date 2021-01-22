@@ -18,7 +18,6 @@ try {
   // Sometimes the ENV var is including the protocol, eg: MDBAPI_ADDRESS=http://mdbapi-test.bemit.dk
 
   if(['http:', 'https:'].indexOf(temp.protocol) > -1) {
-    console.log('Option 1');
     
     MDBAPI_PROTOCOL = temp.protocol;
     MDBAPI_HOSTNAME = temp.hostname;
@@ -27,7 +26,6 @@ try {
   // Other times (eg. in puppet) there are two seperate ENV vars, eg: MDBAPI_ADDRESS=mdbapi-test.bemit.dk MDBAPI_PORT=80
 
   } else if (process.env.MDBAPI_PORT) {
-    console.log('Option 2');
 
     MDBAPI_PROTOCOL = 'http:';
     MDBAPI_HOSTNAME = process.env.MDBAPI_ADDRESS;
@@ -39,8 +37,7 @@ try {
   }
   
 } catch (ex) {
-  console.log('MA ', process.env.MDBAPI_ADDRESS);
-  console.error('Env var MDBAPI_ADDRESS missing or invalid 2.');
+  console.log(ex);
   process.exit(1);
 }
 
