@@ -30,7 +30,7 @@ const init = async () => {
 
   await server.ext('onPreResponse', function (request, reply) {
     const {response} = request;
-    const maintenanceIgnoredPaths = ['/setauthcookie', '/maintenance']
+    const maintenanceIgnoredPaths = ['/setauthcookie', '/maintenance', '/healthcheck'];
 
     if (maintenancePage &&
         request.state[goThoughMaintenancePageCookieName] !== goThoughMaintenancePageString &&
@@ -46,7 +46,7 @@ const init = async () => {
     }
 
     return reply.continue;
-  })
+  });
 
   server.route({
     method: 'GET',
