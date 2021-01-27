@@ -18,24 +18,17 @@ try {
   // Sometimes the ENV var is including the protocol, eg: MDBAPI_ADDRESS=http://mdbapi-test.bemit.dk
 
   if(['http:', 'https:'].indexOf(temp.protocol) > -1) {
-
     MDBAPI_PROTOCOL = temp.protocol;
     MDBAPI_HOSTNAME = temp.hostname;
     MDBAPI_PORT = temp.port;
-
-
     // Other times (eg. in puppet) there are two seperate ENV vars, eg: MDBAPI_ADDRESS=mdbapi-test.bemit.dk MDBAPI_PORT=80
 
   } else if (process.env.MDBAPI_PORT) {
-
     MDBAPI_PROTOCOL = 'http:';
     MDBAPI_HOSTNAME = process.env.MDBAPI_ADDRESS;
     MDBAPI_PORT = process.env.MDBAPI_PORT;
-  
   } else {
-
     throw new Error('unknown protocol or port');
-
   }
 
 } catch (ex) {
@@ -58,7 +51,7 @@ async function proxy (request, h) {
   var options = {
     protocol: MDBAPI_PROTOCOL,
     hostname: MDBAPI_HOSTNAME,
-    port: MDBAPI_PORT,
+    // port: MDBAPI_PORT,
     method: request.method,
     path: path,
     headers: {}

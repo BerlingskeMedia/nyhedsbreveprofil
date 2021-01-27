@@ -10,7 +10,8 @@ try {
   if(['http:', 'https:'].indexOf(temp.protocol) > -1) {
     MDBAPI_ADDRESS = process.env.MDBAPI_ADDRESS;
   } else if (process.env.MDBAPI_PORT) {
-    MDBAPI_ADDRESS = `http://${process.env.MDBAPI_ADDRESS}:${process.env.MDBAPI_PORT}`
+    // MDBAPI_ADDRESS = `http://${process.env.MDBAPI_ADDRESS}:${process.env.MDBAPI_PORT}`
+    MDBAPI_ADDRESS = `http://${process.env.MDBAPI_ADDRESS}`
   } else if (!temp.protocol && process.env.MDBAPI_ADDRESS) {
     MDBAPI_ADDRESS = `https://${process.env.MDBAPI_ADDRESS}`;
   } else {
