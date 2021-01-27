@@ -25,6 +25,7 @@ WORKDIR /app
 COPY --from=build /build/mine-data /app/mine-data
 COPY --from=build /build/opdatering /app/opdatering
 COPY ./nyhedsbreve /app/nyhedsbreve
+COPY ./maintenance /app/maintenance
 COPY ./server /app/server
 ADD package.json /app
 

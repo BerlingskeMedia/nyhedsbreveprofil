@@ -1,0 +1,381 @@
+---
+kind: pipeline
+type: docker
+name: Production pipeline
+
+steps:
+  - name: publish image to production
+    image: plugins/ecr
+    settings:
+      mirror: https://proxy.docker.all.berlingskemedia.net
+      access_key:
+        from_secret: aws_access_key_prod
+      secret_key:
+        from_secret: aws_access_key_secret_prod
+      region: eu-west-1
+      repo: cust-production-newsletter-ecr/nyhedsbreveprofil
+      registry: 815296035528.dkr.ecr.eu-west-1.amazonaws.com
+      dockerfile: Dockerfile
+      tags:
+        - latest
+        - ${CI_COMMIT_SHA}
+
+  - name: Deploy to production
+    image: pelotech/drone-ecs:1.0.7
+    environment:
+      NYHEDSBREVEPROFIL_APP_ID:
+        from_secret: nyhedsbreveprofil_app_id_prod
+      NYHEDSBREVEPROFIL_APP_SECRET:
+        from_secret: nyhedsbreveprofil_app_secret_prod
+      ZENDESK_API_EMAIL:
+        from_secret: zendesk_api_email_prod
+      ZENDESK_API_TOKEN:
+        from_secret: zendesk_api_token_prod
+      GIGYA_API_KEY:
+        from_secret: gigya_api_key_prod
+      GIGYA_API_USER:
+        from_secret: gigya_api_user_prod
+      GIGYA_API_SECRET:
+        from_secret: gigya_api_secret_prod
+      GA_TRACKING_ID:
+        from_secret: ga_tracking_id_prod
+      ARIA_HOST:
+        from_secret: aria_host_prod
+      ARIA_CLIENT_NO:
+        from_secret: aria_client_no_prod
+      ARIA_AUTH_KEY:
+        from_secret: aria_auth_key_prod
+      MDBAPI_ADDRESS:
+        from_secret: mdbapi_service_discovery
+      MAILCHIMP_API_SECRET:
+        from_secret: mailchimp_api_secret_prod
+      JWT_SECRET:
+        from_secret: jwt_secret_prod
+      MAINTENANCE_PAGE:
+        from_secret: maintenance_page_prod
+      COOKIE_AUTH_STRING:
+        from_secret: cookie_auth_string_prod
+    settings:
+      task_role_arn: arn:aws:iam::815296035528:role/cust-production-newsletter-np-exec
+      secret_environment_variables:
+        - NYHEDSBREVEPROFIL_APP_ID
+        - NYHEDSBREVEPROFIL_APP_SECRET
+        - ZENDESK_API_EMAIL
+        - ZENDESK_API_TOKEN
+        - GIGYA_API_KEY
+        - GIGYA_API_USER
+        - GIGYA_API_SECRET
+        - GA_TRACKING_ID
+        - ARIA_HOST
+        - ARIA_CLIENT_NO
+        - ARIA_AUTH_KEY
+        - MDBAPI_ADDRESS
+        - JWT_SECRET
+        - MAILCHIMP_API_SECRET
+        - MAINTENANCE_PAGE
+        - COOKIE_AUTH_STRING
+      environment_variables:
+        - MDBAPI_PORT=8000
+        - BPC_URL=https://bpc.berlingskemedia.net
+        - ZENDESK_URL=https://berlingskemediahelp.zendesk.com
+        - GIGYA_API_URL=https://accounts.eu1.gigya.com
+      aws_access_key_id:
+        from_secret: aws_access_key_prod
+      aws_secret_access_key:
+        from_secret: aws_access_key_secret_prod
+      cluster: cust-production-newsletter
+      compatibilities: FARGATE
+      deployment_configuration: 100 200
+      desired_count: 1
+      docker_image: 815296035528.dkr.ecr.eu-west-1.amazonaws.com/cust-production-newsletter-ecr/nyhedsbreveprofil
+      container_name: cust-production-newsletter-np-container
+      family: cust-production-newsletter-np
+      log_driver: awslogs
+      log_options:
+        - awslogs-group=cust-production-newsletter
+        - awslogs-region=eu-west-1
+        - awslogs-stream-prefix=newsletter-np
+        - awslogs-datetime-format=\[%Y-%m-%dT%H:%M:%S%L\]
+      memory: 512
+      port_mappings:
+        - 8000 8000
+      region: eu-west-1
+      service: cust-production-newsletter-np
+      service_network_security_groups:
+        - sg-0c2900399db25f1d7
+        - sg-0b6b2a83e91eab1c6
+      service_network_subnets:
+        - subnet-061a8876f7f68ea21
+        - subnet-0ace4f6a68677187c
+        - subnet-01633ca14c693e302
+      tag: ${CI_COMMIT_SHA}
+      task_cpu: 256
+      task_execution_role_arn: arn:aws:iam::815296035528:role/cust-production-newsletter-np-exec
+      task_memory: 512
+      task_network_mode: awsvpc
+
+trigger:
+  repo:
+    - BerlingskeMedia/nyhedsbreveprofil
+  branch:
+    #After all tests change following branch to master
+    - pipetest
+  event:
+    include:
+      - push
+    exclude:
+      - pull_request
+
+---
+kind: pipeline
+type: docker
+name: test pipeline
+
+steps:
+  - name: publish image to test
+    image: plugins/ecr
+    settings:
+      mirror: https://proxy.docker.all.berlingskemedia.net
+      access_key:
+        from_secret: aws_access_key_testing
+      secret_key:
+        from_secret: aws_access_key_secret_testing
+      region: eu-west-1
+      repo: cust-testing-newsletter-ecr/nyhedsbreveprofil
+      registry: 815296035528.dkr.ecr.eu-west-1.amazonaws.com
+      dockerfile: Dockerfile
+      tags:
+        - ${DRONE_TAG}-${CI_COMMIT_SHA}
+        - ${CI_COMMIT_SHA}
+
+  - name: Deploy to test QA1
+    image: pelotech/drone-ecs:1.0.7
+    environment:
+      NYHEDSBREVEPROFIL_APP_ID:
+        from_secret: nyhedsbreveprofil_app_id_test_qa1
+      NYHEDSBREVEPROFIL_APP_SECRET:
+        from_secret: nyhedsbreveprofil_app_secret_test_qa1
+      ZENDESK_API_EMAIL:
+        from_secret: zendesk_api_email_test_qa1
+      ZENDESK_API_TOKEN:
+        from_secret: zendesk_api_token_test_qa1
+      GIGYA_API_KEY:
+        from_secret: gigya_api_key_test_qa1
+      GIGYA_API_USER:
+        from_secret: gigya_api_user_test_qa1
+      GIGYA_API_SECRET:
+        from_secret: gigya_api_secret_test_qa1
+      GA_TRACKING_ID:
+        from_secret: ga_tracking_id_test_qa1
+      ARIA_HOST:
+        from_secret: aria_host_test_qa1
+      ARIA_CLIENT_NO:
+        from_secret: aria_client_no_test_qa1
+      ARIA_AUTH_KEY:
+        from_secret: aria_auth_key_test_qa1
+      MDBAPI_ADDRESS:
+        from_secret: mdbapi_qa1_service_discovery
+      MAINTENANCE_PAGE:
+        from_secret: maintenance_page_qa1
+      COOKIE_AUTH_STRING:
+        from_secret: cookie_auth_string_qa1
+    settings:
+      task_role_arn: arn:aws:iam::815296035528:role/cust-testing-newsletter-np-qa1-exec
+      secret_environment_variables:
+        - NYHEDSBREVEPROFIL_APP_ID
+        - NYHEDSBREVEPROFIL_APP_SECRET
+        - ZENDESK_API_EMAIL
+        - ZENDESK_API_TOKEN
+        - GIGYA_API_KEY
+        - GIGYA_API_USER
+        - GIGYA_API_SECRET
+        - GA_TRACKING_ID
+        - ARIA_HOST
+        - ARIA_CLIENT_NO
+        - ARIA_AUTH_KEY
+        - MDBAPI_ADDRESS
+        - MAINTENANCE_PAGE
+        - COOKIE_AUTH_STRING
+      environment_variables:
+        - MDBAPI_PORT=8000
+        - BPC_URL=https://bpc.berlingskemedia-testing.net
+        - ZENDESK_URL=https://berlingskemediahelp.zendesk.com
+      cluster: cust-testing-newsletter
+      compatibilities: FARGATE
+      deployment_configuration: 100 200
+      desired_count: 1
+      docker_image: 815296035528.dkr.ecr.eu-west-1.amazonaws.com/cust-testing-newsletter-ecr/nyhedsbreveprofil
+      container_name: cust-testing-newsletter-np-qa1-container
+      family: cust-testing-newsletter-np-qa1
+      log_driver: awslogs
+      log_options:
+        - awslogs-group=cust-testing-newsletter
+        - awslogs-region=eu-west-1
+        - awslogs-stream-prefix=newsletter-np-qa1
+        - awslogs-datetime-format=\[%Y-%m-%dT%H:%M:%S%L\]
+      memory: 512
+      port_mappings:
+        - 8000 8000
+      region: eu-west-1
+      service: cust-testing-newsletter-np-qa1
+      service_network_security_groups:
+        - sg-04532122919e3abd0
+        - sg-02796308224a5820e
+      service_network_subnets:
+        - subnet-061a8876f7f68ea21
+        - subnet-0ace4f6a68677187c
+        - subnet-01633ca14c693e302
+      tag: ${CI_COMMIT_SHA}
+      task_cpu: 256
+      task_execution_role_arn: arn:aws:iam::815296035528:role/cust-testing-newsletter-np-qa1-exec
+      task_memory: 512
+      task_network_mode: awsvpc
+    when:
+      ref:
+        include:
+          - refs/tags/qa1*
+        exclude:
+          - refs/heads/master
+
+  - name: Deploy to test QA2
+    image: pelotech/drone-ecs:1.0.7
+    environment:
+      NYHEDSBREVEPROFIL_APP_ID:
+        from_secret: nyhedsbreveprofil_app_id_test_qa2
+      NYHEDSBREVEPROFIL_APP_SECRET:
+        from_secret: nyhedsbreveprofil_app_secret_test_qa2
+      ZENDESK_API_EMAIL:
+        from_secret: zendesk_api_email_test_qa2
+      ZENDESK_API_TOKEN:
+        from_secret: zendesk_api_token_test_qa2
+      GIGYA_API_KEY:
+        from_secret: gigya_api_key_test_qa2
+      GIGYA_API_USER:
+        from_secret: gigya_api_user_test_qa2
+      GIGYA_API_SECRET:
+        from_secret: gigya_api_secret_test_qa2
+      GA_TRACKING_ID:
+        from_secret: ga_tracking_id_test_qa2
+      ARIA_HOST:
+        from_secret: aria_host_test_qa2
+      ARIA_CLIENT_NO:
+        from_secret: aria_client_no_test_qa2
+      ARIA_AUTH_KEY:
+        from_secret: aria_auth_key_test_qa2
+      MDBAPI_ADDRESS:
+        from_secret: mdbapi_qa2_service_discovery
+      MAINTENANCE_PAGE:
+        from_secret: maintenance_page_qa2
+      COOKIE_AUTH_STRING:
+        from_secret: cookie_auth_string_qa2
+    settings:
+      task_role_arn: arn:aws:iam::815296035528:role/cust-testing-newsletter-np-qa2-exec
+      secret_environment_variables:
+        - NYHEDSBREVEPROFIL_APP_ID
+        - NYHEDSBREVEPROFIL_APP_SECRET
+        - ZENDESK_API_EMAIL
+        - ZENDESK_API_TOKEN
+        - GIGYA_API_KEY
+        - GIGYA_API_USER=AADC9FWioQwh
+        - GIGYA_API_SECRET
+        - GA_TRACKING_ID
+        - ARIA_HOST
+        - ARIA_CLIENT_NO
+        - ARIA_AUTH_KEY
+        - MDBAPI_ADDRESS
+        - MAINTENANCE_PAGE
+        - COOKIE_AUTH_STRING
+      environment_variables:
+        - MDBAPI_PORT=8000
+        - BPC_URL=https://bpc.berlingskemedia-testing.net
+        - ZENDESK_URL=https://berlingskemediahelp.zendesk.com
+      cluster: cust-testing-newsletter
+      compatibilities: FARGATE
+      deployment_configuration: 100 200
+      desired_count: 1
+      docker_image: 815296035528.dkr.ecr.eu-west-1.amazonaws.com/cust-testing-newsletter-ecr/nyhedsbreveprofil
+      container_name: cust-testing-newsletter-np-qa2-container
+      family: cust-testing-newsletter-np-qa2
+      log_driver: awslogs
+      log_options:
+        - awslogs-group=cust-testing-newsletter
+        - awslogs-region=eu-west-1
+        - awslogs-stream-prefix=newsletter-np-qa2
+        - awslogs-datetime-format=\[%Y-%m-%dT%H:%M:%S%L\]
+      memory: 512
+      port_mappings:
+        - 8000 8000
+      region: eu-west-1
+      service: cust-testing-newsletter-np-qa2
+      service_network_security_groups:
+        - sg-04532122919e3abd0
+        - sg-09120208d89ca170b
+      service_network_subnets:
+        - subnet-061a8876f7f68ea21
+        - subnet-0ace4f6a68677187c
+        - subnet-01633ca14c693e302
+      tag: ${CI_COMMIT_SHA}
+      task_cpu: 256
+      task_execution_role_arn: arn:aws:iam::815296035528:role/cust-testing-newsletter-np-qa2-exec
+      task_memory: 512
+      task_network_mode: awsvpc
+    when:
+      ref:
+        include:
+          - refs/tags/qa2*
+        exclude:
+          - refs/heads/master
+
+trigger:
+  repo:
+    - BerlingskeMedia/nyhedsbreveprofil
+  event:
+    - tag
+  ref:
+    include:
+      - refs/tags/qa*
+
+---
+kind: secret
+name: aws_access_key_testing
+get:
+  path: drone/cust-testing-newsletter
+  name: aws_access_key
+---
+kind: secret
+name: aws_access_key_secret_testing
+get:
+  path: drone/cust-testing-newsletter
+  name: aws_access_key_secret
+---
+kind: secret
+name: mdbapi_qa1_service_discovery
+get:
+  path: drone/cust-testing-newsletter
+  name: mdbapi_qa1_service_discovery
+---
+kind: secret
+name: mdbapi_qa2_service_discovery
+get:
+  path: drone/cust-testing-newsletter
+  name: mdbapi_qa2_service_discovery
+
+# PROD
+---
+kind: secret
+name: mdbapi_service_discovery
+get:
+  path: drone/cust-production-newsletter
+  name: mdbapi_service_discovery
+---
+kind: secret
+name: aws_access_key_prod
+get:
+  path: drone/cust-production-newsletter
+  name: aws_access_key
+---
+kind: secret
+name: aws_access_key_secret_prod
+get:
+  path: drone/cust-production-newsletter
+  name: aws_access_key_secret
