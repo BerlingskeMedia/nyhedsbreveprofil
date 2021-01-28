@@ -76,8 +76,8 @@ steps:
         - COOKIE_AUTH_STRING
       environment_variables:
         - MDBAPI_PORT=8000
-#        - BPC_URL=https://bpc.berlingskemedia.net
-        - BPC_URL=https://bpc.berlingskemedia-testing.net
+        - BPC_URL=https://bpc.berlingskemedia.net
+#        - BPC_URL=https://bpc.berlingskemedia-testing.net
         - ZENDESK_URL=https://berlingskemediahelp.zendesk.com
         - GIGYA_API_URL=https://accounts.eu1.gigya.com
       aws_access_key_id:
