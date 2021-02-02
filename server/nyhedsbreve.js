@@ -8,6 +8,14 @@ module.exports = {
   register: async function (server, options) {
 
     server.route({
+      method: 'GET',
+      path: '/maintenance',
+      handler: {
+        file: 'maintenance/index.html'
+      },
+    });
+
+    server.route({
       method: 'get',
       path: '/node_modules/{param*}',
       handler: {
