@@ -60,13 +60,19 @@ module.exports = {
       handler: async (req, h) => {
 
         const me = await h.bpc.request({ path: `/me` }, req.auth.credentials);
-
-        const user = await MDB.findUser(me.email);
+        let user;
+        try {
+          user = await MDB.findUser(me.email);
+        } catch (e) {
+          if (!(e.hasOwnProperty('output') && e.output.statusCode === 404)) {
+            throw e;
+          }
+        }
 
         if (user && user.ekstern_id) {
           return await MDB.getData(user.ekstern_id);
         } else {
-          throw Boom.notFound();
+          return h.response().code(204);
         }
       }
     });
