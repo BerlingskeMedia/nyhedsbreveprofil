@@ -18,11 +18,23 @@ const nyhedsbreve = require('./nyhedsbreve');
 const smartlinks = require('./smartlinks');
 const opdatering = require('./opdatering');
 const mineData = require('./mine-data');
+const Boom = require('@hapi/boom');
 
 const maintenancePage = process.env.MAINTENANCE_PAGE === 'true' || false;
 const cookieAuthString = process.env.COOKIE_AUTH_STRING;
 const goThoughMaintenancePageCookieName = process.env.GO_THOUGH_MAINTENANCE_PAGE_COOKIE_NAME || 'go_thought_maintenance_page';
 const goThoughMaintenancePageString = process.env.GO_THOUGH_MAINTENANCE_PAGE_STRING || 'allowed';
+
+const existsPathInArray = function(elementsArray, url) {
+  let result = false;
+  for (let i=0; i < elementsArray.length; ++i) {
+    if (url.match(elementsArray[i])) {
+      result = true;
+      break;
+    }
+  }
+  return result;
+}
 
 const init = async () => {
 
@@ -30,11 +42,11 @@ const init = async () => {
 
   await server.ext('onPreResponse', function (request, reply) {
     const {response} = request;
-    const maintenanceIgnoredPaths = ['/setauthcookie', '/maintenance', '/healthcheck'];
+    const maintenanceIgnoredPaths = ['/setauthcookie', '/maintenance', '/healthcheck', '/api', '/smartlinks', '/backend'];
 
     if (maintenancePage &&
         request.state[goThoughMaintenancePageCookieName] !== goThoughMaintenancePageString &&
-        !maintenanceIgnoredPaths.includes(request.route.path)
+        !existsPathInArray(maintenanceIgnoredPaths, request.route.path)
     ) {
       return reply.redirect('/maintenance').temporary();
     }
