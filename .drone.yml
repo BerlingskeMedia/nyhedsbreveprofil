@@ -95,7 +95,6 @@ steps:
         - awslogs-group=cust-production-newsletter
         - awslogs-region=eu-west-1
         - awslogs-stream-prefix=newsletter-np
-        - awslogs-datetime-format=\[%Y-%m-%dT%H:%M:%S%L\]
       memory: 512
       port_mappings:
         - 8000 8000
@@ -211,7 +210,6 @@ steps:
         - awslogs-group=cust-testing-newsletter
         - awslogs-region=eu-west-1
         - awslogs-stream-prefix=newsletter-np-qa1
-        - awslogs-datetime-format=\[%Y-%m-%dT%H:%M:%S%L\]
       memory: 512
       port_mappings:
         - 8000 8000
@@ -300,7 +298,6 @@ steps:
         - awslogs-group=cust-testing-newsletter
         - awslogs-region=eu-west-1
         - awslogs-stream-prefix=newsletter-np-qa2
-        - awslogs-datetime-format=\[%Y-%m-%dT%H:%M:%S%L\]
       memory: 512
       port_mappings:
         - 8000 8000
