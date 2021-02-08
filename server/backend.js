@@ -58,7 +58,7 @@ async function proxy (request, h) {
   var options = {
     protocol: MDBAPI_PROTOCOL,
     hostname: MDBAPI_HOSTNAME,
-    port: MDBAPI_PORT,
+    // port: MDBAPI_PORT,
     method: request.method,
     path: path,
     headers: {}
