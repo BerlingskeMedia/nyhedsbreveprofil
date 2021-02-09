@@ -4,6 +4,7 @@
 const Http = require('http');
 const Url = require('url');
 const Boom = require('@hapi/boom');
+const {showMaintenanceMessage} = require("./lib/maintenance-mode");
 
 var route_prefix = '';
 
@@ -14,7 +15,7 @@ var MDBAPI_PORT;
 
 try {
   var temp = Url.parse(process.env.MDBAPI_ADDRESS);
-  
+
   // Sometimes the ENV var is including the protocol, eg: MDBAPI_ADDRESS=http://mdbapi-test.bemit.dk
 
   if(['http:', 'https:'].indexOf(temp.protocol) > -1) {
@@ -22,24 +23,22 @@ try {
     MDBAPI_PROTOCOL = temp.protocol;
     MDBAPI_HOSTNAME = temp.hostname;
     MDBAPI_PORT = temp.port;
-    
 
   // Other times (eg. in puppet) there are two seperate ENV vars, eg: MDBAPI_ADDRESS=mdbapi-test.bemit.dk MDBAPI_PORT=80
 
   } else if (process.env.MDBAPI_PORT) {
-    
+
     MDBAPI_PROTOCOL = 'http:';
     MDBAPI_HOSTNAME = process.env.MDBAPI_ADDRESS;
     MDBAPI_PORT = process.env.MDBAPI_PORT;
-    
+
   } else {
-    
     throw new Error();
     
   }
   
 } catch (ex) {
-  console.error('Env var MDBAPI_ADDRESS missing or invalid.');
+  console.log(ex);
   process.exit(1);
 }
 
@@ -47,6 +46,7 @@ try {
 console.log('Connecting backend to MDBAPI on hostname', MDBAPI_HOSTNAME, 'and port', MDBAPI_PORT);
 
 async function proxy (request, h) {
+  showMaintenanceMessage(request);
 
   var path = request.raw.req.url;
   if(path.startsWith(route_prefix)){
