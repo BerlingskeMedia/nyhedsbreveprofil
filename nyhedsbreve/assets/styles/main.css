@@ -7200,12 +7200,10 @@ input[type="button"].btn-block {
   max-height: 70px;
   max-width: 500px;
   margin-top: 10px;
-  margin-left: -25px;
 }
 @media (max-width: 768px) {
   #toppic {
-    height: 50px;
-    margin-left: -20px;
+    height: 30px;
   }
 }
 .navi-toggle {
