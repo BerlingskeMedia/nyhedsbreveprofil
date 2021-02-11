@@ -153,8 +153,16 @@ module.exports = {
       handler: async (req, h) => {
         const me = await h.bpc.request({ path: `/me` }, req.auth.credentials);
 
-        const user = await MDB.findUser(me.email);
-        return MDB.deleteUser(user.ekstern_id);
+        try {
+          const user = await MDB.findUser(me.email);
+          return MDB.deleteUser(user.ekstern_id);
+        } catch (e) {
+          if (e.output.statusCode !== 404) {
+            console.error(e);
+            return h.response.code(500);
+          }
+        }
+        return h.response().code(204);
       }
     });
 
