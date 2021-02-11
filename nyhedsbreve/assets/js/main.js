@@ -9,7 +9,7 @@ var newsletterApp = angular.module('newsletter', [
 .constant('DOMAIN_NAME', 'profil.berlingskemedia.dk')
 .constant(
   'DEFAULT_LOGO',
-  'https://s3-eu-west-1.amazonaws.com/nlstatic.berlingskemedia.dk/logos/berlingskemedia.png'
+  '/assets/images/berlingskemedia.png'
 )
 .constant('LOGO_PATH', 'http://nlstatic.berlingskemedia.dk/newsletter_logos/')
 .factory('UserService', ['$q', '$http', 'PublisherService', 'DEFAULT_LOGO',

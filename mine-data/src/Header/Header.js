@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import logo from '../../assets/BEM_logo_White_100_mm.svg';
+import logo from '../../assets/img/BEM_logo_neg_rgb.png';
 import { LogoutLink } from '../logout/LogoutLink';
 
 import './Header.scss';
