@@ -1,5 +1,6 @@
 const request = require('request');
 const {boomify, badImplementation, badRequest} = require('@hapi/boom');
+const logger = require('./../logger');
 
 class Http {
   static get(url, credentials, params) {
@@ -64,15 +65,15 @@ class Http {
 
   static wrapError(err) {
     if (err.response) {
-      console.log('[response error]', err.response.statusCode, err.response.statusMessage, err.body);
+      logger.error('[response error]', err.response.statusCode, err.response.statusMessage, err.body);
       return boomify(new Error(err.body), {
         statusCode: err.response.statusCode
       });
     } else if (err && err.isJoi && err.name === 'ValidationError') {
-      console.log('[validation error]', err.details);
+      logger.error('[validation error]', err.details);
       return badRequest(err.details.map(detail => `${detail.path.join('.')}: ${detail.message}`).join('; '));
     } else {
-      console.log('[internal error]', JSON.stringify(err, null, 2));
+      logger.error('[internal error]', JSON.stringify(err, null, 2));
       return badImplementation(err);
     }
   }

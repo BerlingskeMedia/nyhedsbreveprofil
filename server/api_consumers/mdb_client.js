@@ -1,6 +1,7 @@
 const Http = require('../lib/http');
 const Url = require('url');
 const Boom = require('@hapi/boom');
+const logger = require('./../logger');
 
 let MDBAPI_ADDRESS;
 
@@ -20,7 +21,7 @@ try {
   process.exit(1);
 }
 
-console.log('Connecting mdb_client to MDBAPI on', MDBAPI_ADDRESS);
+logger.info('Connecting mdb_client to MDBAPI on', MDBAPI_ADDRESS);
 
 
 class MDB {

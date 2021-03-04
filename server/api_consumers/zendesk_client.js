@@ -3,7 +3,7 @@ const Url = require('url');
 const Joi = require('@hapi/joi');
 const MDB = require('./mdb_client');
 const {categories} = require('./categories_client');
-const {badRequest} = require('@hapi/boom');
+const logger = require('./../logger');
 
 var ZENDESK_URL;
 const ZENDESK_API_EMAIL = process.env.ZENDESK_API_EMAIL;
@@ -12,18 +12,15 @@ const ZENDESK_API_TOKEN = process.env.ZENDESK_API_TOKEN;
 try {
   ZENDESK_URL = Url.parse(process.env.ZENDESK_URL);
 } catch (ex) {
-  console.error('Env var ZENDESK_URL missing or invalid.');
-  // process.exit(1);
+  logger.debug('Env var ZENDESK_URL missing or invalid.');
 }
 
 if (!ZENDESK_API_EMAIL || ZENDESK_API_EMAIL.length === 0) {
-  console.error('Env var ZENDESK_API_EMAIL missing or invalid.');
-  // process.exit(1);
+  logger.debug('Env var ZENDESK_API_EMAIL missing or invalid.');
 }
 
 if (!ZENDESK_API_TOKEN || ZENDESK_API_TOKEN.length === 0) {
-  console.error('Env var ZENDESK_API_TOKEN missing or invalid.');
-  // process.exit(1);
+  logger.debug('Env var ZENDESK_API_TOKEN missing or invalid.');
 }
 
 

@@ -1,9 +1,9 @@
 const MDB = require('./api_consumers/mdb_client');
-const Boom = require('@hapi/boom');
 const ZenDesk = require('./api_consumers/zendesk_client');
 const {categories} = require('./api_consumers/categories_client');
 const Gigya = require('./api_consumers/gigya_client');
 const ARIA = require('./api_consumers/aria_client');
+const logger = require('./logger');
 
 module.exports = {
   name: 'mine-data',
@@ -66,7 +66,7 @@ module.exports = {
           }
         } catch (e) {
           if (e.output.statusCode !== 404) {
-            console.error(e);
+            logger.error(e);
             return h.response.code(500);
           }
         }
@@ -158,7 +158,7 @@ module.exports = {
           return MDB.deleteUser(user.ekstern_id);
         } catch (e) {
           if (e.output.statusCode !== 404) {
-            console.error(e);
+            logger.error(e);
             return h.response.code(500);
           }
         }

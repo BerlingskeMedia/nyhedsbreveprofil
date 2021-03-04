@@ -1,7 +1,7 @@
 /*jshint node: true */
 'use strict';
 
-console.log('MA ', process.env.MDBAPI_ADDRESS);
+const logger = require('./logger');
 
 // To remain compatible with the puppet-scripts
 if(process.env.NYHEDSBREVEPROFIL_APP_ID && !process.env.BPC_APP_ID) {
@@ -18,7 +18,6 @@ const nyhedsbreve = require('./nyhedsbreve');
 const smartlinks = require('./smartlinks');
 const opdatering = require('./opdatering');
 const mineData = require('./mine-data');
-const Boom = require('@hapi/boom');
 
 const maintenancePage = process.env.MAINTENANCE_PAGE === 'true' || false;
 const cookieAuthString = process.env.COOKIE_AUTH_STRING;
@@ -104,7 +103,7 @@ const init = async () => {
   await server.register(mineData, {routes: {prefix: '/mine-data'}});
 
   await server.start();
-  console.log('Server running on %s', server.info.uri);
+  logger.info('Server running on %s', server.info.uri);
 };
 
 init();

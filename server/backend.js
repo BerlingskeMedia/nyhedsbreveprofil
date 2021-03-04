@@ -4,6 +4,7 @@
 const Http = require('http');
 const Url = require('url');
 const Boom = require('@hapi/boom');
+const logger = require('./logger');
 const {showMaintenanceMessage} = require("./lib/maintenance-mode");
 
 var route_prefix = '';
@@ -40,12 +41,11 @@ try {
   }
 
 } catch (ex) {
-  console.log(process.env.MDBAPI_ADDRESS);
-  console.error('Env var MDBAPI_ADDRESS missing or invalid 1.');
+  logger.error('Env var MDBAPI_ADDRESS missing or invalid 1.');
   process.exit(1);
 }
 
-console.log('Connecting backend to MDBAPI on hostname', MDBAPI_HOSTNAME, 'and port', MDBAPI_PORT);
+logger.debug('Connecting backend to MDBAPI on hostname', MDBAPI_HOSTNAME, 'and port', MDBAPI_PORT);
 
 async function proxy (request, h) {
   showMaintenanceMessage(request);
@@ -102,8 +102,8 @@ async function proxy (request, h) {
           return reject(Boom.boomify(err, { statusCode: res.statusCode }));
         }
 
-        console.log(`-- ${ options.method } ${ options.path }`);
-        console.log(`--    ${ JSON.stringify(options.headers) }`);
+        logger.debug(`-- ${ options.method } ${ options.path }`);
+        logger.debug(`--    ${ JSON.stringify(options.headers) }`);
 
         if(data.length > 0) {
           try {
@@ -120,7 +120,7 @@ async function proxy (request, h) {
     })
     
     req.on('error', function(e) {
-      console.log('Got error while requesting (' + request.url + '): ' + e.message);
+      logger.debug('Got error while requesting (' + request.url + '): ' + e.message);
       reject(e);
     });
   
