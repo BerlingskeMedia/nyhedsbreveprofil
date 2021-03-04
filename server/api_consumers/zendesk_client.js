@@ -12,15 +12,15 @@ const ZENDESK_API_TOKEN = process.env.ZENDESK_API_TOKEN;
 try {
   ZENDESK_URL = Url.parse(process.env.ZENDESK_URL);
 } catch (ex) {
-  logger.debug('Env var ZENDESK_URL missing or invalid.');
+  logger.info('Env var ZENDESK_URL missing or invalid.');
 }
 
 if (!ZENDESK_API_EMAIL || ZENDESK_API_EMAIL.length === 0) {
-  logger.debug('Env var ZENDESK_API_EMAIL missing or invalid.');
+  logger.info('Env var ZENDESK_API_EMAIL missing or invalid.');
 }
 
 if (!ZENDESK_API_TOKEN || ZENDESK_API_TOKEN.length === 0) {
-  logger.debug('Env var ZENDESK_API_TOKEN missing or invalid.');
+  logger.info('Env var ZENDESK_API_TOKEN missing or invalid.');
 }
 
 

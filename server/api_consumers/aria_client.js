@@ -6,7 +6,7 @@ const logger = require('./../logger');
 
 module.exports.client = ({ARIA_HOST, ARIA_AUTH_KEY, ARIA_CLIENT_NO}) => {
     const _ARIA_HOST = Url.parse(ARIA_HOST);
-    logger.debug(`Using ${ _ARIA_HOST.href } as ARIA endpoint`);
+    logger.info(`Using ${ _ARIA_HOST.href } as ARIA endpoint`);
 
     const createMsgAuthDetails = function ({ ariaAccountID, ariaAccountNo }) {
         // Aria requires data format:

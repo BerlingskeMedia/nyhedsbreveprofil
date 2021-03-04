@@ -45,7 +45,7 @@ try {
   process.exit(1);
 }
 
-logger.debug('Connecting backend to MDBAPI on hostname', MDBAPI_HOSTNAME, 'and port', MDBAPI_PORT);
+logger.info('Connecting backend to MDBAPI on hostname', MDBAPI_HOSTNAME, 'and port', MDBAPI_PORT);
 
 async function proxy (request, h) {
   showMaintenanceMessage(request);
@@ -102,8 +102,8 @@ async function proxy (request, h) {
           return reject(Boom.boomify(err, { statusCode: res.statusCode }));
         }
 
-        logger.debug(`-- ${ options.method } ${ options.path }`);
-        logger.debug(`--    ${ JSON.stringify(options.headers) }`);
+        logger.info(`-- ${ options.method } ${ options.path }`);
+        logger.info(`--    ${ JSON.stringify(options.headers) }`);
 
         if(data.length > 0) {
           try {
@@ -120,7 +120,7 @@ async function proxy (request, h) {
     })
     
     req.on('error', function(e) {
-      logger.debug('Got error while requesting (' + request.url + '): ' + e.message);
+      logger.error('Got error while requesting (' + request.url + '): ' + e.message);
       reject(e);
     });
   
