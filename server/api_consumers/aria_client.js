@@ -2,10 +2,11 @@ const Crypto = require('crypto');
 const Https = require('https');
 const Path = require('path');
 const Url = require('url');
+const logger = require('./../logger');
 
 module.exports.client = ({ARIA_HOST, ARIA_AUTH_KEY, ARIA_CLIENT_NO}) => {
     const _ARIA_HOST = Url.parse(ARIA_HOST);
-    console.log(`Using ${ _ARIA_HOST.href } as ARIA endpoint`);
+    logger.debug(`Using ${ _ARIA_HOST.href } as ARIA endpoint`);
 
     const createMsgAuthDetails = function ({ ariaAccountID, ariaAccountNo }) {
         // Aria requires data format:

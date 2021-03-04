@@ -79,6 +79,7 @@ steps:
         - BPC_URL=https://bpc.berlingskemedia.net
         - ZENDESK_URL=https://berlingskemediahelp.zendesk.com
         - GIGYA_API_URL=https://accounts.eu1.gigya.com
+        - LOG_LEVEL=info
       aws_access_key_id:
         from_secret: aws_access_key_prod
       aws_secret_access_key:
@@ -95,6 +96,7 @@ steps:
         - awslogs-group=cust-production-newsletter
         - awslogs-region=eu-west-1
         - awslogs-stream-prefix=newsletter-np
+        - awslogs-datetime-format=\[%Y-%m-%d %H:%M:%S\]
       memory: 512
       port_mappings:
         - 8000 8000
@@ -198,6 +200,7 @@ steps:
         - MDBAPI_PORT=8000
         - BPC_URL=https://bpc.berlingskemedia-testing.net
         - ZENDESK_URL=https://berlingskemediahelp.zendesk.com
+        - LOG_LEVEL=debug
       cluster: cust-testing-newsletter
       compatibilities: FARGATE
       deployment_configuration: 100 200
@@ -210,6 +213,7 @@ steps:
         - awslogs-group=cust-testing-newsletter
         - awslogs-region=eu-west-1
         - awslogs-stream-prefix=newsletter-np-qa1
+        - awslogs-datetime-format=\[%Y-%m-%d %H:%M:%S\]
       memory: 512
       port_mappings:
         - 8000 8000
@@ -286,6 +290,7 @@ steps:
         - MDBAPI_PORT=8000
         - BPC_URL=https://bpc.berlingskemedia-testing.net
         - ZENDESK_URL=https://berlingskemediahelp.zendesk.com
+        - LOG_LEVEL=debug
       cluster: cust-testing-newsletter
       compatibilities: FARGATE
       deployment_configuration: 100 200
@@ -298,6 +303,7 @@ steps:
         - awslogs-group=cust-testing-newsletter
         - awslogs-region=eu-west-1
         - awslogs-stream-prefix=newsletter-np-qa2
+        - awslogs-datetime-format=\[%Y-%m-%d %H:%M:%S\]
       memory: 512
       port_mappings:
         - 8000 8000

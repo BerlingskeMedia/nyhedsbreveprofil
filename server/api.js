@@ -4,6 +4,7 @@
 const Http = require('http');
 const Url = require('url');
 const Boom = require('@hapi/boom');
+const logger = require('./logger');
 const {showMaintenanceMessage} = require("./lib/maintenance-mode");
 
 var route_prefix = '';
@@ -38,12 +39,12 @@ try {
   }
   
 } catch (ex) {
-  console.log(ex);
+  logger.error(ex);
   process.exit(1);
 }
 
 
-console.log('Connecting backend to MDBAPI on hostname', MDBAPI_HOSTNAME, 'and port', MDBAPI_PORT);
+logger.info('Connecting backend to MDBAPI on hostname', MDBAPI_HOSTNAME, 'and port', MDBAPI_PORT);
 
 async function proxy (request, h) {
   showMaintenanceMessage(request);
@@ -96,7 +97,7 @@ async function proxy (request, h) {
         try {
           resolve(JSON.parse(data));
         } catch(ex) {
-          console.log(ex)
+          logger.error(ex)
           reject(ex);
         }
       });
@@ -104,7 +105,7 @@ async function proxy (request, h) {
     })
     
     req.on('error', function(e) {
-      console.log('Got error while requesting (' + request.url + '): ' + e.message);
+      logger.error('Got error while requesting (' + request.url + '): ' + e.message);
       reject(e);
     });
   
